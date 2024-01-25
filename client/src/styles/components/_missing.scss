@@ -1,0 +1,15 @@
+.missing-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  height:100%;
+  &-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  &-link {
+    text-decoration: underline;
+  }
+}

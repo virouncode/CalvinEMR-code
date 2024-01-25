@@ -1,0 +1,235 @@
+.recimmunizations  {
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 50%;
+        margin: 0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__title {
+        font-size: 1.2rem;
+        margin-top: 50px;
+        margin-bottom: 10px;
+        padding: 10px;
+        text-align: center;
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__subtitle {
+        font-size: 1rem;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding: 10px;
+        text-align: center;
+    }
+    &__table {
+        padding:0 10px;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border: solid 1px $black;
+        font-size: 0.8rem;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        thead {
+            background-color: $blue;
+            border: solid 1px $black;
+        }
+        td {
+            border: solid 1px $black;
+        }
+        th {
+            background-color: $blue;
+            padding: 5px;
+            border: solid 1px $black;
+            .description {
+                font-weight: normal;
+                font-size: 0.7rem;
+            }
+        }
+    }
+}
+.recimmunizations-obs {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 15px;
+    &__title {
+        padding: 0;
+        margin: 0;
+    }
+    &__content {
+        width: 100%;
+        height: 200px;
+        outline: solid 1px $black;
+        border: none;
+        padding: 10px;
+        font-size: 0.8rem;
+        margin: 10px 0 0;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    textarea {
+        width: 100%;
+        height: 200px;
+        padding: 10px;
+        margin: 10px 0 0;
+        box-sizing: border-box;
+        font-family: $font1, sans-serif;
+        resize: none;
+    }
+    &__btn-container {
+        margin-top: 10px;
+        text-align: end;
+        width: 100%;
+    }
+}
+
+.recimmunizations-item {
+    td {
+        text-align: center;
+        border: solid 1px $black;
+        padding:2px 5px;
+        word-wrap: break-word;
+    }
+    &__empty {
+        background: $grey;
+    }
+    &__cell {
+        display: flex;
+        font-size: 0.7rem;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px;
+        label {
+            margin-left: 3px;
+        }
+        &-multiple-btn {
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+            padding:0;
+        }
+    }
+    &__checked {
+        color: forestgreen;
+    }
+}
+.recimmunizations-form {
+    margin-top: 50px;
+    label {
+        font-weight: bold;
+        font-size: 0.8rem;
+        width:200px;
+    }
+    &__row {
+        p {
+            padding: 0;
+        }
+        display: flex;
+        align-items: center;
+        margin: 10px auto;
+        width: 90%;
+        &--text {
+            textarea {
+                height:100px;
+                width: 350px;
+            }
+            align-items: flex-start;
+        }
+    }
+    &__btns {
+        margin-top: 40px;
+        text-align: center;
+        button {
+            margin-left: 5px;
+        }
+    }
+}
+
+.recimmunizations-history {
+    margin-top: 50px;
+    &__item {
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}
+
+.immunizations {
+    &__subtitle {
+        font-size: 1rem;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding: 10px;
+        text-align: center;
+    }
+    &__title {
+        font-size: 1.2rem;
+        margin-top: 60px;
+        margin-bottom:30px;
+        text-align: center;
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin: 10px auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__table {
+        table-layout:fixed;
+        min-width:100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        thead {
+            background: $blue;
+            border: solid 1px $black;
+        }
+        th {
+            min-width: 120px;
+            padding: 2px 5px;
+            border: solid 1px $black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+    &__item, &__form {
+        td {
+            text-align: center;
+            border: solid 1px $black;
+            padding: 2px 5px;
+            word-break: break-word;
+        }
+        input, select {
+            width: 100%;
+        }
+        input[type="submit"] {
+            width: auto;
+        }
+        &-btn-container {
+            display: flex;
+            justify-content: center;
+            button {
+                margin-left: 5px;
+            }
+        }
+    }
+    &__btn-container {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        button {
+            margin-left: 5px;
+        }
+    }
+    
+}

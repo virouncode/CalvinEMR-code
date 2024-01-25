@@ -1,0 +1,14 @@
+.patient-account-section {
+    // @include childCenter;
+    // background: linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background: url("../../assets/img/splash.jpg") center/cover;
+    width : 100%;
+    min-height : 100vh;
+    display: flex;
+    flex-direction: column;
+    &-title {
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+}

@@ -1,0 +1,29 @@
+.calendar-section {
+    &__toggle-view {
+        width : 13%;
+        position : absolute;
+        right:15%;
+        top:10px;
+    }
+    &__option {
+        color:grey;
+        display:inline-block;
+        width : 70px;
+        text-align: center;
+        font-size : 0.8rem;
+        padding : 6px 10px;
+        border : solid 0.8px #A7A6A6;
+        border-radius: 2px;
+        background:$white;
+        cursor:pointer;
+        &:hover{
+            background:$grey;
+            color:rgb(70, 70, 70);
+        }
+        &--active{
+            background:$grey;
+            color:rgb(70, 70, 70);
+            border: none;
+        }
+    }
+}

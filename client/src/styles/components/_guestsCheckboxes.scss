@@ -1,0 +1,28 @@
+.guests-checkboxes{
+    &-staff, &-patients{
+        width: 100%;
+        ul {
+            margin-bottom:10px;
+            li {
+                display:flex;
+                font-size : 0.7rem;
+                font-weight : normal;
+                margin-bottom : 2px;
+                display :flex;
+                .guest-checkbox, .doctor-checkbox, .nurse-checkbox, .secretary-checkbox, .patient-checkbox {
+                    width:auto;
+                    margin-right : 5px;
+                }
+                .item-label{
+                    font-weight : normal;
+                    width :auto;
+                }
+                .doctor-label, .nurse-label, .secretary-label, .patient-label{
+                    font-weight: bold;
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+}
+

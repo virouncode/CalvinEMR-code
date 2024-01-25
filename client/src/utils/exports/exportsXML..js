@@ -1,0 +1,128 @@
+import axios from "axios";
+import xmlFormat from "xml-formatter";
+import { axiosXanoAdmin } from "../../api/xanoAdmin";
+import { recordCategories } from "./recordCategories";
+import { removeEmptyTags } from "./removeEmptyTags";
+
+export const exportPatientEMR = async (
+  authToken,
+  checkedRecordCategoriesIds,
+  patientFirstName,
+  patientLastName,
+  patientId,
+  patientDob,
+  doctorFirstName,
+  doctorLastName,
+  doctorOHIP,
+  authorName,
+  dateOfExport
+) => {
+  const xmlHeader = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--file created by CALVIN EMR, compliant with EMR_Data_Migration_Schema.xsd version 1.0/ Publish
+Date: August 4,2017; Status: FINAL-->
+`;
+
+  let xmlContent = "";
+
+  for (let categoryId of checkedRecordCategoriesIds) {
+    const categoryName = recordCategories.find(
+      ({ id }) => id === categoryId
+    ).name;
+    const categoryURL = recordCategories.find(
+      ({ id }) => id === categoryId
+    ).url;
+    const categoryTemplate = recordCategories.find(
+      ({ id }) => id === categoryId
+    ).template;
+
+    xmlContent += await exportEMRCategory(
+      authToken,
+      categoryName,
+      categoryURL,
+      categoryTemplate,
+      [patientId]
+    );
+  }
+
+  //xmlFormat for identation
+  const xmlFinal = xmlFormat(
+    removeEmptyTags(
+      xmlHeader +
+        `<OmdCds xmlns="cds"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="cds /Users/virounkattygnarath/Desktop/EMR_Data_Schema.xsd"
+    xmlns:cdsd="cds_dt"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"><PatientRecord>${xmlContent}</PatientRecord></OmdCds>`
+    ),
+    { collapseContent: true, indentation: "  " }
+  );
+
+  await axios.post("/api/writeXML", {
+    xmlFinal,
+    patientFirstName,
+    patientLastName,
+    patientId,
+    patientDob,
+    doctorFirstName,
+    doctorLastName,
+    doctorOHIP,
+    authorName,
+    dateOfExport,
+  });
+};
+
+export const exportEMRCategory = async (
+  authToken,
+  categoryName,
+  categoryURL,
+  categoryTemplate,
+  checkedPatients = null
+) => {
+  let jsArrayToExport = [];
+  if (checkedPatients) {
+    try {
+      jsArrayToExport = (
+        await axiosXanoAdmin.post(
+          `${categoryURL}_for_patients`,
+          { patients: checkedPatients },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        )
+      ).data;
+    } catch (err) {
+      console.log(err.message);
+    }
+  } else {
+    //All patients
+    try {
+      jsArrayToExport = (
+        await axiosXanoAdmin.get(categoryURL, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+      ).data;
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  let xmlContent = "";
+
+  for (let jsObj of jsArrayToExport) {
+    if (categoryName === "Demographics") {
+      jsObj.UniqueVendorIdSequence = jsObj.patient_id;
+      delete jsObj.patient_id;
+      jsObj.PreferredPharmacy = jsObj.preferred_pharmacy;
+      delete jsObj.preferred_pharmacy;
+    }
+    console.log(jsObj);
+    xmlContent += categoryTemplate(jsObj);
+  }
+  console.log(xmlContent);
+  return xmlContent;
+};

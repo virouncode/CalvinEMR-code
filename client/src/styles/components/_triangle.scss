@@ -1,0 +1,15 @@
+.triangle {
+    cursor: pointer;
+    transition :0.1s;
+    &--active {
+        transform : rotate(90deg);
+    }
+}
+.triangle-clinical-notes {
+    transition : 0.1s;
+    cursor:pointer;
+    &--active {
+        transform : rotate(90deg);
+    }
+}
+

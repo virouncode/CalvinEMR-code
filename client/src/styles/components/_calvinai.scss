@@ -1,0 +1,122 @@
+.calvinai-prompt {
+    margin: 50px 0;
+    height:100%;
+    &__title {
+        margin-bottom: 20px;
+        font-size: 1rem;
+        padding: 5px 10px;
+    }
+    &__textarea {
+        width : 95%;
+        padding: 20px;
+        margin: 0 auto;
+        height: 70%;
+        display:block;
+        resize: none;
+        overflow: scroll;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+    &__footer {
+        padding: 20px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    &__add {
+        width: 75%;
+        display: flex;
+        justify-content: space-between; 
+    }
+    &__attachments, &__documents {
+        p {
+            padding: 0;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+    }
+    &__attachment-item, &__document-item {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        input[type="checkbox"]{
+            margin-right: 5px;
+        }
+    }
+}
+
+.calvinai-discussion {
+    width:90%;
+    height: 94%;
+    margin:40px auto 0;
+    display: flex;
+    flex-direction: column;
+    &__content {
+        overflow: scroll;
+        font-size: 0.85rem;
+        border-bottom: solid 1px $grey;
+        height:80%;
+    }
+    &__stop-btn {
+        height: 5%;
+        margin-left:auto;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        button {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+        }   
+    }
+    &__send-btn {
+        background-color: $blue;
+        &:hover {
+            background-color: $blue2;
+        }
+    }
+    &__input {
+        height:15%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 4px;
+        border: solid 1px $grey;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        padding:5px 0;
+        padding-left:10px;
+        padding-right:20px;
+    }
+    &__textarea {
+        width:90%;
+        overflow: scroll;
+        textarea {
+            font-family: $font1;
+            font-size: 0.85rem;
+            padding:0;
+        }
+    }
+    &__card {
+        padding: 20px;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    &__img-bot {
+        width:8%;
+        height:auto;
+
+    }
+    &__img-user {
+        width:8%;
+        height:auto;
+    }
+    &__message {
+        padding:0 10px;
+        white-space: pre-wrap;
+        width:90%;
+    }
+}

@@ -1,0 +1,97 @@
+.patient-account {
+    &__container {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        background:$white;
+        padding : 20px;
+        width : 75%;
+        margin:0 auto;
+    }
+    &__confirm {
+        padding : 10px 20px;
+        width : 70%;
+        font-size: 0.9rem;
+        margin:0 auto 20px;
+        border-radius: 4px;
+        text-align: center;
+        color: forestgreen;
+        background-color: rgba(34, 139, 34, 0.4);
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 70%;
+        margin:0 auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+        margin:0 auto 20px;
+    }
+    &__btns {
+        margin-top:20px;
+        text-align: center;
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__form {
+        font-size: 0.85rem;
+        &-content {
+            display: grid;
+            grid-template-columns: 17% 35% 35%;
+            justify-content: space-between;
+            &-column {
+                // width:30%;
+                &-img {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    height: 300px;
+                    overflow:hidden;
+                    margin-right:10px;
+                    img{
+                        align-self: flex-start;
+                        height: 90%;
+                        width: auto;
+                    }
+                    input[type="file"] {
+                        &::-webkit-file-upload-button {
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+            &-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+                align-items: center;
+                label {
+                    min-width: 100px;
+                }
+                &--postal {
+                    label {
+                        min-width: 150px;
+                    } 
+                }
+            } 
+            &-sign {
+                margin-top: 20px;
+            }
+            label {
+                font-size: 0.85rem;
+                font-weight: bold;
+            }
+            input, select {
+                width: 150px;
+            }  
+        }
+        legend {
+            margin-left: 10px;
+            padding: 5px;
+            font-weight: bold;
+        }
+    }
+}

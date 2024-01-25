@@ -1,0 +1,86 @@
+.care-elements {
+  &__title {
+    font-size: 1.2rem;
+    margin-top: 60px;
+    margin-bottom:30px;
+    text-align: center;
+  }
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 80%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 4px;
+    text-align: center;
+  }
+  &__card {
+    width: 80%;
+    border : solid 1px $grey;
+    border-radius: 4px;
+    margin: 0 auto;
+    padding : 10px 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+  }
+  &__row {
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    font-size: 0.8rem;
+    label {
+      font-weight: bold;
+      min-width: 200px;
+    }
+    input, select {
+      width: 80px;
+    }
+    &--title {
+      font-weight: bold;
+      font-size:1rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      button {
+        margin-left: 5px;
+      }
+    }
+  }
+  &__date {
+    margin-left: 15px;
+    color: $grey;
+    display:inline-block;
+  }
+  &__history {
+    i {
+      cursor:pointer;
+    }
+    &-container {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform: translate(-50%,-50%);
+      width: 90%;
+      margin : 0 auto;
+      display: flex;
+      justify-content: center;
+      border: solid 1px $grey;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      border-radius:4px;
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+  &__value {
+    width: 80px;
+    display:inline-block;
+  }
+  &__sign {
+    font-size: 0.7rem;
+    text-align: end;
+    margin-top: 20px;
+  }
+}

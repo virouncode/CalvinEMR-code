@@ -1,0 +1,109 @@
+.reset-container {
+    padding : 20px;
+    width : 40%;
+    margin:0 auto 0;
+    border: solid 2px $blue;
+    border-radius: 4px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background: $white;
+    &-title {
+        width:100%;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+    }
+    &-err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin:0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &-success {
+        padding : 10px 20px;
+        width : 100%;
+        font-size: 0.9rem;
+        margin:0 auto 10px;
+        border-radius: 4px;
+        text-align: center;
+        color: forestgreen;
+        background-color: rgba(34, 139, 34, 0.4);
+    }
+    .email-form-row-radio {
+        display: flex;
+        justify-content: space-between;
+        width: 35%;
+        font-size: 0.75rem;
+        margin: 0 auto 30px;
+
+        &-item {
+            display: flex;
+            align-items: center;
+            input[type="radio"] {
+                margin-right: 5px;
+            }
+        }
+    }
+    .email-form-row {
+        font-size: 0.85rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width:80%;
+        margin: 0 auto;
+        label {
+            font-weight: bold;
+        }
+    }
+    .temp-password-form {
+        p {
+            padding: 0;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+            width:100%;
+        }
+        &-row {
+            display: flex;
+            justify-content: space-between;
+            width: 45%;
+            margin: 0 auto;
+        }
+    }
+    .reset-password-form {
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        &-row {
+            width:70%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+            label {
+                font-weight: bold;
+                width:45%;
+            }
+            input {
+                width:55%;
+            }
+            ul {
+                width:55%;
+                margin-left: auto;
+                li {
+                    font-size: 0.7rem;
+                }
+            }
+        }
+        &-row-btn {
+            width: 100%;
+            text-align:center;
+            margin-top: 20px;
+        }
+    }
+}

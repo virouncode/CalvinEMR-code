@@ -1,0 +1,9 @@
+.calendar-section {
+    width : 100%;
+    min-height : 100vh;
+    &__title {
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+}

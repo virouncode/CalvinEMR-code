@@ -1,0 +1,16 @@
+.calendar {
+    &__filter{
+        margin-top : 5px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        width:100%;
+    }
+    &__filter-title {
+        @include childCenter;
+        border-radius: 4px 4px 0 0;
+        font-size : 0.85rem;
+        height: 50px;
+        color : $black;
+        background : $blue;
+        width:100%;
+    }
+}

@@ -1,0 +1,19 @@
+.patient-record {
+    &__content {
+    margin: 0 auto 20px;
+    width : 97%;
+    min-height : 80vh;
+    display : grid;
+    grid-template-columns: 20% 60% 20%;
+    align-items: flex-start;
+    }
+    &__fold {
+        display:block;
+        padding : 5px 10px;
+        margin: 0 auto 10px; 
+    }
+    &__menu {
+        display:flex;
+        flex-direction: column;
+    }
+}

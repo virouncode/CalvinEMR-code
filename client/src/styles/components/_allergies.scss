@@ -1,0 +1,64 @@
+.allergies {
+    &__title {
+        font-size: 1.2rem;
+        margin-top: 60px;
+        margin-bottom:30px;
+        text-align: center;
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin:10px auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__table {
+        table-layout:fixed;
+        min-width:100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        thead {
+            background: $blue;
+            border: solid 1px $black;
+        }
+        th {
+            min-width: 120px;
+            padding: 2px 5px;
+            border: solid 1px $black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+    &__item, &__form {
+        td {
+            text-align: center;
+            border: solid 1px $black;
+            padding: 2px 5px;
+            word-break: break-word;
+        }
+        input {
+            width: 100%;
+        }
+        input[type="submit"] {
+            width: auto;
+        }
+        &-btn-container {
+            display: flex;
+            justify-content: center;
+            button {
+                margin-left: 5px;
+            }
+        }
+    }
+    &__btn-container {
+        text-align: center;
+        margin-top: 20px;
+        button {
+            margin-left: 5px;
+        }
+    }
+    
+}

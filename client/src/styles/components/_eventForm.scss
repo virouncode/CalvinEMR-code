@@ -1,0 +1,169 @@
+.event-form {
+    margin-top: 40px;
+    padding: 10px;
+    &--uneditable {
+        pointer-events: none;
+    }
+    &__row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        padding: 10px;
+        &--guest {
+            flex-direction: column;
+        }
+        &--radio {
+            flex-direction: column;
+            align-items: flex-start;
+            p {
+                padding: 0;
+                font-weight: bold;
+            }
+        }
+    }
+    &__btns {
+        text-align: center;
+        pointer-events: all;
+        button, input[type="submit"] {
+            margin-right: 5px;
+        }
+    }
+    &__radio-container {
+        display: flex;
+        padding: 10px;
+    }
+    &__item {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        width:100%;
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        textarea {
+            width: 100%;
+        }
+        &--guestlist {
+            width:100%;
+            margin-left: 20px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            .guest-patient-item {
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &--guestsearch {
+            width: 100%;
+            height:200px;
+            margin: 0 auto;
+            display:grid;
+            border: solid 1px $grey;
+            padding: 10px;
+            border-radius: 4px;
+            justify-content: space-between;
+            grid-template-columns: 40% 60%;
+            align-items: flex-start;
+            .results {
+                height:170px;
+                overflow:scroll;
+                border: solid 1px $grey;
+                padding: 10px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+            }
+            .search-bar {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            padding:0 10px;
+                &-title {
+                    padding: 0;
+                    text-align: left;
+                    font-weight: bold;
+                }
+                &-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                &-item {
+                    display:flex;
+                    align-items: flex-start;
+                    flex-direction: column;
+                    padding: 5px;
+                    label {
+                        font-size: 0.75rem;
+                    }
+                    input {
+                        font-size: 0.75rem;
+                    }
+                }
+                button {
+                    font-size: 0.7rem;
+                    cursor:pointer;
+                    margin:20px auto 0;
+                    width:80px;
+                }
+            }  
+        }
+        &--radio {
+            margin-right: 10px;
+            label{
+                font-weight: normal;
+                margin-left: 5px;
+            }
+        }
+        .guests-list{
+            padding:0;
+        }
+    }
+}
+
+.invitation {
+    margin-top: 40px;
+    padding: 10px;
+    &__row {
+        border: solid 1px $grey;
+        width:100%;
+        border-radius:4px;
+        padding:10px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    }
+    &__radio {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        &-item {
+            label{
+                margin: 0;
+                font-weight: normal;
+            }
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+            width:20%;
+            input[type="radio"]{
+                margin-right: 5px;
+            }
+        }
+    }
+    &__btns {
+        text-align: center;
+        pointer-events: all;
+        button, input[type="submit"] {
+            margin-right: 5px;
+        }
+    }
+  
+}

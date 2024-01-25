@@ -1,0 +1,113 @@
+.prescription__page {
+    width: 21cm;
+    height: 29.7cm;
+    display: flex;
+    align-items: center;
+}
+.prescription__container {
+    width: 90%;
+    margin: 0 auto;
+    border: solid 1px grey;
+    border-radius:4px;
+    height: 93%;
+    display: flex;
+    flex-direction: column;
+}
+.prescription__header {
+    background: blue;
+    print-color-adjust: exact;
+    display: flex;
+    height: 10%;
+    justify-content: space-between;
+    border-bottom: solid 1px grey;
+}
+.prescription__logo {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    img {
+      height: 80%;
+    }
+}
+.prescription__doctor-infos {
+    font-size: 0.75rem;
+    text-align: end;
+    width: 50%;
+    border-left: solid 1px grey;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    p {
+      padding: 0;
+    }
+}
+.prescription__subheader {
+    display: flex;
+    height: 4%;
+    justify-content: space-between;
+    border-bottom: solid 1px grey;
+    align-items: center;
+}
+.prescription__date {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.prescription__patient-infos {
+    font-size: 0.9rem;
+    font-weight: bold;
+    width: 50%;
+    padding: 5px 10px;
+    p {
+      padding: 0;
+    }
+}
+.prescription__body {
+    height: 76%;
+}
+.prescription__body-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 20px 0;
+}
+.prescription__body-content {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    textarea {
+      width:100%;
+      height:700px;
+      border:none;
+      outline:none;
+    }
+}
+.prescription__sign {
+    height: 10%;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 0.8rem;
+    border-top: solid 1px grey;
+}
+.prescription__sign-image {
+    img {
+      height: 100%;
+    }  
+}
+  /* &__add {
+    font-family:$font1, sans-serif;
+    font-size: 0.9rem;
+    width: 90%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: flex-start;
+    label {
+      margin-right: 20px;
+    }
+    textarea {
+      width: 65%;
+      height: 200px;
+    }
+  }
+} */

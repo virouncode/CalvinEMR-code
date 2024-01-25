@@ -1,0 +1,75 @@
+.header {
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+  padding: 10px 15px;
+  background: rgb(156,185,228);
+  background: linear-gradient(132deg, rgba(156,185,228,1) 0%, #638fd2 100%);
+  box-shadow:rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  border-bottom: solid 0.5px $grey;
+  justify-content: space-between;
+  align-items: center;
+  &--patient {
+    grid-template-columns: 15% 70% 15%;
+  }
+  &--admin {
+    grid-template-columns: 15% 70% 15%;
+  }
+  &--login {
+    grid-template-columns: 25% 75%;
+  }
+  &__logo {
+    height: 40px;
+    width: 130px;
+    background: url(../../assets/img/logoRectTest.png) center/cover;
+    cursor:pointer;
+  }
+  &__nav {
+    ul {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    &--patient {
+      ul{
+        justify-content: flex-end;
+      }
+    }
+    &--admin {
+      ul{
+        justify-content: flex-end;
+      }
+    }
+  }
+  &__link {
+    // color:$white;
+    color:$black;
+    &:hover {
+      // color:#f3f3f3;
+      color:$black;
+    }
+    &--active {
+      font-weight: bold;
+      // border: solid 1px $white;
+      border: solid 1px $black;
+      padding:5px 10px;
+      border-radius:40px;
+    }
+    &--patient {
+      margin-right: 40px;
+    }
+    &--admin {
+      margin-right: 30px;
+    }
+  }
+  &__title {
+    font-family: $font1;
+    text-align: right;
+    font-size: 1rem;
+    text-align: end;
+    // color:#FEFEFE;
+    color:$black;
+  }
+}

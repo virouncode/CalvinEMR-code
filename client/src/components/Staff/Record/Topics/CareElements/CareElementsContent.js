@@ -1,0 +1,116 @@
+import { CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { cmToFeet, kgToLbs } from "../../../../../utils/measurements";
+
+const CareElementsContent = ({ datas, isLoading, errMsg }) => {
+  //HOOKS
+  const [lastDatas, setLastDatas] = useState(null);
+  useEffect(() => {
+    if (datas && datas.length !== 0) {
+      setLastDatas({
+        SmokingStatus: datas[0].SmokingStatus.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        SmokingPacks: datas[0].SmokingPacks.sort((a, b) => b.Date - a.Date)[0],
+        alcoholStatus: datas[0].alcoholStatus.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        alcoholGlasses: datas[0].alcoholGlasses.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        recreationalDrugs: datas[0].recreationalDrugs.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        Weight: datas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
+        Height: datas[0].Height.sort((a, b) => b.Date - a.Date)[0],
+        WaistCircumference: datas[0].WaistCircumference.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        BloodPressure: datas[0].BloodPressure.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        bodyMassIndex: datas[0].bodyMassIndex.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        bodySurfaceArea: datas[0].bodySurfaceArea.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+      });
+    }
+  }, [datas]);
+
+  return !isLoading ? (
+    errMsg ? (
+      <p className="topic-content__err">{errMsg}</p>
+    ) : (
+      <div className="topic-content">
+        {datas && datas.length >= 1 && lastDatas ? (
+          <>
+            <p>
+              <label>Smoking: </label>
+              {lastDatas.SmokingStatus?.Status}
+            </p>
+            <p>
+              <label>Smoking Packs (per day): </label>
+              {lastDatas.SmokingPacks?.PerDay}
+            </p>
+            <p>
+              <label>Alcohol: </label>
+              {lastDatas.alcoholStatus?.Status}
+            </p>
+            <p>
+              <label>Alcohol Glasses (per day): </label>
+              {lastDatas.alcoholGlasses?.PerDay}
+            </p>
+            <p>
+              <label>Recreational Drugs: </label>
+              {lastDatas.recreationalDrugs?.DrugNames}
+            </p>
+            <p>
+              <label>Weight (kg): </label>
+              {lastDatas.Weight?.Weight}
+            </p>
+            <p>
+              <label>Weight (lbs): </label>
+              {kgToLbs(lastDatas.Weight?.Weight)}
+            </p>
+            <p>
+              <label>Height (cm): </label>
+              {lastDatas.Height?.Height}
+            </p>
+            <p>
+              <label>Height (feet): </label>
+              {cmToFeet(lastDatas.Height?.Height)}
+            </p>
+            <p>
+              <label>Body Mass Index (kg/m2): </label>
+              {lastDatas.bodyMassIndex?.BMI}
+            </p>
+            <p>
+              <label>Body Surface Area (m2): </label>
+              {lastDatas.bodySurfaceArea?.BSA}
+            </p>
+            <p>
+              <label>Waist Circumference (cm): </label>
+              {lastDatas.WaistCircumference?.WaistCircumference}
+            </p>
+            <p>
+              <label>Systolic(mmHg): </label>
+              {lastDatas.BloodPressure?.SystolicBP}
+            </p>
+            <p>
+              <label>Diastolic(mmHg): </label>
+              {lastDatas.BloodPressure?.DiastolicBP}
+            </p>
+          </>
+        ) : (
+          "No care elements"
+        )}
+      </div>
+    )
+  ) : (
+    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+  );
+};
+
+export default CareElementsContent;

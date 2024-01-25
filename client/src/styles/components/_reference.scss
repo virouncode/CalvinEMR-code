@@ -1,0 +1,68 @@
+.reference {
+  border: solid 2px $blue;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background: #FEFEFE;
+  border-radius: 4px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  ul {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  li {
+    font-style: 0.85rem;
+    margin-left: 20px;
+    a {
+      &:hover {
+        text-decoration:underline;
+      }
+    }
+  }
+  &__personal-title{
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    h3 {
+      margin:0;
+      margin-right: 10px;
+    }
+  }
+  &__form{
+    border:solid 1px $grey;
+    border-radius:4px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  &__form-err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 100%;
+    margin:0 auto 10px;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 4px;
+    text-align: center;
+  }
+  &__form-row {
+    font-size: 0.85rem;
+    label {
+      display: inline-block;
+      width:20%;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 80%;
+    }
+  }
+  &__form-btns {
+    text-align: center;
+    button {
+      margin-left: 5px;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+.staff-ai-agreement {
+  padding: 20px;
+  height: 100%;
+  p {
+    padding: 0;
+  }
+  &-check {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width:55%;
+    margin: 20px auto 0;
+    &--chat {
+      width:38%;
+    }
+  }
+  &-title {
+    font-style: 1.2rem;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    &--chat {
+      margin-top: 20px;
+    }
+  }
+  
+  ol {
+    margin-left: 40px;
+    li {
+      margin-top: 10px;
+      margin-left: 10px;
+      list-style:decimal;
+      label {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+  ul {
+    li {
+      margin-top: 0;
+      list-style:disc;
+      margin-left: 40px;
+      label {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+  
+
+}
+

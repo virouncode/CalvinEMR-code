@@ -1,0 +1,239 @@
+.clinical-notes {
+    background-color: $white;
+    font-size: 0.85rem;
+    border : solid 0.5px grey;
+    border-radius: 2px;
+    &__err {
+        background:$red;
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+    &__title {
+        padding : 5px 10px;
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $blue;
+        border-bottom: solid 0.5px grey;
+    }
+    &__toolbar {
+        padding : 5px;
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        background:rgb(215, 215, 215);
+        box-shadow:rgba(149, 157, 165, 0.8) 0px 3px 4px;
+        label {
+            padding : 5px;
+        }
+        button {
+            margin-left : 5px;
+        }
+    }
+    &__order {
+        display: flex;
+        justify-content: flex-start;
+        width : 30%;
+    }
+    &__radio-item {
+        display: flex;
+        align-items: center;
+    }
+    &__content {
+        max-height:0;
+        overflow: hidden;
+        transition:0.3s;
+        overflow-y: scroll;
+        padding-top: 0;
+        &--active {
+            max-height: 150vh;
+            padding-top: 5px;
+        }
+    }
+    &__form {
+        border: solid 0.5px grey;
+        margin:4px;
+        border-radius: 4px;
+        overflow:hidden;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+    &__form-header {
+        background:#D7D7D7;
+        padding:10px;
+    }
+    &__form-row {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        input{
+            width : 400px;
+        }
+        p {
+            padding: 0;
+        }
+    }
+    &__form-body {
+        margin: 20px 0;
+        textarea {
+            display:block;
+            resize: none;
+            overflow-y: scroll;
+            padding : 10px;
+            font-family: $font1, sans-serif;
+            width: 95%;
+            border: none;
+            border-radius: 3px;
+            outline: solid 0.5px grey;
+            height: 300px;
+            margin: 0 auto;
+            padding: 10px;
+
+        }
+    }
+    &__form-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        button, input[type="submit"] {
+            margin-left: 5px;
+        }
+
+    }
+    &__card {
+        background-color: $white;
+        border: solid 0.5px grey;
+        margin:4px;
+        border-radius: 4px;
+        overflow:hidden;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        &--print {
+            font-size: 0.8rem;
+        }
+    }
+    &__card-header {
+        padding:5px 10px;
+        background-color: $blue;
+        &-row {
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        &--folded {
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+    &__card-author {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        input, p {
+            padding:5px;
+            margin:0;
+        }
+    }
+    &__card-object {
+        input {
+            min-width: 500px;
+        }
+    }
+    &__card-version {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        select{
+            margin-left:5px;
+            width:50px;
+        }
+    }
+    &__card-btns{
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__card-check {
+        margin-right: 5px;
+    }
+    &__card-body {
+        padding : 20px;
+        text-align: justify;
+        p {
+            white-space: pre;
+        }
+        textarea {
+            padding : 10px;
+            display:block;
+            margin: 0 auto;
+            width : 98%;
+            overflow-y:scroll;
+        }
+    }
+    &__card-body-container {
+        max-height: 0; 
+        transition: 0.3s;
+        overflow: scroll;
+        &--active {
+            max-height: 1000px;
+        }
+    }
+    &__card-sign {
+        text-align:end;
+        font-size:0.6rem;
+        font-style: italic;
+        margin-bottom:5px;
+    }
+    &__attachments {
+        display:flex;
+        padding:15px;
+        flex-wrap: wrap;
+    }
+    &__attachment-card {
+        border: solid 0.5px grey;
+        width: 20%;
+        margin: 10px 5px 0;
+    }
+    &__attachment-thumbnail {
+        height: 80px; 
+        overflow: hidden;
+        position:relative;
+        cursor:pointer;
+        iframe {
+            border:none;
+            cursor:pointer;
+        }
+    }
+    &__attachment-footer {
+        background: rgb(154, 154, 154);
+        padding: 5px;
+        font-size: 0.7rem;
+        display:flex;
+        flex-direction: column;
+    }            
+    &__attachment-footer-title {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        p {
+            font-size: 0.7rem;
+        }
+    }
+    &_attachment-footer-btn {
+        button {
+            font-size: 0.65rem;
+        }
+    }
+    &__print-page {
+        padding : 40px;
+        print-color-adjust: exact;
+    }
+}
+
+@media print {
+    .clinical-notes__print-page-btn {
+        display: none !important;
+    }
+}

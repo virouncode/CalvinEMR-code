@@ -1,0 +1,90 @@
+.calendar {
+    &__availability {
+        padding: 5px;
+        label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    }
+}
+.availability {
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 50%;
+        margin:0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__heads{
+        margin : 50px auto 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width:66%;
+        p {
+            padding: 0;
+            width:50%;
+            text-align: center;
+        }
+    }
+    &__form {
+        font-size: 0.9rem;
+        width: 95%;
+        margin: 20px auto 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        p {
+            padding: 0;
+        }
+    }
+    &__row {
+            display: grid;
+            grid-template-columns: 15% 35% 35% 15%;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+    }
+    &__column {
+        &--day {
+            font-weight: bold;
+        }
+        &--time {
+            margin-right: 15px;
+            margin-left: 15px;
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+        }
+        &--checkbox {
+            input[type="checkbox"]{
+                margin-right: 5px;
+            }
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+    }
+    &__duration {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width:100%;
+        margin-top: 20px;
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    }
+    &__btns {
+        text-align: center;
+        margin-top: 10px;
+        button {
+            margin-left: 5px;
+        }
+    }
+}

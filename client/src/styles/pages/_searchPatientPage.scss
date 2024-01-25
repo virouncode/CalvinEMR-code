@@ -1,0 +1,10 @@
+.search-patient-section {
+  margin: 0 auto;
+  width : 97%;
+  min-height : 80vh;
+  &__title {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+}

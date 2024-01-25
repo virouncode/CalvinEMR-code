@@ -1,0 +1,35 @@
+.verify-pwd {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height:200px;
+    &-title {
+        width : 55%;
+        margin:0 auto;
+        text-align: center;
+    }
+    &-form {
+        padding : 20px;
+        width : 23%;
+        margin:0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        label {
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+    }
+    &-err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 30%;
+        margin:0 auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+}

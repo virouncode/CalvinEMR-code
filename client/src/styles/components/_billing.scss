@@ -1,0 +1,141 @@
+.billing {
+  padding : 20px;
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 50%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 4px;
+    text-align: center;
+  }
+  &__btn-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 0;
+  }
+}
+.billing-form {
+  background-color: $white;
+  width:80%;
+  font-size: 0.85rem;
+  margin: 20px auto;
+  border: solid 1px $grey;
+  padding: 20px;
+  border-radius: 4px;
+  &__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+  }
+  &__item {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    label {
+      font-weight: bold;
+    }
+  }
+  &__btns {
+    margin-top: 20px;
+    text-align: center;
+    button {
+      margin-left: 5px;
+    }
+  }
+
+}
+.billing-filter {
+  background-color: $white;
+  width:80%;
+  margin: 20px auto;
+  border: solid 1px $grey;
+  border-radius:4px;
+  padding: 20px;
+  &__title {
+    font-weight: bold;
+    width:10%;
+  }
+  &__row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-style: 0.8rem;
+  }
+  &__item {
+    width:20%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+    label {
+      font-size: 0.8rem;
+      margin-right: 5px;
+      font-weight: bold;
+    }
+    input[type="date"] {
+      width:150px;
+      &:disabled {
+        color:#FEFEFE;
+      }
+    }
+    input[type="checkbox"]{
+      margin-right: 5px;
+    }
+  }
+  &__btn-container {
+    width : 50%;
+    text-align: end;
+  }
+}
+.billing-table {
+  background-color: $white;
+  table-layout:fixed;
+  min-width:80%;
+  margin:0 auto;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  thead {
+    background: $blue;
+    border: solid 1px $black;
+  }
+  th {
+    min-width: 90px;
+    padding: 2px 5px;
+    border: solid 1px $black;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  &__item {
+    td {
+      text-align: center;
+      border: solid 1px $black;
+      padding: 2px 5px;
+      word-break: break-word;
+    }
+    input {
+        width: 100%;
+    }
+    input[type="submit"] {
+        width: auto;
+    }
+    input[type="date"] {
+        width: 100%;
+    }
+    &-btn-container {
+      display: flex;
+      justify-content: center;
+      button {
+        margin-left: 5px;
+      }
+    }
+  }
+}

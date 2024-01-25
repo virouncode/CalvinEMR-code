@@ -1,0 +1,17 @@
+.calendar {
+    &__slot-select {
+        padding : 5px;
+        label {
+            font-size : 0.8rem;
+            font-weight: bold;
+            display: block;
+            margin-right : 5px;
+            @media (max-width: 1250px){
+                font-size : 0.7rem;
+            }
+        }
+        select {
+            font-size : 0.7rem;
+        }
+    }
+}

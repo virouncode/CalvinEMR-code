@@ -1,0 +1,98 @@
+.calvinai-chat{
+    width:70%;
+    height: 92%;
+    margin:15px auto 0;
+    display: flex;
+    flex-direction: column;
+    background-color: $white;
+    border: solid 2px $blue;
+    border-radius: 4px;
+    padding: 20px;
+    &__content {
+        overflow: scroll;
+        font-size: 0.85rem;
+        border-bottom: solid 1px $grey;
+        height:80%;
+    }
+    &__stop-btn {
+        height: 5%;
+        margin-left:auto;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        button {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+        }   
+    }
+    &__send-btn {
+        background-color: $blue;
+        &:hover {
+            background-color: $blue2;
+        }
+    }
+    &__input {
+        height:15%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 4px;
+        border: solid 1px $grey;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        padding:5px 0;
+        padding-left:10px;
+        padding-right:20px;
+    }
+    &__textarea {
+        width:90%;
+        overflow: scroll;
+        textarea {
+            font-family: $font1;
+            font-size: 0.85rem;
+            padding:0;
+        }
+    }
+    &__card {
+        padding: 20px;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    &__img-bot {
+        width:7%;
+        height:auto;
+    }
+    &__img-user {
+        width:7%;
+        height:auto;
+    }
+    &__message {
+        padding:0 10px;
+        white-space: pre-wrap;
+        width:92%;
+    }
+}
+
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+    height:100%;
+    padding:0;
+}
+.css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root {
+    height:100%;
+    padding:10px !important;
+    textarea {
+        height:100% !important;
+        border:none !important;
+        outline:none !important;
+        font-size:0.85rem;
+        padding:0;
+        line-height: 1em;
+    }
+}
+.css-1k5nzq7-MuiFormControl-root-MuiTextField-root {
+    height:100%;
+}

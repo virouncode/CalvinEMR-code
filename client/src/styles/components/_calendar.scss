@@ -1,0 +1,270 @@
+// comma : .class1, .class2 apply to class1 and class 2
+//space : .class1 .class2 apply to class 2 that is inside class 1
+//no space : .class1.class2 apply to element that has both classes
+.calendar {
+    z-index:1;
+    margin: 20px auto 20px;
+    width : 97%;
+    min-height : 100%;
+    display: flex;
+    justify-content: space-between;
+    &__options{
+        border : 1px solid rgb(218,218,218);
+        border-radius: 6px;
+        margin-top: 5px;
+        overflow: hidden;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        background: $white;
+    }
+    &__options-title {
+        @include childCenter;
+        border-radius: 4px 4px 0 0;
+        font-size : 0.85rem;
+        height: 50px;
+        color : $black;
+        background : $blue;
+    }
+    &__left-bar {   
+        width : 14%;
+        .calendar__shortcutpickr {
+            border-bottom : 1px solid rgb(218,218,218);
+            border-radius: 4px;      
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
+            .flatpickr{
+                &-calendar.animate.inline {
+                    top:0;
+                }
+                &-month  {
+                    width:100%;
+                }
+                &-prev-month, &-next-month {
+                    display:flex;
+                    align-items: center;
+                }
+                &-monthDropdown-months {
+                    font-size : 0.85rem;
+                    width:60%;
+
+                }
+                &-current-month {
+                    display:flex;
+                    justify-content: space-between;
+                    padding : 10px;
+                    .numInputWrapper {
+                        font-size : 0.85rem;
+                    }
+                }
+                &-weekdaycontainer {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                &-innerContainer, &-rContainer,&-weekdays, &-days{
+                    font-size:0.8rem;
+                }
+                &-day {
+                    font-size : 0.7rem;
+                    height: 10%;
+                    line-height: 30px;
+                }
+                &-days {
+                    width:100%;
+                }
+            }
+            .dayContainer{
+                min-width:100%;
+            }
+
+        }
+    }
+    &__display { 
+        width:85%;
+        position:relative;
+        background:$white;
+        border: solid 2px $grey;
+        border-radius: 4px;
+        padding: 10px;
+        //fullcalendar
+        .fc .fc-timegrid-col.fc-day-today {
+            background: rgb(243, 243, 243);
+        }
+        .fc .fc-daygrid-day.fc-day-today {
+            background: rgb(243, 243, 243);
+        }
+        .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
+            .fc-header-toolbar.fc-toolbar {
+                margin-bottom: 20px;
+                .fc-toolbar-chunk {
+                    width : 33%;
+                    &:nth-child(2){
+                        text-align: center;
+                    }
+                    &:nth-child(3){
+                        text-align : end;
+                    }
+                    .fc-toolbar-title {
+                        font-size: 1rem;
+                    }
+                    .fc-button-group {
+                        width: 60%;
+                    }
+                    .fc-button.fc-button-primary {
+                        width : 17%;
+                        border-radius: 2px;
+                        border:0.5px solid #a4a3a3;
+                        background:$white;
+                        color:grey;
+                        font-size: 0.8rem;
+                        line-height: 1.3;
+                        text-align: center;
+                        user-select: none;
+                        box-shadow: none;
+                        margin-left: 0;
+                        &:hover {
+                            background:$grey;
+                            color:rgb(70, 70, 70);
+                        }
+                        &:disabled {
+                            background:$grey;
+                            color:rgb(70, 70, 70);
+                            border: none;
+                            opacity:1;
+                        }
+                    }
+                    .fc-button.fc-button-primary.fc-button-active {
+                        background:$grey;
+                        color:rgb(70, 70, 70);
+                        border: none;
+                    }
+                    .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+                        width:8%;
+                        .fc-icon {
+                            font-size: 0.8rem;
+                        }
+                    }
+                    
+                }
+            }
+            .fc-view-harness.fc-view-harness-active {
+                font-size: 0.75rem;
+                    .fc-scrollgrid.fc-scrollgrid-liquid { 
+                        .fc-event {
+                            opacity : 0.65;
+                            &-main {
+                                overflow : hidden;
+                            }
+                        }
+                    }
+            }
+            .fc-daygrid-event {
+                position : relative;
+                font-size:0.7rem;
+                max-height:15px;
+                overflow: hidden;
+                opacity : 0.65;
+            }         
+        }
+    } 
+    &__patient-link {
+        // color:$white;
+        cursor: pointer;
+        &--list {
+            color:$black;
+        }
+        &:hover{
+            text-decoration: underline !important;
+        }
+    }  
+}
+
+.flatpickr {
+    .numInputWrapper {
+        font-size : 0.85rem;
+    }
+    &-calendar {
+        max-width : 100%;
+        //max-width:200px
+    }
+    &-input {
+        display:none;
+    }
+    &-monthDropdown-months {
+        font-size : 0.85rem!important;
+        width:60%;
+        color:$black!important;
+    }
+    &-prev-month {
+        display:flex;
+        align-items: center;
+        padding : 10px 10px 0 10px;
+    } 
+
+    &-next-month {
+        display:flex;
+        align-items: center;
+        padding : 0px 10px 10px 10px;
+        color:$black!important;
+    }
+    &-current-month {
+        display:flex;
+        justify-content: space-between;
+        padding : 10px;
+        input {
+            outline:none;
+        }
+        .numInputWrapper {
+            color:$black!important;
+        }
+    }
+    &-months {
+        width: 100%;
+        font-size : 0.7rem;
+    }
+    &-innerContainer, &-rContainer,&-weekdays, &-days{
+        width : 100%;
+    }
+    &-weekdays, &-weekday {
+        background-color:$blue !important;
+    }
+    &-day {
+        font-size : 0.7rem !important;
+        height: 10% !important;
+        line-height: 30px !important;
+        width:14% !important;
+    }
+    &-days {
+        width:100% !important;
+    }
+    &-time {
+        input {
+            font-size: 0.7rem;
+            outline:none;
+        }
+        .flatpickr-am-pm {
+            font-size: 0.7rem;
+        }
+    }
+    &-weekdaycontainer {
+        display: flex;
+        justify-content: space-between;
+    }
+    &-innerContainer, &-rContainer,&-weekdays, &-days{
+        font-size:0.8rem;
+    }
+    &-day {
+        font-size : 0.7rem;
+        height: 30px;
+        line-height: 30px;
+    }
+    &-month, &-monthDropdown-months {
+        background-color:$blue !important;
+    }
+}
+.dayContainer{
+    min-width:100% !important;
+}
+
+.form-control  {
+    &:read-only{
+        outline:solid 1px $black;
+    }
+}

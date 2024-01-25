@@ -1,0 +1,228 @@
+.docmailbox {
+    &__noinbox {
+        font-weight: bold;
+        text-align: center;
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 50%;
+        margin:0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__instructions {
+        width:95%;
+        margin: 20px auto;
+        font-weight: bold;
+        font-size:1rem;
+        padding: 0;
+    }
+    &__table {
+        background-color: $white;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        margin: 0 auto;
+        thead {
+            background-color: $blue;
+            border: solid 1px $black;
+        }
+        th {
+            min-width: 100px;
+            padding: 2px 5px;
+            border: solid 1px $black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        &-nofilter {
+            text-decoration: none;
+            cursor: default;
+        }
+    }
+    &__btn-container {
+        display: flex;
+        justify-content: center;
+        width:25%;
+        margin: 20px auto 0;
+    }
+    &__form {
+        background-color: $white;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        padding: 20px; 
+        display: flex;
+        justify-content: space-between; 
+        width:95%;
+        margin: 20px auto;
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__form-preview, &__form-content {
+        width:45%;
+    }
+    &__form-row {
+        display: flex;
+        // justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        label {
+            width: 120px;
+            font-weight: bold;
+        }
+        input,input[type="date"], select {
+            width: 200px;
+        }
+        input[type="submit"]{
+            width:auto;
+        }
+        &--patients{
+            align-items: flex-start;
+         
+        }
+        &--text {
+            align-items: flex-start;
+            textarea {
+                 width: 400px;
+                 height:200px;
+            }
+        }
+    }
+    &__patients {
+        width: 70%;
+    }
+    &__patients-list {
+        margin-top: 10px;
+        height: 200px;
+        overflow: scroll;
+        border : 1px solid $grey;
+        border-radius : 4px;
+        padding: 10px;
+        width:400px;
+        label {
+            width: 100%;
+            font-weight: normal;
+        }
+        input {
+            width: 100%;
+        }
+
+    }
+    &__patients-list-item {
+        display: flex;
+        align-items: center;
+        input[type="checkbox"] {
+            margin-right: 5px;
+            width:auto;
+        }
+    }
+    &__patient-item {
+        td {
+            text-align: center;
+            border: solid 1px $black;
+            padding: 2px 5px;
+            word-wrap: break-word;
+            max-width: 370px;
+        }
+        &-link {
+            cursor:pointer;
+            color: $darkblue;
+            text-decoration: underline;
+        }
+    }
+}        
+.practicians-forward {
+    background:$white;
+    border : solid 1px $grey;
+    border-radius:4px;
+    width: 70%;
+    margin: 30px auto 0;
+    padding: 10px;
+    &__btn {
+        width:100%;
+        text-align: end;
+        button {
+            margin-left: 10px;
+        }
+    }
+    &__title {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+    &__list {
+        margin-top: 10px;
+        font-size: 0.85rem;
+    }
+    &__list-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+    }
+    &__category-overview {
+        margin-left: 10px;
+        i {
+            margin-right: 5px;
+        }
+    }
+    &__category-list {
+        margin-top: 10px;
+        margin-left: 25px;
+    }
+}
+.practicians {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width:100%;
+    &__btn {
+        width:100%;
+        text-align: end;
+        button {
+            margin-left: 10px;
+        }
+    }
+    &__title {
+        font-size: 0.8rem;
+        font-weight: bold;
+        width:30%;
+    }
+    &__list {
+        border : solid 1px $grey;
+        border-radius:4px;
+        width: 70%;
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+    &__list-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+        justify-content: flex-start;
+        input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto;
+        }
+        label {
+            font-size: 0.75rem;
+            font-weight: normal;
+        }
+    }
+    &__category-overview {
+        i {
+            margin-right: 5px;
+        }
+    }
+    &__category-list {
+        margin-top: 10px;
+        margin-left: 25px;
+    }
+}
+

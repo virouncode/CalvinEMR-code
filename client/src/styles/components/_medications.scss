@@ -1,0 +1,215 @@
+.medications {
+    &__title {
+        font-size: 1.2rem;
+        margin-top: 60px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 50%;
+        margin:10px auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 4px;
+        text-align: center;
+    }
+    &__table {
+        table-layout: fixed;
+        min-width:100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        thead{
+            background-color: $blue;
+            border: solid 1px $black;
+        }
+        th {
+            min-width: 120px;
+            padding: 2px 5px;
+            border: solid 1px $black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+    &__event {
+        &--notactive {
+            background:$grey;
+        }
+        td {
+            text-align: center;
+            border: solid 1px $black;
+            padding: 2px 5px;
+            word-break: break-word;
+            input {
+                input{
+                    width: 100%;
+                }
+                input[type="submit"]{
+                    width:auto;
+                }
+            }
+        }
+    }
+    &__event-btn-container {
+        display: flex;
+        justify-content: space-between;
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__btn-container {
+        button {
+            margin-left: 5px;
+        }
+        text-align: center;
+        margin-top: 20px;
+    }
+}
+.medications-form {
+    &__btn-container {
+        button {
+            margin-left:5px;
+        }
+        margin-bottom: 5px;
+    }
+    &__container {
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        border: solid 1px $grey;
+        border-radius: 4px;
+        margin-top: 20px;
+        form {
+            width: 70%;
+        }
+    }
+    &__allergies {
+        color:red;
+        margin-bottom: 10px;   
+    }
+    &__row{
+        display: flex;
+        align-items: center;
+        padding:5px 0;
+        &--textarea {
+            align-items: flex-start;
+            padding:10px 0;
+        }
+        label {
+            width:200px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        input, select {
+            width: 140px;
+            margin-right: 10px;
+        }
+        textarea {
+            height:200px;
+            width:500px;
+        }
+    }
+    &__links {
+        h3 {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        width: 30%;
+        li {
+            text-decoration: underline;
+        }
+    }
+    &__subrow {
+        display: flex;
+        align-items: center;
+        label {
+            width:auto;
+        }
+    }
+}
+
+.medications-search {
+    width:45%;
+    &-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        label {
+            margin-right: 10px;
+        }
+        input {
+            width:180px;
+        }
+        progress {
+            width:10px;
+            height:10px;
+        }
+    }
+}
+
+.medications-detail {
+    &__btn-container {
+        margin: 0 auto;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        button {
+            margin-left: 5px;
+        }
+    }
+    &__container {
+        margin-top: 50px;
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        padding: 40px;
+        border: solid 1px $grey;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border-radius:4px;
+        form {
+            width: 100%;
+        }
+    }
+    &__allergies {
+        color:red;
+        margin-bottom: 10px;   
+    }
+    &__row{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding:5px 0;
+    
+        &-item {
+            display: flex;
+            align-items: center;
+            width:33.3%;
+        }
+        &--textarea {
+            align-items: flex-start;
+            padding:10px 0;
+        }
+        label {
+            width:150px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        input, select {
+            width: 140px;
+            margin-right: 10px;
+        }
+        textarea {
+            height:200px;
+            width:500px;
+        }
+    }
+    &__subrow {
+        display: flex;
+        align-items: center;
+        label {
+            width:auto;
+        }
+    }
+}

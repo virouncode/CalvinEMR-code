@@ -1,0 +1,97 @@
+.migration-toggle {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border : solid 1px $grey;
+  font-size: 0.9rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  width: 170px;
+  align-items: center;
+  margin:0 auto 10px;
+  &__radio {
+      display: flex;
+      align-items:center;
+      label {
+          margin-left: 5px;
+      }
+  }
+}
+.migration-export {
+  background-color: $white;
+  width:80%;
+  margin: 30px auto 0;
+  border: solid 1px $grey;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  justify-content: space-between;
+  border-radius: 4px;
+  padding: 20px;
+  &__form {
+    display: flex;
+  }
+  &__patients {
+    width:70%;
+  }
+  &__records {
+    width:30%;
+  }
+  &__patients-title {
+    text-align: center;
+    font-weight: bold;
+    padding:0;
+  }
+  &__patients-list {
+    padding : 20px;
+    width: 50%;
+    height:350px;
+    border: solid 1px $grey;
+    border-radius: 4px;
+    overflow:scroll;
+  }
+  &__patient-search {
+    font-size: 0.8rem;
+    &__form {
+        display : flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width : 80%;
+        margin: 20px 0;
+    }
+    &__item {
+        display : flex;
+        justify-content: space-between;
+        align-items: center;
+        width:100%;
+        margin-bottom: 10px;
+        label {
+            font-weight: bold;
+            font-size: 0.8rem;
+            min-width:90px;
+        }
+        input {
+          width:120px;
+          margin-right: 20px;
+        }
+    }
+  }
+  &__records-title {
+    text-align: center;
+    font-weight: bold;
+    padding:0;
+  }
+  &__records-list {
+    padding: 20px;
+  }
+  &__records-list-item {
+    display: flex;
+    align-items: center;
+    input[type="checkbox"]{
+      margin-right: 5px;
+    }
+  }
+  &__btn {
+    margin-top: 10px;
+    text-align: center;
+  }
+}
+
