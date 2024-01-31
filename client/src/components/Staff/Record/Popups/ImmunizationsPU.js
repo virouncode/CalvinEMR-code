@@ -18,6 +18,18 @@ const ImmunizationsPU = ({
   const handleClose = () => {
     setPopUpVisible(false);
   };
+  const handleClickReference = () => {
+    const docWindow = window.open(
+      "https://health.gov.on.ca/en/pro/programs/immunization/docs/Publicly_Funded_ImmunizationSchedule.pdf",
+      "_blank",
+      `resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=1000, left=0, top=0`
+    );
+    if (docWindow === null) {
+      alert("Please disable your browser pop-up blocker and sign in again");
+      window.location.assign("/login");
+      return;
+    }
+  };
 
   return (
     <>
@@ -32,7 +44,21 @@ const ImmunizationsPU = ({
       ) : (
         datas && (
           <>
-            <h2 className="immunizations__subtitle">Recommended</h2>
+            <h2 className="immunizations__subtitle">
+              Recommended{" "}
+              <span
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  color: "blue",
+                  marginLeft: "10px",
+                  fontWeight: "normal",
+                }}
+                onClick={handleClickReference}
+              >
+                (Reference)
+              </span>
+            </h2>
             <RecImmunizationsTable
               demographicsInfos={demographicsInfos}
               datas={datas.filter(({ recommended }) => recommended === true)}

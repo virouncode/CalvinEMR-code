@@ -103,6 +103,16 @@ const PatientMenuLeft = ({
         allContentsVisible={allContentsVisible}
         side="left"
       />
+      <PatientTopic
+        url="/personal_history_of_patient"
+        textColor="#FEFEFE"
+        backgroundColor="#CE2D4F"
+        topic="PERSONAL HISTORY"
+        patientId={patientId}
+        demographicsInfos={demographicsInfos}
+        allContentsVisible={allContentsVisible}
+        side="left"
+      />
     </div>
   );
 };

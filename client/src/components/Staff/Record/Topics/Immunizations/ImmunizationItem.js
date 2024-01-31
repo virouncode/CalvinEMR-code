@@ -8,14 +8,18 @@ import {
   immunizationTypeCT,
   routeCT,
   siteCT,
+  toCodeTableName,
+  ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuth from "../../../../../hooks/useAuth";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
+import GenericList from "../../../../All/UI/Lists/GenericList";
 import ImmunizationsList from "../../../../All/UI/Lists/ImmunizationsList";
+import SignCell from "../SignCell";
 
 const ImmunizationItem = ({
   item,
@@ -33,6 +37,10 @@ const ImmunizationItem = ({
   const handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
+    if (name === "RefusedFlag") {
+      setItemInfos({ ...itemInfos, RefusedFlag: { ynIndicatorsimple: value } });
+      return;
+    }
     if (name === "Date") {
       value = value ? Date.parse(new Date(value)) : null;
     }
@@ -44,6 +52,13 @@ const ImmunizationItem = ({
   };
   const handleSiteChange = (value) => {
     setItemInfos({ ...itemInfos, Site: value });
+  };
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setErrMsgPost("");
+    setItemInfos(item);
+    setEditVisible(false);
   };
 
   const handleEditClick = () => {
@@ -83,6 +98,14 @@ const ImmunizationItem = ({
       ImmunizationName: firstLetterUpper(itemInfos.ImmunizationName),
       Manufacturer: firstLetterUpper(itemInfos.Manufacturer),
     };
+    //Validation
+    try {
+      await immunizationSchema.validate(datasToPut);
+    } catch (err) {
+      setErrMsgPost(err.message);
+      return;
+    }
+
     try {
       await putPatientRecord(
         "/immunizations",
@@ -206,6 +229,21 @@ const ImmunizationItem = ({
         </td>
         <td>
           {editVisible ? (
+            <GenericList
+              list={ynIndicatorsimpleCT}
+              name="RefusedFlag"
+              handleChange={handleChange}
+              value={itemInfos.RefusedFlag.ynIndicatorsimple}
+            />
+          ) : (
+            toCodeTableName(
+              ynIndicatorsimpleCT,
+              item.RefusedFlag.ynIndicatorsimple
+            )
+          )}
+        </td>
+        <td>
+          {editVisible ? (
             <input
               name="Instructions"
               type="text"
@@ -230,22 +268,22 @@ const ImmunizationItem = ({
             item.Notes
           )}
         </td>
+        <SignCell item={item} staffInfos={clinic.staffInfos} />
         <td>
-          {staffIdToTitleAndName(
-            clinic.staffInfos,
-            itemInfos.created_by_id,
-            true
-          )}
-        </td>
-        <td>{toLocalDate(itemInfos.date_created)}</td>
-        <td style={{ textAlign: "center" }}>
           <div className="immunizations__item-btn-container">
             {!editVisible ? (
-              <button onClick={handleEditClick}>Edit</button>
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
             ) : (
-              <input type="submit" value="Save" onClick={handleSubmit} />
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
             )}
-            <button onClick={handleDeleteClick}>Delete</button>
           </div>
         </td>
       </tr>

@@ -7,6 +7,7 @@ import { reportClassCT, reportFormatCT } from "../../../datas/codesTables";
 import useAuth from "../../../hooks/useAuth";
 import { toLocalDate } from "../../../utils/formatDates";
 import { getExtension } from "../../../utils/getExtension";
+import { reportSchema } from "../../../validation/reportValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import DocMailboxPatients from "./DocMailboxPatients";
 
@@ -18,7 +19,6 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
   const [formDatas, setFormDatas] = useState({
     Format: "Binary",
   });
-  const [saveDisabled, setSaveDisabled] = useState(true);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -35,6 +35,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
       setFormDatas({
         ...formDatas,
         Content: {},
+        File: null,
         FileExtensionAndVersion: "",
         [name]: value,
       });
@@ -67,6 +68,12 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
       SourceAuthorPhysician: { AuthorFreeText: formDatas.AuthorFreeText },
     };
     //Validation
+    try {
+      await reportSchema.validate(formDatas);
+    } catch (err) {
+      setErrMsg(err.message);
+      return;
+    }
 
     try {
       const response = await postPatientRecord(
@@ -82,10 +89,11 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
         action: "create",
         content: { data: response.data },
       });
+      if (formDatas.Format === "Binary") {
+        fileInputRef.current.value = null;
+      }
       setFormDatas({
-        ...formDatas,
-        Name: "",
-        patient_id: 0,
+        name: "",
         Format: "Binary",
         FileExtensionAndVersion: "",
         Content: {},
@@ -93,11 +101,16 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
         SubClass: "",
         EventDateTime: null,
         ReceivedDateTime: null,
-        AuthorFreeText: "",
+        SourceAuthorPhysician: {
+          AuthorFreeText: "",
+        },
         Notes: "",
       });
-      fileInputRef.current.content = null;
-      toast.success("Posted successfully", { containerId: "A" });
+
+      toast.success(
+        "Report posted successfully to patient's assigned practician",
+        { containerId: "A" }
+      );
     } catch (err) {
       toast.error(`Error unable to save document: ${err.message}`, {
         containerId: "A",
@@ -108,7 +121,6 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
     const file = e.target.files[0];
     if (!file) return;
     setErrMsg("");
-    setSaveDisabled(true);
     if (file.size > 25000000) {
       setErrMsg("The file is over 25Mb, please choose another file");
       setIsLoadingFile(false);
@@ -135,12 +147,11 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           }
         );
         setIsLoadingFile(false);
-        setSaveDisabled(false);
         setFormDatas({
           ...formDatas,
-          Content: { Media: fileToUpload.data },
+          File: fileToUpload.data,
           FileExtensionAndVersion: getExtension(fileToUpload.data.path),
-          FilePath: fileToUpload.data.path,
+          Content: {},
         });
       } catch (err) {
         setIsLoadingFile(false);
@@ -152,14 +163,17 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
   };
 
   return (
-    <div className="docmailbox__form">
+    <div
+      className="docmailbox__form"
+      style={{ border: errMsg && "solid 1.5px red" }}
+    >
       <form className="docmailbox__form-content" onSubmit={handleSubmit}>
         <div className="docmailbox__form-row">
-          <label>Name</label>
+          <label>Report Name</label>
           <input
-            name="Name"
+            name="name"
             type="text"
-            value={formDatas.Name}
+            value={formDatas.name || ""}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -176,18 +190,18 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <label>Format</label>
           <GenericList
             name="Format"
-            value={formDatas.Format}
+            value={formDatas.Format || ""}
             handleChange={handleChange}
             list={reportFormatCT}
           />
         </div>
         <div className="docmailbox__form-row">
           <label>File extension</label>
-          <p>{formDatas.FileExtensionAndVersion}</p>
+          <p>{formDatas.FileExtensionAndVersion || ""}</p>
         </div>
-        <div className="docmailbox__form-row">
-          <label>Content</label>
-          {formDatas.Format === "Binary" ? (
+        {formDatas.Format === "Binary" ? (
+          <div className="docmailbox__form-row">
+            <label>Content</label>
             <input
               name="Content"
               required
@@ -196,21 +210,22 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
               accept=".jpeg, .jpg, .png, .gif, .tif, .pdf, .svg, .mp3, .aac, .aiff, .flac, .ogg, .wma, .wav, .mov, .mp4, .avi, .wmf, .flv, .doc, .docm, .docx, .txt, .csv, .xls, .xlsx, .ppt, .pptx"
               ref={fileInputRef}
             />
-          ) : (
-            <input
-              type="text"
-              autoComplete="off"
+          </div>
+        ) : (
+          <div className="docmailbox__form-row docmailbox__form-row--text">
+            <label>Content</label>
+            <textarea
               name="Content"
-              value={formDatas.Content?.TextContent}
+              value={formDatas.Content?.TextContent || ""}
               onChange={handleContentChange}
             />
-          )}
-        </div>
+          </div>
+        )}
         <div className="docmailbox__form-row">
           <label>Class</label>
           <GenericList
             name="Class"
-            value={formDatas.Class}
+            value={formDatas.Class || ""}
             handleChange={handleChange}
             list={reportClassCT}
           />
@@ -220,7 +235,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <input
             type="text"
             name="SubClass"
-            value={formDatas.SubClass}
+            value={formDatas.SubClass || ""}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -250,7 +265,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <input
             type="text"
             name="AuthorFreeText"
-            value={formDatas.AuthorFreeText}
+            value={formDatas.AuthorFreeText || ""}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -259,7 +274,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <label>Notes</label>
           <textarea
             name="Notes"
-            value={formDatas.Notes}
+            value={formDatas.Notes || ""}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -270,42 +285,36 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           )}
         </div>
         <div className="docmailbox__form-row">
-          <input type="submit" value="Post" disabled={saveDisabled} />
+          <input type="submit" value="Post" disabled={isLoadingFile} />
         </div>
       </form>
       <div className="docmailbox__form-preview">
-        {formDatas.Content?.Media &&
-        formDatas.Content?.Media?.mime?.includes("image") ? (
-          <img
-            src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-            alt=""
-            width="100%"
-          />
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("video") ? (
+        {formDatas.File && formDatas.File.mime?.includes("image") ? (
+          <img src={`${BASE_URL}${formDatas.File.path}`} alt="" width="100%" />
+        ) : formDatas.File && formDatas.File.mime?.includes("video") ? (
           <video controls>
             <source
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.mime}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.mime}
             />
           </video>
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("officedocument") ? (
+        ) : formDatas.File &&
+          formDatas.File.mime?.includes("officedocument") ? (
           <div>
             <iframe
               title="office document"
-              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.Content?.Media?.path}&embedded=true&widget=false`}
+              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.File.path}&embedded=true&widget=false`}
               width="100%"
               height="500px"
               frameBorder="0"
             />
           </div>
         ) : (
-          formDatas.Content?.Media && (
+          formDatas.File && (
             <iframe
-              title={formDatas.Name}
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.type}
+              title={formDatas.name}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.type}
               width="100%"
               style={{ border: "none" }}
               height="500px"

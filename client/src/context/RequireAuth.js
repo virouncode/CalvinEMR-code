@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-const RequireAuth = ({ allowedAccesses }) => {
+const RequireAuthStaff = ({ allowedAccesses }) => {
   const { auth, user } = useAuth();
   const location = useLocation();
 
@@ -15,4 +15,4 @@ const RequireAuth = ({ allowedAccesses }) => {
     <Navigate to="/login" state={{ from: location }} replace /> //il ne s'est pas encore connecté donc on le renvoie à la page de login et on enregistre là où il voulait aller pour le rediriger ensuite
   );
 };
-export default RequireAuth;
+export default RequireAuthStaff;

@@ -4,6 +4,11 @@
         margin-top: 60px;
         margin-bottom:30px;
         text-align: center;
+        &--subtitle {
+            font-size: 1rem;
+            margin-top: 30px;
+            margin-bottom:10px;
+        }
     }
     &__err {
         padding : 10px 20px;
@@ -54,7 +59,7 @@
     }
     &__form {
         font-size: 0.8rem;
-        margin-top: 20px;
+        margin-top: 40px;
         display: flex;
         justify-content: space-between;
         padding: 20px 40px; 
@@ -97,7 +102,8 @@
         &--text {
             align-items: flex-start;
             textarea {
-                width: 250px;
+                width: 50%;
+                height:200px;
             }
         }
     }

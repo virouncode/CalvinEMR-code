@@ -32,7 +32,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
       setFormDatas({
         ...formDatas,
         patient_sin: sin,
-        date: toLocalDate(new Date(parseInt(date)).toISOString()),
+        date: toLocalDate(Date.parse(new Date(parseInt(date)))),
       });
       navigate("/billing");
     }

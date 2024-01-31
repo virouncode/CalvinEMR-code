@@ -15,14 +15,14 @@ export const exportPatientEMR = async (
   doctorLastName,
   doctorOHIP,
   authorName,
-  dateOfExport
+  dateOfExport,
+  demographicsInfos
 ) => {
   const xmlHeader = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--file created by CALVIN EMR, compliant with EMR_Data_Migration_Schema.xsd version 1.0/ Publish
 Date: August 4,2017; Status: FINAL-->
 `;
 
   let xmlContent = "";
-
   for (let categoryId of checkedRecordCategoriesIds) {
     const categoryName = recordCategories.find(
       ({ id }) => id === categoryId
@@ -39,7 +39,8 @@ Date: August 4,2017; Status: FINAL-->
       categoryName,
       categoryURL,
       categoryTemplate,
-      [patientId]
+      [patientId],
+      demographicsInfos
     );
   }
 
@@ -56,6 +57,20 @@ Date: August 4,2017; Status: FINAL-->
     { collapseContent: true, indentation: "  " }
   );
 
+  let reportsFiles = [];
+  if (checkedRecordCategoriesIds.includes(13)) {
+    reportsFiles = (
+      await axiosXanoAdmin.get("/reports_files", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+    ).data
+      .filter(({ File }) => File !== null)
+      .map(({ File }) => File);
+  }
+
   await axios.post("/api/writeXML", {
     xmlFinal,
     patientFirstName,
@@ -67,6 +82,7 @@ Date: August 4,2017; Status: FINAL-->
     doctorOHIP,
     authorName,
     dateOfExport,
+    reportsFiles,
   });
 };
 
@@ -75,8 +91,10 @@ export const exportEMRCategory = async (
   categoryName,
   categoryURL,
   categoryTemplate,
-  checkedPatients = null
+  checkedPatients = null,
+  demographicsInfos
 ) => {
+  console.log(categoryName);
   let jsArrayToExport = [];
   if (checkedPatients) {
     try {
@@ -120,9 +138,7 @@ export const exportEMRCategory = async (
       jsObj.PreferredPharmacy = jsObj.preferred_pharmacy;
       delete jsObj.preferred_pharmacy;
     }
-    console.log(jsObj);
-    xmlContent += categoryTemplate(jsObj);
+    xmlContent += categoryTemplate(jsObj, demographicsInfos);
   }
-  console.log(xmlContent);
   return xmlContent;
 };

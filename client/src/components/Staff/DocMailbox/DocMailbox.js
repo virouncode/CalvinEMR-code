@@ -1,19 +1,16 @@
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuth from "../../../hooks/useAuth";
 import { onMessageDocMailbox } from "../../../utils/socketHandlers/onMessageDocMailbox";
 import DocMailboxAssignedPracticianForward from "./DocMailboxAssignedPracticianForward";
-import DocMailboxForm from "./DocMailboxForm";
 import DocMailboxItem from "./DocMailboxItem";
 
 const DocMailbox = () => {
   //HOOKS
   const { user, auth, clinic, socket } = useAuth();
-  const editCounter = useRef(0);
   const [documents, setDocuments] = useState(null);
-  const [addVisible, setAddVisible] = useState(false);
   const [forwardVisible, setForwardVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [assignedId, setAssignedId] = useState(0);
@@ -80,12 +77,6 @@ const DocMailbox = () => {
 
   //HANDLERS
 
-  const handleAdd = (e) => {
-    setErrMsg("");
-    editCounter.current += 1;
-    setAddVisible((v) => !v);
-  };
-
   const handleCheckPractician = (e) => {
     setErrMsg("");
     setAssignedId(parseInt(e.target.id));
@@ -101,20 +92,23 @@ const DocMailbox = () => {
           {errMsg && <div className="docmailbox__err">{errMsg}</div>}
           {documents.length > 0 ? (
             <>
+              <h3 className="docmailbox__subtitle">Reports to acknowledge</h3>
               <table className="docmailbox__table">
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Format</th>
                     <th>File extension and version</th>
-                    <th>Content</th>
+                    <th>File</th>
+                    <th>Class</th>
+                    <th>SubClass</th>
                     <th>Related patient</th>
                     <th>Date of document</th>
                     <th>Date received</th>
                     <th>Author</th>
                     <th>Notes</th>
-                    <th>Created by</th>
-                    <th>Created on</th>
+                    <th>Updated by</th>
+                    <th>Updated on</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -132,24 +126,9 @@ const DocMailbox = () => {
                   ))}
                 </tbody>
               </table>
-              <div className="docmailbox__btn-container">
-                <button
-                  disabled={addVisible || forwardVisible}
-                  onClick={handleAdd}
-                >
-                  Upload a document
-                </button>
-              </div>
             </>
           ) : (
             <p className="docmailbox__noinbox">No inbox documents</p>
-          )}
-          {addVisible && (
-            <DocMailboxForm
-              setAddVisible={setAddVisible}
-              setErrMsg={setErrMsg}
-              setDocuments={setDocuments}
-            />
           )}
           {forwardVisible && (
             <DocMailboxAssignedPracticianForward

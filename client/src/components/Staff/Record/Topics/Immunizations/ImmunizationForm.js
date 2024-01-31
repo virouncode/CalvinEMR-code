@@ -5,12 +5,15 @@ import {
   immunizationTypeCT,
   routeCT,
   siteCT,
+  ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuth from "../../../../../hooks/useAuth";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
+import GenericList from "../../../../All/UI/Lists/GenericList";
 import ImmunizationsList from "../../../../All/UI/Lists/ImmunizationsList";
 
 const ImmunizationForm = ({
@@ -24,6 +27,7 @@ const ImmunizationForm = ({
     patient_id: patientId,
     recommended: false,
     Date: Date.now(),
+    RefusedFlag: { ynIndicatorsimple: "N" },
   });
 
   const handleRouteChange = (value) => {
@@ -42,6 +46,14 @@ const ImmunizationForm = ({
       ImmunizationName: firstLetterUpper(formDatas.ImmunizationName),
       Manufacturer: firstLetterUpper(formDatas.Manufacturer),
     };
+    //Validation
+    try {
+      await immunizationSchema.validate(datasToPost);
+    } catch (err) {
+      setErrMsgPost(err.message);
+      return;
+    }
+
     try {
       await postPatientRecord(
         "/immunizations",
@@ -63,6 +75,10 @@ const ImmunizationForm = ({
   const handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
+    if (name === "RefusedFlag") {
+      setFormDatas({ ...formDatas, RefusedFlag: { ynIndicatorsimple: value } });
+      return;
+    }
     if (name === "Date") {
       value = value ? Date.parse(new Date(value)) : null;
     }
@@ -136,6 +152,14 @@ const ImmunizationForm = ({
           value={toLocalDate(formDatas.Date)}
           onChange={handleChange}
           autoComplete="off"
+        />
+      </td>
+      <td>
+        <GenericList
+          list={ynIndicatorsimpleCT}
+          name="RefusedFlag"
+          value={formDatas.RefusedFlag.ynIndicatorsimple}
+          handleChange={handleChange}
         />
       </td>
       <td>

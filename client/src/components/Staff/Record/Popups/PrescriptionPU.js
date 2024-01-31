@@ -22,15 +22,11 @@ import {
 } from "../../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import AddressesList from "../../../All/UI/Lists/AddressesList";
+import MedsTemplatesList from "../Topics/Medications/MedsTemplatesList";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const PrescriptionPU = ({
-  medsRx,
-  setMedsRx,
-  demographicsInfos,
-  setPresVisible,
-}) => {
+const PrescriptionPU = ({ demographicsInfos, setPresVisible }) => {
   const { auth, user, clinic, socket } = useAuth();
   const [progress, setProgress] = useState(false);
   const printRef = useRef();
@@ -38,6 +34,8 @@ const PrescriptionPU = ({
   const [siteSelectedId, setSiteSelectedId] = useState(user.settings.site_id);
   const [settings, setSettings] = useState();
   const [body, setBody] = useState("");
+  const [medsTemplates, setMedsTemplates] = useState(null);
+
   // const [fileToUpload, setFileToUpload] = useState(null);
 
   // useEffect(() => {
@@ -118,6 +116,32 @@ const PrescriptionPU = ({
 
   useEffect(() => {
     const abortController = new AbortController();
+    const fetchTemplates = async () => {
+      try {
+        const response = await axiosXanoStaff.get(
+          `/medications_templates_for_staff?staff_id=${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+            signal: abortController.signal,
+          }
+        );
+        if (abortController.signal.aborted) return;
+        setMedsTemplates(response.data);
+      } catch (err) {
+        if (err.name !== "CanceledError")
+          toast.error(`Error: unable to fetch clinic sites: ${err.message}`, {
+            containerId: "B",
+          });
+      }
+    };
+    fetchTemplates();
+    return () => abortController.abort();
+  }, [auth.authToken, user.id]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
     const fetchSites = async () => {
       try {
         const response = await axiosXanoStaff.get(`/sites`, {
@@ -167,16 +191,15 @@ const PrescriptionPU = ({
     return () => abortController.abort();
   }, [auth.authToken, user.id]);
 
-  useEffect(() => {
-    setBody(
-      medsRx
-        .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
-        .join("\n\n")
-    );
-  }, [medsRx]);
+  // useEffect(() => {
+  //   setBody(
+  //     medsRx
+  //       .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
+  //       .join("\n\n")
+  //   );
+  // }, [medsRx]);
 
   const handleCancel = (e) => {
-    setMedsRx([]);
     setPresVisible(false);
   };
 
@@ -412,71 +435,81 @@ const PrescriptionPU = ({
         />
         {progress && <CircularProgress />}
       </div>
-      <div ref={printRef} className="prescription__page">
-        <div className="prescription__container">
-          <div className="prescription__header">
-            <div className="prescription__logo">
-              <img
-                src={
-                  sites.find(({ id }) => id === siteSelectedId)?.logo?.url ||
-                  logo
-                }
-                alt="prescription-logo"
-              />
+      <div className="prescription__section">
+        <div ref={printRef} className="prescription__page">
+          <div className="prescription__container">
+            <div className="prescription__header">
+              <div className="prescription__doctor-infos">
+                <p>
+                  {staffIdToTitleAndName(clinic.staffInfos, user.id)} (LIC.{" "}
+                  {user.licence_nbr})
+                </p>
+                <p>{sites.find(({ id }) => id === siteSelectedId)?.name}</p>
+                <p>
+                  {sites.find(({ id }) => id === siteSelectedId)?.address}{" "}
+                  {sites.find(({ id }) => id === siteSelectedId)?.postal_code}{" "}
+                  {
+                    sites.find(({ id }) => id === siteSelectedId)
+                      ?.province_state
+                  }{" "}
+                  {sites.find(({ id }) => id === siteSelectedId)?.city}
+                </p>
+                <p>
+                  Phone: {sites.find(({ id }) => id === siteSelectedId)?.phone}
+                </p>
+                <p>Fax: {sites.find(({ id }) => id === siteSelectedId)?.fax}</p>
+              </div>
+              <div className="prescription__logo">
+                <img
+                  src={
+                    sites.find(({ id }) => id === siteSelectedId)?.logo?.url ||
+                    logo
+                  }
+                  alt="prescription-logo"
+                />
+              </div>
             </div>
-            <div className="prescription__doctor-infos">
-              <p>
-                Prescriber: {staffIdToTitleAndName(clinic.staffInfos, user.id)}{" "}
-                (LIC. {user.licence_nbr})
-              </p>
-              <p>{sites.find(({ id }) => id === siteSelectedId)?.name}</p>
-              <p>
-                {sites.find(({ id }) => id === siteSelectedId)?.address}{" "}
-                {sites.find(({ id }) => id === siteSelectedId)?.postal_code}{" "}
-                {sites.find(({ id }) => id === siteSelectedId)?.province_state}{" "}
-                {sites.find(({ id }) => id === siteSelectedId)?.city}
-              </p>
-              <p>
-                Phone: {sites.find(({ id }) => id === siteSelectedId)?.phone}
-              </p>
-              <p>Fax: {sites.find(({ id }) => id === siteSelectedId)?.fax}</p>
-            </div>
-          </div>
-          <div className="prescription__subheader">
-            <div className="prescription__patient-infos">
-              <p>
-                Patient:{" "}
-                {patientIdToName(
-                  clinic.demographicsInfos,
-                  demographicsInfos.patient_id
-                )}
-                , {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
-                {getAge(demographicsInfos.DateOfBirth)} y.o.
+            <div className="prescription__subheader">
+              <div className="prescription__patient-infos">
+                <p>
+                  Patient:{" "}
+                  {patientIdToName(
+                    clinic.demographicsInfos,
+                    demographicsInfos.patient_id
+                  )}
+                  , {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
+                  {getAge(demographicsInfos.DateOfBirth)} y.o.
+                </p>
+              </div>
+              <p className="prescription__date">
+                Date emitted: {toLocalDate(new Date())}
               </p>
             </div>
-            <p className="prescription__date">
-              Date emitted: {toLocalDate(new Date())}
-            </p>
-          </div>
-          <div className="prescription__body">
-            <p className="prescription__body-title">Prescription</p>
-            <div className="prescription__body-content">
-              <div name="body" onChange={handleChange} contentEditable>
-                {body}
+            <div className="prescription__body">
+              <p className="prescription__body-title">Prescription</p>
+              <div className="prescription__body-content">
+                <div name="body" onChange={handleChange} contentEditable>
+                  {body}
+                </div>
+              </div>
+            </div>
+            <div className="prescription__sign">
+              <p>Sign: </p>
+              <div className="prescription__sign-image">
+                <img
+                  src={user.sign?.url}
+                  alt="doctor sign"
+                  crossOrigin="Anonymous"
+                />
               </div>
             </div>
           </div>
-          <div className="prescription__sign">
-            <p>Sign: </p>
-            <div className="prescription__sign-image">
-              <img
-                src={user.sign?.url}
-                alt="doctor sign"
-                crossOrigin="Anonymous"
-              />
-            </div>
-          </div>
         </div>
+        <MedsTemplatesList
+          medsTemplates={medsTemplates}
+          body={body}
+          setBody={setBody}
+        />
       </div>
       {/* <div className="prescription__add">
         <label>Additional Notes: </label>

@@ -18,8 +18,6 @@ const MedicationItem = ({
   item,
   editCounter,
   setErrMsgPost,
-  presVisible,
-  setPresVisible,
   medsRx,
   setMedsRx,
   patientId,
@@ -40,19 +38,19 @@ const MedicationItem = ({
     setDetailVisible((v) => !v);
   };
 
-  const handleAddToRxClick = (e) => {
-    if (!presVisible) {
-      setMedsRx([...medsRx, item]);
-      setPresVisible(true);
-    } else {
-      setMedsRx([...medsRx, item]);
-    }
-  };
-  const handleRemoveFromRxClick = (e) => {
-    let newMedsRx = [...medsRx];
-    newMedsRx = newMedsRx.filter(({ id }) => id !== item.id);
-    setMedsRx(newMedsRx);
-  };
+  // const handleAddToRxClick = (e) => {
+  //   if (!presVisible) {
+  //     setMedsRx([...medsRx, item]);
+  //     setPresVisible(true);
+  //   } else {
+  //     setMedsRx([...medsRx, item]);
+  //   }
+  // };
+  // const handleRemoveFromRxClick = (e) => {
+  //   let newMedsRx = [...medsRx];
+  //   newMedsRx = newMedsRx.filter(({ id }) => id !== item.id);
+  //   setMedsRx(newMedsRx);
+  // };
 
   return (
     itemInfos && (
@@ -94,7 +92,7 @@ const MedicationItem = ({
           <td>
             <div className="medications__event-btn-container">
               <button onClick={handleDetailClick}>See details</button>
-              {user.title === "Doctor" &&
+              {/* {user.title === "Doctor" &&
                 (presVisible ? (
                   medsRx.find(({ id }) => id === item.id) ? (
                     <button
@@ -120,7 +118,7 @@ const MedicationItem = ({
                   >
                     Add To RX
                   </button>
-                ))}
+                ))} */}
             </div>
           </td>
         </tr>

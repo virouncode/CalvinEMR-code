@@ -3,20 +3,10 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
   switch (historyTopic) {
     case "SMOKING STATUS":
       datasToPlot = historyDatas.map((data) => {
-        return { ...data, Status: data.Status === "Yes" ? 1 : 0 };
+        return { ...data, Status: data.Status === "Y" ? 1 : 0 };
       });
       break;
     case "SMOKING PACKS PER DAY":
-      datasToPlot = historyDatas.map((data) => {
-        return { ...data, PerDay: data.PerDay ? parseFloat(data.PerDay) : 0 };
-      });
-      break;
-    case "ALCOHOL STATUS":
-      datasToPlot = historyDatas.map((data) => {
-        return { ...data, Status: data.Status === "Yes" ? 1 : 0 };
-      });
-      break;
-    case "ALCOHOL GLASSES PER DAY":
       datasToPlot = historyDatas.map((data) => {
         return { ...data, PerDay: data.PerDay ? parseFloat(data.PerDay) : 0 };
       });

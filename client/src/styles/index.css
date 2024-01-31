@@ -12386,10 +12386,7 @@ readers do not read off random characters that represent icons */
 }
 .medications__event-btn-container {
   display: flex;
-  justify-content: space-between;
-}
-.medications__event-btn-container button {
-  margin-left: 5px;
+  justify-content: center;
 }
 .medications__btn-container {
   text-align: center;
@@ -12494,7 +12491,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
   display: flex;
   justify-content: space-between;
-  padding: 40px;
+  padding: 30px 40px;
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border-radius: 4px;
@@ -13336,6 +13333,11 @@ readers do not read off random characters that represent icons */
   margin-bottom: 30px;
   text-align: center;
 }
+.reports__title--subtitle {
+  font-size: 1rem;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
 .reports__err {
   padding: 10px 20px;
   font-size: 0.9rem;
@@ -13383,7 +13385,7 @@ readers do not read off random characters that represent icons */
 }
 .reports__form {
   font-size: 0.8rem;
-  margin-top: 20px;
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   padding: 20px 40px;
@@ -13428,7 +13430,8 @@ readers do not read off random characters that represent icons */
   align-items: flex-start;
 }
 .reports__row--text textarea {
-  width: 250px;
+  width: 50%;
+  height: 200px;
 }
 .reports__subrow {
   display: flex;
@@ -13621,9 +13624,32 @@ readers do not read off random characters that represent icons */
   margin: 60px auto 0;
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 .prescription__actions button {
   margin-right: 10px;
+}
+.prescription__section {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.prescription__templates-list {
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  width: 50%;
+  height: 1000px;
+  padding: 10px;
+}
+.prescription__templates-item {
+  margin-top: 10px;
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.prescription__templates-item:hover {
+  text-decoration: underline;
 }
 .prescription__page {
   width: 21cm;
@@ -13633,15 +13659,13 @@ readers do not read off random characters that represent icons */
 }
 .prescription__container {
   width: 90%;
-  margin: 0 auto;
   border: solid 1px #cecdcd;
   border-radius: 4px;
-  height: 93%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 .prescription__header {
-  background: #9CB9E4;
   -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
   display: flex;
@@ -13655,15 +13679,14 @@ readers do not read off random characters that represent icons */
   align-items: center;
   justify-content: center;
   padding: 5px 10px;
+  border-left: solid 1px #cecdcd;
 }
 .prescription__logo img {
   height: 80%;
 }
 .prescription__doctor-infos {
   font-size: 0.75rem;
-  text-align: end;
   width: 50%;
-  border-left: solid 1px #cecdcd;
   padding: 5px 10px;
   display: flex;
   flex-direction: column;
@@ -13680,11 +13703,11 @@ readers do not read off random characters that represent icons */
   align-items: center;
 }
 .prescription__date {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: bold;
 }
 .prescription__patient-infos {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: bold;
   width: 50%;
   padding: 5px 10px;
@@ -15302,6 +15325,11 @@ readers do not read off random characters that represent icons */
   margin-bottom: 20px;
 }
 
+.docmailbox__subtitle {
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
 .docmailbox__noinbox {
   font-weight: bold;
   text-align: center;
@@ -16505,5 +16533,69 @@ readers do not read off random characters that represent icons */
 }
 .migration-export__btn {
   margin-top: 10px;
+  text-align: center;
+}
+
+.personalhistory-card {
+  font-size: 0.8rem;
+  width: 80%;
+  margin: 60px auto;
+  border: 1px solid #cecdcd;
+  border-radius: 4px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.personalhistory-card__header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #cecdcd;
+  padding: 10px;
+  align-items: center;
+}
+.personalhistory-card__header h1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.personalhistory-card__btns {
+  text-align: center;
+  margin-top: 20px;
+}
+.personalhistory-card__btns button {
+  margin-left: 5px;
+}
+.personalhistory-card__sign {
+  padding: 0 5px;
+  text-align: right;
+  font-size: 0.6rem;
+  margin-bottom: 10px;
+}
+
+.personalhistory-form {
+  margin: 30px auto;
+  width: 90%;
+}
+.personalhistory-form label {
+  font-weight: bold;
+  display: inline-block;
+  min-width: 150px;
+}
+.personalhistory-form input {
+  min-width: 30px;
+}
+.personalhistory-form__btns {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+.personalhistory-form__btns button {
+  margin-right: 10px;
+}
+.personalhistory-form__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 0 auto 10px;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
   text-align: center;
 }/*# sourceMappingURL=index.css.map */

@@ -40,10 +40,9 @@ const MedicationsPU = ({
       setPopUpVisible(false);
     }
   };
-  const handleAdd = (e) => {
+  const handleNewRX = (e) => {
     setErrMsgPost("");
-    editCounter.current += 1;
-    setAddVisible((v) => !v);
+    setPresVisible((v) => !v);
   };
 
   return (
@@ -82,7 +81,6 @@ const MedicationsPU = ({
                     key={medication.id}
                     editCounter={editCounter}
                     presVisible={presVisible}
-                    setPresVisible={setPresVisible}
                     setErrMsgPost={setErrMsgPost}
                     errMsgPost={errMsgPost}
                     medsRx={medsRx}
@@ -93,8 +91,8 @@ const MedicationsPU = ({
               </tbody>
             </table>
             <div className="medications__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add Medication To Profile
+              <button onClick={handleNewRX} disabled={addVisible}>
+                New RX
               </button>
               <button onClick={handleClose}>Close</button>
             </div>
@@ -116,12 +114,12 @@ const MedicationsPU = ({
             clinic.demographicsInfos,
             patientId
           )}`}
-          width={800}
+          width={1300}
           height={600}
-          x={(window.innerWidth - 800) / 2}
+          x={(window.innerWidth - 1300) / 2}
           y={(window.innerHeight - 600) / 2}
           color="black"
-          closeCross={false}
+          setPopUpVisible={setPresVisible}
         >
           <PrescriptionPU
             demographicsInfos={demographicsInfos}

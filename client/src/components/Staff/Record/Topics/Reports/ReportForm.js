@@ -10,6 +10,7 @@ import {
 import useAuth from "../../../../../hooks/useAuth";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getExtension } from "../../../../../utils/getExtension";
+import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
 import { reportSchema } from "../../../../../validation/reportValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
@@ -24,13 +25,14 @@ const ReportForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth, user, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuth();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     Format: "Binary",
     assigned_staff_id: demographicsInfos.assigned_staff_id,
   });
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [sentOrReceived, setSentOrReceived] = useState("Received");
 
   //HANDLERS
   const handleChange = (e) => {
@@ -49,6 +51,7 @@ const ReportForm = ({
       setFormDatas({
         ...formDatas,
         Content: {},
+        File: null,
         FileExtensionAndVersion: "",
         [name]: value,
       });
@@ -105,6 +108,12 @@ const ReportForm = ({
     setAddVisible(false);
   };
 
+  const handleSentOrReceived = (e) => {
+    const value = e.target.value;
+    setErrMsgPost("");
+    setSentOrReceived(value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrMsgPost("");
@@ -119,11 +128,9 @@ const ReportForm = ({
       datasToPost.ReportReviewed = [datasToPost.ReportReviewed];
       datasToPost.acknowledged = true;
     }
-
-    //Validating
-    // if (datasToPost.Format === "Binary" && !datasToPost.Content.Media.type) {
-    //   datasToPost.Content.Media.type = "document";
-    // }
+    if (sentOrReceived === "Sent") {
+      datasToPost.acknowledged = true;
+    }
 
     //Validation
     try {
@@ -189,9 +196,9 @@ const ReportForm = ({
         setIsLoadingFile(false);
         setFormDatas({
           ...formDatas,
-          Content: { Media: fileToUpload.data },
+          File: fileToUpload.data,
           FileExtensionAndVersion: getExtension(fileToUpload.data.path),
-          FilePath: fileToUpload.data.path,
+          Content: {},
         });
       } catch (err) {
         setIsLoadingFile(false);
@@ -216,12 +223,19 @@ const ReportForm = ({
           </button>
         </div>
         <div className="reports__row">
-          <label>Name</label>
+          <label>Sent or Received</label>
+          <select value={sentOrReceived} onChange={handleSentOrReceived}>
+            <option value="Received">Received</option>
+            <option value="Sent">Sent</option>
+          </select>
+        </div>
+        <div className="reports__row">
+          <label>Report Name</label>
           <input
             type="text"
             autoComplete="off"
             name="name"
-            value={formDatas.name}
+            value={formDatas.name || ""}
             onChange={handleChange}
           />
         </div>
@@ -229,18 +243,18 @@ const ReportForm = ({
           <label>Format</label>
           <GenericList
             name="Format"
-            value={formDatas.Format}
+            value={formDatas.Format || ""}
             handleChange={handleChange}
             list={reportFormatCT}
           />
         </div>
         <div className="reports__row">
           <label>File extension</label>
-          <p>{formDatas.FileExtensionAndVersion}</p>
+          <p>{formDatas.FileExtensionAndVersion || ""}</p>
         </div>
-        <div className="reports__row">
-          <label>Content</label>
-          {formDatas.Format === "Binary" ? (
+        {formDatas.Format === "Binary" ? (
+          <div className="reports__row">
+            <label>Content</label>
             <input
               name="Content"
               required
@@ -248,21 +262,22 @@ const ReportForm = ({
               onChange={handleUpload}
               accept=".jpeg, .jpg, .png, .gif, .tif, .pdf, .svg, .mp3, .aac, .aiff, .flac, .ogg, .wma, .wav, .mov, .mp4, .avi, .wmf, .flv, .doc, .docm, .docx, .txt, .csv, .xls, .xlsx, .ppt, .pptx"
             />
-          ) : (
-            <input
-              type="text"
-              autoComplete="off"
+          </div>
+        ) : (
+          <div className="reports__row reports__row--text">
+            <label>Content</label>
+            <textarea
               name="Content"
-              value={formDatas.Content?.TextContent}
+              value={formDatas.Content?.TextContent || ""}
               onChange={handleContentChange}
             />
-          )}
-        </div>
+          </div>
+        )}
         <div className="reports__row">
           <label>Class</label>
           <GenericList
             name="Class"
-            value={formDatas.Class}
+            value={formDatas.Class || ""}
             handleChange={handleChange}
             list={reportClassCT}
           />
@@ -272,7 +287,7 @@ const ReportForm = ({
           <input
             type="text"
             name="SubClass"
-            value={formDatas.SubClass}
+            value={formDatas.SubClass || ""}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -287,116 +302,132 @@ const ReportForm = ({
             autoComplete="off"
           />
         </div>
-        <div className="reports__row">
-          <label>Date received</label>
-          <input
-            type="date"
-            name="ReceivedDateTime"
-            value={toLocalDate(formDatas.ReceivedDateTime)}
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </div>
+        {sentOrReceived === "Received" && (
+          <div className="reports__row">
+            <label>Date received</label>
+            <input
+              type="date"
+              name="ReceivedDateTime"
+              value={toLocalDate(formDatas.ReceivedDateTime)}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+        )}
         <div className="reports__row">
           <label>Author</label>
-          <input
-            type="text"
-            name="AuthorFreeText"
-            value={formDatas.AuthorFreeText}
-            onChange={handleChange}
-            autoComplete="off"
-          />
+          {sentOrReceived === "Received" ? (
+            <input
+              type="text"
+              name="AuthorFreeText"
+              value={formDatas.AuthorFreeText || ""}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          ) : (
+            patientIdToAssignedStaffName(
+              clinic.demographicsInfos,
+              clinic.staffInfos,
+              patientId
+            )
+          )}
         </div>
-        <div className="reports__row reports__row--special">
-          <label>Reviewed by</label>
-          <div>
-            <div className="reports__subrow">
-              <label>First name</label>
-              <input
-                type="text"
-                name="FirstName"
-                value={formDatas.ReportReviewed?.Name?.FirstName}
-                onChange={handleReviewedName}
-                autoComplete="off"
-              />
-            </div>
-            <div className="reports__subrow">
-              <label>Last name</label>
-              <input
-                type="text"
-                name="LastName"
-                value={formDatas.ReportReviewed?.Name?.LastName}
-                onChange={handleReviewedName}
-                autoComplete="off"
-              />
-            </div>
-            <div className="reports__subrow">
-              <label>OHIP#</label>
-              <input
-                type="text"
-                name="ReviewingOHIPPhysicianId"
-                value={formDatas.ReportReviewed?.ReviewingOHIPPhysicianId}
-                onChange={handleReviewedOHIP}
-                autoComplete="off"
-              />
-            </div>
-            <div className="reports__subrow">
-              {" "}
-              <label>Date reviewed</label>
-              <input
-                type="date"
-                name="DateTimeReportReviewed"
-                value={toLocalDate(
-                  formDatas.ReportReviewed?.DateTimeReportReviewed
-                )}
-                onChange={handleReviewedDate}
-              />
+        {sentOrReceived === "Received" && (
+          <div className="reports__row reports__row--special">
+            <label>Reviewed by</label>
+            <div>
+              <div className="reports__subrow">
+                <label>First name</label>
+                <input
+                  type="text"
+                  name="FirstName"
+                  value={formDatas.ReportReviewed?.Name?.FirstName || ""}
+                  onChange={handleReviewedName}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="reports__subrow">
+                <label>Last name</label>
+                <input
+                  type="text"
+                  name="LastName"
+                  value={formDatas.ReportReviewed?.Name?.LastName || ""}
+                  onChange={handleReviewedName}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="reports__subrow">
+                <label>OHIP#</label>
+                <input
+                  type="text"
+                  name="ReviewingOHIPPhysicianId"
+                  value={
+                    formDatas.ReportReviewed?.ReviewingOHIPPhysicianId || ""
+                  }
+                  onChange={handleReviewedOHIP}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="reports__subrow">
+                {" "}
+                <label>Date reviewed</label>
+                <input
+                  type="date"
+                  name="DateTimeReportReviewed"
+                  value={toLocalDate(
+                    formDatas.ReportReviewed?.DateTimeReportReviewed
+                  )}
+                  onChange={handleReviewedDate}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="reports__row reports__row--text">
           <label>Notes</label>
           <textarea
             name="Notes"
-            value={formDatas.Notes}
+            value={formDatas.Notes || ""}
             onChange={handleChange}
             autoComplete="off"
           />
         </div>
-        <div className="reports__row reports__row--special">
-          <label>Recipient</label>
-          <div>
-            <div className="reports__subrow">
-              <label>First name</label>
-              <input
-                type="text"
-                name="FirstName"
-                value={formDatas.RecipientName?.FirstName}
-                onChange={handleRecipientName}
-                autoComplete="off"
-              />
-            </div>
-            <div className="reports__subrow">
-              <label>Last name</label>
-              <input
-                type="text"
-                name="LastName"
-                value={formDatas.RecipientName?.LastName}
-                onChange={handleRecipientName}
-                autoComplete="off"
-              />
-            </div>
-            <div className="reports__subrow">
-              <label>Date sent</label>
-              <input
-                type="date"
-                name="DateTimeSent"
-                value={toLocalDate(formDatas.DateTimeSent)}
-                onChange={handleChange}
-              />
+        {sentOrReceived === "Sent" && (
+          <div className="reports__row reports__row--special">
+            <label>Recipient</label>
+            <div>
+              <div className="reports__subrow">
+                <label>First name</label>
+                <input
+                  type="text"
+                  name="FirstName"
+                  value={formDatas.RecipientName?.FirstName || ""}
+                  onChange={handleRecipientName}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="reports__subrow">
+                <label>Last name</label>
+                <input
+                  type="text"
+                  name="LastName"
+                  value={formDatas.RecipientName?.LastName || ""}
+                  onChange={handleRecipientName}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="reports__subrow">
+                <label>Date sent</label>
+                <input
+                  type="date"
+                  name="DateTimeSent"
+                  value={toLocalDate(formDatas.DateTimeSent)}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="reports__row">
           {isLoadingFile && (
             <CircularProgress size="1rem" style={{ margin: "5px" }} />
@@ -404,38 +435,32 @@ const ReportForm = ({
         </div>
       </form>
       <div className="reports__preview">
-        {formDatas.Content?.Media &&
-        formDatas.Content?.Media?.mime?.includes("image") ? (
-          <img
-            src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-            alt=""
-            width="100%"
-          />
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("video") ? (
+        {formDatas.File && formDatas.File.mime?.includes("image") ? (
+          <img src={`${BASE_URL}${formDatas.File.path}`} alt="" width="100%" />
+        ) : formDatas.File && formDatas.File.mime?.includes("video") ? (
           <video controls>
             <source
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.mime}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.mime}
             />
           </video>
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("officedocument") ? (
+        ) : formDatas.File &&
+          formDatas.File.mime?.includes("officedocument") ? (
           <div>
             <iframe
               title="office document"
-              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.Content?.Media?.path}&embedded=true&widget=false`}
+              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.File.path}&embedded=true&widget=false`}
               width="100%"
               height="500px"
               frameBorder="0"
             />
           </div>
         ) : (
-          formDatas.Content?.Media && (
+          formDatas.File && (
             <iframe
               title={formDatas.name}
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.type}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.type}
               width="100%"
               style={{ border: "none" }}
               height="500px"

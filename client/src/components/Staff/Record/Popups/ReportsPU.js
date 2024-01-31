@@ -5,7 +5,8 @@ import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import ReportForm from "../Topics/Reports/ReportForm";
-import ReportItem from "../Topics/Reports/ReportItem";
+import ReportItemReceived from "../Topics/Reports/ReportItemReceived";
+import ReportItemSent from "../Topics/Reports/ReportItemSent";
 
 const ReportsPU = ({
   patientId,
@@ -55,16 +56,16 @@ const ReportsPU = ({
       ) : (
         datas && (
           <>
-            <h1 className="reports__title">
-              Patient reports <i className="fa-regular fa-folder"></i>
-            </h1>
+            <h2 className="reports__title reports__title--subtitle">
+              Received
+            </h2>
             <table className="reports__table">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Format</th>
                   <th>File extension and version</th>
-                  <th>Content</th>
+                  <th>File</th>
                   <th>Class</th>
                   <th>Subclass</th>
                   <th>Date of document</th>
@@ -79,16 +80,50 @@ const ReportsPU = ({
                 </tr>
               </thead>
               <tbody>
-                {datas.map((document) => (
-                  <ReportItem
-                    item={document}
-                    key={document.id}
-                    showDocument={showDocument}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                    demographicsInfos={demographicsInfos}
-                  />
-                ))}
+                {datas
+                  .filter(({ DateTimeSent }) => !DateTimeSent)
+                  .map((document) => (
+                    <ReportItemReceived
+                      item={document}
+                      key={document.id}
+                      showDocument={showDocument}
+                      setErrMsgPost={setErrMsgPost}
+                      errMsgPost={errMsgPost}
+                      demographicsInfos={demographicsInfos}
+                    />
+                  ))}
+              </tbody>
+            </table>
+            <h2 className="reports__title reports__title--subtitle">Sent</h2>
+            <table className="reports__table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Format</th>
+                  <th>File extension and version</th>
+                  <th>File</th>
+                  <th>Class</th>
+                  <th>Subclass</th>
+                  <th>Date of document</th>
+                  <th>Date sent</th>
+                  <th>Author</th>
+                  <th>Recipient</th>
+                  <th>Notes</th>
+                  <th>Updated by</th>
+                  <th>Updated on</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {datas
+                  .filter(({ DateTimeSent }) => DateTimeSent)
+                  .map((document) => (
+                    <ReportItemSent
+                      item={document}
+                      key={document.id}
+                      showDocument={showDocument}
+                    />
+                  ))}
               </tbody>
             </table>
             <div className="reports__btn-container">
@@ -97,6 +132,7 @@ const ReportsPU = ({
               </button>
               <button onClick={handleClose}>Close</button>
             </div>
+
             {addVisible && (
               <ReportForm
                 patientId={patientId}

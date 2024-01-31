@@ -6,7 +6,7 @@ import AdminLayout from "./components/All/UI/Layouts/AdminLayout";
 import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
-import RequireAuth from "./context/RequireAuth";
+import RequireAuthStaff from "./context/RequireAuth";
 import RequireAuthAdmin from "./context/RequireAuthAdmin";
 import RequireAuthPatient from "./context/RequireAuthPatient";
 import useAuth from "./hooks/useAuth";
@@ -113,7 +113,7 @@ const App = () => {
         {/* public routes */}
         <Route path="unauthorized" element={<UnauthorizedPage />} />
         {/* protected routes */}
-        <Route element={<RequireAuth allowedAccesses={["User"]} />}>
+        <Route element={<RequireAuthStaff allowedAccesses={["User"]} />}>
           <Route index element={<CalendarPage />} />
           <Route path="search-patient" element={<SearchPatientPage />} />
           <Route path="patient-record/:id" element={<PatientRecordPage />} />

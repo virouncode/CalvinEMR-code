@@ -1784,10 +1784,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                     demographicsInfos.created_by_id,
                     true
                   )}{" "}
-                  on{" "}
-                  {toLocalDateAndTime(
-                    new Date(demographicsInfos.date_created).toISOString()
-                  )}
+                  on {toLocalDateAndTime(demographicsInfos.date_created)}
                 </em>
               )}
             </p>

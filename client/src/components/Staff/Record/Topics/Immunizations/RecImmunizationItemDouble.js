@@ -32,7 +32,7 @@ const RecImmunizationItemDouble = ({
           new Date(demographicsInfos.DateOfBirth).getFullYear() + 15
         )
       ) < new Date()
-        ? "crimson"
+        ? "orange"
         : "black",
   };
   const INTERVAL_65_YEARS_STYLE = {
@@ -42,7 +42,7 @@ const RecImmunizationItemDouble = ({
           new Date(demographicsInfos.DateOfBirth).getFullYear() + 70
         )
       ) < new Date()
-        ? "crimson"
+        ? "orange"
         : "black",
   };
 
@@ -89,7 +89,15 @@ const RecImmunizationItemDouble = ({
         />
         {immunizationInfos.length &&
         immunizationInfos.find(({ doseNumber }) => doseNumber === 1)?.Date ? (
-          <label className="recimmunizations-item__checked">
+          <label
+            style={{
+              color:
+                immunizationInfos.find(({ doseNumber }) => doseNumber === 1)
+                  .RefusedFlag.ynIndicatorsimple === "Y"
+                  ? "red"
+                  : "forestgreen",
+            }}
+          >
             {toLocalDate(
               immunizationInfos.find(({ doseNumber }) => doseNumber === 1).Date
             )}{" "}
@@ -204,7 +212,15 @@ const RecImmunizationItemDouble = ({
             {immunizationInfos.length === 2 &&
             immunizationInfos.find(({ doseNumber }) => doseNumber === 2)
               ?.Date ? (
-              <label className="recimmunizations-item__checked">
+              <label
+                style={{
+                  color:
+                    immunizationInfos.find(({ doseNumber }) => doseNumber === 2)
+                      .RefusedFlag.ynIndicatorsimple === "Y"
+                      ? "red"
+                      : "forestgreen",
+                }}
+              >
                 {toLocalDate(
                   immunizationInfos.find(({ doseNumber }) => doseNumber === 2)
                     .Date
@@ -234,7 +250,7 @@ const RecImmunizationItemDouble = ({
                                 ).getMonth() + 7
                               )
                             ) < new Date()
-                              ? "crimson"
+                              ? "orange"
                               : "black",
                         }}
                       >
@@ -293,7 +309,7 @@ const RecImmunizationItemDouble = ({
                                 ).getMonth() + 7
                               )
                             ) < new Date()
-                              ? "crimson"
+                              ? "orange"
                               : "black",
                         }}
                       >

@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import { routeCT, siteCT } from "../../../../../datas/codesTables";
+import {
+  routeCT,
+  siteCT,
+  ynIndicatorsimpleCT,
+} from "../../../../../datas/codesTables";
 import useAuth from "../../../../../hooks/useAuth";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
+import GenericList from "../../../../All/UI/Lists/GenericList";
 
 const RecImmunizationFormFirstDose = ({
   setFormVisible,
@@ -30,6 +35,7 @@ const RecImmunizationFormFirstDose = ({
     Site: "",
     Dose: "",
     Date: rangeEnd,
+    RefusedFlag: { ynIndicatorsimple: "N" },
     Instructions: "",
     Notes: "",
     age: age,
@@ -80,6 +86,13 @@ const RecImmunizationFormFirstDose = ({
   const handleChange = (e) => {
     let value = e.target.value;
     const name = e.target.name;
+    if (name === "RefusedFlag") {
+      setFormDatas({
+        ...formDatas,
+        RefusedFlag: { ynIndicatorsimple: value },
+      });
+      return;
+    }
     if (name === "Date") {
       value = value === "" ? null : Date.parse(new Date(value));
     }
@@ -173,6 +186,15 @@ const RecImmunizationFormFirstDose = ({
           onChange={handleChange}
           value={toLocalDate(formDatas.Date)}
           autoComplete="off"
+        />
+      </div>
+      <div className="recimmunizations-form__row">
+        <label>Refused: </label>
+        <GenericList
+          list={ynIndicatorsimpleCT}
+          name="RefusedFlag"
+          handleChange={handleChange}
+          value={formDatas.RefusedFlag.ynIndicatorsimple}
         />
       </div>
       <div className="recimmunizations-form__row recimmunizations-form__row--text">

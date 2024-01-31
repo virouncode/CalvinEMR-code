@@ -10,7 +10,7 @@ import {
   staffIdToLastName,
   staffIdToOHIP,
 } from "../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import SignCell from "../Record/Topics/SignCell";
 
 const DocMailboxItem = ({
   item,
@@ -69,17 +69,15 @@ const DocMailboxItem = ({
 
   return (
     <tr className="reports__item">
-      <td>{item.Name}</td>
+      <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>
-      {item.Content.Media ? (
+      {item.File ? (
         <td
           className="reports__link"
-          onClick={() =>
-            showDocument(item.Content.Media.url, item.Content.Media.mime)
-          }
+          onClick={() => showDocument(item.File.url, item.File.mime)}
         >
-          {item.Content.Media.name}
+          {item.File.name}
         </td>
       ) : (
         <td>{item.Content.TextContent}</td>
@@ -94,6 +92,8 @@ const DocMailboxItem = ({
           {patientIdToName(clinic.demographicsInfos, item.patient_id)}
         </NavLink>
       </td>
+      <td>{item.Class}</td>
+      <td>{item.SubClass}</td>
       <td>{toLocalDate(item.EventDateTime)}</td>
       <td>{toLocalDate(item.ReceivedDateTime)}</td>
       <td>
@@ -104,14 +104,7 @@ const DocMailboxItem = ({
           : ""}
       </td>
       <td>{item.Notes}</td>
-      <td>
-        <em>
-          {staffIdToTitleAndName(clinic.staffInfos, item.created_by_id, true)}
-        </em>
-      </td>
-      <td>
-        <em>{toLocalDate(item.date_created)}</em>
-      </td>
+      <SignCell item={item} staffInfos={clinic.staffInfos} />
       <td>
         <div className="reports__item-btn-container">
           <button onClick={handleAcknowledge}>Acknowledge</button>

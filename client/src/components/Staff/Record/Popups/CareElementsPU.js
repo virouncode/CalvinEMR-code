@@ -5,6 +5,10 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
+import {
+  toCodeTableName,
+  ynIndicatorsimpleCT,
+} from "../../../../datas/codesTables";
 import useAuth from "../../../../hooks/useAuth";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import {
@@ -25,6 +29,7 @@ import { careElementsSchema } from "../../../../validation/careElementsValidatio
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import GenericList from "../../../All/UI/Lists/GenericList";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CareElementHistory from "../Topics/CareElements/CareElementHistory";
 var _ = require("lodash");
@@ -48,9 +53,6 @@ const CareElementsPU = ({
     patient_id: parseInt(patientId),
     SmokingStatus: { Status: "", Date: "" },
     SmokingPacks: { PerDay: "", Date: "" },
-    alcoholStatus: { Status: "", Date: "" },
-    alcoholGlasses: { PerDay: "", Date: "" },
-    recreationalDrugs: { DrugNames: "", Date: "" },
     Weight: { Weight: "", WeightUnit: "kg", Date: "" },
     WeightLbs: "",
     Height: { Height: "", HeightUnit: "cm", Date: "" },
@@ -73,9 +75,6 @@ const CareElementsPU = ({
     patient_id: parseInt(patientId),
     SmokingStatus: { Status: "", Date: "" },
     SmokingPacks: { PerDay: "", Date: "" },
-    alcoholStatus: { Status: "", Date: "" },
-    alcoholGlasses: { PerDay: "", Date: "" },
-    recreationalDrugs: { DrugNames: "", Date: "" },
     Weight: { Weight: "", WeightUnit: "kg", Date: "" },
     WeightLbs: "",
     Height: { Height: "", HeightUnit: "cm", Date: "" },
@@ -105,15 +104,6 @@ const CareElementsPU = ({
           (a, b) => b.Date - a.Date
         )[0],
         SmokingPacks: datas[0].SmokingPacks.sort((a, b) => b.Date - a.Date)[0],
-        alcoholStatus: datas[0].alcoholStatus.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
-        alcoholGlasses: datas[0].alcoholGlasses.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
-        recreationalDrugs: datas[0].recreationalDrugs.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
         Weight: datas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
         Height: datas[0].Height.sort((a, b) => b.Date - a.Date)[0],
         WaistCircumference: datas[0].WaistCircumference.sort(
@@ -168,7 +158,7 @@ const CareElementsPU = ({
           ...formDatas,
           SmokingStatus: { Status: value, Date: Date.now() },
           SmokingPacks:
-            value === "No"
+            value === "N"
               ? { PerDay: 0, Date: Date.now() }
               : { PerDay: "", Date: Date.now() },
         });
@@ -177,36 +167,10 @@ const CareElementsPU = ({
         setFormDatas({
           ...formDatas,
           SmokingStatus: {
-            Status: Number(value) ? "Yes" : "No",
+            Status: Number(value) ? "Y" : "N",
             Date: Date.now(),
           },
           SmokingPacks: { PerDay: value, Date: Date.now() },
-        });
-        break;
-      case "alcoholStatus":
-        setFormDatas({
-          ...formDatas,
-          alcoholStatus: { Status: value, Date: Date.now() },
-          alcoholGlasses:
-            value === "No"
-              ? { PerDay: 0, Date: Date.now() }
-              : { PerDay: "", Date: Date.now() },
-        });
-        break;
-      case "alcoholGlasses":
-        setFormDatas({
-          ...formDatas,
-          alcoholStatus: {
-            Status: Number(value) ? "Yes" : "No",
-            Date: Date.now(),
-          },
-          alcoholGlasses: { PerDay: value, Date: Date.now() },
-        });
-        break;
-      case "recreationalDrugs":
-        setFormDatas({
-          ...formDatas,
-          recreationalDrugs: { DrugNames: value, Date: Date.now() },
         });
         break;
       case "Weight":
@@ -321,17 +285,10 @@ const CareElementsPU = ({
     }
 
     if (
-      formDatas.SmokingStatus.Status === "Yes" &&
+      formDatas.SmokingStatus.Status === "Y" &&
       !formDatas.SmokingPacks.PerDay
     ) {
       setErrMsgPost("Smoking Packs field is required");
-      return;
-    }
-    if (
-      formDatas.alcoholStatus.Status === "Yes" &&
-      !formDatas.alcoholGlasses.PerDay
-    ) {
-      setErrMsgPost("Alcohol Glasses field is required");
       return;
     }
 
@@ -344,15 +301,6 @@ const CareElementsPU = ({
           : [],
         SmokingPacks: formDatas.SmokingPacks.PerDay
           ? [formDatas.SmokingPacks]
-          : [],
-        alcoholStatus: formDatas.alcoholStatus.Status
-          ? [formDatas.alcoholStatus]
-          : [],
-        alcoholGlasses: formDatas.alcoholGlasses.PerDay
-          ? [formDatas.alcoholGlasses]
-          : [],
-        recreationalDrugs: formDatas.recreationalDrugs.DrugNames
-          ? [formDatas.recreationalDrugs]
           : [],
         Weight: formDatas.Weight.Weight ? [formDatas.Weight] : [],
         Height: formDatas.Height.Height ? [formDatas.Height] : [],
@@ -409,19 +357,6 @@ const CareElementsPU = ({
           formDatas.SmokingPacks?.PerDay !== lastDatas.SmokingPacks?.PerDay
             ? [...datas[0].SmokingPacks, formDatas.SmokingPacks]
             : [...datas[0].SmokingPacks],
-        alcoholStatus:
-          formDatas.alcoholStatus?.Status !== lastDatas.alcoholStatus?.Status
-            ? [...datas[0].alcoholStatus, formDatas.alcoholStatus]
-            : [...datas[0].alcoholStatus],
-        alcoholGlasses:
-          formDatas.alcoholGlasses?.PerDay !== lastDatas.alcoholGlasses?.PerDay
-            ? [...datas[0].alcoholGlasses, formDatas.alcoholGlasses]
-            : [...datas[0].alcoholGlasses],
-        recreationalDrugs:
-          formDatas.recreationalDrugs?.DrugNames !==
-          lastDatas.recreationalDrugs?.DrugNames
-            ? [...datas[0].recreationalDrugs, formDatas.recreationalDrugs]
-            : [...datas[0].recreationalDrugs],
         Weight:
           formDatas.Weight?.Weight !== lastDatas.Weight?.Weight
             ? [...datas[0].Weight, formDatas.Weight]
@@ -491,20 +426,6 @@ const CareElementsPU = ({
             : []
           : [];
         break;
-      case "ALCOHOL STATUS":
-        historyDatasToPass = datas.length
-          ? datas[0].alcoholStatus?.length
-            ? datas[0].alcoholStatus.sort((a, b) => a.Date - b.Date)
-            : []
-          : [];
-        break;
-      case "ALCOHOL GLASSES PER DAY":
-        historyDatasToPass = datas.length
-          ? datas[0].alcoholGlasses?.length
-            ? datas[0].alcoholGlasses.sort((a, b) => a.Date - b.Date)
-            : []
-          : [];
-        break;
       case "WEIGHT":
         historyDatasToPass = datas.length
           ? datas[0].Weight?.length
@@ -544,13 +465,6 @@ const CareElementsPU = ({
         historyDatasToPass = datas.length
           ? datas[0].bodySurfaceArea?.length
             ? datas[0].bodySurfaceArea.sort((a, b) => a.Date - b.Date)
-            : []
-          : [];
-        break;
-      case "RECREATIONAL DRUGS":
-        historyDatasToPass = datas.length
-          ? datas[0].recreationalDrugs?.length
-            ? datas[0].recreationalDrugs.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
@@ -600,19 +514,19 @@ const CareElementsPU = ({
                 <label>Smoking:</label>
                 {/* </Tooltip> */}
                 {editVisible ? (
-                  <select
+                  <GenericList
+                    list={ynIndicatorsimpleCT}
                     name="SmokingStatus"
-                    onChange={handleChange}
+                    handleChange={handleChange}
                     value={formDatas.SmokingStatus?.Status}
-                  >
-                    <option value="" disabled></option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
+                  />
                 ) : (
                   <div>
                     <span className="care-elements__value">
-                      {formDatas.SmokingStatus?.Status}
+                      {toCodeTableName(
+                        ynIndicatorsimpleCT,
+                        formDatas.SmokingStatus?.Status
+                      )}
                     </span>
                     <span className="care-elements__history">
                       <i
@@ -644,86 +558,6 @@ const CareElementsPU = ({
                         className="fa-solid fa-clock-rotate-left"
                         onClick={(e) =>
                           handleClickHistory(e, "SMOKING PACKS PER DAY")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Alcohol:</label>
-                {editVisible ? (
-                  <select
-                    name="alcoholStatus"
-                    onChange={handleChange}
-                    value={formDatas.alcoholStatus?.Status}
-                  >
-                    <option value="" disabled></option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.alcoholStatus?.Status}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "ALCOHOL STATUS")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Alcohol Glasses (per day):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="alcoholGlasses"
-                    onChange={handleChange}
-                    value={formDatas.alcoholGlasses?.PerDay}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.alcoholGlasses?.PerDay}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "ALCOHOL GLASSES PER DAY")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Recreational Drugs:</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="recreationalDrugs"
-                    onChange={handleChange}
-                    value={formDatas.recreationalDrugs?.DrugNames}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.recreationalDrugs?.DrugNames}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "RECREATIONAL DRUGS")
                         }
                       ></i>
                     </span>

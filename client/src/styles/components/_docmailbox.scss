@@ -1,4 +1,9 @@
 .docmailbox {
+    &__subtitle {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
     &__noinbox {
         font-weight: bold;
         text-align: center;
@@ -26,6 +31,7 @@
         border-collapse: collapse;
         font-size: 0.8rem;
         margin: 0 auto;
+
         thead {
             background-color: $blue;
             border: solid 1px $black;

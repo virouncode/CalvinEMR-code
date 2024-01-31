@@ -1,3 +1,5 @@
+import { staffIdToName } from "./staffIdToName";
+
 export const patientIdToName = (
   demographicsInfos,
   patientId,
@@ -63,6 +65,22 @@ export const patientIdToMiddleName = (demographicsInfos, patientId) => {
         ? patientInfo.Names.LegalName.OtherNames[0].OtherName?.Part
         : "";
     }
+  } else {
+    return "";
+  }
+};
+
+export const patientIdToAssignedStaffName = (
+  demographicsInfos,
+  staffInfos,
+  patientId
+) => {
+  if (!patientId) return "";
+  const patientInfo = demographicsInfos.find(
+    ({ patient_id }) => patient_id === patientId
+  );
+  if (patientInfo) {
+    return staffIdToName(staffInfos, patientInfo.assigned_staff_id);
   } else {
     return "";
   }

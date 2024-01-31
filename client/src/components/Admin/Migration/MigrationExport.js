@@ -94,6 +94,7 @@ const MigrationExport = () => {
 
   const handleExport = async () => {
     setIsLoading(true);
+    const dateOfExport = dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT");
     try {
       for (let patientId of checkedPatientsIds) {
         const patientFirstName = patientIdToFirstName(
@@ -144,7 +145,8 @@ const MigrationExport = () => {
           doctorLastName,
           doctorOHIP,
           user.name,
-          dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT")
+          dateOfExport,
+          clinic.demographicsInfos
         );
       }
       setIsLoading(false);

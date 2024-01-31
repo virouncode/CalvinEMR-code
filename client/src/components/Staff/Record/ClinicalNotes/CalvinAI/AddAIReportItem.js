@@ -29,7 +29,7 @@ const AddAIReportItem = ({
       setDocumentsAddedIds([...documentsAddedIds, id]);
       setIsLoadingDocumentText(true);
       let textToAdd = (
-        await extractToText(report.Content.Media.url, report.Content.Media.mime)
+        await extractToText(report.File.url, report.File.mime)
       ).join("");
 
       textToAdd = textToAdd

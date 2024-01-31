@@ -26,6 +26,7 @@ const ImmunizationsTable = ({
             <th>Site</th>
             <th>Dose</th>
             <th>Date</th>
+            <th>Refused</th>
             <th>Instructions</th>
             <th>Notes</th>
             <th>Updated by</th>

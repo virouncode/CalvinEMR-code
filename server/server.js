@@ -3,6 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const axios = require("axios");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
@@ -14,6 +15,7 @@ const twilio = require("twilio")(
 const extractTextFromDoc = require("./extractTextFromDoc");
 // const bodyParser = require("body-parser");
 const convertJStoXML = require("./jsxml.js");
+const getExtension = require("./getExtension.js");
 
 const PORT = process.env.PORT || 4000;
 
@@ -80,7 +82,7 @@ app.post("/api/convertJSToXML", (req, res) => {
 
 //**************** Endpoint write XML File ****************//
 
-app.post("/api/writeXML", (req, res) => {
+app.post("/api/writeXML", async (req, res) => {
   try {
     const {
       xmlFinal,
@@ -93,18 +95,21 @@ app.post("/api/writeXML", (req, res) => {
       doctorOHIP,
       authorName,
       dateOfExport,
+      reportsFiles,
     } = req.body;
 
     //Names
     const exportFolderName = `CalvinEMR_Export_${dateOfExport}`;
     const folderName = `${doctorFirstName}_${doctorLastName}_${doctorOHIP}`;
     const fileName = `${patientFirstName}_${patientLastName}_${patientId}_${patientDob}.xml`;
+    const reportsFilesFolderName = "Reports_files";
 
     //Paths
     const downloadsPath = path.join(os.homedir(), "Downloads");
     const exportFolderPath = path.join(downloadsPath, exportFolderName);
     const folderPath = path.join(downloadsPath, exportFolderName, folderName);
     const filePath = path.join(folderPath, fileName);
+    const reportsFilesPath = path.join(folderPath, reportsFilesFolderName);
 
     //Create folders
     if (!fs.existsSync(exportFolderPath)) {
@@ -113,9 +118,12 @@ app.post("/api/writeXML", (req, res) => {
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath);
     }
+    if (!fs.existsSync(reportsFilesPath)) {
+      fs.mkdirSync(reportsFilesPath);
+    }
 
     //Create ReadMe text
-    const readMeContent = `This EMR export from CalvinEMR software was performed by ${authorName} on ${dateOfExport}`;
+    const readMeContent = `This EMR export from CalvinEMR software was performed by ${authorName} on ${new Date().toUTCString()}`;
     const readMePath = path.join(folderPath, "README.md");
 
     //Write file asynchronously
@@ -133,6 +141,28 @@ app.post("/api/writeXML", (req, res) => {
         console.log("README file saved successfully in Downloads folder.");
       }
     });
+
+    console.log(reportsFiles);
+    for (let reportFile of reportsFiles) {
+      console.log(reportFile.url);
+      const url = reportFile.url;
+      const destinationPath = path.join(reportsFilesPath, `${reportFile.name}`);
+      try {
+        const response = await axios.get(url, { responseType: "stream" });
+
+        const fileStream = fs.createWriteStream(destinationPath);
+        response.data.pipe(fileStream);
+
+        await new Promise((resolve, reject) => {
+          fileStream.on("finish", resolve);
+          fileStream.on("error", reject);
+        });
+
+        console.log("File downloaded successfully.");
+      } catch (error) {
+        console.error(`Error downloading file: ${error.message}`);
+      }
+    }
 
     res.status(200).json({ success: true });
   } catch (err) {

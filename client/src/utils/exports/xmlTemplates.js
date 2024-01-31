@@ -1,8 +1,8 @@
 import xmlFormat from "xml-formatter";
 import { toLocalDate } from "../formatDates";
+import { patientIdToName } from "../patientIdToName";
 
-export const toXmlDemographics = (jsObj) => {
-  console.log("toXmlDemographics");
+export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
   const xmlNames = `<Names>
 <cdsd:NamePrefix>${jsObj.Names?.NamePrefix ?? ""}</cdsd:NamePrefix>
     <cdsd:LegalName namePurpose=${jsObj.Names?.LegalName?._namePurpose}>
@@ -102,12 +102,13 @@ export const toXmlDemographics = (jsObj) => {
           address.Structured?.CountrySubDivisionCode ?? ""
         }</cdsd:CountrySubdivisionCode>
         <cdsd:PostalZipCode>
-          <cdsd:PostalCode>${
-            address.Structured?.PostalZipCode?.PostalCode ?? ""
-          }</cdsd:PostalCode>
-          <cdsd:ZipCode>${
-            address.Structured?.PostalZipCode?.ZipCode ?? ""
-          }</cdsd:ZipCode>
+          ${
+            address.Structured?.PostalZipCode?.PostalCode
+              ? `<cdsd:PostalCode>${address.Structured?.PostalZipCode?.PostalCode}</cdsd:PostalCode>`
+              : `<cdsd:ZipCode>${
+                  address.Structured?.PostalZipCode?.ZipCode ?? ""
+                }</cdsd:ZipCode>`
+          }
         </cdsd:PostalZipCode>
     </cdsd:Structured>
    </Address>`
@@ -119,9 +120,16 @@ export const toXmlDemographics = (jsObj) => {
       ? jsObj.PhoneNumber.map(
           (item) =>
             `<PhoneNumber phoneNumberType=${item._phoneNumberType}>
-      <cdsd:phoneNumber>${item.phoneNumber ?? ""}</cdsd:phoneNumber>
-      <cdsd:extension>${item.extension ?? ""}</cdsd:extension>
-    </PhoneNumber>`
+        ${
+          item.phoneNumber
+            ? `<cdsd:phoneNumber>${item.phoneNumber}</cdsd:phoneNumber>
+                <cdsd:extension>${item.extension ?? ""}</cdsd:extension>`
+            : `<cdsd:areaCode>${item.areaCode ?? ""}</cdsd:areaCode>
+              <cdsd:number>${item.number ?? ""}</cdsd:number>
+              <cdsd:extension>${item.extension ?? ""}</cdsd:extension>
+              <cdsd:exchange>${item.exchange ?? ""}</cdsd:exchange>`
+        }
+</PhoneNumber>`
         ).join("")
       : "";
 
@@ -134,17 +142,18 @@ export const toXmlDemographics = (jsObj) => {
   }</PreferredSpokenLanguage>`;
 
   const xmlContact =
-    jsObj.Contact.length > 0
+    jsObj.Contact?.length > 0
       ? jsObj.Contact.map(
           (contact) =>
             `<Contact>
         <ContactPurpose>
-          <cdsd:PurposeAsEnum>${
-            contact.ContactPurpose?.PurposeAsEnum ?? ""
-          }</cdsd:PurposeAsEnum>
-          <cdsd:PurposeAsPlainText>${
-            contact.ContactPurpose?.PurposeAsPlainText ?? ""
-          }</cdsd:PurposeAsPlainText>
+          ${
+            contact.ContactPurpose?.PurposeAsEnum
+              ? `<cdsd:PurposeAsEnum>${contact.ContactPurpose?.PurposeAsEnum}</cdsd:PurposeAsEnum>`
+              : `<cdsd:PurposeAsPlainText>${
+                  contact.ContactPurpose?.PurposeAsPlainText ?? ""
+                }</cdsd:PurposeAsPlainText>`
+          }
         </ContactPurpose>
         <Name>
           <cdsd:FirstName>
@@ -162,8 +171,22 @@ export const toXmlDemographics = (jsObj) => {
             ? contact.PhoneNumber.map(
                 (item) =>
                   `<PhoneNumber phoneNumberType=${item._phoneNumberType}>
-            <cdsd:phoneNumber>${item.phoneNumber ?? ""}</cdsd:phoneNumber>
-            <cdsd:extension>${item.extension ?? ""}</cdsd:extension>
+                  ${
+                    item.phoneNumber
+                      ? `<cdsd:phoneNumber>${
+                          item.phoneNumber
+                        }</cdsd:phoneNumber>
+            <cdsd:extension>${item.extension ?? ""}</cdsd:extension>`
+                      : `<cdsd:areaCode>${
+                          item.areaCode ?? ""
+                        }</cdsd:areaCode><cdsd:number>${
+                          item.number ?? ""
+                        }</cdsd:number><cdsd:extension>${
+                          item.extension ?? ""
+                        }</cdsd:extension><cdsd:exchange>${
+                          item.exchange ?? ""
+                        }</cdsd:exchange>`
+                  }
           </PhoneNumber>`
               ).join("")
             : ""
@@ -180,7 +203,7 @@ export const toXmlDemographics = (jsObj) => {
 
   const xmlEnrolment = `<Enrolment>
       ${
-        jsObj.Enrolment.EnrolmentHistory.length > 0
+        jsObj.Enrolment?.EnrolmentHistory?.length > 0
           ? jsObj.Enrolment.EnrolmentHistory.map(
               (history) =>
                 `<EnrolmentHistory>
@@ -235,13 +258,14 @@ export const toXmlDemographics = (jsObj) => {
   const xmlEmail = `<Email>${jsObj.Email ?? ""}</Email>`;
 
   const xmlPersonStatusCode = `<PersonStatusCode>
-        <PersonStatusAsEnum>${
-          jsObj.PersonStatusCode?.PersonStatusAsEnum ?? ""
-        }</PersonStatusAsEnum>
-        <PersonStatusAsPlainText>${
+  ${
+    jsObj.PersonStatusCode?.PersonStatusAsEnum
+      ? `<PersonStatusAsEnum>${jsObj.PersonStatusCode?.PersonStatusAsEnum}</PersonStatusAsEnum>`
+      : `<PersonStatusAsPlainText>${
           jsObj.PersonStatusCode?.PersonStatusAsPlainText ?? ""
-        }</PersonStatusAsPlainText>
-      </PersonStatusCode>`;
+        }</PersonStatusAsPlainText>`
+  }
+  </PersonStatusCode>`;
 
   const xmlPersonStatusDate = `<PersonStatusDate>${toLocalDate(
     jsObj.PersonStatusDate
@@ -288,14 +312,16 @@ export const toXmlDemographics = (jsObj) => {
             ?.CountrySubDivisionCode ?? ""
         }</cdsd:CountrySubdivisionCode>
         <cdsd:PostalZipCode>
-          <cdsd:PostalCode>${
+          ${
             jsObj.PreferredPharmacy?.Address?.Structured?.PostalZipCode
-              ?.PostalCode ?? ""
-          }</cdsd:PostalCode>
+              ?.PostalCode
+              ? `<cdsd:PostalCode>${jsObj.PreferredPharmacy?.Address?.Structured?.PostalZipCode?.PostalCode}</cdsd:PostalCode>`
+              : `
           <cdsd:ZipCode>${
             jsObj.PreferredPharmacy?.Address?.Structured?.PostalZipCode
               ?.ZipCode ?? ""
-          }</cdsd:ZipCode>
+          }</cdsd:ZipCode>`
+          }
         </cdsd:PostalZipCode>
       </cdsd:Structured>
     </Address>
@@ -304,11 +330,45 @@ export const toXmlDemographics = (jsObj) => {
         ? jsObj.PreferredPharmacy.PhoneNumber.map(
             (item) =>
               `<PhoneNumber phoneNumberType=${item._phoneNumberType}>
-        <cdsd:phoneNumber>${item.phoneNumber ?? ""}</cdsd:phoneNumber>
-        <cdsd:extension>${item.extension ?? ""}</cdsd:extension></PhoneNumber>`
+            ${
+              item.phoneNumber
+                ? `<cdsd:phoneNumber>${item.phoneNumber}</cdsd:phoneNumber>
+                  <cdsd:extension>${item.extension ?? ""}</cdsd:extension>`
+                : `<cdsd:areaCode>${item.areaCode ?? ""}</cdsd:areaCode>
+                   <cdsd:number>${item.number ?? ""}</cdsd:number>
+                   <cdsd:extension>${item.extension ?? ""}</cdsd:extension>
+                   <cdsd:exchange>${item.exchange ?? ""}</cdsd:exchange>`
+            }
+    </PhoneNumber>`
           ).join("")
         : ""
     }
+    <FaxNumber phoneNumberType=${
+      jsObj.PreferredPharmacy?.FaxNumber?._phoneNumberType
+    }>
+       ${
+         jsObj.PreferredPharmacy?.FaxNumber?.phoneNumer
+           ? `<cdsd:phoneNumber>${
+               jsObj.PreferredPharmacy?.FaxNumber?.phoneNumer
+             }</cdsd:phoneNumber>
+        <cdsd:extension>${
+          jsObj.PreferredPharmacy?.FaxNumber?.extension ?? ""
+        }</cdsd:extension>`
+           : `<cdsd:areaCode>${
+               jsObj.PreferredPharmacy?.FaxNumber.areaCode ?? ""
+             }</cdsd:areaCode>
+        <cdsd:number>${
+          jsObj.PreferredPharmacy?.FaxNumber.number ?? ""
+        }</cdsd:number>
+         <cdsd:extension>${
+           jsObj.PreferredPharmacy?.FaxNumber.extension ?? ""
+         }</cdsd:extension>
+        <cdsd:exchange>${
+          jsObj.PreferredPharmacy?.FaxNumber.exchange ?? ""
+        }</cdsd:exchange>`
+       }
+    </FaxNumber>
+    <EmailAddress>${jsObj.PreferredPharmacy?.EmailAddress ?? ""}</EmailAddress>
   </PreferredPharmacy>`;
 
   const xmlDemographics =
@@ -336,20 +396,45 @@ export const toXmlDemographics = (jsObj) => {
     xmlPreferredPharmacy +
     "</Demographics>";
 
+  console.log(xmlDemographics);
+
   return xmlFormat(xmlDemographics, {
     collapseContent: true,
     indentation: "  ",
   });
 };
 
-export const toXmlFamHistory = (jsObj) => {
+export const toXmlPersonalHistory = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
+  <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
+        ).join("")
+      : ""
+  }
+  </ResidualInfo>`;
+
+  const xmlPersonalHistory =
+    "<PersonalHistory>" + xmlResidual + "</PersonalHistory>";
+
+  return xmlFormat(xmlPersonalHistory, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlFamHistory = (jsObj, demographicsInfos = null) => {
+  const xmlResidual = `<ResidualInfo>
+  ${
+    jsObj.ResidualInfo?.DataElement?.length > 0
+      ? jsObj.ResidualInfo.DataElement.map(
+          (dataElement) => `<cdsd:DataElement>
+  <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -405,14 +490,14 @@ export const toXmlFamHistory = (jsObj) => {
   });
 };
 
-export const toXmlPastHealth = (jsObj) => {
+export const toXmlPastHealth = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -474,14 +559,14 @@ export const toXmlPastHealth = (jsObj) => {
   });
 };
 
-export const toXmlProblemList = (jsObj) => {
+export const toXmlProblemList = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -543,14 +628,14 @@ export const toXmlProblemList = (jsObj) => {
   });
 };
 
-export const toXmlRiskFactors = (jsObj) => {
+export const toXmlRiskFactors = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -595,14 +680,14 @@ export const toXmlRiskFactors = (jsObj) => {
   });
 };
 
-export const toXmlAllergies = (jsObj) => {
+export const toXmlAllergies = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -663,14 +748,14 @@ export const toXmlAllergies = (jsObj) => {
   });
 };
 
-export const toXmlMedications = (jsObj) => {
+export const toXmlMedications = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -817,14 +902,14 @@ export const toXmlMedications = (jsObj) => {
   });
 };
 
-export const toXmlImmunizations = (jsObj) => {
+export const toXmlImmunizations = (jsObj, demographicsInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
-    jsObj.ResidualInfo.DataElement.length > 0
+    jsObj.ResidualInfo?.DataElement?.length > 0
       ? jsObj.ResidualInfo.DataElement.map(
           (dataElement) => `<cdsd:DataElement>
   <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
-  <cdsd:DataType>${dataElement.DataTYpe ?? ""}</cdsd:DataType>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
   <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
         ).join("")
       : ""
@@ -888,11 +973,11 @@ export const toXmlImmunizations = (jsObj) => {
   });
 };
 
-export const toXmlLabResults = (jsObj) => {
+export const toXmlLabResults = (jsObj, demographicsInfos = null) => {
   return "";
 };
 
-export const toXmlAppointments = (jsObj) => {
+export const toXmlAppointments = (jsObj, demographicsInfos = null) => {
   const xmlTime = `<AppointmentTime>${
     jsObj.AppointmentTime ?? ""
   }</AppointmentTime>`;
@@ -929,6 +1014,561 @@ export const toXmlAppointments = (jsObj) => {
     "</Appointments>";
 
   return xmlFormat(xmlAppointments, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlClinicalNotes = (jsObj, demographicsInfos = null) => {
+  const xmlNoteType = `<NoteType>${jsObj.NoteType ?? ""}</NoteType>`;
+  const xmlContent = `<MyClinicalNotesContent>${
+    jsObj.MyClinicalNotesContent ?? ""
+  }</MyClinicalNotesContent>`;
+  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${toLocalDate(
+    jsObj.EventDateTime
+  )}</cdsd:FullDate></EventDateTime>`;
+  const xmlParticipatingProviders =
+    jsObj.ParticipatingProviders?.length > 0
+      ? jsObj.ParticipatingProviders.map(
+          (provider) =>
+            `<ParticipatingProviders>
+      <Name>
+        <cdsd:FirstName>${provider.Name?.FirstName ?? ""}</cdsd:FirstName>
+        <cdsd:LastName>${provider.Name?.LastName ?? ""}</cdsd:LastName>
+      </Name>
+      <OHIPPhysicianId>
+      ${provider.OHIPPhysicianId ?? ""}
+      </OHIPPhysicianId>
+      <DateTimeNoteCreated>
+        <cdsd:FullDateTime>${
+          provider.DateTimeNoteCreated
+            ? new Date(provider.DateTimeNoteCreated).toISOString()
+            : ""
+        }
+        </cdsd:FullDateTime>
+      </DateTimeNoteCreated>
+    </ParticipatingProviders>`
+        ).join("")
+      : "";
+  const xmlReviewer =
+    jsObj.NoteReviewer?.length > 0
+      ? jsObj.NoteReviewer.map(
+          (provider) =>
+            `<NoteReviewer>
+  <Name>
+    <cdsd:FirstName>${provider.Name?.FirstName ?? ""}</cdsd:FirstName>
+    <cdsd:LastName>${provider.Name?.LastName ?? ""}</cdsd:LastName>
+  </Name>
+  <OHIPPhysicianId>
+  ${provider.OHIPPhysicianId ?? ""}
+  </OHIPPhysicianId>
+  <DateTimeNoteReviewed>
+    <cdsd:FullDateTime>${
+      provider.DateTimeNoteCreated
+        ? new Date(provider.DateTimeNoteCreated).toISOString()
+        : ""
+    }
+    </cdsd:FullDateTime>
+  </DateTimeNoteReviewed>
+</NoteReviewer>`
+        ).join("")
+      : "";
+
+  const xmlClinicalNotes =
+    "<ClinicalNotes>" +
+    xmlNoteType +
+    xmlContent +
+    xmlEventDateTime +
+    xmlParticipatingProviders +
+    xmlReviewer +
+    "</ClinicalNotes>";
+
+  return xmlFormat(xmlClinicalNotes, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlReports = (jsObj, demographicsInfos = null) => {
+  const xmlMedia = `<Media>${jsObj.Media ?? ""}</Media>`;
+  const xmlForm = `<Format>${jsObj.Format ?? ""}</Format>`;
+  const xmlFileExtAndVer = `<FileExtensionAndVersion>${
+    jsObj.FileExtensionAndVersion ?? ""
+  }</FileExtensionAndVersion>`;
+  const xmlFilePath = jsObj.File
+    ? `<FilePath>./Reports_files/${jsObj.File.name}
+    </FilePath>`
+    : "";
+  const xmlContent = `<Content>
+  ${
+    jsObj.Content.Media
+      ? `<cdsd:Media>${jsObj.Content.Media}</cdsd:Media>`
+      : `<cdsd:TextContent>${
+          jsObj.Content?.TextContent ?? ""
+        }</cdsd:TextContent>`
+  }
+  </Content>`;
+  const xmlClass = `<Class>${jsObj.Class ?? ""}</Class>`;
+  const xmlSubClass = `<SubClass>${jsObj.SubClass ?? ""}</SubClass>`;
+  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${toLocalDate(
+    jsObj.EventDateTime
+  )}</cdsd:FullDate></EventDateTime>`;
+  const xmlReceivedDateTime = `<ReceivedDateTime><cdsd:FullDate>${toLocalDate(
+    jsObj.ReceivedDateTime
+  )}</cdsd:FullDate></ReceivedDateTime>`;
+  const xmlSourceAuthor = `<SourceAuthorPhysician>
+  ${
+    jsObj.SourceAuthorPhysician?.AuthorFreeText
+      ? `<AuthorFreeText>
+   ${jsObj.SourceAuthorPhysician?.AuthorFreeText}
+  </AuthorFreeText>`
+      : `<AuthorName>
+  <cdsd:FirstName>${
+    jsObj.SourceAuthorPhysician?.AuthorName?.FirstName ?? ""
+  }</cdsd:FirstName>
+  <cdsd:LastName>${
+    jsObj.SourceAuthorPhysician?.AuthorName?.LastName ?? ""
+  }</cdsd:LastName>
+  </AuthorName>`
+  }
+  </SourceAuthorPhysician>`;
+  const xmlSourceFacility = `<SourceFacility>${
+    jsObj.SourceFacility ?? ""
+  }</SourceFacility>`;
+  const xmlReportReviewed =
+    jsObj.ReportReviewed?.length > 0
+      ? jsObj.ReportReviewed.map(
+          (item) =>
+            `<ReportReviewed>
+      <Name>
+        <cdsd:FirstName>
+        ${item.Name?.FirstName ?? ""}
+        </cdsd:FirstName>
+        <cdsd:LastName>
+        ${item.Name?.LastName ?? ""}
+        </cdsd:LastName>
+      </Name>
+      <ReviewingOHIPPhysicianId>
+        ${item.ReviewingOHIPPhysicianId ?? ""}
+      </ReviewingOHIPPhysicianId>
+      <DateTimeReportReviewed>
+        <cdsd:FullDateTime>
+          ${
+            item.DateTimeReportReviewed
+              ? new Date(item.DateTimeReportReviewed).toISOString()
+              : ""
+          }
+        </cdsd:FullDateTime>
+      </DateTimeReportReviewed>
+    </ReportReviewed>`
+        ).join("")
+      : "";
+  const xmlFacilityId = `<SendingFacilityId>
+  ${jsObj.SendingFacilityId ?? ""}</SendingFacilityId>`;
+  const xmlFacilityReport = `<SendingFacilityReport>
+  ${jsObj.SendingFacilityReport ?? ""}</SendingFacilityReport>`;
+
+  const xmlOBR =
+    jsObj.OBRContent?.length > 0
+      ? jsObj.OBRContent.length
+          .map(
+            (obr) =>
+              `<OBRContent>
+   <AccompanyingSubClass>
+   ${obr.AccompanyingSubClass ?? ""}
+   </AccompanyingSubClass>
+   <AccompanyingMnemonic>
+   ${obr.AccompanyingMnemonic ?? ""}
+   </AccompanyingMnemonic>
+   <AccompanyingDescription>
+   ${obr.AccompanyingDescription ?? ""}
+   </AccompanyingDescription>
+   <ObservationDateTime>
+        <cdsd:FullDateTime>
+        ${
+          obr.ObservationDateTime
+            ? new Date(obr.ObservationDateTime).toISOString()
+            : ""
+        }
+        </cdsd:FullDateTime>
+   </ObservationDateTime>
+  </OBRContent>`
+          )
+          .join("")
+      : "";
+
+  const xmlHRM = `<HRMResultStatus>${
+    jsObj.HRMResultStatus ?? ""
+  }</HRMResultStatus>`;
+
+  const xmlMessageId = `<MessageUniqueID>${
+    jsObj.MessageUniqueID ?? ""
+  }</MessageUniqueID>`;
+
+  const xmlNotes = `<Notes>${jsObj.Notes ?? ""}</Notes>`;
+
+  const xmlRecipientName = `<RecipientName>
+  <cdsd:FirstName>
+  ${jsObj.RecipientName?.FirstName ?? ""}
+  </cdsd:FirstName>
+  <cdsd:LastName>
+  ${jsObj.RecipientName?.LastName ?? ""}
+  </cdsd:LastName>
+  </RecipientName>`;
+
+  const xmlSentDateTime = `<SentDateTime>
+  <cdsd:FullDateTime>
+  ${jsObj.SentDateTime ? new Date(jsObj.SentDateTime).toISOString() : ""}
+  </cdsd:FullDateTime>
+</SentDateTime>`;
+
+  const xmlReports =
+    "<Reports>" +
+    xmlMedia +
+    xmlForm +
+    xmlFileExtAndVer +
+    xmlFilePath +
+    xmlContent +
+    xmlClass +
+    xmlSubClass +
+    xmlEventDateTime +
+    xmlReceivedDateTime +
+    xmlSourceAuthor +
+    xmlSourceFacility +
+    xmlReportReviewed +
+    xmlFacilityId +
+    xmlFacilityReport +
+    xmlOBR +
+    xmlHRM +
+    xmlMessageId +
+    xmlNotes +
+    xmlRecipientName +
+    xmlSentDateTime +
+    "</Reports>";
+
+  return xmlFormat(xmlReports, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlCareElements = (jsObj, demographicsInfos = null) => {
+  const xmlSmokingStatus =
+    jsObj.SmokingStatus?.length > 0
+      ? jsObj.SmokingStatus.map(
+          (status) => `<SmokingStatus>
+<cdsd:Status>
+  ${status.Status ?? ""}
+</cdsd:Status>
+<cdsd:Date>
+  ${toLocalDate(status.Date)}
+</cdsd:Date>
+</SmokingStatus>`
+        ).join("")
+      : "";
+
+  const xmlSmokingPacks =
+    jsObj.SmokingPacks?.length > 0
+      ? jsObj.SmokingPacks.map(
+          (packs) =>
+            `<SmokingPacks>
+  <cdsd:PerDay>${packs.PerDay ?? ""}</cdsd:PerDay>
+  <cdsd:Date>${toLocalDate(packs.Date)}</cdsd:Date>
+  </SmockingPacks>`
+        ).join("")
+      : "";
+
+  const xmlWeight =
+    jsObj.Weight?.length > 0
+      ? jsObj.Weight.map(
+          (weight) =>
+            `<Weight>
+      <cdsd:Weight>${weight.Weight ?? ""}</cdsd:Weight>
+      <cdsd:WeightUnit>${weight.WeightUnit ?? ""}</cdsd:WeightUnit>
+      <cdsd:Date>${toLocalDate(weight.Date)}</cdsd:Date>
+    </Weight>`
+        ).join("")
+      : "";
+
+  const xmlHeight =
+    jsObj.Height?.length > 0
+      ? jsObj.Height.map(
+          (height) =>
+            `<Height>
+        <cdsd:Height>${height.Height ?? ""}</cdsd:Height>
+        <cdsd:HeightUnit>${height.HeightUnit ?? ""}</cdsd:HeightUnit>
+        <cdsd:Date>${toLocalDate(height.Date)}</cdsd:Date>
+      </Height>`
+        ).join("")
+      : "";
+
+  const xmlWaistCircumference =
+    jsObj.WaistCircumference?.length > 0
+      ? jsObj.WaistCircumference.map(
+          (waist) =>
+            `<WaistCircumference>
+          <cdsd:WaistCircumference>${
+            waist.WaistCircumference ?? ""
+          }</cdsd:WaistCircumference>
+          <cdsd:WaistCircumferenceUnit>${
+            waist.WaistCircumferenceUnit ?? ""
+          }</cdsd:WaistCircumferenceUnit>
+          <cdsd:Date>${toLocalDate(waist.Date)}</cdsd:Date>
+        </WaistCircumference>`
+        ).join("")
+      : "";
+
+  const xmlBloodPressure =
+    jsObj.BloodPressure?.length > 0
+      ? jsObj.BloodPressure.map(
+          (bp) => `<BloodPressure>
+  <cdsd:SystolicBP>${bp.SystolicBP ?? ""}</cdsd:SystolicBP>
+  <cdsd:DiastolicBP>${bp.DiastolicBP ?? ""}</cdsd:DiastolicBP>
+  <cdsd:BPUnit>${bp.BPUnit ?? ""}</cdsd:BPUnit>
+  <cdsd:Date>${toLocalDate(bp.Date)}</cdsd:Date>
+  </BloodPressure>`
+        ).join("")
+      : "";
+
+  const xmlDiabetesComplication =
+    jsObj.DiabetesComplicationsScreening?.length > 0
+      ? jsObj.DiabetesComplicationsScreening.map(
+          (item) =>
+            `<DiabetesComplicationsScreening>
+      <cdsd:ExamCode>${item.ExamCode ?? ""}</cdsd:ExamCode>
+      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+    </DiabetesComplicationsScreening>`
+        ).join("")
+      : "";
+
+  const xmlDiabetesMotivation =
+    jsObj.DiabetesMotivationalCounselling?.length > 0
+      ? jsObj.DiabetesMotivationalCounselling.map(
+          (item) =>
+            `<DiabetesMotivationalCounselling>
+      <cdsd:CounsellingPerformed>${
+        item.CounsellingPerformed ?? ""
+      }</cdsd:CounsellingPerformed>
+      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+    </DiabetesMotivationalCounselling>`
+        ).join("")
+      : "";
+
+  const xmlDiabetesSelfMgmtCollab =
+    jsObj.DiabetesSelfManagementCollaborative?.length > 0
+      ? jsObj.DiabetesSelfManagementCollaborative.map(
+          (item) =>
+            `<DiabetesSelfManagementCollaborative>
+      <cdsd:CodeValue>${item.CodeValue ?? ""}</cdsd:CodeValue>
+      <cdsd:DocumentedGoals>${item.DocumentedGoals ?? ""}</cdsd:DocumentedGoals>
+      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+    </DiabetesSelfManagementCollaborative>`
+        ).join("")
+      : "";
+
+  const xmlDiabetesSelfMgmtChallenges =
+    jsObj.DiabetesSelfManagementChallenges?.length > 0
+      ? jsObj.DiabetesSelfManagementChallenges.map(
+          (item) =>
+            `<DiabetesSelfManagementChallenges>
+      <cdsd:CodeValue>${item.CodeValue ?? ""}</cdsd:CodeValue>
+      <cdsd:ChallengesIdentified>${
+        item.ChallengesIdentified ?? ""
+      }</cdsd:ChallengesIdentified>
+      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+    </DiabetesSelfManagementChallenges>`
+        ).join("")
+      : "";
+
+  const xmlDiabetesEducSelfManagement =
+    jsObj.DiabetesEducationalSelfManagement?.length > 0
+      ? jsObj.DiabetesEducationalSelfManagement.map(
+          (item) =>
+            `<DiabetesEducationalSelfManagement>
+      <cdsd:EducationalTrainingPerformed>${
+        item.EducationalTrainingPerformed ?? ""
+      }</cdsd:EducationalTrainingPerformed>
+      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+    </DiabetesEducationalSelfManagement>`
+        ).join("")
+      : "";
+
+  const xmlHypoEpisodes =
+    jsObj.HypoglycemicEpisodes?.length > 0
+      ? jsObj.HypoglycemicEpisodes.map(
+          (item) =>
+            `<HypoglycemicEpisodes>
+  <cdsd:NumOfReportedEpisodes>${
+    item.NumOfReportedEpisodes ?? ""
+  }</cdsd:NumOfReportedEpisodes>
+  <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+</HypoglycemicEpisodes>`
+        ).join("")
+      : "";
+
+  const xmlSelfMonitoring =
+    jsObj.SelfMonitoringBloodGlucose?.length > 0
+      ? jsObj.SelfMonitoringBloodGlucose.map(
+          (item) =>
+            `<SelfMonitoringBloodGlucose>
+  <cdsd:SelfMonitoring>${item.SelfMonitoring ?? ""}</cdsd:SelfMonitoring>
+  <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+</SelfMonitoringBloodGlucose>`
+        ).join("")
+      : "";
+
+  const xmlCareElements =
+    "<CareElements>" +
+    xmlSmokingStatus +
+    xmlSmokingPacks +
+    xmlWeight +
+    xmlHeight +
+    xmlWaistCircumference +
+    xmlBloodPressure +
+    xmlDiabetesComplication +
+    xmlDiabetesMotivation +
+    xmlDiabetesSelfMgmtCollab +
+    xmlDiabetesSelfMgmtChallenges +
+    xmlDiabetesEducSelfManagement +
+    xmlHypoEpisodes +
+    xmlSelfMonitoring +
+    "</CareElements>";
+
+  return xmlFormat(xmlCareElements, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlAlerts = (jsObj, demographicsInfos = null) => {
+  const xmlResidual = `<ResidualInfo>
+  ${
+    jsObj.ResidualInfo?.DataElement?.length > 0
+      ? jsObj.ResidualInfo.DataElement.map(
+          (dataElement) => `<cdsd:DataElement>
+  <cdsd:Name>${dataElement.Name ?? ""}</cdsd:Name>
+  <cdsd:DataType>${dataElement.DataType ?? ""}</cdsd:DataType>
+  <cdsd:Content>${dataElement.Content ?? ""}</cdsd:Content></cdsd:DataElement>`
+        ).join("")
+      : ""
+  }
+  </ResidualInfo>`;
+
+  const xmlDescription = `<AlertDescription>${
+    jsObj.AlertDescription ?? ""
+  }</AlertDescription>`;
+
+  const xmlNotes = `<Notes>${jsObj.Notes ?? ""}</Notes>`;
+
+  const xmlDateActive = `<DateActive><cdsd:FullDate>${toLocalDate(
+    jsObj.DateActive
+  )}</cdsd:FullDate></DateActive>`;
+
+  const xmlEndDate = `<EndDate><cdsd:FullDate>${toLocalDate(
+    jsObj.EndDate
+  )}</cdsd:FullDate></EndDate>`;
+
+  const xmlAlerts =
+    "<AlertsAndSpecialNeeds>" +
+    xmlResidual +
+    xmlDescription +
+    xmlNotes +
+    xmlDateActive +
+    xmlEndDate +
+    "</AlertsAndSpecialNeeds>";
+
+  return xmlFormat(xmlAlerts, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlPregnancies = (jsObj, demographicsInfos = null) => {
+  const xmlPregnancies = `<NewCategory>
+<CategoryName>Pregnancies</CategoryName>
+<CategoryDescription>Encompasses data collected from the patient's pregnancy events</CategoryDescription>
+ <ResidualInfo>
+${
+  jsObj.description
+    ? `<cdsd:DataElement>
+<cdsd:Name>Description</cdsd:Name>
+<cdsd:DataType>text</cdsd:DataType>
+<cdsd:Content>${jsObj.description ?? ""}</cdsd:Content>
+</cdsd:DataElement>`
+    : ""
+}
+${
+  jsObj.date_of_event
+    ? `<cdsd:DataElement>
+<cdsd:Name>EventDate</cdsd:Name>
+<cdsd:DataType>date</cdsd:DataType>
+<cdsd:Content>${toLocalDate(jsObj.date_of_event)}</cdsd:Content>
+</cdsd:DataElement>`
+    : ""
+}
+${
+  jsObj.premises
+    ? `<cdsd:DataElement>
+<cdsd:Name>Premises</cdsd:Name>
+<cdsd:DataType>text</cdsd:DataType>
+<cdsd:Content>${jsObj.premises}</cdsd:Content>
+</cdsd:DataElement>`
+    : ""
+}
+${
+  jsObj.term_nbr_of_weeks
+    ? `<cdsd:DataElement>
+<cdsd:Name>TermNumberOfWeeks</cdsd:Name>
+<cdsd:DataType>number</cdsd:DataType>
+<cdsd:Content>${jsObj.term_nbr_of_weeks ?? ""}</cdsd:Content>
+</cdsd:DataElement>`
+    : ""
+}
+${
+  jsObj.term_nbr_of_days
+    ? `<cdsd:DataElement><cdsd:Name>TermNumberOfDays</cdsd:Name><cdsd:DataType>number</cdsd:DataType><cdsd:Content>${jsObj.term_nbr_of_days}</cdsd:Content></cdsd:DataElement>`
+    : ""
+}
+</ResidualInfo>
+</NewCategory>`;
+
+  return xmlFormat(xmlPregnancies, {
+    collapseContent: true,
+    indentation: "  ",
+  });
+};
+
+export const toXmlRelationships = (jsObj, demographicsInfos) => {
+  console.log(jsObj);
+  const xmlRelationships = `<NewCategory>
+  <CategoryName>Relationships</CategoryName>
+  <CategoryDescription>Contains data about the patient’s relationships</CategoryDescription>
+   <ResidualInfo>
+   ${
+     jsObj.relationship
+       ? `<cdsd:DataElement>
+      <cdsd:Name>RelationType</cdsd:Name>
+      <cdsd:DataType>text</cdsd:DataType>
+      <cdsd:Content>${jsObj.relationship} of</cdsd:Content>
+    </cdsd:DataElement>`
+       : ""
+   }
+    ${
+      jsObj.relation_id
+        ? `<cdsd:DataElement>
+      <cdsd:Name>RelationName</cdsd:Name>
+      <cdsd:DataType>text</cdsd:DataType>
+      <cdsd:Content>${patientIdToName(
+        demographicsInfos,
+        jsObj.relation_id
+      )}</cdsd:Content>
+    </cdsd:DataElement>`
+        : ""
+    }
+  </ResidualInfo>
+  </NewCategory>`;
+
+  return xmlFormat(xmlRelationships, {
     collapseContent: true,
     indentation: "  ",
   });

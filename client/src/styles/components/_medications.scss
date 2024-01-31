@@ -53,10 +53,7 @@
     }
     &__event-btn-container {
         display: flex;
-        justify-content: space-between;
-        button {
-            margin-left: 5px;
-        }
+        justify-content: center;
     }
     &__btn-container {
         button {
@@ -164,7 +161,7 @@
         font-size: 0.8rem;
         display: flex;
         justify-content: space-between;
-        padding: 40px;
+        padding: 30px 40px;
         border: solid 1px $grey;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         border-radius:4px;

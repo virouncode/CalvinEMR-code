@@ -20,10 +20,10 @@ const EmailForm = ({
     e.preventDefault();
     //verifier l'email
     try {
-      const response = await axiosXanoReset.get(`/${type}/all_emails`);
-      const mail = response.data.find(
-        ({ email }) => email === emailInput.toLowerCase()
+      const response = await axiosXanoReset.get(
+        `/${type}/email?email=${emailInput.toLowerCase()}`
       );
+      const mail = response.data;
       if (!mail) {
         setErrMsg(`There is no ${type} account associated with this email`);
         return;

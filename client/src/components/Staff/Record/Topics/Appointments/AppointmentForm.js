@@ -47,8 +47,8 @@ const AppointmentForm = ({
     AppointmentNotes: "",
   });
   const [availableRooms, setAvailableRooms] = useState([]);
-  const previousStartDate = useRef(toLocalDate(new Date().toISOString()));
-  const previousEndDate = useRef(toLocalDate(new Date().toISOString()));
+  const previousStartDate = useRef(toLocalDate(Date.now()));
+  const previousEndDate = useRef(toLocalDate(Date.now()));
   const previousStartHours = useRef("");
   const previousEndHours = useRef("");
   const previousStartMin = useRef("");
@@ -63,8 +63,8 @@ const AppointmentForm = ({
   const endMinInput = useRef("");
   const startAMPMInput = useRef("");
   const endAMPMInput = useRef("");
-  const minStartDate = useRef(toLocalDate(new Date().toISOString()));
-  const minEndDate = useRef(toLocalDate(new Date().toISOString()));
+  const minStartDate = useRef(toLocalDate(Date.now()));
+  const minEndDate = useRef(toLocalDate(Date.now()));
 
   //STYLE
 

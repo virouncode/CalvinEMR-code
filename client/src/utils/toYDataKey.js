@@ -1,10 +1,7 @@
 export const toYDataKey = (historyTopic) => {
-  if (historyTopic === "SMOKING STATUS" || historyTopic === "ALCOHOL STATUS") {
+  if (historyTopic === "SMOKING STATUS") {
     return "Status";
-  } else if (
-    historyTopic === "SMOKING PACKS PER DAY" ||
-    historyTopic === "ALCOHOL GLASSES PER DAY"
-  ) {
+  } else if (historyTopic === "SMOKING PACKS PER DAY") {
     return "PerDay";
   } else if (historyTopic === "WEIGHT") {
     return "Weight";

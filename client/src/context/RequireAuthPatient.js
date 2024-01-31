@@ -9,7 +9,7 @@ const RequireAuthPatient = ({ allowedAccesses }) => {
   return allowedAccesses.includes(user.access_level) ? (
     <Outlet />
   ) : auth?.email ? (
-    <Navigate to="/patient/unauthorized" state={{ from: location }} replace />
+    <Navigate to="/unauthorized" state={{ from: location }} replace />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );

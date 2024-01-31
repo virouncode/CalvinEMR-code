@@ -16,6 +16,7 @@ import FamilyDoctorsPU from "../Popups/FamilyDoctorsPU";
 import ImmunizationsPU from "../Popups/ImmunizationsPU";
 import MedicationsPU from "../Popups/MedicationsPU";
 import PastHealthPU from "../Popups/PastHealthPU";
+import PersonalHistoryPU from "../Popups/PersonalHistoryPU";
 import PharmaciesPU from "../Popups/PharmaciesPU";
 import PregnanciesPU from "../Popups/PregnanciesPU";
 import ProblemListPU from "../Popups/ProblemListPU";
@@ -37,6 +38,7 @@ import MedicationsContent from "../Topics/Medications/MedicationsContent";
 import MessagesContent from "../Topics/MessagesAboutPatient/MessagesContent";
 import MessagesExternalContent from "../Topics/MessagesWithPatient/MessagesExternalContent";
 import PastHealthContent from "../Topics/PastHealth/PastHealthContent";
+import PersonalHistoryContent from "../Topics/PersonalHistory/PersonalHistoryContent";
 import PharmaciesContent from "../Topics/Pharmacies/PharmaciesContent";
 import PregnanciesContent from "../Topics/Pregnancies/PregnanciesContent";
 import ProblemListContent from "../Topics/ProblemList/ProblemListContent";
@@ -140,7 +142,7 @@ const PatientTopic = ({
       <div
         className={
           allContentsVisible
-            ? topic === "E-FORMS" || topic === "MESSAGES WITH PATIENT"
+            ? topic === "PERSONAL HISTORY" || topic === "MESSAGES WITH PATIENT"
               ? `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active patient-record__topic-container--bottom`
               : `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active`
             : `patient-record__topic-container patient-record__topic-container--${side} `
@@ -453,6 +455,42 @@ const PatientTopic = ({
             setPopUpVisible={setPopUpVisible}
           >
             <EformsPU
+              demographicsInfos={demographicsInfos}
+              patientId={patientId}
+              showDocument={showDocument}
+              datas={datas}
+              setDatas={setDatas}
+              isLoading={isLoading}
+              errMsg={errMsg}
+              setPopUpVisible={setPopUpVisible}
+            />
+          </FakeWindow>
+        )}
+        {/*******************/}
+
+        {/* PERSONAL HISTORY */}
+        {topic === "PERSONAL HISTORY" && (
+          <PersonalHistoryContent
+            datas={datas}
+            isLoading={isLoading}
+            errMsg={errMsg}
+            showDocument={showDocument}
+          />
+        )}
+        {topic === "PERSONAL HISTORY" && popUpVisible && (
+          <FakeWindow
+            title={`PERSONAL HISTORY of ${patientIdToName(
+              clinic.demographicsInfos,
+              patientId
+            )}`}
+            width={800}
+            height={500}
+            x={(window.innerWidth - 800) / 2}
+            y={(window.innerHeight - 500) / 2}
+            color={backgroundColor}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <PersonalHistoryPU
               demographicsInfos={demographicsInfos}
               patientId={patientId}
               showDocument={showDocument}

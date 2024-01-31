@@ -14,12 +14,7 @@ import {
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReportItem = ({
-  item,
-  showDocument,
-  setErrMsgPost,
-  demographicsInfos,
-}) => {
+const ReportItemReceived = ({ item, showDocument, setErrMsgPost }) => {
   const { auth, clinic, user, socket } = useAuth();
   const handleDeleteClick = async (e) => {
     setErrMsgPost("");
@@ -94,19 +89,18 @@ const ReportItem = ({
     <tr className="reports__item">
       <td>{item.name}</td>
       <td>{item.Format}</td>
+      {console.log(item.File)}
       <td>{item.FileExtensionAndVersion}</td>
-      {item.Content.Media ? (
+      {item.Format === "Binary" ? (
         <td
           className="reports__link"
-          onClick={() =>
-            showDocument(item.Content.Media.url, item.Content.Media.mime)
-          }
+          onClick={() => showDocument(item.File.url, item.File.mime)}
           style={{
             fontWeight: item.ReportReviewed.length ? "normal" : "bold",
             color: item.ReportReviewed.length ? "black" : "blue",
           }}
         >
-          {item.Content.Media.name}
+          {item.File.name}
         </td>
       ) : (
         <td>{item.Content.TextContent}</td>
@@ -171,4 +165,4 @@ const ReportItem = ({
   );
 };
 
-export default ReportItem;
+export default ReportItemReceived;

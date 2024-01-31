@@ -17,7 +17,6 @@ const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
     FirstName: "",
     LastName: "",
     Address: {
-      Formatted: "",
       Structured: {
         Line1: "",
         City: "",

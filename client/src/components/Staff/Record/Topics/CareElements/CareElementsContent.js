@@ -1,5 +1,9 @@
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import {
+  toCodeTableName,
+  ynIndicatorsimpleCT,
+} from "../../../../../datas/codesTables";
 import { cmToFeet, kgToLbs } from "../../../../../utils/measurements";
 
 const CareElementsContent = ({ datas, isLoading, errMsg }) => {
@@ -12,15 +16,6 @@ const CareElementsContent = ({ datas, isLoading, errMsg }) => {
           (a, b) => b.Date - a.Date
         )[0],
         SmokingPacks: datas[0].SmokingPacks.sort((a, b) => b.Date - a.Date)[0],
-        alcoholStatus: datas[0].alcoholStatus.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
-        alcoholGlasses: datas[0].alcoholGlasses.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
-        recreationalDrugs: datas[0].recreationalDrugs.sort(
-          (a, b) => b.Date - a.Date
-        )[0],
         Weight: datas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
         Height: datas[0].Height.sort((a, b) => b.Date - a.Date)[0],
         WaistCircumference: datas[0].WaistCircumference.sort(
@@ -48,23 +43,14 @@ const CareElementsContent = ({ datas, isLoading, errMsg }) => {
           <>
             <p>
               <label>Smoking: </label>
-              {lastDatas.SmokingStatus?.Status}
+              {toCodeTableName(
+                ynIndicatorsimpleCT,
+                lastDatas.SmokingStatus?.Status
+              )}
             </p>
             <p>
               <label>Smoking Packs (per day): </label>
               {lastDatas.SmokingPacks?.PerDay}
-            </p>
-            <p>
-              <label>Alcohol: </label>
-              {lastDatas.alcoholStatus?.Status}
-            </p>
-            <p>
-              <label>Alcohol Glasses (per day): </label>
-              {lastDatas.alcoholGlasses?.PerDay}
-            </p>
-            <p>
-              <label>Recreational Drugs: </label>
-              {lastDatas.recreationalDrugs?.DrugNames}
             </p>
             <p>
               <label>Weight (kg): </label>

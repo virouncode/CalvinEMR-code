@@ -21,7 +21,7 @@ const RecImmunizationItemSingle = ({
 
   //STYLES
   const INTERVAL_STYLE = {
-    color: rangeEnd < new Date() ? "crimson" : "black",
+    color: rangeEnd < new Date() ? "orange" : "black",
   };
 
   //HANDLERS
@@ -47,7 +47,14 @@ const RecImmunizationItemSingle = ({
         checked={isChecked()}
       />
       {immunizationInfos.Date ? (
-        <label className="recimmunizations-item__checked">
+        <label
+          style={{
+            color:
+              immunizationInfos.RefusedFlag.ynIndicatorsimple === "Y"
+                ? "red"
+                : "forestgreen",
+          }}
+        >
           {toLocalDate(immunizationInfos.Date)} {getVaccinationLogo(route)}
         </label>
       ) : (

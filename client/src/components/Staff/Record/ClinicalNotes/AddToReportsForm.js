@@ -17,10 +17,7 @@ const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {
     Media: "Download",
     Format: "Binary",
     FileExtensionAndVersion: getExtension(attachment.file.path),
-    FilePath: attachment.file.path,
-    Content: {
-      Media: attachment.file,
-    },
+    File: attachment,
     ReceivedDateTime: date,
     assigned_staff_id: user.id,
   });
@@ -103,8 +100,8 @@ const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {
       datasToPost.acknowledged = true;
     }
 
-    // if (datasToPost.Format === "Binary" && !datasToPost.Content.Media.type) {
-    //   datasToPost.Content.Media.type = "document";
+    // if (datasToPost.Format === "Binary" && !datasToPost.File.type) {
+    //   datasToPost.File.type = "document";
     // }
 
     //Validation
@@ -298,38 +295,32 @@ const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {
         </div>
       </form>
       <div className="reports__preview">
-        {formDatas.Content?.Media &&
-        formDatas.Content?.Media?.mime?.includes("image") ? (
-          <img
-            src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-            alt=""
-            width="100%"
-          />
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("video") ? (
+        {formDatas.File && formDatas.File.mime?.includes("image") ? (
+          <img src={`${BASE_URL}${formDatas.File.path}`} alt="" width="100%" />
+        ) : formDatas.File && formDatas.File.mime?.includes("video") ? (
           <video controls>
             <source
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.mime}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.mime}
             />
           </video>
-        ) : formDatas.Content?.Media &&
-          formDatas.Content?.Media?.mime?.includes("officedocument") ? (
+        ) : formDatas.File &&
+          formDatas.File.mime?.includes("officedocument") ? (
           <div>
             <iframe
               title="office document"
-              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.Content?.Media?.path}&embedded=true&widget=false`}
+              src={`https://docs.google.com/gview?url=${BASE_URL}${formDatas.File.path}&embedded=true&widget=false`}
               width="100%"
               height="500px"
               frameBorder="0"
             />
           </div>
         ) : (
-          formDatas.Content?.Media && (
+          formDatas.File && (
             <iframe
               title={formDatas.alias}
-              src={`${BASE_URL}${formDatas.Content?.Media?.path}`}
-              type={formDatas.Content?.Media?.type}
+              src={`${BASE_URL}${formDatas.File.path}`}
+              type={formDatas.File.type}
               width="100%"
               style={{ border: "none" }}
               height="500px"
