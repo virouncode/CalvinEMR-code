@@ -89,7 +89,6 @@ const ReportItemReceived = ({ item, showDocument, setErrMsgPost }) => {
     <tr className="reports__item">
       <td>{item.name}</td>
       <td>{item.Format}</td>
-      {console.log(item.File)}
       <td>{item.FileExtensionAndVersion}</td>
       {item.Format === "Binary" ? (
         <td

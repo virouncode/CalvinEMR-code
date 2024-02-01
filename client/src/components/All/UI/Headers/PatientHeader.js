@@ -28,7 +28,7 @@ const PatientHeader = () => {
         <ul>
           <li>
             <NavLink
-              to="patient/messages"
+              to="/patient/messages"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--patient header__link--active"
@@ -40,7 +40,7 @@ const PatientHeader = () => {
           </li>
           <li>
             <NavLink
-              to="patient/appointments"
+              to="/patient/appointments"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--patient header__link--active"
@@ -52,7 +52,7 @@ const PatientHeader = () => {
           </li>
           <li>
             <NavLink
-              to="patient/my-account"
+              to="/patient/my-account"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--patient header__link--active"
@@ -64,7 +64,7 @@ const PatientHeader = () => {
           </li>
           <li>
             <NavLink
-              to="login"
+              to="/"
               onClick={handleLogout}
               className={(nav) =>
                 nav.isActive

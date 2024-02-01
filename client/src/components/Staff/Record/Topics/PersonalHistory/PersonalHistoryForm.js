@@ -80,7 +80,6 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         ],
       },
     };
-    console.log("datasToPost", datasToPost);
 
     try {
       await postPatientRecord(

@@ -1,18 +1,50 @@
 import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { searchByBrandName } from "../../../../../api/medsService";
+import { getMedForm, searchByBrandName } from "../../../../../api/medsService";
 import MedsResult from "./MedsResult";
 
-const MedsSearch = ({ handleMedClick }) => {
+const MedsSearch = () => {
   const [results, setResults] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const abortController = useRef(null);
 
+  const handleMedClick = async (e, drugId) => {
+    const abortController = new AbortController();
+    const form = await getMedForm(drugId, abortController);
+  };
+
   const handleChange = async (e) => {
     const value = e.target.value;
     setSearch(value);
+    if (abortController.current) {
+      //si le controleur n'est pas nul
+      abortController.current.abort(); //on l'abort
+      abortController.current = null; //on l'efface
+    }
+    if (!value) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+    const newAbortController = new AbortController();
+    abortController.current = newAbortController; //on en crée un nouveau
+
+    try {
+      setLoading(true); //on lance la requête avec le controleur
+      const drugResults = await searchByBrandName(value, newAbortController);
+      if (newAbortController.signal.aborted) {
+        return;
+      }
+      setResults(drugResults);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      toast.error(`Error: unable to fetch meds database: ${err.message}`, {
+        containerId: "B",
+      });
+    }
   };
 
   const handleSearch = async (e) => {

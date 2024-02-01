@@ -27,7 +27,7 @@ const MessagesExternal = () => {
   useEffect(() => {
     if (messageId) {
       setCurrentMsgId(parseInt(messageId));
-      navigate("/messages");
+      navigate("/staff/messages");
     }
   }, [messageId, navigate, setCurrentMsgId]);
 

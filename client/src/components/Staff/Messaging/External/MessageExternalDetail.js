@@ -294,7 +294,7 @@ const MessageExternalDetail = ({
         <div className="message-detail__subject">{message.subject}</div>
         <div className="message-detail__patient">
           <NavLink
-            to={`/patient-record/${
+            to={`/staff/patient-record/${
               message.from_user_type === "patient"
                 ? message.from_id
                 : message.to_id

@@ -1,6 +1,7 @@
 import { Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { getPatientRecord } from "../../../../../api/fetchRecords";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
   formCT,
@@ -11,18 +12,16 @@ import {
 } from "../../../../../datas/codesTables";
 import useAuth from "../../../../../hooks/useAuth";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
-import { medicationSchema } from "../../../../../validation/medicationValidation";
+import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
-var _ = require("lodash");
 
-const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
+const MedTemplateForm = ({ setNewVisible }) => {
   //HOOKS
-  const { auth } = useAuth();
-  const [allergies, setAllergies] = useState([]);
+  const { auth, socket, user } = useAuth();
   const [formDatas, setFormDatas] = useState({
     DrugIdentificationNumber: "",
     DrugName: "",
@@ -40,59 +39,41 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
       D: 0,
     },
     RefillDuration: "",
-    refill_duration: {
-      Y: 0,
-      M: 0,
-      W: 0,
-      D: 0,
-    },
     Quantity: "",
     RefillQuantity: "",
     LongTermMedication: { ynIndicatorsimple: "N" },
     Notes: "",
     PrescriptionInstructions: "",
     SubstitutionNotAllowed: "N",
+    refill_duration: {
+      Y: 0,
+      M: 0,
+      W: 0,
+      D: 0,
+    },
   });
   const [errMsg, setErrMsg] = useState("");
-  const [errAllergies, setErrAllergies] = useState(null);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAllergies = async () => {
-      try {
-        const allergiesResults = await getPatientRecord(
-          "/allergies_for_patient",
-          patientId,
-          auth.authToken,
-          abortController
-        );
-        if (abortController.signal.aborted) return;
-        setAllergies(allergiesResults);
-      } catch (err) {
-        setErrAllergies(
-          `Error: unable to fetch patient allergies: ${err.message}`
-        );
-      }
-    };
-    fetchAllergies();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, patientId]);
 
   //HANDLERS
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setNewVisible(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
-    const datasToAdd = {
+    const datasToPost = {
       ...formDatas,
+      staff_id: user.id,
+      date_created: Date.now(),
+      created_by_id: user.id,
       DrugName: formDatas.DrugName.toUpperCase(),
-      temp_id: _.uniqueId(),
     };
 
     //Validation
     try {
-      await medicationSchema.validate(datasToAdd);
+      await medTemplateSchema.validate(datasToPost);
     } catch (err) {
       setErrMsg(err.message);
       return;
@@ -101,42 +82,35 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
     if (
       await confirmAlert({
         content:
-          "It is your responsibility to ensure that the instructions accurately match the fields on the form, add to RX ?",
+          "It is your responsibility to ensure that the instructions accurately match the fields on the form, save template ?",
       })
     ) {
-      setAddedMeds([...addedMeds, datasToAdd]);
-      setFormDatas({
-        DrugIdentificationNumber: "",
-        DrugName: "",
-        Strength: { Amount: "", UnitOfMeasure: "" },
-        Dosage: "",
-        DosageUnitOfMeasure: "",
-        Form: "",
-        Route: "",
-        Frequency: "",
-        Duration: "",
-        duration: {
-          Y: 0,
-          M: 0,
-          W: 0,
-          D: 0,
-        },
-        RefillDuration: "",
-        refill_duration: {
-          Y: 0,
-          M: 0,
-          W: 0,
-          D: 0,
-        },
-        Quantity: "",
-        RefillQuantity: "",
-        LongTermMedication: { ynIndicatorsimple: "N" },
-        Notes: "",
-        PrescriptionInstructions: "",
-        SubstitutionNotAllowed: "N",
-      });
+      try {
+        const response = await axiosXanoStaff.post(
+          "/medications_templates",
+          datasToPost,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+          }
+        );
+        socket.emit("message", {
+          route: "MEDS TEMPLATES",
+          action: "create",
+          content: { data: response.data },
+        });
+        setNewVisible(false);
+        toast.success("Medication template successfully added", {
+          containerId: "B",
+        });
+      } catch (err) {
+        toast.error(`Unable to add medication template: ${err.message}`);
+      }
     }
   };
+
   const handleChange = (e) => {
     setErrMsg("");
     let value = e.target.value;
@@ -381,7 +355,6 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
       ),
     });
   };
-
   const handleFrequencyChange = (value) => {
     setFormDatas({
       ...formDatas,
@@ -473,26 +446,8 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
   };
 
   return (
-    <form className="medications-form" onSubmit={handleSubmit}>
-      <div className="medications-form__title">
-        <p>Medications</p>
-        <input type="submit" value="Add to RX" />
-      </div>
-      {errMsg && <p className="medications-form__err">{errMsg}</p>}
-      <div className="medications-form__allergies">
-        <i
-          className="fa-solid fa-triangle-exclamation"
-          style={{ color: "#ff0000" }}
-        ></i>{" "}
-        Patient Allergies :{" "}
-        {errAllergies
-          ? errAllergies
-          : allergies && allergies.length > 0
-          ? allergies
-              .map((allergy) => allergy.OffendingAgentDescription)
-              .join(", ")
-          : "No Allergies"}
-      </div>
+    <form className="med-templates__form" onSubmit={handleSubmit}>
+      {errMsg && <div className="med-templates__form-err">{errMsg}</div>}
       <div className="med-templates__form-row">
         <label>Drug identification number</label>
         <input
@@ -663,8 +618,12 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
           name="PrescriptionInstructions"
         />
       </div>
+      <div className="med-templates__form-btn-container">
+        <input type="submit" value="Save" />
+        <button onClick={handleCancel}>Cancel</button>
+      </div>
     </form>
   );
 };
 
-export default MedicationForm;
+export default MedTemplateForm;

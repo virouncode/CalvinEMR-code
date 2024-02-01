@@ -12396,27 +12396,37 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
-.medications-form__btn-container {
-  margin-bottom: 5px;
-}
-.medications-form__btn-container button {
-  margin-left: 5px;
-}
-.medications-form__container {
-  font-size: 0.8rem;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
+.medications-form {
   border: solid 1px #cecdcd;
   border-radius: 4px;
+  padding: 10px 20px;
   margin-top: 20px;
 }
-.medications-form__container form {
-  width: 70%;
+.medications-form__err {
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  width: 90%;
+  margin: 0 auto 10px;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
+  text-align: center;
+}
+.medications-form__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.medications-form__title p {
+  padding: 0;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 10px;
 }
 .medications-form__allergies {
   color: red;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .medications-form__row {
   display: flex;
@@ -13630,77 +13640,56 @@ readers do not read off random characters that represent icons */
 .prescription__actions button {
   margin-right: 10px;
 }
-.prescription__section {
+.prescription__form {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
 }
-.prescription__templates-list {
-  border: solid 1px #cecdcd;
-  border-radius: 4px;
-  width: 50%;
-  height: 1000px;
-  padding: 10px;
-}
-.prescription__templates-item {
-  margin-top: 10px;
-  margin-left: 20px;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-.prescription__templates-item:hover {
-  text-decoration: underline;
+.prescription__item {
+  padding: 10px 5px;
 }
 .prescription__page {
   width: 21cm;
-  height: 29.7cm;
-  display: flex;
-  align-items: center;
+  max-height: 29.7cm;
+  padding: 40px;
+}
+.prescription__medications {
+  width: 50%;
 }
 .prescription__container {
-  width: 90%;
+  width: 100%;
+  height: 100%;
   border: solid 1px #cecdcd;
   border-radius: 4px;
-  height: 100%;
   display: flex;
   flex-direction: column;
 }
 .prescription__header {
-  -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
   display: flex;
-  height: 10%;
+  height: 20%;
   justify-content: space-between;
-  border-bottom: solid 1px #cecdcd;
 }
 .prescription__logo {
-  width: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 20%;
   padding: 5px 10px;
-  border-left: solid 1px #cecdcd;
 }
 .prescription__logo img {
-  height: 80%;
+  width: 100%;
 }
 .prescription__doctor-infos {
   font-size: 0.75rem;
   width: 50%;
   padding: 5px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }
 .prescription__doctor-infos p {
-  padding: 0;
+  padding: 5px;
 }
 .prescription__subheader {
   display: flex;
-  height: 4%;
+  flex-direction: column;
+  height: 10%;
   justify-content: space-between;
-  border-bottom: solid 1px #cecdcd;
-  align-items: center;
+  align-items: flex-start;
 }
 .prescription__date {
   font-size: 0.8rem;
@@ -13716,7 +13705,7 @@ readers do not read off random characters that represent icons */
   padding: 0;
 }
 .prescription__body {
-  height: 76%;
+  height: 58%;
 }
 .prescription__body-title {
   font-weight: bold;
@@ -13725,25 +13714,30 @@ readers do not read off random characters that represent icons */
   margin: 20px 0;
 }
 .prescription__body-content {
-  padding: 5px 10px;
-  font-size: 0.9rem;
+  padding: 0 20px;
+  font-size: 0.8rem;
+  white-space: pre;
 }
-.prescription__body-content div {
+.prescription__body-content textarea {
   width: 100%;
   height: 700px;
   border: none;
   outline: none;
-  padding: 10px;
   font-size: 0.8rem;
-  white-space: pre;
-  display: inline-block;
+}
+.prescription__footer {
+  height: 2%;
+}
+.prescription__id {
+  font-size: 0.7em;
+  font-style: italic;
+  text-align: end;
 }
 .prescription__sign {
   height: 10%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   font-size: 0.8rem;
-  border-top: solid 1px #cecdcd;
 }
 .prescription__sign-image img {
   height: 100%;
@@ -16598,4 +16592,94 @@ readers do not read off random characters that represent icons */
   background-color: rgba(255, 0, 0, 0.403);
   border-radius: 4px;
   text-align: center;
+}
+
+.med-templates__search {
+  margin: 10px 0;
+}
+.med-templates__form {
+  width: 90%;
+  margin: 50px auto 20px;
+}
+.med-templates__form-row {
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.med-templates__form-row label {
+  font-weight: bold;
+  min-width: 180px;
+}
+.med-templates__form-row--text {
+  align-items: start;
+}
+.med-templates__form-notes {
+  width: 100%;
+  height: 50px;
+  white-space: pre;
+}
+.med-templates__form-instructions {
+  width: 100%;
+  height: 100px;
+  white-space: pre;
+}
+.med-templates__form-btn-container {
+  text-align: center;
+  margin-top: 15px;
+}
+.med-templates__form-btn-container button {
+  margin-left: 5px;
+}
+.med-templates__form-err {
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  width: 90%;
+  margin: 0 auto 10px;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
+  text-align: center;
+}
+.med-templates__form-container {
+  padding: 10px;
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.med-templates__list {
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  height: 300px;
+  padding: 10px 20px;
+  overflow: scroll;
+}
+.med-templates__list button {
+  margin-left: 5px;
+}
+.med-templates__allergies {
+  color: red;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.med-templates__item {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.med-templates__item span {
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.med-templates__item span:hover {
+  text-decoration: underline;
+}
+.med-templates__item i {
+  cursor: pointer;
+}
+
+.meds-results {
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  margin-top: 1px;
+  height: 500px;
+  overflow: scroll;
 }/*# sourceMappingURL=index.css.map */

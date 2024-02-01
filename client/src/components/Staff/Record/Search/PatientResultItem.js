@@ -12,7 +12,7 @@ const PatientResultItem = ({ patient }) => {
     <tr>
       <td>
         <NavLink
-          to={`/patient-record/${patient.patient_id}`}
+          to={`/staff/patient-record/${patient.patient_id}`}
           className="record-link"
           target="_blank"
         >

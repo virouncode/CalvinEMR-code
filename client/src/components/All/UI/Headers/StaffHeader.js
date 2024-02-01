@@ -24,7 +24,7 @@ const StaffHeader = () => {
         <ul>
           <li>
             <NavLink
-              to="/"
+              to="/staff/calendar"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -37,7 +37,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="search-patient"
+              to="/staff/search-patient"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -50,7 +50,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="signup-patient"
+              to="/staff/signup-patient"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -63,7 +63,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="doc-inbox"
+              to="/staff/doc-inbox"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -76,7 +76,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="messages"
+              to="/staff/messages"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -89,7 +89,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="reference"
+              to="/staff/reference"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -102,7 +102,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="calvinai"
+              to="/staff/calvinai"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -115,7 +115,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="billing"
+              to="/staff/billing"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -128,7 +128,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="my-account"
+              to="/staff/my-account"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"
@@ -141,7 +141,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="login"
+              to="/"
               onClick={handleLogout}
               className={(nav) =>
                 nav.isActive

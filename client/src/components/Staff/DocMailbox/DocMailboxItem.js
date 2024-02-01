@@ -85,7 +85,7 @@ const DocMailboxItem = ({
       <td>
         <NavLink
           className="reports__link"
-          to={`/patient-record/${item.patient_id}`}
+          to={`/staff/patient-record/${item.patient_id}`}
           target="_blank"
         >
           {" "}

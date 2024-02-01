@@ -94,7 +94,6 @@ export const exportEMRCategory = async (
   checkedPatients = null,
   demographicsInfos
 ) => {
-  console.log(categoryName);
   let jsArrayToExport = [];
   if (checkedPatients) {
     try {

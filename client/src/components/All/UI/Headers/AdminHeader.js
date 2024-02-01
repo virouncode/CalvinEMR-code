@@ -24,7 +24,7 @@ const AdminHeader = () => {
         <ul>
           <li>
             <NavLink
-              to="admin/dashboard"
+              to="/admin/dashboard"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -36,7 +36,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="admin/accounts"
+              to="/admin/accounts"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -48,7 +48,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="admin/clinic"
+              to="/admin/clinic"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -60,7 +60,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="admin/billing"
+              to="/admin/billing"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -73,7 +73,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="admin/rooms"
+              to="/admin/rooms"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -86,7 +86,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="admin/migration"
+              to="/admin/migration"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
@@ -98,7 +98,7 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="login"
+              to="/"
               onClick={handleLogout}
               className={(nav) =>
                 nav.isActive

@@ -17,7 +17,7 @@ const RelationshipsContent = ({ datas, isLoading, errMsg }) => {
               <li key={item.id}>
                 - {item.relationship} of{" "}
                 <NavLink
-                  to={`/patient-record/${item.relation_id}`}
+                  to={`/staff/patient-record/${item.relation_id}`}
                   className="topic-content__link"
                   target="_blank"
                 >

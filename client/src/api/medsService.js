@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const base_URL_DPD = "https://dpd-hc-sc-apicast-production.api.canada.ca/v1";
+// const base_URL_DPD = "https://dpd-hc-sc-apicast-production.api.canada.ca/v1";
+const base_URL_DPD = "https://health-products.canada.ca/api/drug/";
 var _ = require("lodash");
 
 const axiosMeds = axios.create({
@@ -10,10 +11,8 @@ const axiosMeds = axios.create({
 export const getActiveIngredients = async (drugCode, abortController) => {
   const init = {
     method: "GET",
-    mode: "cors",
     headers: {
       Accept: "application/json",
-      "user-key": process.env.REACT_APP_MEDS_USER_KEY,
     },
     ...(abortController && { signal: abortController.signal }),
   };
@@ -48,18 +47,13 @@ export const getActiveIngredients = async (drugCode, abortController) => {
 export const getRoute = async (drugCode, abortController) => {
   const init = {
     method: "GET",
-    mode: "cors",
     headers: {
       Accept: "application/json",
-      "user-key": process.env.REACT_APP_MEDS_USER_KEY,
     },
     ...(abortController && { signal: abortController.signal }),
   };
   try {
-    const response = await axiosMeds.get(
-      `/route?lang=en&type=json&id=${drugCode}`,
-      init
-    );
+    const response = await axiosMeds.get(`route?lang=en&type=json`, init);
     if (response.status === 200) {
       return response.data[0].route_of_administration_name;
     } else {
@@ -86,20 +80,39 @@ export const getRoute = async (drugCode, abortController) => {
 export const searchByBrandName = async (brandName, abortController) => {
   const init = {
     method: "GET",
-    mode: "cors",
     headers: {
       Accept: "application/json",
-      "user-key": process.env.REACT_APP_MEDS_USER_KEY,
     },
     ...(abortController && { signal: abortController.signal }),
   };
   try {
     const response = await axiosMeds.get(
-      `/drugproduct?lang=en&type=json&brandname=${brandName}`,
+      `drugproduct/?lang=en&type=json&brandname=${brandName}`,
       init
     );
     const uniqData = _.uniqBy(response.data, "drug_code");
     return uniqData;
+  } catch (err) {
+    if (err.name !== "CanceledError") {
+      throw err;
+    }
+  }
+};
+
+export const getMedForm = async (drugId, abortController) => {
+  const init = {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    ...(abortController && { signal: abortController.signal }),
+  };
+  try {
+    const response = await axiosMeds.get(
+      `form/?lang=en&type=json&id=${drugId}`,
+      init
+    );
+    return response.data;
   } catch (err) {
     if (err.name !== "CanceledError") {
       throw err;

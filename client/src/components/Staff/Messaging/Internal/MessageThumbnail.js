@@ -164,7 +164,7 @@ const MessageThumbnail = ({
       <div className="message-thumbnail__patient">
         {patient && (
           <NavLink
-            to={`/patient-record/${patient.patient_id}`}
+            to={`/staff/patient-record/${patient.patient_id}`}
             className="message-thumbnail__patient-link"
             target="_blank"
           >

@@ -114,11 +114,11 @@ const MedicationsPU = ({
             clinic.demographicsInfos,
             patientId
           )}`}
-          width={1300}
-          height={600}
-          x={(window.innerWidth - 1300) / 2}
-          y={(window.innerHeight - 600) / 2}
-          color="black"
+          width={1400}
+          height={750}
+          x={(window.innerWidth - 1400) / 2}
+          y={(window.innerHeight - 750) / 2}
+          color="#931621"
           setPopUpVisible={setPresVisible}
         >
           <PrescriptionPU
@@ -126,6 +126,8 @@ const MedicationsPU = ({
             setPresVisible={setPresVisible}
             medsRx={medsRx}
             setMedsRx={setMedsRx}
+            patientId={patientId}
+            resize={false}
           />
         </FakeWindow>
       )}

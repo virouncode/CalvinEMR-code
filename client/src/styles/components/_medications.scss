@@ -64,27 +64,35 @@
     }
 }
 .medications-form {
-    &__btn-container {
-        button {
-            margin-left:5px;
-        }
-        margin-bottom: 5px;
-    }
-    &__container {
+    border: solid 1px $grey;
+    border-radius : 4px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    &__err {
+        padding : 10px 20px;
         font-size: 0.8rem;
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-        border: solid 1px $grey;
+        width : 90%;
+        margin: 0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
         border-radius: 4px;
-        margin-top: 20px;
-        form {
-            width: 70%;
+        text-align: center;
+    }
+    &__title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        p {
+            padding:0;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 10px;
         }
     }
     &__allergies {
         color:red;
-        margin-bottom: 10px;   
+        margin-bottom: 20px;   
     }
     &__row{
         display: flex;

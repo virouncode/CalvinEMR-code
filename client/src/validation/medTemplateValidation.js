@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const medicationSchema = yup.object({
+export const medTemplateSchema = yup.object({
   DrugName: yup.string().required("Drug name field is required"),
   Strength: yup.object({
     Amount: yup.string().required("Strength field is required"),

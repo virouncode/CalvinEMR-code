@@ -3,43 +3,61 @@ import {
   formCT,
   frequencyCT,
   routeCT,
+  strengthUnitCT,
   toCodeTableName,
 } from "../datas/codesTables";
 
 export const toPrescriptionInstructions = (
   drugName,
+  strength,
+  strengthUnit,
+  substitution,
+  quantity,
   form,
   route,
   dosage,
   dosageUnit,
   frequency,
   duration,
-  substitution,
-  quantity
+  refillQuantity,
+  refillDuration
 ) => {
   const medicament = drugName.toUpperCase() || "";
+  const force = strength ? ` ${strength}` : "";
+  const forceUnit = strengthUnit
+    ? ` ${toCodeTableName(strengthUnitCT, strengthUnit) || strengthUnit}`
+    : "";
   const forme = form ? ` (${toCodeTableName(formCT, form) || form})` : "";
-  const dose = dosage ? `, ${dosage}` : "";
-  const unite = dosageUnit
+  const quantite = quantity ? `, ${quantity}` : "";
+  const sub = substitution === "Y" ? `, Substitution not allowed` : "";
+  const dose = dosage ? `Take ${dosage}` : "";
+  const doseUnit = dosageUnit
     ? ` ${toCodeTableName(dosageUnitCT, dosageUnit) || dosageUnit}`
     : "";
+  const voie = route ? `, ${toCodeTableName(routeCT, route) || route}` : "";
   const frequence = frequency
     ? `, ${toCodeTableName(frequencyCT, frequency) || frequency}`
     : "";
-  const voie = route ? `, ${toCodeTableName(routeCT, route) || route}` : "";
   const duree = duration ? `, during ${duration}` : "";
-  const sub = substitution === "Y" ? `, Substitution not allowed` : "";
-  const quantite = quantity ? `, ${quantity}` : "";
+  const refillQuantite = refillQuantity ? `Refill: ${refillQuantity}` : "";
+  const refillDuree =
+    refillQuantity && refillDuration ? ` during ${refillDuration}` : "";
 
   return (
     medicament +
+    force +
+    forceUnit +
     forme +
-    voie +
+    quantite +
+    sub +
+    "\n" +
     dose +
-    unite +
+    doseUnit +
+    voie +
     frequence +
     duree +
-    sub +
-    quantite
+    "\n" +
+    refillQuantite +
+    refillDuree
   );
 };

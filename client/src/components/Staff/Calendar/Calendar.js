@@ -187,7 +187,7 @@ const Calendar = () => {
   const handlePatientClick = (e, id) => {
     e.stopPropagation();
     if (formVisible) return;
-    window.open(`/patient-record/${id}`, "_blank");
+    window.open(`/staff/patient-record/${id}`, "_blank");
   };
   const handleDeleteEvent = async (e, info) => {
     e.stopPropagation();

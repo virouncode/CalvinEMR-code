@@ -122,7 +122,7 @@ const CredentialsForm = () => {
         content: { id: user.id, data: me },
       });
       setSuccessMsg("Credentials changed succesfully");
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       setErrMsg(`Error: unable to change credentials: ${err.message}`);
       return;

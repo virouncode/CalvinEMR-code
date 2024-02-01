@@ -10,11 +10,12 @@ const AddressesList = ({ handleSiteChange, siteSelectedId, sites }) => {
       <option value="" disabled selected>
         Choose an address...
       </option>
-      {sites.map((site) => (
-        <option key={site.id} value={site.id}>
-          {site.name}
-        </option>
-      ))}
+      {sites &&
+        sites.map((site) => (
+          <option key={site.id} value={site.id}>
+            {site.name}
+          </option>
+        ))}
     </select>
   );
 };

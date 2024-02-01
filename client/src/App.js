@@ -6,9 +6,7 @@ import AdminLayout from "./components/All/UI/Layouts/AdminLayout";
 import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
-import RequireAuthStaff from "./context/RequireAuth";
-import RequireAuthAdmin from "./context/RequireAuthAdmin";
-import RequireAuthPatient from "./context/RequireAuthPatient";
+import RequireAuth from "./context/RequireAuth";
 import useAuth from "./hooks/useAuth";
 import useAutoLogout from "./hooks/useAutoLogout";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
@@ -104,17 +102,16 @@ const App = () => {
     <Routes>
       <Route path="/" element={<LoginLayout />}>
         {/* public routes */}
-        <Route path="login" element={<LoginPage />} />
+        <Route index element={<LoginPage />} />
+        <Route path="unauthorized" element={<UnauthorizedPage />} />
         <Route path="reset-password" element={<ResetPage />}></Route>
         {/* catch all */}
         <Route path="*" element={<MissingPage />} />
       </Route>
-      <Route path="/" element={<StaffLayout />}>
-        {/* public routes */}
-        <Route path="unauthorized" element={<UnauthorizedPage />} />
+      <Route path="staff" element={<StaffLayout />}>
         {/* protected routes */}
-        <Route element={<RequireAuthStaff allowedAccesses={["User"]} />}>
-          <Route index element={<CalendarPage />} />
+        <Route element={<RequireAuth allowedAccesses={["User"]} />}>
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="search-patient" element={<SearchPatientPage />} />
           <Route path="patient-record/:id" element={<PatientRecordPage />} />
           <Route path="signup-patient" element={<SignupPatientPage />} />
@@ -133,27 +130,21 @@ const App = () => {
           <Route path="export" element={<ExportPage />} />
         </Route>
       </Route>
-      <Route path="/" element={<AdminLayout />}>
+      <Route path="admin" element={<AdminLayout />}>
         {/* protected routes */}
-        <Route element={<RequireAuthAdmin allowedAccesses={["Admin"]} />}>
-          <Route path="admin/dashboard" element={<DashboardPage />} />
-          <Route path="admin/accounts" element={<AccountsPage />} />
-          <Route path="admin/migration" element={<MigrationPage />} />
+        <Route element={<RequireAuth allowedAccesses={["Admin"]} />}>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="accounts" element={<AccountsPage />} />
+          <Route path="migration" element={<MigrationPage />} />
         </Route>
       </Route>
-      <Route path="/" element={<PatientLayout />}>
+      <Route path="patient" element={<PatientLayout />}>
         {/* protected routes */}
-        <Route element={<RequireAuthPatient allowedAccesses={["Patient"]} />}>
-          <Route path="patient/messages" element={<PatientMessagesPage />} />
-          <Route
-            path="patient/appointments"
-            element={<PatientAppointmentsPage />}
-          />
-          <Route path="patient/my-account" element={<PatientAccountPage />} />
-          <Route
-            path="patient/credentials"
-            element={<PatientCredentialsPage />}
-          />
+        <Route element={<RequireAuth allowedAccesses={["Patient"]} />}>
+          <Route path="messages" element={<PatientMessagesPage />} />
+          <Route path="appointments" element={<PatientAppointmentsPage />} />
+          <Route path="my-account" element={<PatientAccountPage />} />
+          <Route path="credentials" element={<PatientCredentialsPage />} />
         </Route>
       </Route>
     </Routes>

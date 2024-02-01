@@ -29,7 +29,6 @@ const PersonalHistoryPU = ({
   const [editVisible, setEditVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [formDatas, setFormDatas] = useState(null);
-  console.log("render", datas);
 
   useEffect(() => {
     if (datas && datas.length > 0) {

@@ -89,7 +89,7 @@ const ClinicalNotesCardHeader = ({
                 </button>
                 <button disabled={versionsLoading}>
                   <a
-                    href={`/billing/${demographicsInfos.SIN}/${
+                    href={`/staff/billing/${demographicsInfos.SIN}/${
                       isUpdated(clinicalNote)
                         ? getLastUpdate(clinicalNote).date_updated
                         : clinicalNote.date_created

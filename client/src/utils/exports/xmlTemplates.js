@@ -396,8 +396,6 @@ export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
     xmlPreferredPharmacy +
     "</Demographics>";
 
-  console.log(xmlDemographics);
-
   return xmlFormat(xmlDemographics, {
     collapseContent: true,
     indentation: "  ",
@@ -1539,7 +1537,6 @@ ${
 };
 
 export const toXmlRelationships = (jsObj, demographicsInfos) => {
-  console.log(jsObj);
   const xmlRelationships = `<NewCategory>
   <CategoryName>Relationships</CategoryName>
   <CategoryDescription>Contains data about the patient’s relationships</CategoryDescription>

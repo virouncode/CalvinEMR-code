@@ -33,7 +33,7 @@ const MyAccountForm = () => {
   };
 
   const handleChangeCredentials = (e) => {
-    navigate("/credentials");
+    navigate("/staff/credentials");
   };
 
   const handleSignChange = async (e) => {

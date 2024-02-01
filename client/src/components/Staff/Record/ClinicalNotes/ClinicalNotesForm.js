@@ -114,7 +114,10 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
 
   const handleSaveSignBillClick = async (e) => {
     await handleSubmit(e);
-    window.open(`/billing/${demographicsInfos.SIN}/${Date.now()}`, "_blank");
+    window.open(
+      `/staff/billing/${demographicsInfos.SIN}/${Date.now()}`,
+      "_blank"
+    );
   };
   const handleChange = (e) => {
     const name = e.target.name;

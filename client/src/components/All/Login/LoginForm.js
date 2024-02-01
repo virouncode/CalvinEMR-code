@@ -18,7 +18,9 @@ const LoginForm = () => {
   const { setAuth, setClinic, setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [from, setFrom] = useState(location.state?.from?.pathname || "/"); //où on voulait aller ou calendar staff
+  const [from, setFrom] = useState(
+    location.state?.from?.pathname || "/staff/calendar"
+  ); //où on voulait aller ou calendar staff (car pour l'instant type: "staff")
   const [errMsg, setErrMsg] = useState("");
   const [formDatas, setFormDatas] = useState({
     email: "",
@@ -32,13 +34,21 @@ const LoginForm = () => {
     const name = e.target.name;
     setErrMsg("");
     setFormDatas({ ...formDatas, [name]: value });
+  };
+
+  const handleChangeType = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setFormDatas({ ...formDatas, [name]: value });
     if (value === "patient")
       setFrom(location.state?.from?.pathname || "/patient/messages");
     //où on voulait aller ou messages patient
     else if (value === "admin")
-      setFrom(location.state?.from?.pathname || "/admin/dashboard"); //où on voulait aller ou messages patient
+      setFrom(location.state?.from?.pathname || "/admin/dashboard");
+    //où on voulait aller ou admin dashboard
+    else if (value === "staff")
+      setFrom(location.state?.from?.pathname || "/staff/calendar"); //où on voulait aller ou staff calendar
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Validation
@@ -432,7 +442,7 @@ const LoginForm = () => {
                 name="type"
                 value="staff"
                 checked={formDatas.type === "staff"}
-                onChange={handleChange}
+                onChange={handleChangeType}
               />
               <label htmlFor="staff">Staff</label>
             </div>
@@ -443,7 +453,7 @@ const LoginForm = () => {
                 name="type"
                 value="patient"
                 checked={formDatas.type === "patient"}
-                onChange={handleChange}
+                onChange={handleChangeType}
               />
               <label htmlFor="patient">Patient</label>
             </div>
@@ -454,7 +464,7 @@ const LoginForm = () => {
                 name="type"
                 value="admin"
                 checked={formDatas.type === "admin"}
-                onChange={handleChange}
+                onChange={handleChangeType}
               />
               <label htmlFor="admin">Admin</label>
             </div>

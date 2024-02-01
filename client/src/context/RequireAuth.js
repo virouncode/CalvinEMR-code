@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-const RequireAuthStaff = ({ allowedAccesses }) => {
+const RequireAuth = ({ allowedAccesses }) => {
   const { auth, user } = useAuth();
   const location = useLocation();
 
@@ -12,7 +12,7 @@ const RequireAuthStaff = ({ allowedAccesses }) => {
   ) : auth?.email ? ( //si l'utilisateur a reussi à se connecter mais n'a pas l'access level
     <Navigate to="/unauthorized" state={{ from: location }} replace /> //il n'est pas autorisé
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace /> //il ne s'est pas encore connecté donc on le renvoie à la page de login et on enregistre là où il voulait aller pour le rediriger ensuite
+    <Navigate to="/" state={{ from: location }} replace /> //il ne s'est pas encore connecté donc on le renvoie à la page de login et on enregistre là où il voulait aller pour le rediriger ensuite
   );
 };
-export default RequireAuthStaff;
+export default RequireAuth;

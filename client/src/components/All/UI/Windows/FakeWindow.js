@@ -10,6 +10,7 @@ const FakeWindow = ({
   color,
   setPopUpVisible,
   closeCross = true,
+  resize = true,
 }) => {
   const isDragging = useRef(false);
   const isResizing = useRef(false);
@@ -135,6 +136,7 @@ const FakeWindow = ({
         onMouseDown={handleResizeMouseDown}
         style={{ background: color }}
       ></div>
+
       <div className="window-content">{children}</div>
     </div>
   );

@@ -399,7 +399,6 @@ const SignupPatientForm = () => {
         });
         break;
       case "assigned_staff_id":
-        console.log(parseInt(value));
         setDemographicsDatas({
           ...demographicsDatas,
           assigned_staff_id: parseInt(value),

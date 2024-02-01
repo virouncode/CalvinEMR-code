@@ -10,12 +10,7 @@ const MedsResult = ({ results, handleMedClick }) => {
   return (
     results &&
     results.length !== 0 && (
-      <div
-        style={{
-          border: "solid 1px black",
-          borderRadius: "2px",
-        }}
-      >
+      <div className="meds-results">
         <ul
           style={{
             padding: "0",
@@ -30,7 +25,7 @@ const MedsResult = ({ results, handleMedClick }) => {
               key={med.drug_code}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onClick={() => handleMedClick(med.brand_name, med.drug_code)}
+              onClick={(e) => handleMedClick(e, med.drug_code)}
             >
               {med.brand_name}
             </li>
