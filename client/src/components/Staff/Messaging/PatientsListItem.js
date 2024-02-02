@@ -5,6 +5,7 @@ const PatientsListItem = ({
   handleCheckPatient,
   isPatientChecked,
   patientName,
+  isLoading,
 }) => {
   return (
     <li className="patients__list-item">
@@ -14,6 +15,7 @@ const PatientsListItem = ({
         onChange={handleCheckPatient}
         checked={isPatientChecked(info.patient_id)}
         name={patientName}
+        disabled={isLoading}
       />
       <label htmlFor={info.patient_id}>{patientName}</label>
     </li>

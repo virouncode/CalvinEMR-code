@@ -41,6 +41,7 @@ const Invitation = ({
       try {
         const response = await axiosXanoStaff.get(`/sites`, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
           signal: abortController.signal,
@@ -251,6 +252,7 @@ Powered by Calvin EMR`,
         { ...settings, invitation_templates: newTemplates },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
         }
@@ -290,6 +292,7 @@ Powered by Calvin EMR`,
         { ...settings, site_id: parseInt(e.target.value) },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
         }

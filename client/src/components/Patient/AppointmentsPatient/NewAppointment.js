@@ -61,6 +61,7 @@ const NewAppointment = () => {
           },
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
           }
@@ -97,6 +98,7 @@ const NewAppointment = () => {
           `/availability_for_staff?staff_id=${user.demographics.assigned_staff_id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
             signal: abortController.signal,

@@ -13,6 +13,7 @@ const MedsTemplatesList = ({
   addedMeds,
   setAddedMeds,
   patientId,
+  progress,
 }) => {
   const { auth, socket, user } = useAuth();
   const [newVisible, setNewVisible] = useState(false);
@@ -74,7 +75,9 @@ const MedsTemplatesList = ({
     <div className="med-templates__list">
       <div className="medications-form__title">
         <p>Medications Templates</p>
-        <button onClick={handleNew}>New</button>
+        <button onClick={handleNew} disabled={progress}>
+          New
+        </button>
       </div>
       <div className="med-templates__search">
         <input

@@ -41,6 +41,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           `/medications_templates_for_staff?staff_id=${user.id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
             signal: abortController.signal,
@@ -67,6 +68,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
       try {
         const response = await axiosXanoStaff.get(`/sites`, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
           signal: abortController.signal,
@@ -92,6 +94,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           `/settings_for_staff?staff_id=${user.id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
             signal: abortController.signal,
@@ -140,14 +143,18 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
         delete datasToPost.created_by_id;
       if (datasToPost.hasOwnProperty("updates")) delete datasToPost.updates;
 
-      await postPatientRecord(
-        "/medications",
-        user.id,
-        auth.authToken,
-        datasToPost,
-        socket,
-        "MEDICATIONS"
-      );
+      try {
+        await postPatientRecord(
+          "/medications",
+          user.id,
+          auth.authToken,
+          datasToPost,
+          socket,
+          "MEDICATIONS AND TREATMENTS"
+        );
+      } catch (err) {
+        toast.error(`Unable to add med to database: ${err.message}`);
+      }
     }
   };
 
@@ -156,45 +163,51 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
       alert("Please choose an address first");
       return;
     }
+    if (addedMeds.length === 0) {
+      alert("Your prescription is empty !");
+      return;
+    }
     //Post the meds
     handlePostMeds();
     //Generate pdf
     setProgress(true);
     const element = printRef.current;
-    const canvas = await html2canvas(element, {
-      removeContainer: false,
-      useCORS: true,
-      ignoreElements: (element) => element.classList.contains("fa-trash"),
-    });
-    const dataURL = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      unit: "cm",
-    });
-    pdf.addImage(dataURL, "PNG", 0, 0, 21, 29.7);
-    setProgress(false);
-    let fileToUpload = await axiosXanoStaff.post(
-      "/upload/attachment",
-      {
-        content: pdf.output("dataurlstring"),
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      }
-    );
-    printJS(`${BASE_URL}${fileToUpload.data.path}`);
-    const datasAttachment = [
-      {
-        file: fileToUpload.data,
-        alias: `Prescription (id:${uniqueId})`,
-        date_created: Date.now(),
-        created_by_id: user.id,
-        created_by_user_type: "staff",
-      },
-    ];
 
     try {
+      const canvas = await html2canvas(element, {
+        removeContainer: false,
+        useCORS: true,
+        ignoreElements: (element) => element.classList.contains("fa-trash"),
+      });
+      const dataURL = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        unit: "cm",
+      });
+      pdf.addImage(dataURL, "PNG", 0, 0, 21, 29.7);
+
+      let fileToUpload = await axiosXanoStaff.post(
+        "/upload/attachment",
+        {
+          content: pdf.output("dataurlstring"),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+      printJS(`${BASE_URL}${fileToUpload.data.path}`);
+      const datasAttachment = [
+        {
+          file: fileToUpload.data,
+          alias: `Prescription (id:${uniqueId})`,
+          date_created: Date.now(),
+          created_by_id: user.id,
+          created_by_user_type: "staff",
+        },
+      ];
+
       const attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
           attachments_array: datasAttachment,
@@ -225,7 +238,8 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
         socket,
         "CLINICAL NOTES"
       );
-
+      setProgress(false);
+      setAddedMeds([]);
       toast.success("Saved succesfully to clinical notes", {
         containerId: "B",
       });
@@ -246,6 +260,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
         { ...settings, site_id: parseInt(e.target.value) },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
         }
@@ -260,52 +275,59 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
       alert("Please choose an address first");
       return;
     }
+    if (addedMeds.length === 0) {
+      alert("Your prescription is empty !");
+      return;
+    }
     setProgress(true);
     const element = printRef.current;
-    const canvas = await html2canvas(element, {
-      logging: true,
-      letterRendering: 1,
-      allowTaint: false,
-      useCORS: true,
-      scale: 2,
-    });
-    const dataURL = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("portrait", "pt", "a4");
-    // const imgProperties = pdf.getImageProperties(dataURL);
-    pdf.addImage(
-      dataURL,
-      "PNG",
-      0,
-      0,
-      pdf.internal.pageSize.getWidth(),
-      pdf.internal.pageSize.getHeight()
-    );
-    let fileToUpload = await axiosXanoStaff.post(
-      "/upload/attachment",
-      {
-        content: pdf.output("dataurlstring"),
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      }
-    );
-
-    const datasAttachment = [
-      {
-        file: fileToUpload.data,
-        alias: `Prescription ${patientIdToName(
-          clinic.demographicsInfos,
-          demographicsInfos.patient_id
-        )} ${toLocalDateAndTimeWithSeconds(new Date())}`,
-        date_created: Date.now(),
-        created_by_id: user.id,
-        created_by_user_type: "staff",
-      },
-    ];
 
     try {
+      const canvas = await html2canvas(element, {
+        logging: true,
+        letterRendering: 1,
+        allowTaint: false,
+        useCORS: true,
+        scale: 2,
+      });
+      const dataURL = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("portrait", "pt", "a4");
+      // const imgProperties = pdf.getImageProperties(dataURL);
+      pdf.addImage(
+        dataURL,
+        "PNG",
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight()
+      );
+
+      let fileToUpload = await axiosXanoStaff.post(
+        "/upload/attachment",
+        {
+          content: pdf.output("dataurlstring"),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+
+      const datasAttachment = [
+        {
+          file: fileToUpload.data,
+          alias: `Prescription ${patientIdToName(
+            clinic.demographicsInfos,
+            demographicsInfos.patient_id
+          )} ${toLocalDateAndTimeWithSeconds(new Date())}`,
+          date_created: Date.now(),
+          created_by_id: user.id,
+          created_by_user_type: "staff",
+        },
+      ];
+
       const attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
           attachments_array: datasAttachment,
@@ -378,11 +400,13 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             addedMeds={addedMeds}
             setAddedMeds={setAddedMeds}
             patientId={patientId}
+            progress={progress}
           />
           <MedicationForm
             patientId={patientId}
             addedMeds={addedMeds}
             setAddedMeds={setAddedMeds}
+            progress={progress}
           />
         </div>
       </div>

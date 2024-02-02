@@ -1,0 +1,47 @@
+.new-enrolment {
+  &__btn-container {
+    text-align: center;
+    margin-top: 30px;
+    button {
+      margin-left: 5px;
+    }
+  }
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.8rem;
+    width : 90%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 4px;
+    text-align: center;
+  }
+  &__form {
+    margin-top: 50px;
+    padding: 0 10px;
+  }
+  &__form-row {
+    padding:5px;
+    display: flex;
+    align-items: center;
+    select, input[type="date"] {
+      width: 150px;
+    }
+    label {
+      width:150px;
+      font-weight: bold;
+    }
+    &--special {
+      margin-left: 20px;
+    }
+  }
+  &__form-physician {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    label {
+      width:150px;
+      font-weight: bold;
+    }
+  }
+}

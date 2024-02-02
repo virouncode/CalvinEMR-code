@@ -151,6 +151,7 @@ Powered by Calvin EMR`,
             },
             {
               headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.authToken}`,
               },
             }

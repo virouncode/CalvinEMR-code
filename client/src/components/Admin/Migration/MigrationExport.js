@@ -46,6 +46,7 @@ const MigrationExport = () => {
     if (checked) {
       setCheckedPatientsIds([...checkedPatientsIds, id]);
     } else {
+      setAllPatientsIdsChecked(false);
       setCheckedPatientsIds(
         checkedPatientsIds.filter((patientId) => patientId !== id)
       );
@@ -57,6 +58,7 @@ const MigrationExport = () => {
     if (checked) {
       setCheckedRecordsIds([...checkedRecordsIds, id]);
     } else {
+      setAllRecordsIdsChecked(false);
       setCheckedRecordsIds(
         checkedRecordsIds.filter((recordId) => recordId !== id)
       );
@@ -93,6 +95,10 @@ const MigrationExport = () => {
   };
 
   const handleExport = async () => {
+    if (checkedPatientsIds.length === 0) {
+      alert("Please choose at least 1 patient !");
+      return;
+    }
     setIsLoading(true);
     const dateOfExport = dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT");
     try {
@@ -176,6 +182,7 @@ const MigrationExport = () => {
             search={search}
             handleCheckAllPatientsIds={handleCheckAllPatientsIds}
             isAllPatientsIdsChecked={isAllPatientsIdsChecked}
+            isLoading={isLoading}
           />
         </div>
         <div className="migration-export__records">
@@ -186,6 +193,7 @@ const MigrationExport = () => {
             search={search}
             handleCheckAllRecordsIds={handleCheckAllRecordsIds}
             isAllRecordsIdsChecked={isAllRecordsIdsChecked}
+            isLoading={isLoading}
           />
         </div>
       </div>

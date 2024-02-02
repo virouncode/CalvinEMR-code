@@ -177,13 +177,6 @@ const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         "FAMILY DOCTORS/SPECIALISTS"
       );
       setAddNew(false);
-      // const response = await axiosXanoStaff.get("/doctors", {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${auth.authToken}`,
-      //   },
-      // });
-      // setDoctorsList(response.data);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
       toast.error(`Error: unable to add doctor: ${err.message}`, {

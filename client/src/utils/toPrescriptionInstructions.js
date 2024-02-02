@@ -19,6 +19,7 @@ export const toPrescriptionInstructions = (
   dosageUnit,
   frequency,
   duration,
+  numberOfRefills,
   refillQuantity,
   refillDuration
 ) => {
@@ -39,7 +40,12 @@ export const toPrescriptionInstructions = (
     ? `, ${toCodeTableName(frequencyCT, frequency) || frequency}`
     : "";
   const duree = duration ? `, during ${duration}` : "";
-  const refillQuantite = refillQuantity ? `Refill: ${refillQuantity}` : "";
+  const refillNombre = numberOfRefills
+    ? `Number of refills: ${numberOfRefills} - `
+    : "";
+  const refillQuantite = refillQuantity
+    ? `Refill quantity: ${refillQuantity} - `
+    : "";
   const refillDuree =
     refillQuantity && refillDuration ? ` during ${refillDuration}` : "";
 
@@ -57,6 +63,7 @@ export const toPrescriptionInstructions = (
     frequence +
     duree +
     "\n" +
+    refillNombre +
     refillQuantite +
     refillDuree
   );

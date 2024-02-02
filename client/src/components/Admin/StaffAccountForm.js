@@ -54,6 +54,7 @@ const StaffAccountForm = ({ infos, setEditVisible }) => {
           },
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
           }

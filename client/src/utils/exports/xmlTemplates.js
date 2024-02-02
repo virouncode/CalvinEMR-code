@@ -1150,13 +1150,13 @@ export const toXmlReports = (jsObj, demographicsInfos = null) => {
         ${item.ReviewingOHIPPhysicianId ?? ""}
       </ReviewingOHIPPhysicianId>
       <DateTimeReportReviewed>
-        <cdsd:FullDateTime>
+        <cdsd:FullDate>
           ${
             item.DateTimeReportReviewed
-              ? new Date(item.DateTimeReportReviewed).toISOString()
+              ? toLocalDate(item.DateTimeReportReviewed)
               : ""
           }
-        </cdsd:FullDateTime>
+        </cdsd:FullDate>
       </DateTimeReportReviewed>
     </ReportReviewed>`
         ).join("")

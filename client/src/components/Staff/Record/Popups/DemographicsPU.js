@@ -1,4 +1,4 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
@@ -11,6 +11,7 @@ import {
   officialLanguageCT,
   personStatusCT,
   provinceStateTerritoryCT,
+  terminationReasonCT,
   toCodeTableName,
 } from "../../../../datas/codesTables";
 import useAuth from "../../../../hooks/useAuth";
@@ -19,6 +20,7 @@ import { enrolmentCaption } from "../../../../utils/enrolmentCaption";
 import { firstLetterUpper } from "../../../../utils/firstLetterUpper";
 import { toLocalDate, toLocalDateAndTime } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
+import { patientIdToName } from "../../../../utils/patientIdToName";
 import { primaryPhysicianCaption } from "../../../../utils/primaryPhysicianCaption";
 import {
   getLastUpdate,
@@ -31,6 +33,9 @@ import ConfirmGlobal, {
 } from "../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../All/UI/Lists/GenericList";
 import StaffList from "../../../All/UI/Lists/StaffList";
+import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import EnrolmentHistory from "../Topics/Demographics/EnrolmentHistory";
+import NewEnrolmentForm from "../Topics/Demographics/NewEnrolmentForm";
 var _ = require("lodash");
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
@@ -54,8 +59,9 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
       )
     : {};
 
-  const [newEnrolment, setNewEnrolment] = useState({});
   const [lastEnrolment, setLastEnrolment] = useState({});
+  const [newEnrolmentVisible, setNewEnrolmentVisible] = useState(false);
+  const [enrolmentHistoryVisible, setEnrolmentHistoryVisible] = useState(false);
 
   useEffect(() => {
     setFormDatas(demographicsInfos);
@@ -63,23 +69,6 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
       demographicsInfos.Enrolment.EnrolmentHistory.sort(
         (a, b) => a.EnrollmentDate - b.EnrollmentDate
       ).slice(-1)[0] || {}
-    );
-    setNewEnrolment(
-      demographicsInfos.Enrolment.EnrolmentHistory.sort(
-        (a, b) => a.EnrollmentDate - b.EnrollmentDate
-      ).slice(-1)[0] || {
-        EnrolledToPhysician: {
-          Name: {
-            FirstName: "",
-            LastName: "",
-          },
-          OHIPPhysicianId: "",
-        },
-        EnrollmentStatus: "",
-        EnrollmentDate: "",
-        EnrollmentTerminationDate: "",
-        // TerminationReason: "",
-      }
     );
   }, [demographicsInfos]);
 
@@ -101,6 +90,14 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           : item;
       }),
     });
+  };
+
+  const handleClickNewEnrolment = (e) => {
+    setNewEnrolmentVisible(true);
+  };
+
+  const handleClickHistory = (e) => {
+    setEnrolmentHistoryVisible(true);
   };
 
   const handleChange = (e) => {
@@ -599,64 +596,6 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           },
         });
         break;
-
-      case "EnrolledToPhysicianFirstName":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrolledToPhysician: {
-            ...newEnrolment.EnrolledToPhysician,
-            Name: {
-              ...newEnrolment.EnrolledToPhysician?.Name,
-              FirstName: value,
-            },
-          },
-        });
-        break;
-      case "EnrolledToPhysicianLastName":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrolledToPhysician: {
-            ...newEnrolment.EnrolledToPhysician,
-            Name: {
-              ...newEnrolment.EnrolledToPhysician?.Name,
-              LastName: value,
-            },
-          },
-        });
-        break;
-      case "EnrolledToPhysicianOHIP":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrolledToPhysician: {
-            ...newEnrolment.EnrolledToPhysician,
-            OHIPPhysicianId: value,
-          },
-        });
-        break;
-      case "EnrollmentStatus":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrollmentStatus: value,
-        });
-        break;
-      case "EnrollmentDate":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrollmentDate: Date.parse(new Date(value)),
-        });
-        break;
-      case "EnrollmentTerminationDate":
-        setNewEnrolment({
-          ...newEnrolment,
-          EnrollmentTerminationDate: Date.parse(new Date(value)),
-        });
-        break;
-      // case "TerminationReason":
-      //   setNewEnrolment({
-      //     ...newEnrolment,
-      //     TerminationReason: value,
-      //   });
-      //   break;
       case "assigned_staff_id":
         setFormDatas({ ...formDatas, assigned_staff_id: parseInt(value) });
         break;
@@ -691,6 +630,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           },
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
           }
@@ -729,44 +669,11 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
-    let enrolmentHistory = [];
-    if (_.isEmpty(lastEnrolment) || _.values(lastEnrolment).every(_.isEmpty)) {
-      enrolmentHistory = !_.values(newEnrolment).every(_.isEmpty)
-        ? [newEnrolment]
-        : [];
-    } else {
-      enrolmentHistory = !_.isEqual(newEnrolment, lastEnrolment)
-        ? [...formDatas.Enrolment.EnrolmentHistory, newEnrolment]
-        : [...formDatas.Enrolment.EnrolmentHistory];
-    }
-
     const datasToPut = {
       ...formDatas,
-      Enrolment: {
-        EnrolmentHistory: enrolmentHistory.map((item) => {
-          return {
-            ...item,
-            EnrolledToPhysician: {
-              ...item.EnrolledToPhysician,
-              Name: {
-                FirstName: firstLetterUpper(
-                  item.EnrolledToPhysician?.Name?.FirstName
-                ),
-                LastName: firstLetterUpper(
-                  item.EnrolledToPhysician?.Name?.LastName
-                ),
-              },
-            },
-          };
-        }),
-      },
     };
 
     // Validation
-    if (datasToPut.assigned_staff_id === 0) {
-      setErrMsgPost("Please choose an assigned practician");
-      return;
-    }
     try {
       await demographicsSchema.validate(datasToPut);
     } catch (err) {
@@ -812,7 +719,6 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
         socket,
         "DEMOGRAPHICS"
       );
-
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
@@ -1429,113 +1335,56 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                     )
                   )}
                 </p>
-                {editVisible ? (
-                  <fieldset>
-                    <legend>Enrolment</legend>
-                    <div className="demographics-card__row-special">
-                      <label>Enrolled to physician: </label>
-                      <div>
-                        <label>First Name: </label>
-                        <input
-                          type="text"
-                          name="EnrolledToPhysicianFirstName"
-                          value={
-                            newEnrolment?.EnrolledToPhysician?.Name?.FirstName
-                          }
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div>
-                        <label>Last Name: </label>
-                        <input
-                          type="text"
-                          name="EnrolledToPhysicianLastName"
-                          value={
-                            newEnrolment?.EnrolledToPhysician?.Name?.LastName
-                          }
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div>
-                        <label>OHIP#: </label>
-                        <input
-                          type="text"
-                          name="EnrolledToPhysicianOHIP"
-                          value={
-                            newEnrolment?.EnrolledToPhysician?.OHIPPhysicianId
-                          }
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="demographics-card__row-special">
-                      <label>Status: </label>
-                      <GenericList
-                        name="EnrollmentStatus"
-                        list={enrollmentStatusCT}
-                        value={newEnrolment?.EnrollmentStatus}
-                        handleChange={handleChange}
-                        placeHolder="Choose a status..."
-                        noneOption={true}
-                      />
-                      <label>Date: </label>
-                      <input
-                        type="date"
-                        value={toLocalDate(newEnrolment?.EnrollmentDate)}
-                        onChange={handleChange}
-                        name="EnrollmentDate"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="demographics-card__row-special">
-                      <label>Termination Date: </label>
-                      <input
-                        type="date"
-                        value={toLocalDate(
-                          newEnrolment?.EnrollmentTerminationDate
-                        )}
-                        onChange={handleChange}
-                        name="EnrollmentTerminationDate"
-                        autoComplete="off"
-                      />
-                      {/* <label>Termination Reason: </label>
-                      <input
-                        type="text"
-                        value={newEnrolment?.TerminationReason}
-                        onChange={handleChange}
-                        name="TerminationReason"
-                        autoComplete="off"
-                      /> */}
-                    </div>
-                  </fieldset>
-                ) : (
-                  <>
-                    <p>
-                      <label>Enrolled to Physician: </label>
-                      {enrolmentCaption(lastEnrolment)}
-                    </p>
-                    <p>
-                      <label>Enrollment Status: </label>
-                      {
-                        enrollmentStatusCT.find(
-                          ({ code }) => code === lastEnrolment?.EnrollmentStatus
-                        )?.name
-                      }
-                    </p>
-                    <p>
-                      <label>Enrollment Date: </label>
-                      {toLocalDate(lastEnrolment?.EnrollmentDate)}
-                    </p>
-                    <p>
-                      <label>Enrollment Termination Date: </label>
-                      {toLocalDate(lastEnrolment?.EnrollmentTerminationDate)}
-                    </p>
-                    {/* <p>
-                      <label>Termination Reason: </label>
-                      {lastEnrolment?.TerminationReason}
-                    </p> */}
-                  </>
-                )}
+
+                <p>
+                  <label>Enrolled to physician: </label>
+                  {enrolmentCaption(lastEnrolment)}
+                  {"  "}
+                  <Tooltip
+                    title="Add new enrolment"
+                    placement="top-start"
+                    arrow
+                  >
+                    <i
+                      className="fa-regular fa-square-plus"
+                      onClick={handleClickNewEnrolment}
+                      style={{ marginLeft: "5px", cursor: "pointer" }}
+                    ></i>
+                  </Tooltip>
+                  <Tooltip
+                    title="See enrolment history"
+                    placement="top-start"
+                    arrow
+                  >
+                    <i
+                      className="fa-solid fa-clock-rotate-left"
+                      onClick={handleClickHistory}
+                      style={{ marginLeft: "5px", cursor: "pointer" }}
+                    ></i>
+                  </Tooltip>
+                </p>
+                <p>
+                  <label>Enrollment status: </label>
+                  {toCodeTableName(
+                    enrollmentStatusCT,
+                    lastEnrolment?.EnrollmentStatus
+                  )}
+                </p>
+                <p>
+                  <label>Enrollment date: </label>
+                  {toLocalDate(lastEnrolment?.EnrollmentDate)}
+                </p>
+                <p>
+                  <label>Enrollment termination date: </label>
+                  {toLocalDate(lastEnrolment?.EnrollmentTerminationDate)}
+                </p>
+                <p>
+                  <label>Termination reason: </label>
+                  {toCodeTableName(
+                    terminationReasonCT,
+                    lastEnrolment?.TerminationReason
+                  )}
+                </p>
                 {editVisible ? (
                   <fieldset>
                     <legend>Primary Physician</legend>
@@ -1792,6 +1641,43 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
         </>
       ) : (
         <CircularProgress />
+      )}
+      {newEnrolmentVisible && (
+        <FakeWindow
+          title={`NEW ENROLMENT`}
+          width={500}
+          height={400}
+          x={(window.innerWidth - 500) / 2}
+          y={(window.innerHeight - 400) / 2}
+          color="#495867"
+          setPopUpVisible={setNewEnrolmentVisible}
+        >
+          <NewEnrolmentForm
+            setNewEnrolmentVisible={setNewEnrolmentVisible}
+            demographicsInfos={demographicsInfos}
+          />
+        </FakeWindow>
+      )}
+      {enrolmentHistoryVisible && (
+        <FakeWindow
+          title={`ENROLMENT HISTORY of ${patientIdToName(
+            clinic.demographicsInfos,
+            demographicsInfos.patient_id
+          )}`}
+          width={1100}
+          height={400}
+          x={(window.innerWidth - 1100) / 2}
+          y={(window.innerHeight - 400) / 2}
+          color="#495867"
+          setPopUpVisible={setEnrolmentHistoryVisible}
+        >
+          <EnrolmentHistory
+            enrolmentHistory={demographicsInfos.Enrolment.EnrolmentHistory.sort(
+              (a, b) => b.EnrollmentDate - a.EnrollmentDate
+            )}
+            demographicsInfos={demographicsInfos}
+          />
+        </FakeWindow>
       )}
       <ConfirmGlobal isPopUp={true} />
       <ToastContainer

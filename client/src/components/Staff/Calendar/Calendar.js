@@ -111,7 +111,10 @@ const Calendar = () => {
             await axiosXanoStaff.delete(
               `/appointments/${currentEvent.current.id}`,
               {
-                headers: { Authorization: `Bearer ${auth.authToken}` },
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${auth.authToken}`,
+                },
               }
             );
             toast.success("Deleted Successfully", { containerId: "A" });
@@ -229,7 +232,10 @@ const Calendar = () => {
         await axiosXanoStaff.delete(
           `/appointments/${currentEvent.current.id}`,
           {
-            headers: { Authorization: `Bearer ${auth.authToken}` },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
           }
         );
         toast.success("Deleted Successfully", { containerId: "A" });

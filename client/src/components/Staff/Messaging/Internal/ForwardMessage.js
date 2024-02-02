@@ -185,6 +185,7 @@ const ForwardMessage = ({
             },
             {
               headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.authToken}`,
               },
             }

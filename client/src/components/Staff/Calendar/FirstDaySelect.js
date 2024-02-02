@@ -13,6 +13,7 @@ const FirstDaySelect = () => {
         { ...user.settings, first_day: value },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
         }

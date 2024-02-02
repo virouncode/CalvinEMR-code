@@ -10,6 +10,7 @@ const MigrationPatientsList = ({
   handleCheckPatientId,
   handleCheckAllPatientsIds,
   search,
+  isLoading,
 }) => {
   const { clinic } = useAuth();
   return (
@@ -19,6 +20,7 @@ const MigrationPatientsList = ({
           type="checkbox"
           onChange={handleCheckAllPatientsIds}
           checked={isAllPatientsIdsChecked()}
+          disabled={isLoading}
         />
         <label>All</label>
       </li>
@@ -52,6 +54,7 @@ const MigrationPatientsList = ({
               clinic.demographicsInfos,
               info.patient_id
             )}
+            isLoading={isLoading}
           />
         ))}
     </ul>

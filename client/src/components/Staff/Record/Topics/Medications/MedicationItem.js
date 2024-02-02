@@ -1,124 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   dosageUnitCT,
   frequencyCT,
+  strengthUnitCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
 import useAuth from "../../../../../hooks/useAuth";
-import { toLocalDate } from "../../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../../utils/socketHandlers/updates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import { isMedicationActive } from "../../../../../utils/isMedicationActive";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import SignCell from "../SignCell";
 import MedicationDetails from "./MedicationDetails";
 
-const MedicationItem = ({
-  item,
-  editCounter,
-  setErrMsgPost,
-  medsRx,
-  setMedsRx,
-  patientId,
-}) => {
+const MedicationItem = ({ item, patientId }) => {
   //HOOKS
-  const { user, clinic } = useAuth();
+  const { clinic } = useAuth();
   const [detailVisible, setDetailVisible] = useState(false);
-  const [itemInfos, setItemInfos] = useState(null);
-
-  useEffect(() => {
-    setItemInfos(item);
-  }, [item]);
 
   //HANDLERS
   const handleDetailClick = (e) => {
-    setErrMsgPost("");
-    editCounter.current += 1;
     setDetailVisible((v) => !v);
   };
 
-  // const handleAddToRxClick = (e) => {
-  //   if (!presVisible) {
-  //     setMedsRx([...medsRx, item]);
-  //     setPresVisible(true);
-  //   } else {
-  //     setMedsRx([...medsRx, item]);
-  //   }
-  // };
-  // const handleRemoveFromRxClick = (e) => {
-  //   let newMedsRx = [...medsRx];
-  //   newMedsRx = newMedsRx.filter(({ id }) => id !== item.id);
-  //   setMedsRx(newMedsRx);
-  // };
-
   return (
-    itemInfos && (
+    item && (
       <>
-        <tr className="medications__event">
-          <td>{itemInfos.PrescriptionStatus}</td>
-          <td>{itemInfos.DrugName}</td>
-          <td>{itemInfos.Dosage}</td>
+        <tr
+          className="medications__event"
+          style={{
+            backgroundColor: isMedicationActive(item.StartDate, item.duration)
+              ? "#FEFEFE"
+              : "#cecdcd",
+          }}
+        >
           <td>
-            {toCodeTableName(dosageUnitCT, itemInfos.DosageUnitOfMeasure)}
+            {isMedicationActive(item.StartDate, item.duration)
+              ? "Active"
+              : "Inactive"}
+          </td>
+          <td>{item.DrugName}</td>
+          <td>
+            {item.Strength.Amount}{" "}
+            {toCodeTableName(strengthUnitCT, item.Strength.UnitOfMeasure) ||
+              item.Strength.UnitOfMeasure}
           </td>
           <td>
-            {toCodeTableName(frequencyCT, itemInfos.Frequency) ||
-              itemInfos.Frequency}
-          </td>
-          <td>{itemInfos.Duration}</td>
-          <td>
-            <em>
-              {isUpdated(item)
-                ? staffIdToTitleAndName(
-                    clinic.staffInfos,
-                    getLastUpdate(item).updated_by_id,
-                    true
-                  )
-                : staffIdToTitleAndName(
-                    clinic.staffInfos,
-                    item.created_by_id,
-                    true
-                  )}
-            </em>
+            {item.Dosage}{" "}
+            {toCodeTableName(dosageUnitCT, item.DosageUnitOfMeasure) ||
+              item.DosageUnitOfMeasure}
           </td>
           <td>
-            <em>
-              {isUpdated(item)
-                ? toLocalDate(getLastUpdate(item).date_updated)
-                : toLocalDate(item.date_created)}
-            </em>
+            {toCodeTableName(frequencyCT, item.Frequency) || item.Frequency}
           </td>
+          <td>{item.Duration}</td>
+          <SignCell item={item} staffInfos={clinic.staffInfos} />
           <td>
             <div className="medications__event-btn-container">
               <button onClick={handleDetailClick}>See details</button>
-              {/* {user.title === "Doctor" &&
-                (presVisible ? (
-                  medsRx.find(({ id }) => id === item.id) ? (
-                    <button
-                      onClick={handleRemoveFromRxClick}
-                      style={{ minWidth: "90px" }}
-                    >
-                      Rmv From Rx
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleAddToRxClick}
-                      style={{ minWidth: "90px" }}
-                      disabled={item.PrescriptionStatus !== "Active"}
-                    >
-                      Add To RX
-                    </button>
-                  )
-                ) : (
-                  <button
-                    onClick={handleAddToRxClick}
-                    style={{ minWidth: "90px" }}
-                    disabled={item.PrescriptionStatus !== "Active"}
-                  >
-                    Add To RX
-                  </button>
-                ))} */}
             </div>
           </td>
         </tr>
@@ -127,20 +64,17 @@ const MedicationItem = ({
             <td>
               <FakeWindow
                 title="MEDICATION DETAILS"
-                width={900}
-                height={600}
-                x={(window.innerWidth - 900) / 2}
-                y={(window.innerHeight - 600) / 2}
+                width={600}
+                height={750}
+                x={(window.innerWidth - 600) / 2}
+                y={(window.innerHeight - 750) / 2}
                 color="#931621"
                 setPopUpVisible={setDetailVisible}
               >
                 <MedicationDetails
-                  itemInfos={itemInfos}
-                  setItemInfos={setItemInfos}
-                  setDetailVisible={setDetailVisible}
-                  editCounter={editCounter}
-                  patientId={patientId}
                   item={item}
+                  setDetailVisible={setDetailVisible}
+                  patientId={patientId}
                 />
               </FakeWindow>
             </td>

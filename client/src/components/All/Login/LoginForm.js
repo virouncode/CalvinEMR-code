@@ -83,6 +83,7 @@ const LoginForm = () => {
         //================ USER ===================//
         const response2 = await axiosXanoStaff.get(USERINFO_URL, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });
@@ -102,6 +103,7 @@ const LoginForm = () => {
           `/settings_for_staff?staff_id=${id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
           }
@@ -238,6 +240,7 @@ const LoginForm = () => {
         //================ USER ===================//
         const response2 = await axiosXanoPatient.get(USERINFO_URL, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });
@@ -248,6 +251,7 @@ const LoginForm = () => {
           `/demographics_for_patient?patient_id=${id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
           }
@@ -352,6 +356,7 @@ const LoginForm = () => {
         //================ USER ===================//
         const response2 = await axiosXanoAdmin.get(USERINFO_URL, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });

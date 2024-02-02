@@ -7,7 +7,6 @@ import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
-import MedicationForm from "../Topics/Medications/MedicationForm";
 import { default as MedicationItem } from "../Topics/Medications/MedicationItem";
 import PrescriptionPU from "./PrescriptionPU";
 
@@ -22,10 +21,8 @@ const MedicationsPU = ({
   //HOOKS
   const { clinic } = useAuth();
   const editCounter = useRef(0);
-  const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [presVisible, setPresVisible] = useState(false);
-  const [medsRx, setMedsRx] = useState([]);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -61,14 +58,14 @@ const MedicationsPU = ({
             <table className="medications__table">
               <thead>
                 <tr>
-                  <th>Prescription status</th>
+                  <th>Status</th>
                   <th>Drug name</th>
+                  <th>Strength</th>
                   <th>Dosage</th>
-                  <th>Dosage unit</th>
                   <th>Frequency</th>
                   <th>Duration</th>
-                  <th>Updated By</th>
-                  <th>Updated On</th>
+                  <th>Created By</th>
+                  <th>Created On</th>
                   <th style={{ textDecoration: "none", cursor: "default" }}>
                     Action
                   </th>
@@ -79,34 +76,17 @@ const MedicationsPU = ({
                   <MedicationItem
                     item={medication}
                     key={medication.id}
-                    editCounter={editCounter}
-                    presVisible={presVisible}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                    medsRx={medsRx}
-                    setMedsRx={setMedsRx}
                     patientId={patientId}
                   />
                 ))}
               </tbody>
             </table>
             <div className="medications__btn-container">
-              <button onClick={handleNewRX} disabled={addVisible}>
-                New RX
-              </button>
+              <button onClick={handleNewRX}>New RX</button>
               <button onClick={handleClose}>Close</button>
             </div>
           </>
         )
-      )}
-      {addVisible && (
-        <MedicationForm
-          patientId={patientId}
-          setAddVisible={setAddVisible}
-          editCounter={editCounter}
-          setErrMsgPost={setErrMsgPost}
-          errMsgPost={errMsgPost}
-        />
       )}
       {presVisible && (
         <FakeWindow
@@ -124,8 +104,6 @@ const MedicationsPU = ({
           <PrescriptionPU
             demographicsInfos={demographicsInfos}
             setPresVisible={setPresVisible}
-            medsRx={medsRx}
-            setMedsRx={setMedsRx}
             patientId={patientId}
             resize={false}
           />

@@ -661,6 +661,84 @@ export const reportMediaCT = [
   { code: "Hardcopy", name: "Hardcopy" },
 ];
 
+export const terminationReasonCT = [
+  { code: "12", name: "Health Number error" },
+  { code: "14", name: "Patient identified as deceased on ministry database" },
+  { code: "24", name: "Patient added to roster in error" },
+  {
+    code: "30",
+    name: "Pre-member/ Assigned member ended; now enrolled or registered with red and white health card",
+  },
+  {
+    code: "32",
+    name: "Pre-member/ Assigned member ended; now enrolled or registered with photo health card",
+  },
+  {
+    code: "33",
+    name: "Termination reason cannot be released (due to patient confidentiality)",
+  },
+  { code: "35", name: "Patient transferred from roster per physician request" },
+  { code: "36", name: "Original enrolment ended; patient now re-enroled" },
+  {
+    code: "37",
+    name: "Original enrolment ended; patient now enrolled as Long Term Care",
+  },
+  {
+    code: "38",
+    name: "Long Term Care enrolment ended; patient has left Long Term Care",
+  },
+  {
+    code: "39",
+    name: "Assigned member status ended; roster transferred per physician request",
+  },
+  { code: "40", name: "Physician reported member as deceased" },
+  {
+    code: "41",
+    name: "Patient no longer meets selection criteria for your roster – assigned to another physician",
+  },
+  {
+    code: "42",
+    name: "Physician ended enrolment; patient entered Long Term Care facility",
+  },
+  { code: "44", name: "Physician ended patient enrolment" },
+  {
+    code: "51",
+    name: "Patient no longer meets selection criteria for your roster",
+  },
+  {
+    code: "53",
+    name: "Physician ended enrolment; patient moved out of geographic area",
+  },
+  { code: "54", name: "Physician ended enrolment; patient left province" },
+  { code: "56", name: "Physician ended enrolment; per patient request" },
+  { code: "57", name: "Enrolment terminated by patient" },
+  { code: "59", name: "Enrolment ended; patient out of geographic area" },
+  { code: "60", name: "No current eligibility" },
+  {
+    code: "61",
+    name: "Patient out of geographic area; address over-ride applied",
+  },
+  {
+    code: "62",
+    name: "Patient out of geographic area; address over-ride removed",
+  },
+  { code: "73", name: "No current eligibility" },
+  { code: "74", name: "No current eligibility" },
+  { code: "82", name: "Ministry has not received enrolment/ Consent form" },
+  {
+    code: "84",
+    name: "Termination reason cannot be released (due to patient confidentiality)",
+  },
+  {
+    code: "90",
+    name: "Termination reason cannot be released (due to patient confidentiality)",
+  },
+  {
+    code: "91",
+    name: "Termination reason cannot be released (due to patient confidentiality)",
+  },
+];
+
 export const toCodeTableName = (codeTable, code) => {
   return codeTable.find((item) => item.code === code)?.name || "";
 };

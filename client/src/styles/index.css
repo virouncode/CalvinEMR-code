@@ -11018,7 +11018,7 @@ readers do not read off random characters that represent icons */
   width: 85%;
   position: relative;
   background: #FEFEFE;
-  border: solid 2px #cecdcd;
+  border: solid 1px #cecdcd;
   border-radius: 4px;
   padding: 10px;
 }
@@ -12087,7 +12087,7 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   border-radius: 4px;
   padding: 5px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 .demographics-card__content fieldset legend {
   font-weight: bold;
@@ -16682,4 +16682,58 @@ readers do not read off random characters that represent icons */
   margin-top: 1px;
   height: 500px;
   overflow: scroll;
+}
+
+.new-enrolment__btn-container {
+  text-align: center;
+  margin-top: 30px;
+}
+.new-enrolment__btn-container button {
+  margin-left: 5px;
+}
+.new-enrolment__err {
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  width: 90%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
+  text-align: center;
+}
+.new-enrolment__form {
+  margin-top: 50px;
+  padding: 0 10px;
+}
+.new-enrolment__form-row {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+.new-enrolment__form-row select, .new-enrolment__form-row input[type=date] {
+  width: 150px;
+}
+.new-enrolment__form-row label {
+  width: 150px;
+  font-weight: bold;
+}
+.new-enrolment__form-row--special {
+  margin-left: 20px;
+}
+.new-enrolment__form-physician {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.new-enrolment__form-physician label {
+  width: 150px;
+  font-weight: bold;
+}
+
+.enrolment-history__container {
+  margin-top: 50px;
+}
+.enrolment-history__item {
+  padding: 5px;
+  white-space: pre;
 }/*# sourceMappingURL=index.css.map */

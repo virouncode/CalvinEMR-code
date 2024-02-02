@@ -116,31 +116,6 @@ export const demographicsSchema = yup.object({
         (ohip) => !ohip || ohip.length === 6
       ),
   }),
-  Enrolment: yup.object({
-    EnrolmentHistory: yup.array().of(
-      yup.object({
-        EnrolledToPhysician: yup.object({
-          Name: yup.object({
-            FirstName: yup.string().matches(/^([^0-9]*)$/, {
-              message: "Invalid Enrolled to physician First Name",
-              excludeEmptyString: true,
-            }),
-            LastName: yup.string().matches(/^([^0-9]*)$/, {
-              message: "Invalid Enrolled to physician Last Name",
-              excludeEmptyString: true,
-            }),
-          }),
-          OHIPPhysicianId: yup
-            .string()
-            .test(
-              "empty-or-6-chars",
-              "Invalid Enrolled to physician OHIP#, should be 6-digits",
-              (ohip) => !ohip || ohip.length === 6
-            ),
-        }),
-      })
-    ),
-  }),
   ReferredPhysician: yup.object({
     FirstName: yup.string().matches(/^([^0-9]*)$/, {
       message: "Invalid Referred physician First Name",

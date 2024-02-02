@@ -6,6 +6,7 @@ const MigrationRecordsList = ({
   handleCheckRecordId,
   handleCheckAllRecordsIds,
   isAllRecordsIdsChecked,
+  isLoading,
 }) => {
   return (
     <ul className="migration-export__records-list">
@@ -14,6 +15,7 @@ const MigrationRecordsList = ({
           type="checkbox"
           onChange={handleCheckAllRecordsIds}
           checked={isAllRecordsIdsChecked()}
+          disabled={isLoading}
         />
         <label>All</label>
       </li>
@@ -25,6 +27,7 @@ const MigrationRecordsList = ({
           handleCheckRecord={handleCheckRecordId}
           isRecordChecked={isRecordIdChecked}
           recordId={record.id}
+          isLoading={isLoading}
         />
       ))}
     </ul>

@@ -168,6 +168,7 @@ const MessageExternalDetail = ({
       },
       {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${auth.authToken}`,
         },
       }

@@ -19,6 +19,7 @@ const VerifyPasswordPatient = ({ setVerified }) => {
         LOGIN_URL,
         JSON.stringify({ email: auth.email, password }),
         {
+          "Content-Type": "application/json",
           headers: { "Content-Type": "application/json" },
         }
       );

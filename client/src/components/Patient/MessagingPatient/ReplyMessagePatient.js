@@ -122,6 +122,7 @@ const ReplyMessagePatient = ({
             },
             {
               headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.authToken}`,
               },
             }

@@ -66,6 +66,7 @@ const EventForm = ({
           `/settings_for_staff?staff_id=${currentEvent.current.extendedProps.host}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
             signal: abortController.signal,

@@ -12,6 +12,7 @@ const ReportsContent = ({ showDocument, datas, isLoading, errMsg }) => {
             <p style={{ fontWeight: "bold" }}>Received</p>
             <ul>
               {datas
+                .filter(({ File }) => File)
                 .filter(({ RecipientName }) => !RecipientName?.FirstName)
                 .filter(({ acknowledged }) => !acknowledged)
                 .sort((a, b) => b.date_created - a.date_created)
@@ -32,6 +33,7 @@ const ReportsContent = ({ showDocument, datas, isLoading, errMsg }) => {
                   </li>
                 ))}
               {datas
+                .filter(({ File }) => File)
                 .filter(({ acknowledged }) => acknowledged)
                 .sort((a, b) => b.date_created - a.date_created)
                 .map((report) => (

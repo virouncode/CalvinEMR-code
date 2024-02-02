@@ -1,11 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
-import {
-  dosageUnitCT,
-  formCT,
-  frequencyCT,
-  toCodeTableName,
-} from "../../../../../datas/codesTables";
+import { isMedicationActive } from "../../../../../utils/isMedicationActive";
 
 const MedicationsContent = ({ datas, isLoading, errMsg }) => {
   return !isLoading ? (
@@ -16,24 +11,15 @@ const MedicationsContent = ({ datas, isLoading, errMsg }) => {
         {datas && datas.length >= 1 ? (
           <ul>
             {datas
-              .filter(
-                ({ PrescriptionStatus }) => PrescriptionStatus === "Active"
-              )
-              .sort((a, b) => b.date_created - a.date_created)
+              .filter((med) => isMedicationActive(med.StartDate, med.duration))
+              .sort((a, b) => b.StartDate - a.StartDate)
               .map((medication) => (
                 <li key={medication.id}>
-                  - <strong>{medication.DrugName}</strong> (
-                  {toCodeTableName(formCT, medication.Form) || medication.Form}
-                  ), {medication.Dosage}{" "}
-                  {toCodeTableName(
-                    dosageUnitCT,
-                    medication.DosageUnitOfMeasure
-                  ) || medication.DosageUnitOfMeasure}
-                  ,{" "}
-                  {toCodeTableName(frequencyCT, medication.Frequency) ||
-                    medication.Frequency}
-                  , {"during "}
-                  {medication.Duration}
+                  -{" "}
+                  <strong>
+                    {medication.DrugName} {medication.Strength.Amount}{" "}
+                    {medication.Strength.UnitOfMeasure}
+                  </strong>
                 </li>
               ))}
           </ul>

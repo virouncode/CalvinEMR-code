@@ -13,6 +13,7 @@ const SlotSelect = () => {
         { ...user.settings, slot_duration: value },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
           },
         }

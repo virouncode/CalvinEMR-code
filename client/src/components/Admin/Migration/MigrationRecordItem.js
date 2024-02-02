@@ -5,6 +5,7 @@ const MigrationRecordItem = ({
   handleCheckRecord,
   isRecordChecked,
   recordId,
+  isLoading,
 }) => {
   return (
     <li className="migration-export__records-list-item">
@@ -13,7 +14,7 @@ const MigrationRecordItem = ({
         onChange={handleCheckRecord}
         id={recordId}
         checked={isRecordChecked(recordId)}
-        disabled={recordId === 1}
+        disabled={recordId === 1 || isLoading}
       />
       <label>{label}</label>
     </li>

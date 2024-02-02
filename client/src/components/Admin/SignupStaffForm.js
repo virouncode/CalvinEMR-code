@@ -72,6 +72,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
           },
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
           }

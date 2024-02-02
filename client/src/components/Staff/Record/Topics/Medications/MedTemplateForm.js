@@ -41,6 +41,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
     RefillDuration: "",
     Quantity: "",
     RefillQuantity: "",
+    NumberOfRefills: "",
     LongTermMedication: { ynIndicatorsimple: "N" },
     Notes: "",
     PrescriptionInstructions: "",
@@ -132,6 +133,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -161,6 +163,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -182,6 +185,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -203,6 +207,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -224,6 +229,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -245,7 +251,30 @@ const MedTemplateForm = ({ setNewVisible }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             value,
+            formDatas.RefillDuration
+          ),
+        });
+        break;
+      case "NumberOfRefills":
+        setFormDatas({
+          ...formDatas,
+          [name]: value,
+          PrescriptionInstructions: toPrescriptionInstructions(
+            formDatas.DrugName,
+            formDatas.Strength.Amount,
+            formDatas.Strength.UnitOfMeasure,
+            formDatas.SubstitutionNotAllowed,
+            formDatas.Quantity,
+            formDatas.Form,
+            formDatas.Route,
+            formDatas.Dosage,
+            formDatas.DosageUnitOfMeasure,
+            formDatas.Frequency,
+            formDatas.Duration,
+            value,
+            formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
         });
@@ -289,6 +318,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
           type,
           parseInt(value)
         ),
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -322,6 +352,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         toDurationText(
           formDatas.refill_duration.Y,
@@ -350,6 +381,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -371,6 +403,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         formDatas.DosageUnitOfMeasure,
         value,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -393,6 +426,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         value,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -418,6 +452,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -439,6 +474,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -570,6 +606,16 @@ const MedTemplateForm = ({ setNewVisible }) => {
           name="RefillQuantity"
           type="text"
           value={formDatas.RefillQuantity}
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </div>
+      <div className="med-templates__form-row">
+        <label>Number of refills</label>
+        <input
+          name="NumberOfRefills"
+          type="text"
+          value={formDatas.NumberOfRefills}
           onChange={handleChange}
           autoComplete="off"
         />

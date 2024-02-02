@@ -33,6 +33,7 @@ const AvailabilityEditor = ({ setEditVisible }) => {
           `/availability_for_staff?staff_id=${user.id}`,
           {
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
             signal: abortController.signal,
@@ -81,6 +82,7 @@ const AvailabilityEditor = ({ setEditVisible }) => {
     try {
       await axiosXanoStaff.put(`/availability/${availabilityId}`, datasToPost, {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${auth.authToken}`,
         },
       });

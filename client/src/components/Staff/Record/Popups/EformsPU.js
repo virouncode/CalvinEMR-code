@@ -61,6 +61,7 @@ const EformsPU = ({
             },
             {
               headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.authToken}`,
               },
             }
@@ -90,6 +91,7 @@ const EformsPU = ({
                 },
                 {
                   headers: {
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${auth.authToken}`,
                   },
                 }

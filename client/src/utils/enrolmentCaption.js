@@ -1,3 +1,6 @@
+import { terminationReasonCT, toCodeTableName } from "../datas/codesTables";
+import { toLocalDate } from "./formatDates";
+
 export const enrolmentCaption = (lastEnrolment) => {
   const firstName = lastEnrolment?.EnrolledToPhysician?.Name?.FirstName
     ? `${lastEnrolment?.EnrolledToPhysician?.Name?.FirstName}`
@@ -6,7 +9,7 @@ export const enrolmentCaption = (lastEnrolment) => {
     ? ` ${lastEnrolment?.EnrolledToPhysician?.Name?.LastName}`
     : "";
   const ohip = lastEnrolment?.EnrolledToPhysician?.OHIPPhysicianId
-    ? `, ${lastEnrolment?.EnrolledToPhysician?.OHIPPhysicianId}`
+    ? `, OHIP#: ${lastEnrolment?.EnrolledToPhysician?.OHIPPhysicianId}`
     : "";
   const active = lastEnrolment?.EnrollmentTerminationDate
     ? `, Inactive`
@@ -15,4 +18,30 @@ export const enrolmentCaption = (lastEnrolment) => {
     : "";
 
   return firstName + lastName + ohip + active;
+};
+
+export const enrolmentCaptionComplete = (enrolment) => {
+  const firstName = enrolment?.EnrolledToPhysician?.Name?.FirstName
+    ? `Enroled to ${enrolment?.EnrolledToPhysician?.Name?.FirstName}`
+    : "";
+  const lastName = enrolment?.EnrolledToPhysician?.Name?.LastName
+    ? ` ${enrolment?.EnrolledToPhysician?.Name?.LastName}`
+    : "";
+  const ohip = enrolment?.EnrolledToPhysician?.OHIPPhysicianId
+    ? `, OHIP#: ${enrolment?.EnrolledToPhysician?.OHIPPhysicianId}`
+    : "";
+  const start = enrolment?.EnrollmentDate
+    ? `, since ${toLocalDate(enrolment?.EnrollmentDate)}.`
+    : "";
+  const end = enrolment?.EnrollmentTerminationDate
+    ? `Ended on ${toLocalDate(enrolment?.EnrollmentTerminationDate)}`
+    : "";
+  const reason = enrolment?.TerminationReason
+    ? `, because of: ${toCodeTableName(
+        terminationReasonCT,
+        enrolment?.TerminationReason
+      )}`
+    : "";
+
+  return firstName + lastName + ohip + start + "\n" + end + reason;
 };

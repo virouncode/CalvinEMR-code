@@ -19,7 +19,7 @@ import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 var _ = require("lodash");
 
-const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
+const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
   //HOOKS
   const { auth } = useAuth();
   const [allergies, setAllergies] = useState([]);
@@ -48,6 +48,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
     },
     Quantity: "",
     RefillQuantity: "",
+    NumberOfRefills: "",
     LongTermMedication: { ynIndicatorsimple: "N" },
     Notes: "",
     PrescriptionInstructions: "",
@@ -130,6 +131,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         },
         Quantity: "",
         RefillQuantity: "",
+        NumberOfRefills: "",
         LongTermMedication: { ynIndicatorsimple: "N" },
         Notes: "",
         PrescriptionInstructions: "",
@@ -158,6 +160,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -187,6 +190,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -208,6 +212,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -229,6 +234,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -250,6 +256,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
@@ -271,7 +278,30 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
             formDatas.DosageUnitOfMeasure,
             formDatas.Frequency,
             formDatas.Duration,
+            formDatas.NumberOfRefills,
             value,
+            formDatas.RefillDuration
+          ),
+        });
+        break;
+      case "NumberOfRefills":
+        setFormDatas({
+          ...formDatas,
+          [name]: value,
+          PrescriptionInstructions: toPrescriptionInstructions(
+            formDatas.DrugName,
+            formDatas.Strength.Amount,
+            formDatas.Strength.UnitOfMeasure,
+            formDatas.SubstitutionNotAllowed,
+            formDatas.Quantity,
+            formDatas.Form,
+            formDatas.Route,
+            formDatas.Dosage,
+            formDatas.DosageUnitOfMeasure,
+            formDatas.Frequency,
+            formDatas.Duration,
+            value,
+            formDatas.RefillQuantity,
             formDatas.RefillDuration
           ),
         });
@@ -315,6 +345,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
           type,
           parseInt(value)
         ),
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -348,6 +379,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         toDurationText(
           formDatas.refill_duration.Y,
@@ -376,6 +408,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -398,6 +431,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         formDatas.DosageUnitOfMeasure,
         value,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -420,6 +454,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         value,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -445,6 +480,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -466,6 +502,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
         formDatas.DosageUnitOfMeasure,
         formDatas.Frequency,
         formDatas.Duration,
+        formDatas.NumberOfRefills,
         formDatas.RefillQuantity,
         formDatas.RefillDuration
       ),
@@ -476,7 +513,7 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
     <form className="medications-form" onSubmit={handleSubmit}>
       <div className="medications-form__title">
         <p>Medications</p>
-        <input type="submit" value="Add to RX" />
+        <input type="submit" value="Add to RX" disabled={progress} />
       </div>
       {errMsg && <p className="medications-form__err">{errMsg}</p>}
       <div className="medications-form__allergies">
@@ -615,6 +652,16 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds }) => {
           name="RefillQuantity"
           type="text"
           value={formDatas.RefillQuantity}
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </div>
+      <div className="med-templates__form-row">
+        <label>Number of refills</label>
+        <input
+          name="NumberOfRefills"
+          type="text"
+          value={formDatas.NumberOfRefills}
           onChange={handleChange}
           autoComplete="off"
         />
