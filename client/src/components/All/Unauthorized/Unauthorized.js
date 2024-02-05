@@ -9,7 +9,7 @@ const Unauthorized = () => {
         Unauthorized Page : you don't have access to the requested page (
         {location.state?.from?.pathname})
       </h2>
-      <p>Please contact an admin</p>
+      <p>Please contact your administrator</p>
       <NavLink className="unauthorized-container-link" to="/">
         Return to login page
       </NavLink>

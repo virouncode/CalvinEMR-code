@@ -39,6 +39,10 @@ export const useEvents = (
   hostsIds,
   rangeStart,
   rangeEnd,
+  timelineVisible,
+  timelineSiteId,
+  sitesIds,
+  sites,
   isSecretary,
   userId
 ) => {
@@ -49,11 +53,12 @@ export const useEvents = (
       try {
         dispatch({ type: "FETCH_START" });
         const response = await axiosXanoStaff.post(
-          "/appointments_for_staff",
+          "/appointments_for_staff_and_sites",
           {
             hosts_ids: hostsIds,
             range_start: rangeStart,
             range_end: rangeEnd,
+            sites_ids: timelineVisible ? [timelineSiteId] : sitesIds,
           },
           {
             headers: {
@@ -66,6 +71,7 @@ export const useEvents = (
         const formattedEvents = parseToEvents(
           response.data,
           clinic.staffInfos,
+          sites,
           isSecretary,
           userId
         );
@@ -87,6 +93,10 @@ export const useEvents = (
       isSecretary,
       rangeEnd,
       rangeStart,
+      sites,
+      sitesIds,
+      timelineSiteId,
+      timelineVisible,
       userId,
     ]
   );

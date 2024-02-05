@@ -100,6 +100,7 @@ export const putPatientRecord = async (
   //   datas.created_by_id = authId;
   //   datas.date_created = Date.now();
   // }
+
   datas.updates.push({ updated_by_id: authId, date_updated: Date.now() });
 
   try {

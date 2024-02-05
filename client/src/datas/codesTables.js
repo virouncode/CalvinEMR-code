@@ -64,13 +64,6 @@ export const enrollmentStatusCT = [
   { code: "0", name: "Not Enrolled" },
 ];
 
-// export const enrollmentTerminationReasonCT = [
-//   //CT_010
-//   { code: "12", name: "ENDED BY MOH (Health# error)"},
-//   { code: "14", name: "ENDED BY MOH (Patient deceased)"},
-//   { code: "24", name: "ADDED IN ERROR (Patient added to roster in error)"},
-// ]
-
 export const adressTypeCT = [
   //CT-011
   { code: "M", name: "Mailing" },

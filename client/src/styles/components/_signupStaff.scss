@@ -1,9 +1,9 @@
 .signup-staff {
     &__success {
         padding : 10px 20px;
-        width : 30%;
+        width : 80%;
         font-size: 0.9rem;
-        margin:0 auto;
+        margin:10px auto;
         border-radius: 4px;
         text-align: center;
         color: forestgreen;
@@ -12,8 +12,8 @@
     &__err {
         padding : 10px 20px;
         font-size: 0.9rem;
-        width : 30%;
-        margin:0 auto;
+        width : 80%;
+        margin:10px auto;
         color : red;
         background-color:rgba(255, 0, 0, 0.403);
         border-radius: 4px;
@@ -24,7 +24,7 @@
         width : 95%;
         margin:50px auto 0;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border: solid 2px $blue;
+        border: solid 1px $grey;
         border-radius: 4px;
         background:$white;
     }

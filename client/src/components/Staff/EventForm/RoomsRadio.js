@@ -3,13 +3,13 @@ import RoomRadioItem from "./RoomRadioItem";
 
 const RoomsRadio = ({
   handleRoomChange,
-  roomSelected,
+  roomSelectedId,
   rooms,
   isRoomOccupied,
   label = true,
 }) => {
   //Rooms vector with all Rooms
-  const isRoomSelected = (roomName) => roomSelected === roomName;
+  const isRoomSelected = (roomId) => roomSelectedId === roomId;
   return (
     <>
       {label && <p>Room</p>}
@@ -17,6 +17,7 @@ const RoomsRadio = ({
         {rooms.map((room) => (
           <RoomRadioItem
             key={room.id}
+            roomId={room.id}
             roomName={room.title}
             isRoomOccupied={isRoomOccupied}
             handleRoomChange={handleRoomChange}

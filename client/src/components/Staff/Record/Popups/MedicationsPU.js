@@ -19,7 +19,7 @@ const MedicationsPU = ({
   errMsg,
 }) => {
   //HOOKS
-  const { clinic } = useAuth();
+  const { user, clinic } = useAuth();
   const editCounter = useRef(0);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [presVisible, setPresVisible] = useState(false);
@@ -82,7 +82,9 @@ const MedicationsPU = ({
               </tbody>
             </table>
             <div className="medications__btn-container">
-              <button onClick={handleNewRX}>New RX</button>
+              {user.title === "Doctor" && (
+                <button onClick={handleNewRX}>New RX</button>
+              )}
               <button onClick={handleClose}>Close</button>
             </div>
           </>

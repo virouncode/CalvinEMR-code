@@ -66,7 +66,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
           />
         </div>
         <div className="patient-search__item">
-          <label htmlFor="health">Social Insurance#</label>
+          <label htmlFor="health">SIN</label>
           <input
             type="text"
             name="health"

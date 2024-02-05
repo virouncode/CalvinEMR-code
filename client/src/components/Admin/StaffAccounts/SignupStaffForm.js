@@ -1,22 +1,19 @@
 import { CircularProgress } from "@mui/material";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { sendEmail } from "../../api/sendEmail";
-import { axiosXanoAdmin } from "../../api/xanoAdmin";
-import useAuth from "../../hooks/useAuth";
-import { firstLetterUpper } from "../../utils/firstLetterUpper";
-import { generatePassword } from "../../utils/generatePassword";
-import { staffSchema } from "../../validation/staffValidation";
+import { sendEmail } from "../../../api/sendEmail";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import useAuth from "../../../hooks/useAuth";
+import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { generatePassword } from "../../../utils/generatePassword";
+import { staffSchema } from "../../../validation/staffValidation";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupStaffForm = ({ setAddVisible }) => {
-  const { auth, socket } = useAuth();
-  const [successMsg, setSuccessMsg] = useState("");
+  const { auth, socket, user } = useAuth();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const navigate = useNavigate();
   const [formDatas, setFormDatas] = useState({
     email: "",
     password: "",
@@ -30,12 +27,41 @@ const SignupStaffForm = ({ setAddVisible }) => {
     subspeciality: "",
     licence_nbr: "",
     ohip_billing_nbr: "",
-    account_status: "Confirmed",
+    account_status: "Activated",
     cell_phone: "",
     backup_phone: "",
     video_link: "",
     sign: null,
   });
+  const [siteId, setSiteId] = useState("");
+  const [sites, setSites] = useState([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const fetchSites = async () => {
+      try {
+        const response = await axiosXanoAdmin.get("/sites", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          signal: abortController.signal,
+        });
+        if (abortController.signal.aborted) return;
+        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
+          containerId: "A",
+        });
+      }
+    };
+    fetchSites();
+    return () => abortController.abort();
+  }, [auth.authToken]);
+
+  const handleChangeSite = (e) => {
+    setSiteId(parseInt(e.target.value));
+  };
 
   const handleCancel = () => {
     setAddVisible(false);
@@ -118,6 +144,10 @@ const SignupStaffForm = ({ setAddVisible }) => {
       setErrMsg("OHIP Billing number should be 6-digits");
       return;
     }
+    if (!siteId) {
+      setErrMsg("Clinic site field is required");
+      return;
+    }
     try {
       const full_name =
         formDatas.first_name +
@@ -125,7 +155,11 @@ const SignupStaffForm = ({ setAddVisible }) => {
         (formDatas.middle_name ? formDatas.middle_name + " " : "") +
         formDatas.last_name;
 
-      const datasToPost = { ...formDatas };
+      const datasToPost = {
+        ...formDatas,
+        created_by_id: user.id,
+        date_created: Date.now(),
+      };
 
       //Formatting
       datasToPost.email = datasToPost.email.toLowerCase();
@@ -212,8 +246,9 @@ const SignupStaffForm = ({ setAddVisible }) => {
             },
             { name: "[Blank]", intro: "", infos: "", message: "" },
           ],
-          clinic_address: "",
+          date_created: Date.now(),
           progress_notes_order: "top",
+          site_id: siteId,
         },
         {
           headers: {
@@ -309,7 +344,8 @@ const SignupStaffForm = ({ setAddVisible }) => {
       );
 
       sendEmail(
-        formDatas.email,
+        //formDatas.email,
+        "virounk@gmail.com",
         datasToPost.full_name,
         "Welcome to Calvin EMR : New Life Fertility Center",
         "",
@@ -329,9 +365,11 @@ const SignupStaffForm = ({ setAddVisible }) => {
     }
   };
   return (
-    <div className="signup-staff__container">
+    <div
+      className="signup-staff__container"
+      style={{ border: errMsg && "solid 1px red" }}
+    >
       {errMsg && <p className="signup-staff__err">{errMsg}</p>}
-      {successMsg && <p className="signup-staff__success">{successMsg}</p>}
       <form className="signup-staff__form">
         <div className="signup-staff__column">
           <div className="signup-staff__row">
@@ -418,6 +456,16 @@ const SignupStaffForm = ({ setAddVisible }) => {
               onChange={handleChange}
             />
           </div>
+          <div className="signup-staff__row">
+            <label>Clinic site*: </label>
+            <select value={siteId} onChange={handleChangeSite}>
+              {sites.map((site) => (
+                <option value={site.id} name={site.id} key={site.id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="signup-staff__column">
@@ -442,7 +490,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
             />
           </div>
           <div className="signup-staff__row">
-            <label>Licence nbr: </label>
+            <label>Licence#: </label>
             <input
               type="text"
               value={formDatas.licence_nbr}
@@ -453,7 +501,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
             />
           </div>
           <div className="signup-staff__row">
-            <label>OHIP billing nbr: </label>
+            <label>OHIP#: </label>
             <input
               type="text"
               value={formDatas.ohip_billing_nbr}

@@ -1,0 +1,45 @@
+.sites__table-container {
+  width:97%;
+  margin: 0 auto;
+  overflow: scroll;;
+  table{    
+    margin:0 auto;
+    table-layout: fixed;
+    max-width: 100%;
+    background-color: $white;
+    border-collapse: collapse;
+    border:solid 1px $black;
+    white-space: nowrap;
+    thead{
+      background-color:$blue;
+        th {
+          text-decoration: underline;
+          cursor:pointer;
+          padding : 2px 5px;
+          font-size: 0.8rem;
+          min-width: 100px;
+        }
+      }
+    tbody {
+      tr{
+        td {
+          border:solid 1px $black;
+          font-size: 0.8rem;
+          padding : 2px 5px;
+          overflow : hidden;
+          text-align: center;
+        }
+      }    
+    }
+  }
+}
+.site-item {
+  &__btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      margin-left: 5px;
+    }
+  }
+}

@@ -29,9 +29,16 @@ export const onMessageEvents = (
   setEvents,
   staffInfos,
   userId,
-  isSecretary
+  isSecretary,
+  sites,
+  siteId,
+  timelineSiteId,
+  timelineVisible
 ) => {
   if (message.route !== "EVENTS") return;
+  const rooms = timelineVisible
+    ? sites.find(({ id }) => id === timelineSiteId).rooms
+    : sites.find(({ id }) => id === siteId).rooms;
   const remainingStaffObjects = staffInfos
     .filter(({ id }) => id !== userId)
     .map((staff, index) => {
@@ -51,7 +58,9 @@ export const onMessageEvents = (
                 message.content.data,
                 "#bfbfbf",
                 "#FEFEFE",
-                isSecretary
+                isSecretary,
+                userId,
+                rooms
               ) //grey
             : parseToEvent(
                 message.content.data,
@@ -65,14 +74,17 @@ export const onMessageEvents = (
                     id: message.content.data.host_id,
                   })
                 ].textColor,
-                isSecretary
+                isSecretary,
+                userId,
+                rooms
               )
           : parseToEvent(
               message.content.data,
               "#6490D2",
               "#FEFEFE",
               isSecretary,
-              userId
+              userId,
+              rooms
             );
       setEvents([...events, newEvent]);
       break;
@@ -84,7 +96,9 @@ export const onMessageEvents = (
                 message.content.data,
                 "#bfbfbf",
                 "#FEFEFE",
-                isSecretary
+                isSecretary,
+                userId,
+                rooms
               ) //grey
             : parseToEvent(
                 message.content.data,
@@ -98,14 +112,17 @@ export const onMessageEvents = (
                     id: message.content.data.host_id,
                   })
                 ].textColor,
-                isSecretary
+                isSecretary,
+                userId,
+                rooms
               )
           : parseToEvent(
               message.content.data,
               "#6490D2",
               "#FEFEFE",
               isSecretary,
-              userId
+              userId,
+              rooms
             );
       setEvents(
         events.map((event) =>

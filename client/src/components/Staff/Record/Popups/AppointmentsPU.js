@@ -1,6 +1,8 @@
 import { CircularProgress } from "@mui/material";
-import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import React, { useEffect, useRef, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import { axiosXanoStaff } from "../../../../api/xanoStaff";
+import useAuth from "../../../../hooks/useAuth";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
@@ -16,9 +18,34 @@ const AppointmentsPU = ({
   errMsg,
 }) => {
   //HOOKS
+  const { auth } = useAuth();
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+  const [sites, setSites] = useState([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const fetchSites = async () => {
+      try {
+        const response = await axiosXanoStaff.get("/sites", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          signal: abortController.signal,
+        });
+        if (abortController.signal.aborted) return;
+        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
+          containerId: "B",
+        });
+      }
+    };
+    fetchSites();
+    return () => abortController.abort();
+  }, [auth.authToken]);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -61,6 +88,7 @@ const AppointmentsPU = ({
                   <th>From</th>
                   <th>To</th>
                   <th>All Day</th>
+                  <th>Site</th>
                   <th>Room</th>
                   <th>Status</th>
                   <th>Notes</th>
@@ -80,6 +108,7 @@ const AppointmentsPU = ({
                     setAddVisible={setAddVisible}
                     errMsgPost={errMsgPost}
                     setErrMsgPost={setErrMsgPost}
+                    sites={sites}
                   />
                 )}
                 {datas.map((appointment) => (
@@ -89,6 +118,7 @@ const AppointmentsPU = ({
                     editCounter={editCounter}
                     errMsgPost={errMsgPost}
                     setErrMsgPost={setErrMsgPost}
+                    sites={sites}
                   />
                 ))}
               </tbody>

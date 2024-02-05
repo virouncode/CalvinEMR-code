@@ -1,17 +1,17 @@
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { axiosXanoAdmin } from "../../api/xanoAdmin";
-import useAuth from "../../hooks/useAuth";
-import { firstLetterUpper } from "../../utils/firstLetterUpper";
-import { myAccountSchema } from "../../validation/myAccountValidation";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import useAuth from "../../../hooks/useAuth";
+import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { myAccountSchema } from "../../../validation/myAccountValidation";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const StaffAccountForm = ({ infos, setEditVisible }) => {
+const StaffAccountEdit = ({ infos, setEditVisible }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
-  const { auth, socket, clinic } = useAuth();
+  const { auth, socket } = useAuth();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
 
@@ -126,7 +126,10 @@ const StaffAccountForm = ({ infos, setEditVisible }) => {
   };
 
   return (
-    <div className="staff-account__container">
+    <div
+      className="staff-account__container"
+      style={{ border: errMsg && "solid 1px red" }}
+    >
       {errMsg && <p className="staff-account__err">{errMsg}</p>}
       {formDatas && (
         <div className="staff-account__form">
@@ -204,6 +207,20 @@ const StaffAccountForm = ({ infos, setEditVisible }) => {
               </select>
             </div>
             <div className="staff-account__row">
+              <label>Account status*: </label>
+              <select
+                required
+                value={formDatas.account_status}
+                onChange={handleChange}
+                name="account_status"
+              >
+                <option value="Activated">Activated</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+          <div className="staff-account__column">
+            <div className="staff-account__row">
               <label>Speciality: </label>
               <input
                 type="text"
@@ -213,8 +230,6 @@ const StaffAccountForm = ({ infos, setEditVisible }) => {
                 autoComplete="off"
               />
             </div>
-          </div>
-          <div className="staff-account__column">
             <div className="staff-account__row">
               <label>Subspeciality: </label>
               <input
@@ -317,4 +332,4 @@ const StaffAccountForm = ({ infos, setEditVisible }) => {
   );
 };
 
-export default StaffAccountForm;
+export default StaffAccountEdit;

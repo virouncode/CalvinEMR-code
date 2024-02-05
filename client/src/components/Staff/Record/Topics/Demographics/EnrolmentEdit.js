@@ -22,8 +22,6 @@ const EnrolmentEdit = ({
   const [err, setErr] = useState("");
   const [formDatas, setFormDatas] = useState(enrolment);
 
-  console.log("enrolmentIndex", enrolmentIndex);
-
   const handleChange = (e) => {
     setErr("");
     const name = e.target.name;
@@ -94,7 +92,6 @@ const EnrolmentEdit = ({
         },
       },
     };
-    console.log("newEnrolmentToPut", newEnrolmentToPut);
     const datasToPut = {
       ...demographicsInfos,
       Enrolment: {

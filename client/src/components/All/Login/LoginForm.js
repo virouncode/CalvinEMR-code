@@ -87,6 +87,10 @@ const LoginForm = () => {
             Authorization: `Bearer ${authToken}`,
           },
         });
+        if (response2.data.account_status === "Suspended") {
+          navigate("/suspended");
+          return;
+        }
         const id = response2?.data?.id;
         const first_name = response2.data?.first_name;
         const last_name = response2.data?.last_name;
@@ -244,6 +248,10 @@ const LoginForm = () => {
             Authorization: `Bearer ${authToken}`,
           },
         });
+        if (response2.data.account_status === "Suspended") {
+          navigate("/suspended");
+          return;
+        }
         const id = response2?.data?.id;
         const access_level = response2?.data?.access_level;
 
@@ -409,11 +417,29 @@ const LoginForm = () => {
         });
         const patientsInfos = response6.data;
 
-        setClinic({ staffInfos, demographicsInfos, patientsInfos });
+        const response7 = await axiosXanoAdmin.get("/admin", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const adminsInfos = response7.data;
+
+        setClinic({
+          staffInfos,
+          demographicsInfos,
+          patientsInfos,
+          adminsInfos,
+        });
 
         localStorage.setItem(
           "clinic",
-          JSON.stringify({ staffInfos, demographicsInfos, patientsInfos })
+          JSON.stringify({
+            staffInfos,
+            demographicsInfos,
+            patientsInfos,
+            adminsInfos,
+          })
         );
         navigate(from, { replace: true });
       } catch (err) {

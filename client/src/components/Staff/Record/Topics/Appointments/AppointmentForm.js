@@ -9,7 +9,6 @@ import {
   toLocalDate,
   toLocalTimeWithSeconds,
 } from "../../../../../utils/formatDates";
-import { rooms } from "../../../../../utils/rooms";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -18,10 +17,12 @@ import {
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { statuses } from "../../../../../utils/statuses";
 import { appointmentSchema } from "../../../../../validation/appointmentValidation";
+import { toRoomTitle } from "../../../../../validation/toRoomTitle";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import TimePicker from "../../../../All/UI/Pickers/TimePicker";
 import HostsList from "../../../EventForm/HostsList";
 import RoomsList from "../../../EventForm/RoomsList";
+import SelectSite from "../../../EventForm/SelectSite";
 import StatusList from "../../../EventForm/StatusList";
 
 const AppointmentForm = ({
@@ -30,6 +31,7 @@ const AppointmentForm = ({
   setAddVisible,
   setErrMsgPost,
   errMsgPost,
+  sites,
 }) => {
   //HOOKS
   const { auth, clinic, user, socket } = useAuth();
@@ -45,8 +47,14 @@ const AppointmentForm = ({
     AppointmentStatus: "Scheduled",
     AppointmentPurpose: "Appointment",
     AppointmentNotes: "",
+    site_id: user.settings.site_id,
+    room_id: "z",
   });
-  const [availableRooms, setAvailableRooms] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState(
+    sites
+      .find(({ id }) => id === user.settings.site_id)
+      ?.rooms.map(({ id }) => id)
+  );
   const previousStartDate = useRef(toLocalDate(Date.now()));
   const previousEndDate = useRef(toLocalDate(Date.now()));
   const previousStartHours = useRef("");
@@ -73,6 +81,22 @@ const AppointmentForm = ({
     return user.title === "Secretary";
   };
 
+  const handleChangeSite = async (e) => {
+    const value = parseInt(e.target.value);
+    setFormDatas({ ...formDatas, site_id: value, room_id: "z" });
+    if (formDatas.start && formDatas.end) {
+      const availableRoomsResult = await getAvailableRooms(
+        0,
+        formDatas.start,
+        formDatas.end,
+        sites,
+        value,
+        auth.authToken
+      );
+      setAvailableRooms(availableRoomsResult);
+    }
+  };
+
   const handleChange = (e) => {
     setErrMsgPost(false);
     const name = e.target.name;
@@ -92,7 +116,11 @@ const AppointmentForm = ({
     if (
       (isRoomOccupied(value) &&
         (await confirmAlert({
-          content: `${value} will be occupied at this time slot, choose this room anyway ?`,
+          content: `${toRoomTitle(
+            sites,
+            formDatas.site_id,
+            value
+          )} will be occupied at this time slot, choose this room anyway ?`,
         }))) ||
       !isRoomOccupied(value)
     ) {
@@ -131,6 +159,8 @@ const AppointmentForm = ({
         0,
         value,
         rangeEnd,
+        sites,
+        formDatas.site_id,
         auth.authToken
       );
       if (
@@ -169,7 +199,14 @@ const AppointmentForm = ({
           endMinInput.value = startMinInput.value;
           endAMPMInput.vzalue = startAMPMInput.value;
           setAvailableRooms(
-            await getAvailableRooms(0, value, value, auth.authToken)
+            await getAvailableRooms(
+              0,
+              value,
+              value,
+              sites,
+              formDatas.site_id,
+              auth.authToken
+            )
           );
         } else {
           setFormDatas({
@@ -178,7 +215,14 @@ const AppointmentForm = ({
             Duration: Math.floor((formDatas.end - value) / (1000 * 60)),
           });
           setAvailableRooms(
-            await getAvailableRooms(0, value, formDatas.end, auth.authToken)
+            await getAvailableRooms(
+              0,
+              value,
+              formDatas.end,
+              sites,
+              formDatas.site_id,
+              auth.authToken
+            )
           );
         }
       } else {
@@ -235,6 +279,8 @@ const AppointmentForm = ({
         0,
         formDatas.start,
         value,
+        sites,
+        formDatas.site_id,
         auth.authToken
       );
       if (
@@ -267,7 +313,14 @@ const AppointmentForm = ({
           Duration: Math.floor((value - formDatas.start) / (1000 * 60)),
         });
         setAvailableRooms(
-          await getAvailableRooms(0, formDatas.start, value, auth.authToken)
+          await getAvailableRooms(
+            0,
+            formDatas.start,
+            value,
+            sites,
+            formDatas.site_id,
+            auth.authToken
+          )
         );
       } else {
         switch (name) {
@@ -384,11 +437,11 @@ const AppointmentForm = ({
     }
   };
 
-  const isRoomOccupied = (roomName) => {
-    if (roomName === "To be determined") {
+  const isRoomOccupied = (roomId) => {
+    if (roomId === "z") {
       return false;
     }
-    return availableRooms.includes(roomName) ? false : true;
+    return availableRooms.includes(roomId) ? false : true;
   };
 
   return (
@@ -469,10 +522,20 @@ const AppointmentForm = ({
         </select>
       </td>
       <td>
+        <SelectSite
+          handleChangeSite={handleChangeSite}
+          sites={sites}
+          value={formDatas.site_id}
+          label={false}
+        />
+      </td>
+      <td>
         <RoomsList
           handleRoomChange={handleRoomChange}
-          roomSelected={formDatas.room}
-          rooms={rooms}
+          roomSelectedId={formDatas.room_id}
+          rooms={sites
+            .find(({ id }) => id === formDatas.site_id)
+            ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
           isRoomOccupied={isRoomOccupied}
           label={false}
         />

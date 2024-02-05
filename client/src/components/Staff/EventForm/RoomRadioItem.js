@@ -1,6 +1,7 @@
 import React from "react";
 
 const RoomRadioItem = ({
+  roomId,
   roomName,
   isRoomOccupied,
   handleRoomChange,
@@ -10,14 +11,14 @@ const RoomRadioItem = ({
     <div className="event-form__item event-form__item--radio">
       <input
         type="radio"
-        name="room"
-        id={roomName}
-        value={roomName}
+        name="room_id"
+        id={roomId}
+        value={roomId}
         onChange={handleRoomChange}
-        checked={isRoomSelected(roomName)}
+        checked={isRoomSelected(roomId)}
       />
       <label htmlFor={roomName}>
-        {roomName} {isRoomOccupied(roomName) ? "(Occupied)" : ""}
+        {roomName} {isRoomOccupied(roomId) ? "(Occupied)" : ""}
       </label>
     </div>
   );

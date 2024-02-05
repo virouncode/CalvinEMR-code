@@ -1,6 +1,6 @@
 import React from "react";
 
-const StaffSearchForm = ({ search, setSearch }) => {
+const StaffAccountSearch = ({ search, setSearch }) => {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -8,7 +8,6 @@ const StaffSearchForm = ({ search, setSearch }) => {
   };
   return (
     <div className="staff-search">
-      <div className="staff-search__title">Search by</div>
       <form className="staff-search__form">
         <div className="staff-search__item">
           <label htmlFor="name">Name</label>
@@ -82,4 +81,4 @@ const StaffSearchForm = ({ search, setSearch }) => {
   );
 };
 
-export default StaffSearchForm;
+export default StaffAccountSearch;

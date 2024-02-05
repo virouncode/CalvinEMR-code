@@ -10,15 +10,17 @@ import RequireAuth from "./context/RequireAuth";
 import useAuth from "./hooks/useAuth";
 import useAutoLogout from "./hooks/useAutoLogout";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
-import AccountsPage from "./pages/Admin/AccountsPage";
+import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
 import {
   default as ExportPage,
   default as MigrationPage,
 } from "./pages/Admin/MigrationPage";
+import StaffAccountsPage from "./pages/Admin/StaffAccountsPage";
 import LoginPage from "./pages/All/LoginPage";
 import MissingPage from "./pages/All/MissingPage";
 import ResetPage from "./pages/All/ResetPage";
+import SuspendedPage from "./pages/All/SuspendedPage";
 import UnauthorizedPage from "./pages/All/UnauthorizedPage";
 import PatientAccountPage from "./pages/Patient/PatientAccountPage";
 import PatientAppointmentsPage from "./pages/Patient/PatientAppointmentsPage";
@@ -104,6 +106,7 @@ const App = () => {
         {/* public routes */}
         <Route index element={<LoginPage />} />
         <Route path="unauthorized" element={<UnauthorizedPage />} />
+        <Route path="suspended" element={<SuspendedPage />} />
         <Route path="reset-password" element={<ResetPage />}></Route>
         {/* catch all */}
         <Route path="*" element={<MissingPage />} />
@@ -134,7 +137,8 @@ const App = () => {
         {/* protected routes */}
         <Route element={<RequireAuth allowedAccesses={["Admin"]} />}>
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="accounts" element={<AccountsPage />} />
+          <Route path="staff-accounts" element={<StaffAccountsPage />} />
+          <Route path="clinic" element={<ClinicPage />} />
           <Route path="migration" element={<MigrationPage />} />
         </Route>
       </Route>

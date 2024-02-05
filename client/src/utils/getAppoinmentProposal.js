@@ -10,7 +10,6 @@ export const getAppointmentProposal = (
   rangeStart,
   id
 ) => {
-  console.log("getAppointmentProposal");
   //Morning
   const availabilityMorning = availability.schedule_morning[day];
   const startMorning = new Date(rangeStart);

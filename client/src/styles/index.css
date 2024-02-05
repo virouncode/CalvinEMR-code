@@ -449,6 +449,32 @@ select:focus {
   margin-bottom: 30px;
 }
 
+.suspended-section {
+  padding: 20px;
+  height: 90vh;
+  margin: 0 auto;
+}
+
+.dashboard-section {
+  width: 100%;
+  min-height: 100vh;
+}
+.dashboard-section__title {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.clinic-section {
+  width: 100%;
+  min-height: 80vh;
+}
+.clinic-section__title {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
 /*!
  * Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -11633,6 +11659,9 @@ readers do not read off random characters that represent icons */
   width: 95%;
   max-height: 60vh;
 }
+.staff-result__btn-container {
+  text-align: center;
+}
 .staff-result table {
   margin: 0 auto;
   table-layout: fixed;
@@ -11652,27 +11681,18 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
   min-width: 100px;
 }
-.staff-result table tbody tr .record-link {
-  text-decoration: underline;
-  font-weight: bold;
-}
-.staff-result table tbody tr .record-link:hover {
-  color: #A4B9E2;
-}
 .staff-result table tbody tr td {
   border: solid 1px #3D375A;
   font-size: 0.8rem;
   padding: 2px 5px;
   overflow: hidden;
-}
-.staff-result table tbody tr td:nth-child(4), .staff-result table tbody tr td:nth-child(5), .staff-result table tbody tr td:nth-child(6), .staff-result table tbody tr td:nth-child(7), .staff-result table tbody tr td:nth-child(8), .staff-result table tbody tr td:nth-child(9), .staff-result table tbody tr td:nth-child(10) {
   text-align: center;
 }
 .staff-result__item-btn-container {
   text-align: center;
 }
-.staff-result__item-btn-container button:nth-child(1) {
-  margin-right: 5px;
+.staff-result__item-btn-container button {
+  margin-left: 5px;
 }
 
 .patient-record__content {
@@ -13856,9 +13876,9 @@ readers do not read off random characters that represent icons */
 
 .signup-staff__success {
   padding: 10px 20px;
-  width: 30%;
+  width: 80%;
   font-size: 0.9rem;
-  margin: 0 auto;
+  margin: 10px auto;
   border-radius: 4px;
   text-align: center;
   color: forestgreen;
@@ -13867,8 +13887,8 @@ readers do not read off random characters that represent icons */
 .signup-staff__err {
   padding: 10px 20px;
   font-size: 0.9rem;
-  width: 30%;
-  margin: 0 auto;
+  width: 80%;
+  margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
   border-radius: 4px;
@@ -13879,7 +13899,7 @@ readers do not read off random characters that represent icons */
   width: 95%;
   margin: 50px auto 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: solid 2px #9CB9E4;
+  border: solid 1px #cecdcd;
   border-radius: 4px;
   background: #FEFEFE;
 }
@@ -14026,7 +14046,7 @@ readers do not read off random characters that represent icons */
 
 .staff-account__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: solid 2px #9CB9E4;
+  border: solid 1px #cecdcd;
   border-radius: 4px;
   background: #FEFEFE;
   padding: 20px;
@@ -16736,4 +16756,235 @@ readers do not read off random characters that represent icons */
 .enrolment-history__item {
   padding: 5px;
   white-space: pre;
+}
+
+.suspended-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+}
+.suspended-container-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.dashboard {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.dashboard-card {
+  height: 300px;
+  width: 30%;
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  background-color: #FEFEFE;
+  padding: 10px;
+}
+.dashboard-card__title {
+  text-align: center;
+  font-weight: bold;
+}
+
+.patients-accounts {
+  overflow: scroll;
+}
+.patients-accounts__btn-container {
+  text-align: center;
+}
+.patients-accounts__container {
+  width: 97%;
+  overflow: scroll;
+  margin: 0 auto;
+}
+.patients-accounts__table {
+  table-layout: fixed;
+  background-color: #FEFEFE;
+  border-collapse: collapse;
+  border: solid 1px #3D375A;
+  white-space: nowrap;
+}
+.patients-accounts__table thead {
+  background-color: #9CB9E4;
+}
+.patients-accounts__table thead th {
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  min-width: 150px;
+}
+.patients-accounts__table thead th:nth-child(1), .patients-accounts__table thead th:nth-child(2), .patients-accounts__table thead th:nth-child(3) {
+  min-width: 100px;
+}
+.patients-accounts__table thead th:nth-child(4) {
+  min-width: 50px;
+}
+.patients-accounts__table thead th:nth-child(5) {
+  min-width: 10px;
+}
+.patients-accounts__table thead th:nth-child(12), .patients-accounts__table thead th:nth-child(13), .patients-accounts__table thead th:nth-child(14) {
+  min-width: 130px;
+}
+.patients-accounts__table tbody tr .record-link {
+  text-decoration: underline;
+  font-weight: bold;
+}
+.patients-accounts__table tbody tr .record-link:hover {
+  color: #A4B9E2;
+}
+.patients-accounts__table tbody tr td {
+  border: solid 1px #3D375A;
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.sites__table-container {
+  width: 97%;
+  margin: 0 auto;
+  overflow: scroll;
+}
+.sites__table-container table {
+  margin: 0 auto;
+  table-layout: fixed;
+  max-width: 100%;
+  background-color: #FEFEFE;
+  border-collapse: collapse;
+  border: solid 1px #3D375A;
+  white-space: nowrap;
+}
+.sites__table-container table thead {
+  background-color: #9CB9E4;
+}
+.sites__table-container table thead th {
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  min-width: 100px;
+}
+.sites__table-container table tbody tr td {
+  border: solid 1px #3D375A;
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.site-item__btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.site-item__btn-container button {
+  margin-left: 5px;
+}
+
+.clinic__btn-container {
+  text-align: center;
+}
+.clinic__subtitle {
+  font-weight: bold;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.site-form {
+  display: flex;
+  justify-content: space-between;
+}
+.site-form__column {
+  width: 50%;
+}
+.site-form__container {
+  margin-top: 50px;
+  width: 97%;
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  padding: 20px;
+}
+.site-form__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 80%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
+  text-align: center;
+}
+.site-form__row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.site-form__row label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  width: 45%;
+}
+.site-form__row input, .site-form__row select {
+  width: 150px;
+}
+.site-form__row input[type=file] {
+  width: 150px;
+  padding: 0;
+}
+.site-form__row input[type=file]::-webkit-file-upload-button {
+  cursor: pointer;
+}
+.site-form__row--special {
+  align-items: flex-start;
+}
+.site-form__row-image {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 150px;
+}
+.site-form__rooms label {
+  margin-right: 50px;
+  font-weight: bold;
+}
+.site-form__room-item {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.site-form__room-item-id {
+  width: 20%;
+}
+.site-form__room-item label {
+  font-weight: bold;
+  margin-right: 10px;
+  width: 50px;
+  padding: 0;
+}
+.site-form__btn-container {
+  text-align: center;
+  margin-top: 15px;
+}
+.site-form__btn-container button {
+  margin-left: 5px;
+}
+
+.calendar-section__select-site {
+  width: 13%;
+  position: absolute;
+  left: 15%;
+  top: 13px;
 }/*# sourceMappingURL=index.css.map */

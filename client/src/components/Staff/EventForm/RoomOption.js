@@ -1,9 +1,9 @@
 import React from "react";
 
-const RoomOption = ({ roomName, isRoomOccupied }) => {
+const RoomOption = ({ roomName, roomId, isRoomOccupied }) => {
   return (
-    <option value={roomName}>
-      {roomName} {isRoomOccupied(roomName) ? "(Occupied)" : ""}
+    <option value={roomId}>
+      {roomName} {isRoomOccupied(roomId) ? "(Occupied)" : ""}
     </option>
   );
 };

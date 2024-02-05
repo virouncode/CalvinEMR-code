@@ -3,7 +3,7 @@ import { staffIdToTitleAndName } from "./staffIdToTitleAndName";
 
 export const toWelcomeName = (user, staffInfos, demographicsInfos) => {
   if (user.access_level === "Admin") {
-    return user.full_name;
+    return user.name;
   } else if (user.access_level === "User") {
     return staffIdToTitleAndName(staffInfos, user.id);
   } else {

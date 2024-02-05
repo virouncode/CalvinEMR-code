@@ -3,7 +3,7 @@ import RoomOption from "./RoomOption";
 
 const RoomsList = ({
   handleRoomChange,
-  roomSelected,
+  roomSelectedId,
   rooms,
   isRoomOccupied,
   label = true,
@@ -12,7 +12,7 @@ const RoomsList = ({
   return (
     <>
       {label && <label>Room</label>}
-      <select name="room" onChange={handleRoomChange} value={roomSelected}>
+      <select name="room_id" onChange={handleRoomChange} value={roomSelectedId}>
         <option disabled value="">
           Choose a room...
         </option>
@@ -20,6 +20,7 @@ const RoomsList = ({
           <RoomOption
             key={room.id}
             roomName={room.title}
+            roomId={room.id}
             isRoomOccupied={isRoomOccupied}
           />
         ))}

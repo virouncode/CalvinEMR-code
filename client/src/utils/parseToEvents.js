@@ -1,4 +1,3 @@
-import { rooms } from "./rooms";
 var _ = require("lodash");
 
 const colorsPalette = [
@@ -26,6 +25,7 @@ const colorsPalette = [
 export const parseToEvents = (
   appointments,
   staffInfos,
+  sites,
   isSecretary,
   userId
 ) => {
@@ -44,7 +44,14 @@ export const parseToEvents = (
       (appointment) =>
         appointment.host_id !== userId
           ? appointment.host_id === 0
-            ? parseToEvent(appointment, "#bfbfbf", "#FEFEFE", isSecretary) //grey
+            ? parseToEvent(
+                appointment,
+                "#bfbfbf",
+                "#FEFEFE",
+                isSecretary,
+                userId,
+                sites.filter(({ id }) => id === appointment.site_id)[0].rooms
+              ) //grey
             : parseToEvent(
                 appointment,
                 remainingStaffObjects[
@@ -57,9 +64,18 @@ export const parseToEvents = (
                     id: appointment.host_id,
                   })
                 ].textColor,
-                isSecretary
+                isSecretary,
+                userId,
+                sites.filter(({ id }) => id === appointment.site_id)[0].rooms
               )
-          : parseToEvent(appointment, "#6490D2", "#FEFEFE", isSecretary, userId) //blue
+          : parseToEvent(
+              appointment,
+              "#6490D2",
+              "#FEFEFE",
+              isSecretary,
+              userId,
+              sites.filter(({ id }) => id === appointment.site_id)[0].rooms
+            ) //blue
     ),
     remainingStaffObjects,
   ];
@@ -70,7 +86,8 @@ export const parseToEvent = (
   color,
   textColor,
   isSecretary,
-  userId
+  userId,
+  rooms
 ) => {
   return {
     id: appointment.id.toString(),
@@ -83,7 +100,7 @@ export const parseToEvent = (
     editable: appointment.host_id === userId || isSecretary ? true : false, //if secretary give access
     resourceEditable:
       appointment.host_id === userId || isSecretary ? true : false, //if secretary give access
-    resourceId: rooms[_.findIndex(rooms, { title: appointment.room })].id,
+    resourceId: rooms.find(({ id }) => id === appointment.room_id).id,
     extendedProps: {
       host: appointment.host_id,
       duration: appointment.Duration,
@@ -91,7 +108,8 @@ export const parseToEvent = (
       status: appointment.AppointmentStatus,
       staffGuestsIds: appointment.staff_guests_ids,
       patientsGuestsIds: appointment.patients_guests_ids,
-      room: appointment.room,
+      siteId: appointment.site_id,
+      roomId: appointment.room_id,
       updates: appointment.updates,
       date_created: appointment.date_created,
       created_by_id: appointment.created_by_id,

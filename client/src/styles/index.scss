@@ -19,6 +19,9 @@
 @import "./pages/messagesPatientPage";
 @import "./pages/accountsPage";
 @import "./pages/migrationPage";
+@import "./pages/suspendedPage";
+@import "./pages/dashboardPage";
+@import "./pages/clinicPage";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/fontawesome";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/brands";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/solid";
@@ -97,6 +100,13 @@
 @import "./components/medTemplates";
 @import "./components/newEnrolment";
 @import "./components/enrolmentHistory";
+@import "./components/suspended";
+@import "./components/dashboard";
+@import "./components/patientsAccounts";
+@import "./components/sitesTable";
+@import "./components/clinic";
+@import "./components/site";
+@import "./components/selectSite";
 @import "flatpickr/dist/themes/material_blue.css";
 
 

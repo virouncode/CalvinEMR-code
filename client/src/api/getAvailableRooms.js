@@ -5,13 +5,20 @@ export const getAvailableRooms = async (
   currentAppointmentId,
   rangeStart,
   rangeEnd,
+  sites,
+  siteId,
   authToken,
   controller = null
 ) => {
+  console.log(typeof siteId, siteId);
   try {
     const response = await axiosXanoStaff.post(
-      "/appointments_in_range",
-      { range_start: rangeStart, range_end: rangeEnd },
+      "/appointments_in_range_and_sites",
+      {
+        range_start: rangeStart,
+        range_end: rangeEnd,
+        sites_ids: [siteId],
+      },
       {
         headers: {
           "Content-Type": "application/json",
@@ -26,19 +33,15 @@ export const getAvailableRooms = async (
     );
     const occupiedRooms = _.uniq(
       otherAppointments
-        .filter(({ room }) => room !== "To be determined")
-        .map(({ room }) => room)
+        .filter(({ room_id }) => room_id !== "z")
+        .map(({ room_id }) => room_id)
     );
-    const allRooms = [
-      "Room A",
-      "Room B",
-      "Room C",
-      "Room D",
-      "Room E",
-      "Room F",
-      "Room G",
-    ];
+    const allRooms = sites
+      .find(({ id }) => id === siteId)
+      ?.rooms.filter(({ id }) => id !== "z")
+      .map(({ id }) => id);
     const availableRooms = _.difference(allRooms, occupiedRooms);
+    console.log(availableRooms);
     return availableRooms;
   } catch (err) {
     if (err.name !== "CanceledError") throw err;

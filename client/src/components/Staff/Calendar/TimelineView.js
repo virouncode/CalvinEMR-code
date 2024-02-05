@@ -1,7 +1,6 @@
 import interaction from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGrid from "@fullcalendar/resource-timegrid";
-import { rooms } from "../../../utils/rooms";
 
 const TimelineView = ({
   slotDuration,
@@ -17,7 +16,9 @@ const TimelineView = ({
   handleResize,
   handleResizeStart,
   renderEventContent,
+  site,
 }) => {
+  console.log("site", site);
   return (
     <FullCalendar
       plugins={[resourceTimeGrid, interaction]}
@@ -61,7 +62,7 @@ const TimelineView = ({
       allDayMaintainDuration={true}
       ref={fcRef}
       //==================== CALLBACKS ====================//
-      resources={rooms.map((room) => {
+      resources={site.rooms.map((room) => {
         return { id: room.id, title: room.title };
       })}
       events={events}

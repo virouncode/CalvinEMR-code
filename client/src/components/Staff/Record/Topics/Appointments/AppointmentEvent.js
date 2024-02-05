@@ -18,7 +18,6 @@ import {
   toLocalMinutes,
   toLocalTimeWithSeconds,
 } from "../../../../../utils/formatDates";
-import { rooms } from "../../../../../utils/rooms";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -26,11 +25,14 @@ import {
 } from "../../../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { statuses } from "../../../../../utils/statuses";
+import { toSiteName } from "../../../../../utils/toSiteName";
 import { appointmentSchema } from "../../../../../validation/appointmentValidation";
+import { toRoomTitle } from "../../../../../validation/toRoomTitle";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import TimePicker from "../../../../All/UI/Pickers/TimePicker";
 import HostsList from "../../../EventForm/HostsList";
 import RoomsList from "../../../EventForm/RoomsList";
+import SelectSite from "../../../EventForm/SelectSite";
 import StatusList from "../../../EventForm/StatusList";
 import SignCell from "../SignCell";
 
@@ -39,6 +41,7 @@ const AppointmentEvent = ({
   editCounter,
   setErrMsgPost,
   errMsgPost,
+  sites,
 }) => {
   //HOOKS
   const { auth, clinic, user, socket } = useAuth();
@@ -75,6 +78,8 @@ const AppointmentEvent = ({
           parseInt(event.id),
           event.start,
           event.end,
+          sites,
+          event.site_id,
           auth.authToken,
           abortController
         );
@@ -91,11 +96,35 @@ const AppointmentEvent = ({
     return () => {
       abortController.abort();
     };
-  }, [auth.authToken, event.end, event.host_id, event.id, event.start]);
+  }, [
+    auth.authToken,
+    event.end,
+    event.host_id,
+    event.id,
+    event.site_id,
+    event.start,
+    sites,
+  ]);
 
   //HANDLERS
   const isSecretary = () => {
     return user.title === "Secretary";
+  };
+
+  const handleChangeSite = async (e) => {
+    const value = parseInt(e.target.value);
+    setEventInfos({ ...eventInfos, site_id: value, room_id: "z" });
+    if (eventInfos.start && eventInfos.end) {
+      const availableRoomsResult = await getAvailableRooms(
+        parseInt(event.id),
+        eventInfos.start,
+        eventInfos.end,
+        sites,
+        value,
+        auth.authToken
+      );
+      setAvailableRooms(availableRoomsResult);
+    }
   };
 
   const handleChange = (e) => {
@@ -128,7 +157,11 @@ const AppointmentEvent = ({
     if (
       (isRoomOccupied(value) &&
         (await confirmAlert({
-          content: `${value} will be occupied at this time slot, choose this room anyway ?`,
+          content: `${toRoomTitle(
+            sites,
+            eventInfos.site_id,
+            value
+          )} will be occupied at this time slot, choose this room anyway ?`,
         }))) ||
       !isRoomOccupied(value)
     ) {
@@ -180,6 +213,8 @@ const AppointmentEvent = ({
         event.id,
         value,
         rangeEnd,
+        sites,
+        eventInfos.site_id,
         auth.authToken
       );
 
@@ -280,6 +315,8 @@ const AppointmentEvent = ({
         event.id,
         eventInfos.start,
         value,
+        sites,
+        eventInfos.site_id,
         auth.authToken
       );
       if (
@@ -459,11 +496,11 @@ const AppointmentEvent = ({
     }
   };
 
-  const isRoomOccupied = (roomName) => {
-    if (roomName === "To be determined") {
+  const isRoomOccupied = (roomId) => {
+    if (roomId === "z") {
       return false;
     }
-    return availableRooms.includes(roomName) ? false : true;
+    return availableRooms.includes(roomId) ? false : true;
   };
 
   return (
@@ -585,15 +622,29 @@ const AppointmentEvent = ({
         </td>
         <td>
           {editVisible ? (
+            <SelectSite
+              handleChangeSite={handleChangeSite}
+              sites={sites}
+              value={eventInfos.site_id}
+              label={false}
+            />
+          ) : (
+            toSiteName(sites, event.site_id)
+          )}
+        </td>
+        <td>
+          {editVisible ? (
             <RoomsList
               handleRoomChange={handleRoomChange}
-              roomSelected={eventInfos.room}
-              rooms={rooms}
+              roomSelectedId={eventInfos.room_id}
+              rooms={sites
+                .find(({ id }) => id === eventInfos.site_id)
+                ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
               isRoomOccupied={isRoomOccupied}
               label={false}
             />
           ) : (
-            event.room
+            toRoomTitle(sites, event.site_id, event.room_id)
           )}
         </td>
         <td>

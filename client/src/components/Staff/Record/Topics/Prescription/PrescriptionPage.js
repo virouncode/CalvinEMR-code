@@ -76,7 +76,10 @@ const PrescriptionPage = ({
               {toCodeTableName(genderCT, demographicsInfos.Gender)}
               <br />
               Born {toLocalDate(demographicsInfos.DateOfBirth)},{" "}
-              {getAge(demographicsInfos.DateOfBirth)} years-old
+              {getAge(demographicsInfos.DateOfBirth)} years-old,{" "}
+              {demographicsInfos.HealthCard?.Number
+                ? `\nHealth Card Number: ${demographicsInfos.HealthCard?.Number}`
+                : ""}
             </p>
           </div>
           <p className="prescription__date">

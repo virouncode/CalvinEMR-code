@@ -36,16 +36,28 @@ const AdminHeader = () => {
           </li>
           <li>
             <NavLink
-              to="/admin/accounts"
+              to="/admin/staff-accounts"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--admin header__link--active"
                   : "header__link header__link--admin"
               }
             >
-              Accounts
+              Staff Accounts
             </NavLink>
           </li>
+          {/* <li>
+            <NavLink
+              to="/admin/patients-accounts"
+              className={(nav) =>
+                nav.isActive
+                  ? "header__link header__link--admin header__link--active"
+                  : "header__link header__link--admin"
+              }
+            >
+              Patients Accounts
+            </NavLink>
+          </li> */}
           <li>
             <NavLink
               to="/admin/clinic"
@@ -69,19 +81,6 @@ const AdminHeader = () => {
               target="_blank"
             >
               Billings
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/admin/rooms"
-              className={(nav) =>
-                nav.isActive
-                  ? "header__link header__link--admin header__link--active"
-                  : "header__link header__link--admin"
-              }
-              target="_blank"
-            >
-              Rooms
             </NavLink>
           </li>
           <li>

@@ -1,38 +1,33 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
-import StaffResultItem from "./StaffResultItem";
+import StaffAccountItem from "./StaffAccountItem";
 
-const StaffSearchResults = ({
+const StaffAccountsTable = ({
   search,
   sortedStaffInfos,
-  handleSort,
   setEditVisible,
   setSelectedStaffId,
-  setAddVisible,
 }) => {
-  const handleAddNew = () => {
-    setAddVisible((v) => !v);
-  };
-
   return sortedStaffInfos ? (
     <div className="staff-result">
-      <button onClick={handleAddNew} style={{ marginBottom: "20px" }}>
-        Add a new account
-      </button>
       <table>
         <thead>
           <tr>
-            <th onClick={() => handleSort("last_name")}>Last Name</th>
-            <th onClick={() => handleSort("first_name")}>First Name</th>
-            <th onClick={() => handleSort("middle_name")}>Middle Name</th>
-            <th onClick={() => handleSort("email")}>Email</th>
-            <th onClick={() => handleSort("cell_phone")}>Cell phone</th>
-            <th onClick={() => handleSort("backup_phone")}>Backup phone</th>
-            <th onClick={() => handleSort("title")}>Occupation</th>
-            <th onClick={() => handleSort("speciality")}>Speciality</th>
-            <th onClick={() => handleSort("licence_nbr")}>Licence#</th>
-            <th onClick={() => handleSort("ohip_billig_nbr")}>OHIP#</th>
-            <th style={{ textDecoration: "none" }}>Action</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Cell phone</th>
+            <th>Backup phone</th>
+            <th>Occupation</th>
+            <th>Speciality</th>
+            <th>Licence#</th>
+            <th>OHIP#</th>
+            <th>Account status</th>
+            <th>Updated by</th>
+            <th>Updated on</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -40,31 +35,31 @@ const StaffSearchResults = ({
             .filter(
               (staff) =>
                 staff.full_name
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search.name.toLowerCase()) &&
                 staff.email
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search.email.toLowerCase()) &&
                 (staff.cell_phone
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search.phone.toLowerCase()) ||
                   staff.backup_phone
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(search.phone.toLowerCase())) &&
                 staff.title
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search.title.toLowerCase()) &&
                 staff.speciality
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search.speciality.toLowerCase()) &&
-                staff.licence_nbr.includes(search.licence_nbr) &&
+                staff.licence_nbr?.includes(search.licence_nbr) &&
                 staff.ohip_billing_nbr
-                  .toString()
+                  ?.toString()
                   .includes(search.ohip_billing_nbr)
             )
 
             .map((staff) => (
-              <StaffResultItem
+              <StaffAccountItem
                 staff={staff}
                 key={staff.id}
                 setEditVisible={setEditVisible}
@@ -88,4 +83,4 @@ const StaffSearchResults = ({
   );
 };
 
-export default StaffSearchResults;
+export default StaffAccountsTable;

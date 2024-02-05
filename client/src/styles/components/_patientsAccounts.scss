@@ -1,0 +1,63 @@
+.patients-accounts {
+  &__btn-container {
+    text-align: center;
+  }
+  &__container {
+    width:97%;
+    overflow: scroll;
+    margin: 0 auto;
+  }
+  overflow:scroll;
+  &__table{    
+    table-layout: fixed;
+    background-color: $white;
+    border-collapse: collapse;
+    border:solid 1px $black;
+    white-space: nowrap;
+    thead{
+        background-color:$blue;
+        th {
+            text-decoration: underline;
+            cursor:pointer;
+            padding : 2px 5px;
+            font-size: 0.8rem;
+            min-width: 150px;
+            &:nth-child(1),&:nth-child(2),&:nth-child(3){
+                min-width : 100px;
+            }
+            &:nth-child(4){
+                min-width : 50px;  
+            }
+            &:nth-child(5){
+                min-width : 10px;  
+            }
+            &:nth-child(12),&:nth-child(13),&:nth-child(14){
+                min-width : 130px;  
+            }
+        }
+    }
+    tbody {
+        tr{
+            .record-link {
+                text-decoration: underline;
+                font-weight: bold;
+                &:hover {
+                    color:#A4B9E2;
+                }
+            }
+            td {
+                border:solid 1px $black;
+                font-size: 0.8rem;
+                padding : 2px 5px;
+                // width: 200px;
+                overflow : hidden;
+                text-align: center;
+                // &:nth-child(4), &:nth-child(5), &:nth-child(7), &:nth-child(8),&:nth-child(9),&:nth-child(10), &:nth-child(12),&:nth-child(13),&:nth-child(14){
+                //     text-align : center;
+                // }
+            }
+        }
+        
+    }
+}
+}

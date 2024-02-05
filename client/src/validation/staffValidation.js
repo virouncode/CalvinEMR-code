@@ -5,17 +5,25 @@ export const staffSchema = yup.object({
     .string()
     .email("Invalid Email field")
     .required("Email field is required"),
+  first_name: yup
+    .string()
+    .required("First Name field is required")
+    .matches(/^([^0-9]*)$/, {
+      message: "Invalid First Name",
+      excludeEmptyString: true,
+    }),
   middle_name: yup.string().matches(/^([^0-9]*)$/, {
     message: "Invalid Middle Name",
     excludeEmptyString: true,
   }),
   last_name: yup
     .string()
-    .required("First Name field is required")
+    .required("Last Name field is required")
     .matches(/^([^0-9]*)$/, {
       message: "Invalid Last Name",
       excludeEmptyString: true,
     }),
+  gender: yup.string().required("Gender field is required"),
   speciality: yup.string().matches(/^([^0-9]*)$/, {
     message: "Invalid Speciality field",
     excludeEmptyString: true,

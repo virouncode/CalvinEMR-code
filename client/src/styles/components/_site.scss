@@ -1,0 +1,80 @@
+.site-form {
+  display: flex;
+  justify-content: space-between;
+  &__column {
+    width: 50%;
+  }
+  &__container {
+    margin-top: 50px;
+    width: 97%;
+    border: solid 1px $grey;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 80%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 4px;
+    text-align: center;
+  }
+  &__row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    label {
+      font-size: 0.85rem;
+      font-weight: bold;
+      width:45%;
+    }
+    input,select {
+      width : 150px;
+    }
+    input[type="file"] {
+      width : 150px;
+      padding:0;
+      &::-webkit-file-upload-button {
+        cursor: pointer;
+      }
+    }
+    &--special {
+      align-items: flex-start;
+    }
+  }
+  &__row-image {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width:150px;
+  }
+  &__rooms {
+    label {
+      margin-right: 50px;
+      font-weight: bold;
+    }
+  }
+  &__room-item {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    &-id {
+      width: 20%;
+    }
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+      width:50px;
+      padding: 0;
+    }
+  }
+  &__btn-container {
+    text-align: center;
+    margin-top: 15px;
+    button {
+      margin-left: 5px;
+    }
+  }
+}

@@ -10,21 +10,24 @@ import {
   toLocalDate,
   toLocalTimeWithSeconds,
 } from "../../../utils/formatDates";
-import { patientIdToName } from "../../../utils/patientIdToName";
-import { rooms } from "../../../utils/rooms";
 import { onMessageEvents } from "../../../utils/socketHandlers/onMessageEvents";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
 } from "../../../utils/staffIdToName";
+
+import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import { toSiteName } from "../../../utils/toSiteName";
+import { toRoomTitle } from "../../../validation/toRoomTitle";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import EventForm from "../EventForm/EventForm";
 import CalendarFilter from "./CalendarFilter";
 import CalendarOptions from "./CalendarOptions";
 import CalendarView from "./CalendarView";
+import SelectTimelineSite from "./SelectTimelineSite";
 import Shortcutpickr from "./Shortcutpickr";
 import TimelineView from "./TimelineView";
 import ToggleView from "./ToggleView";
@@ -50,17 +53,50 @@ const Calendar = () => {
   const [rangeEnd, setRangeEnd] = useState(
     Date.parse(getWeekRange(user.settings.first_day)[1])
   );
+  const [formColor, setFormColor] = useState("#6490D2");
+  const [siteId, setSiteId] = useState(user.settings.site_id); //ne bouge jamais
+  console.log(user.settings);
+  const [timelineSiteId, setTimelineSiteId] = useState(user.settings.site_id); //SelectTimelineSite
+  const [sitesIds, setSitesIds] = useState([user.settings.site_id]); //Calendar filter
+  const [sites, setSites] = useState([]);
   const isSecretary = useCallback(() => {
     return user.title === "Secretary" ? true : false;
   }, [user.title]);
+
   const [{ events, remainingStaff }, fetchEvents, setEvents] = useEvents(
     hostsIds,
     rangeStart,
     rangeEnd,
+    timelineVisible,
+    timelineSiteId,
+    siteId,
+    sites,
     isSecretary(),
     user.id
   );
-  const [formColor, setFormColor] = useState("#6490D2");
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const fetchSites = async () => {
+      try {
+        const response = await axiosXanoStaff.get("/sites", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          signal: abortController.signal,
+        });
+        if (abortController.signal.aborted) return;
+        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
+          containerId: "A",
+        });
+      }
+    };
+    fetchSites();
+    return () => abortController.abort();
+  }, [auth.authToken]);
 
   useEffect(() => {
     if (lastCurrentId.current) {
@@ -178,7 +214,11 @@ const Calendar = () => {
         setEvents,
         clinic.staffInfos,
         user.id,
-        user.title === "Secretary"
+        user.title === "Secretary",
+        sites,
+        siteId,
+        timelineSiteId,
+        timelineVisible
       );
     socket.on("message", onMessage);
     return () => {
@@ -334,8 +374,16 @@ const Calendar = () => {
             {hostName}
           </div>
           <div>
+            <strong>Site: </strong>
+            {toSiteName(sites, event.extendedProps.siteId)}
+          </div>
+          <div>
             <strong>Room: </strong>
-            {event.extendedProps.room}
+            {toRoomTitle(
+              sites,
+              event.extendedProps.siteId,
+              event.extendedProps.roomId
+            )}
           </div>
           <div>
             <strong>Status: </strong>
@@ -395,8 +443,15 @@ const Calendar = () => {
               </span>
             ) : null}
             <strong>Host: </strong>
-            {hostName} / <strong>Room: </strong>
-            {event.extendedProps.room} / <strong>Status: </strong>
+            {hostName} / <strong>Site:</strong>{" "}
+            {toSiteName(sites, event.extendedProps.siteId)} /{" "}
+            <strong>Room: </strong>
+            {toRoomTitle(
+              sites,
+              event.extendedProps.siteId,
+              event.extendedProps.roomId
+            )}{" "}
+            / <strong>Status: </strong>
             {event.extendedProps.status}
           </div>
           <i
@@ -471,8 +526,16 @@ const Calendar = () => {
             {hostName}
           </div>
           <div>
+            <strong>Site: </strong>
+            {toSiteName(sites, event.extendedProps.siteId)}
+          </div>
+          <div>
             <strong>Room: </strong>
-            {event.extendedProps.room}
+            {toRoomTitle(
+              sites,
+              event.extendedProps.siteId,
+              event.extendedProps.roomId
+            )}
           </div>
           <div>
             <strong>Status: </strong>
@@ -527,6 +590,8 @@ const Calendar = () => {
           0,
           startDate,
           endDate,
+          sites,
+          timelineSiteId,
           auth.authToken
         );
       } catch (err) {
@@ -536,15 +601,20 @@ const Calendar = () => {
         return;
       }
       if (
-        info.resource.title === "To be determined" ||
-        availableRooms.includes(info.resource.title) ||
-        (!availableRooms.includes(info.resource.title) &&
+        info.resource.id === "z" ||
+        availableRooms.includes(info.resource.id) ||
+        (!availableRooms.includes(info.resource.id) &&
           (await confirmAlert({
-            content: `${info.resource.title} will be occupied at this time slot, choose it anyway ?`,
+            content: `${toRoomTitle(
+              sites,
+              timelineSiteId,
+              info.resource.id
+            )} will be occupied at this time slot, choose it anyway ?`,
           })))
       ) {
         newEvent.resourceId = info.resource.id;
-        newEvent.extendedProps.room = info.resource.title;
+        newEvent.extendedProps.roomId = info.resource.id;
+        newEvent.extendedProps.siteId = timelineSiteId;
         fcRef.current.calendar.addEvent(newEvent);
         fcRef.current.calendar.unselect();
 
@@ -554,7 +624,7 @@ const Calendar = () => {
           end: Date.parse(newEvent.end),
           patients_guests_ids: [],
           staff_guests_ids: [],
-          room: newEvent.extendedProps.room,
+          room_id: newEvent.extendedProps.roomId,
           all_day: newEvent.allDay,
           date_created: Date.now(),
           created_by_id: user.id,
@@ -564,6 +634,7 @@ const Calendar = () => {
           AppointmentDate: toLocalDate(newEvent.start),
           AppointmentPurpose: newEvent.extendedProps.purpose,
           AppointmentNotes: newEvent.extendedProps.notes,
+          site_id: timelineSiteId,
         };
 
         if (newEvent.extendedProps.host) {
@@ -611,7 +682,8 @@ const Calendar = () => {
       }
     } else {
       newEvent.resourceId = "z";
-      newEvent.extendedProps.room = "To be determined";
+      newEvent.extendedProps.roomId = "z";
+      newEvent.extendedProps.siteId = siteId;
       fcRef.current.calendar.addEvent(newEvent);
       fcRef.current.calendar.unselect();
       datas = {
@@ -620,7 +692,7 @@ const Calendar = () => {
         end: Date.parse(newEvent.end),
         patients_guests_ids: [],
         staff_guests_ids: [],
-        room: newEvent.extendedProps.room,
+        room_id: newEvent.extendedProps.roomId,
         all_day: newEvent.allDay,
         date_created: Date.now(),
         created_by_id: user.id,
@@ -630,6 +702,7 @@ const Calendar = () => {
         AppointmentDate: toLocalDate(newEvent.start),
         AppointmentPurpose: newEvent.extendedProps.purpose,
         AppointmentNotes: newEvent.extendedProps.notes,
+        site_id: siteId,
       };
 
       if (newEvent.extendedProps.host) {
@@ -650,6 +723,9 @@ const Calendar = () => {
           ),
         };
       }
+
+      console.log("datas", datas);
+
       try {
         const response = await axiosXanoStaff.post(
           "/appointments",
@@ -708,6 +784,8 @@ const Calendar = () => {
         parseInt(event.id),
         startDate,
         endDate,
+        sites,
+        timelineVisible ? timelineSiteId : siteId,
         auth.authToken
       );
     } catch (err) {
@@ -760,18 +838,23 @@ const Calendar = () => {
       },
       AppointmentPurpose: event.extendedProps.purpose,
       AppointmentNotes: event.extendedProps.notes,
+      site_id: event.extendedProps.siteId,
     };
 
     if (!timelineVisible) {
       if (
-        event.extendedProps.room === "To be determined" ||
-        availableRooms.includes(event.extendedProps.room) ||
-        (!availableRooms.includes(event.extendedProps.room) &&
+        event.extendedProps.roomId === "z" ||
+        availableRooms.includes(event.extendedProps.roomId) ||
+        (!availableRooms.includes(event.extendedProps.roomId) &&
           (await confirmAlert({
-            content: `${event.extendedProps.room} will be occupied at this time slot, change schedule anyway?`,
+            content: `${toRoomTitle(
+              sites,
+              siteId,
+              event.extendedProps.roomId
+            )} will be occupied at this time slot, change schedule anyway?`,
           })))
       ) {
-        datas.room = event.extendedProps.room;
+        datas.room_id = event.extendedProps.roomId;
         try {
           await axiosXanoStaff.put(`/appointments/${event.id}`, datas, {
             headers: {
@@ -799,20 +882,24 @@ const Calendar = () => {
         info.revert();
       }
     } else {
-      const newRoom = info.newResource
-        ? info.newResource.title
-        : event.extendedProps.room;
+      const newRoomId = info.newResource
+        ? info.newResource.id
+        : event.extendedProps.roomId;
       if (
-        newRoom === "To be determined" ||
-        availableRooms.includes(newRoom) ||
-        (!availableRooms.includes(newRoom) &&
+        newRoomId === "z" ||
+        availableRooms.includes(newRoomId) ||
+        (!availableRooms.includes(newRoomId) &&
           (await confirmAlert({
-            content: `${newRoom} will be occupied at this time slot, change schedule anyway?`,
+            content: `${toRoomTitle(
+              sites,
+              timelineSiteId,
+              newRoomId
+            )} will be occupied at this time slot, change schedule anyway?`,
           })))
       ) {
-        event.setExtendedProp("room", newRoom);
-        event.setResources([rooms[_.findIndex(rooms, { title: newRoom })].id]);
-        datas.room = newRoom;
+        event.setExtendedProp("roomId", newRoomId);
+        event.setResources([newRoomId]);
+        datas.room_id = newRoomId;
         try {
           await axiosXanoStaff.put(`/appointments/${event.id}`, datas, {
             headers: {
@@ -867,6 +954,8 @@ const Calendar = () => {
         parseInt(event.id),
         startDate,
         endDate,
+        sites,
+        timelineVisible ? timelineSiteId : siteId,
         auth.authToken
       );
     } catch (err) {
@@ -879,11 +968,15 @@ const Calendar = () => {
     const endAllDay = event.end.setHours(0, 0, 0, 0);
 
     if (
-      event.extendedProps.room === "To be determined" ||
-      availableRooms.includes(event.extendedProps.room) ||
-      (!availableRooms.includes(event.extendedProps.room) &&
+      event.extendedProps.roomId === "z" ||
+      availableRooms.includes(event.extendedProps.roomId) ||
+      (!availableRooms.includes(event.extendedProps.roomId) &&
         (await confirmAlert({
-          content: `${event.extendedProps.room} will be occupied at this time slot, change schedule anyway?`,
+          content: `${toRoomTitle(
+            sites,
+            siteId,
+            event.extendedProps.roomId
+          )} will be occupied at this time slot, change schedule anyway?`,
         })))
     ) {
       let datas = {
@@ -892,7 +985,7 @@ const Calendar = () => {
         end: event.allDay ? endAllDay : endDate,
         patients_guests_ids: event.extendedProps.patientsGuestsIds,
         staff_guests_ids: event.extendedProps.staffGuestsIds,
-        room: event.extendedProps.room,
+        room_id: event.extendedProps.roomId,
         all_day: event.allDay,
         date_created: event.extendedProps.date_created,
         created_by_id: event.extendedProps.created_by_id,
@@ -928,7 +1021,9 @@ const Calendar = () => {
         },
         AppointmentPurpose: event.extendedProps.purpose,
         AppointmentNotes: event.extendedProps.notes,
+        site_id: event.extendedProps.siteId,
       };
+
       try {
         await axiosXanoStaff.put(`/appointments/${event.id}`, datas, {
           headers: {
@@ -1014,6 +1109,13 @@ const Calendar = () => {
         />
       </div>
       <div className="calendar__display">
+        {timelineVisible && (
+          <SelectTimelineSite
+            sites={sites}
+            timelineSiteId={timelineSiteId}
+            setTimelineSiteId={setTimelineSiteId}
+          />
+        )}
         <ToggleView
           setTimelineVisible={setTimelineVisible}
           timelineVisible={timelineVisible}
@@ -1049,6 +1151,7 @@ const Calendar = () => {
             handleResize={handleResize}
             handleResizeStart={handleResizeStart}
             renderEventContent={renderEventContent}
+            site={sites.filter(({ id }) => id === timelineSiteId)[0]}
           />
         )}
         {formVisible && (
@@ -1072,6 +1175,7 @@ const Calendar = () => {
               setCalendarSelectable={setCalendarSelectable}
               hostsIds={hostsIds}
               setHostsIds={setHostsIds}
+              sites={sites}
             />
           </FakeWindow>
         )}
