@@ -20,7 +20,7 @@ const ImmunizationsPU = ({
   };
   const handleClickReference = () => {
     const docWindow = window.open(
-      "https://health.gov.on.ca/en/pro/programs/immunization/docs/Publicly_Funded_ImmunizationSchedule.pdf",
+      "https://www.canada.ca/en/public-health/services/publications/healthy-living/canadian-immunization-guide-part-1-key-immunization-information/page-13-recommended-immunization-schedules.html",
       "_blank",
       `resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=1000, left=0, top=0`
     );
@@ -38,7 +38,7 @@ const ImmunizationsPU = ({
         <button onClick={handleClose}>Close</button>
       </h1>
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="immunizations__err">{errMsg}</p>
       ) : (

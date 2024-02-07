@@ -14,7 +14,6 @@ import useAuth from "../../../../../hooks/useAuth";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
-import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
@@ -71,7 +70,6 @@ const MedTemplateForm = ({ setNewVisible }) => {
       created_by_id: user.id,
       DrugName: formDatas.DrugName.toUpperCase(),
     };
-
     //Validation
     try {
       await medTemplateSchema.validate(datasToPost);
@@ -80,35 +78,29 @@ const MedTemplateForm = ({ setNewVisible }) => {
       return;
     }
     //Submission
-    if (
-      await confirmAlert({
-        content:
-          "It is your responsibility to ensure that the instructions accurately match the fields on the form, save template ?",
-      })
-    ) {
-      try {
-        const response = await axiosXanoStaff.post(
-          "/medications_templates",
-          datasToPost,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        );
-        socket.emit("message", {
-          route: "MEDS TEMPLATES",
-          action: "create",
-          content: { data: response.data },
-        });
-        setNewVisible(false);
-        toast.success("Medication template successfully added", {
-          containerId: "B",
-        });
-      } catch (err) {
-        toast.error(`Unable to add medication template: ${err.message}`);
-      }
+
+    try {
+      const response = await axiosXanoStaff.post(
+        "/medications_templates",
+        datasToPost,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+      socket.emit("message", {
+        route: "MEDS TEMPLATES",
+        action: "create",
+        content: { data: response.data },
+      });
+      setNewVisible(false);
+      toast.success("Medication template successfully added", {
+        containerId: "B",
+      });
+    } catch (err) {
+      toast.error(`Unable to add medication template: ${err.message}`);
     }
   };
 

@@ -1,4 +1,4 @@
-import { Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
@@ -10,16 +10,20 @@ import { billingItemSchema } from "../../../validation/billingValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import DiagnosisSearch from "./DiagnosisSearch";
+import SinSearch from "./HcnSearch";
+import PatientNameSearch from "./PatientNameSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
-import SinSearch from "./SinSearch";
 
-const BillingTableItem = ({ billing, setErrMsg }) => {
+const BillingTableItem = ({ billing, errMsg, setErrMsg }) => {
   const { auth, user, clinic, socket } = useAuth();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
-  const [hinSearchVisible, setHinSearchVisible] = useState(false);
+  const [hcnSearchVisible, setHcnSearchVisible] = useState(false);
+  const [patientNameSearchVisible, setPatientNameSearchVisible] =
+    useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
+  const [isPuting, setIsPuting] = useState(false);
 
   useEffect(() => {
     setItemInfos({
@@ -28,7 +32,8 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
       provider_ohip_nbr:
         billing.provider_ohip_billing_nbr.ohip_billing_nbr.toString(),
       referrer_ohip_nbr: billing.referrer_ohip_billing_nbr.toString(),
-      patient_sin: billing.patient_sin.SIN,
+      patient_id: billing.patient_id,
+      patient_hcn: billing.patient_hcn,
       diagnosis_code: billing.diagnosis_code.code.toString(),
       billing_code: billing.billing_code.billing_code,
     });
@@ -37,12 +42,14 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
     billing.date,
     billing.date_created,
     billing.diagnosis_code.code,
-    billing.patient_sin.SIN,
+    billing.patient_hcn,
+    billing.patient_id,
     billing.provider_ohip_billing_nbr.ohip_billing_nbr,
     billing.referrer_ohip_billing_nbr,
   ]);
 
   const handleChange = (e) => {
+    setErrMsg("");
     const name = e.target.name;
     let value = e.target.value;
     if (name === "date") value = Date.parse(new Date(value));
@@ -54,16 +61,29 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
     setEditVisible(true);
   };
   const handleClickDiagnosis = (e, code) => {
+    setErrMsg("");
     setItemInfos({ ...itemInfos, diagnosis_code: code });
     setDiagnosisSearchVisible(false);
   };
-  const handleClickSin = (e, sin) => {
-    setItemInfos({ ...itemInfos, patient_sin: sin });
-    setHinSearchVisible(false);
+  const handleClickHcn = (e, hcn, patientId) => {
+    setErrMsg("");
+    setItemInfos({ ...itemInfos, patient_hcn: hcn, patient_id: patientId });
+    setHcnSearchVisible(false);
+  };
+  const handleClickPatient = (e, patientId) => {
+    setErrMsg("");
+    setItemInfos({ ...itemInfos, patient_id: patientId });
+    setPatientNameSearchVisible(false);
   };
   const handleClickRefOHIP = (e, ohip) => {
+    setErrMsg("");
     setItemInfos({ ...itemInfos, referrer_ohip_nbr: ohip.toString() });
     setRefOHIPSearchVisible(false);
+  };
+
+  const handleCancel = () => {
+    setErrMsg("");
+    setEditVisible(false);
   };
 
   const handleDuplicateClick = async () => {
@@ -72,9 +92,8 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
       date_created: Date.now(),
       provider_id: billing.provider_id,
       referrer_ohip_billing_nbr: parseInt(itemInfos.referrer_ohip_nbr),
-      patient_id: clinic.demographicsInfos.find(
-        ({ SIN }) => SIN === itemInfos.patient_sin
-      ).patient_id,
+      patient_id: itemInfos.patient_id,
+      patient_hcn: itemInfos.patient_hcn,
       diagnosis_id: (
         await axiosXanoStaff.get(
           `/diagnosis_codes_for_code?code=${itemInfos.diagnosis_code}`,
@@ -131,11 +150,6 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
             ({ id }) => id === datasToPost.provider_id
           ).ohip_billing_nbr,
         },
-        patient_sin: {
-          SIN: clinic.demographicsInfos.find(
-            ({ patient_id }) => patient_id === datasToPost.patient_id
-          ).SIN,
-        },
         billing_code: {
           billing_code: feeSchedule.data.billing_code,
           provider_fee: feeSchedule.data.provider_fee,
@@ -175,10 +189,19 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
       setErrMsg("Referrer OHIP nbr field must be 6-digits");
       return;
     }
+    if (itemInfos.provider_ohip_nbr.length !== 6) {
+      setErrMsg("Referrer OHIP nbr field must be 6-digits");
+      return;
+    }
     if (
-      !clinic.demographicsInfos.find(({ SIN }) => SIN === itemInfos.patient_sin)
+      itemInfos.patient_hcn &&
+      !clinic.demographicsInfos.find(
+        ({ HealthCard }) => HealthCard.Number === itemInfos.patient_hcn
+      )
     ) {
-      setErrMsg("There is no patient with this HIN in the clinic's database");
+      setErrMsg(
+        "There is no patient with this Health Card Number in the clinic's database"
+      );
       return;
     }
     if (
@@ -197,6 +220,10 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
       setErrMsg("There is no existing diagnosis with this code");
       return;
     }
+    if (itemInfos.billing_code.includes(",")) {
+      setErrMsg("Please enter only one billing code");
+      return;
+    }
     const response = await axiosXanoStaff.get(
       `/ohip_fee_schedule_for_code?billing_code=${itemInfos.billing_code}`,
       {
@@ -212,14 +239,13 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
       return;
     }
     //Submission
+    setIsPuting(true);
     const datasToPut = {
       date: itemInfos.date,
-      date_created: Date.now(),
       provider_id: billing.provider_id,
       referrer_ohip_billing_nbr: parseInt(itemInfos.referrer_ohip_nbr),
-      patient_id: clinic.demographicsInfos.find(
-        ({ SIN }) => SIN === itemInfos.patient_sin
-      ).id,
+      patient_id: itemInfos.patient_id,
+      patient_hcn: itemInfos.patient_hcn,
       diagnosis_id: (
         await axiosXanoStaff.get(
           `/diagnosis_codes_for_code?code=${itemInfos.diagnosis_code}`,
@@ -242,7 +268,16 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
           }
         )
       ).data.id,
+      updates: [
+        ...billing.updates,
+        {
+          updated_by_id: user.id,
+          date_updated: Date.now(),
+          updated_by_user_type: "Staff",
+        },
+      ],
     };
+
     try {
       const response = await axiosXanoStaff.put(
         `/billings/${billing.id}`,
@@ -279,15 +314,13 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
             ({ id }) => id === datasToPut.provider_id
           ).ohip_billing_nbr,
         },
-        patient_sin: {
-          SIN: clinic.demographicsInfos.find(
-            ({ id }) => id === datasToPut.patient_id
-          ).SIN,
-        },
         billing_code: {
           billing_code: feeSchedule.data.billing_code,
           provider_fee: feeSchedule.data.provider_fee,
+          assistant_fee: feeSchedule.data.assistant_fee,
           specialist_fee: feeSchedule.data.specialist_fee,
+          anaesthetist_fee: feeSchedule.data.anaesthetist_fee,
+          non_anaesthetist_fee: feeSchedule.data.non_anaesthetist_fee,
         },
         diagnosis_code: {
           code: diagnosis.data.code,
@@ -299,8 +332,10 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
         content: { id: billing.id, data: datasToEmit },
       });
       setEditVisible(false);
+      setIsPuting(false);
       toast.success(`Billing saved successfully`, { containerId: "A" });
     } catch (err) {
+      setIsPuting(false);
       toast.error(`Can't save billing: ${err.message}`, {
         containerId: "A",
       });
@@ -338,7 +373,10 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
   return (
     itemInfos && (
       <>
-        <tr className="billing-table__item">
+        <tr
+          className="billing-table__item"
+          style={{ border: errMsg && "solid 1.5px red" }}
+        >
           <td>
             {editVisible ? (
               <input
@@ -361,7 +399,7 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
               placement="top-start"
               arrow
             >
-              {billing.provider_ohip_billing_nbr.ohip_billing_nbr}
+              <span>{billing.provider_ohip_billing_nbr.ohip_billing_nbr}</span>
             </Tooltip>
           </td>
           <td style={{ position: "relative" }}>
@@ -393,8 +431,8 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
               <>
                 <input
                   type="text"
-                  value={itemInfos.patient_sin}
-                  name="patient_sin"
+                  value={itemInfos.patient_hcn}
+                  name="patient_health_card_nbr"
                   onChange={handleChange}
                 />
                 <i
@@ -405,21 +443,38 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
                     top: "8px",
                   }}
                   className="fa-solid fa-magnifying-glass"
-                  onClick={() => setHinSearchVisible(true)}
+                  onClick={() => setHcnSearchVisible(true)}
                 ></i>
               </>
             ) : (
-              <Tooltip
-                title={patientIdToName(
-                  clinic.demographicsInfos,
-                  billing.patient_id,
-                  true
-                )}
-                placement="top-start"
-                arrow
-              >
-                {billing.patient_sin.SIN}
-              </Tooltip>
+              billing.patient_hcn
+            )}
+          </td>
+          <td style={{ position: "relative" }}>
+            {editVisible ? (
+              <>
+                <input
+                  type="text"
+                  value={patientIdToName(
+                    clinic.demographicsInfos,
+                    itemInfos.patient_id
+                  )}
+                  name="patient_id"
+                  readOnly
+                />
+                <i
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "10px",
+                    top: "8px",
+                  }}
+                  className="fa-solid fa-magnifying-glass"
+                  onClick={() => setPatientNameSearchVisible(true)}
+                ></i>
+              </>
+            ) : (
+              patientIdToName(clinic.demographicsInfos, billing.patient_id)
             )}
           </td>
           <td style={{ position: "relative" }}>
@@ -458,6 +513,14 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
               billing.billing_code.billing_code
             )}
           </td>
+          {console.log(
+            typeof billing.billing_code.assistant_fee,
+            billing.billing_code.assistant_fee
+          )}
+          {console.log(
+            typeof billing.billing_code.specialist_fee,
+            billing.billing_code.specialist_fee
+          )}
           <td>{billing.billing_code.provider_fee / 10000} $</td>
           <td>{billing.billing_code.assistant_fee / 10000} $</td>
           <td>{billing.billing_code.specialist_fee / 10000} $</td>
@@ -467,27 +530,42 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
             <td>
               <div className="billing-table__item-btn-container">
                 {!editVisible ? (
-                  <button onClick={handleEditClick}>Edit</button>
+                  <>
+                    <button onClick={handleEditClick}>Edit</button>
+                    <button onClick={handleDeleteClick}>Delete</button>
+                    <button onClick={handleDuplicateClick}>Duplicate</button>
+                  </>
                 ) : (
-                  <input type="submit" value="Save" onClick={handleSubmit} />
+                  <>
+                    {isPuting ? (
+                      <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                    ) : (
+                      <input
+                        type="submit"
+                        value="Save"
+                        onClick={handleSubmit}
+                      />
+                    )}
+                    <button onClick={handleCancel} disabled={isPuting}>
+                      Cancel
+                    </button>
+                  </>
                 )}
-                <button onClick={handleDeleteClick}>Delete</button>
-                <button onClick={handleDuplicateClick}>Duplicate</button>
               </div>
             </td>
           )}
         </tr>
-        {hinSearchVisible && (
+        {hcnSearchVisible && (
           <FakeWindow
-            title="HEALTH INSURANCE NUMBER SEARCH"
+            title="HEALTH CARD NUMBER SEARCH"
             width={800}
             height={600}
             x={(window.innerWidth - 800) / 2}
             y={(window.innerHeight - 600) / 2}
             color="#94bae8"
-            setPopUpVisible={setHinSearchVisible}
+            setPopUpVisible={setHcnSearchVisible}
           >
-            <SinSearch handleClickSin={handleClickSin} />
+            <SinSearch handleClickHcn={handleClickHcn} />
           </FakeWindow>
         )}
         {diagnosisSearchVisible && (
@@ -514,6 +592,19 @@ const BillingTableItem = ({ billing, setErrMsg }) => {
             setPopUpVisible={setRefOHIPSearchVisible}
           >
             <ReferringOHIPSearch handleClickRefOHIP={handleClickRefOHIP} />
+          </FakeWindow>
+        )}
+        {patientNameSearchVisible && (
+          <FakeWindow
+            title="PATIENT NAME SEARCH"
+            width={800}
+            height={600}
+            x={(window.innerWidth - 800) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color="#94bae8"
+            setPopUpVisible={setPatientNameSearchVisible}
+          >
+            <PatientNameSearch handleClickPatient={handleClickPatient} />
           </FakeWindow>
         )}
       </>

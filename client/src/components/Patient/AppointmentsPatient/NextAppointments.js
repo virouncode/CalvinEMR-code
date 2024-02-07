@@ -166,7 +166,7 @@ Cellphone: ${user.demographics.cell_phone}`,
             <div>No next appointments</div>
           )
         ) : (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         )}
       </div>
       <div className="appointments-patient__btn">

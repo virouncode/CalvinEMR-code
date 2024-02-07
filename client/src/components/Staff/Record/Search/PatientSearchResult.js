@@ -18,7 +18,7 @@ const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
             <th>Cell phone</th>
             <th>Home phone</th>
             <th>Work phone</th>
-            <th>SIN</th>
+            <th>Health Card#</th>
             <th>Address</th>
             <th>Postal/Zip Code</th>
             <th>Province/State</th>
@@ -46,7 +46,7 @@ const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
                 ) &&
                 toLocalDate(patient.DateOfBirth).includes(search.birth) &&
                 patient.ChartNumber.includes(search.chart) &&
-                patient.SIN.includes(search.health)
+                patient.HealthCard?.Number?.includes(search.health)
             )
             .map((patient) => (
               <PatientResultItem patient={patient} key={patient.id} />
@@ -62,7 +62,7 @@ const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
         alignItems: "center",
       }}
     >
-      <CircularProgress />
+      <CircularProgress size="1rem" style={{ margin: "5px" }} />
     </div>
   );
 };

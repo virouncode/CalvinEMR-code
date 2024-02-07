@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
@@ -11,13 +12,15 @@ const PatientResultItem = ({ patient }) => {
   return (
     <tr>
       <td>
-        <NavLink
-          to={`/staff/patient-record/${patient.patient_id}`}
-          className="record-link"
-          target="_blank"
-        >
-          {patient.Names.LegalName.LastName.Part}
-        </NavLink>
+        <Tooltip title="Go to EMR" placement="top-start" arrow>
+          <NavLink
+            to={`/staff/patient-record/${patient.patient_id}`}
+            className="record-link"
+            target="_blank"
+          >
+            {patient.Names.LegalName.LastName.Part}
+          </NavLink>
+        </Tooltip>
       </td>
       <td>{patient.Names.LegalName.FirstName.Part}</td>
       <td>{patient.Names.LegalName.OtherName[0].Part}</td>
@@ -45,7 +48,7 @@ const PatientResultItem = ({ patient }) => {
           )?.phoneNumber
         }
       </td>
-      <td>{patient.SIN}</td>
+      <td>{patient.HealthCard?.Number || ""}</td>
       <td>
         {
           patient.Address.find(({ _addressType }) => _addressType === "R")

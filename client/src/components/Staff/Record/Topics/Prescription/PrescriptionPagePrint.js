@@ -7,34 +7,20 @@ import { toLocalDate } from "../../../../../utils/formatDates";
 import { getAge } from "../../../../../utils/getAge";
 import { patientIdToName } from "../../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import AddedMedsList from "./AddedMedsList";
 
-const PrescriptionPage = ({
+const PrescriptionPagePrint = ({
+  printRef,
   sites,
   siteSelectedId,
   patientId,
   demographicsInfos,
-  addedMeds,
-  setAddedMeds,
   uniqueId,
-  setBody,
-  body,
-  setFinalInstructions,
+  finalInstructions,
 }) => {
   const { clinic, user } = useAuth();
-  const handleChangeBody = (e) => {
-    const value = e.target.value;
-    setBody(value);
-    setFinalInstructions(
-      addedMeds
-        .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
-        .join("\n\n") +
-        "\n\n" +
-        value
-    );
-  };
+
   return (
-    <div className="prescription__page">
+    <div ref={printRef} className="prescription__page">
       <div className="prescription__container">
         <div className="prescription__header">
           {sites ? (
@@ -93,23 +79,9 @@ const PrescriptionPage = ({
         <div className="prescription__body">
           <p className="prescription__body-title">Prescription</p>
           <div className="prescription__body-content">
-            {addedMeds.length > 0 ? (
-              <AddedMedsList
-                addedMeds={addedMeds}
-                setAddedMeds={setAddedMeds}
-                body={body}
-                setFinalInstructions={setFinalInstructions}
-              />
-            ) : (
-              ""
-            )}
-            <textarea
-              className="prescription__body-content-textarea"
-              name="body"
-              value={body}
-              onChange={handleChangeBody}
-              placeholder="For the sake of medication traceability, we recommend that you include medications using either your templates list or the medication form located on the right side. While you can fill in the prescription as free text, please be aware that doing so will not add the medications to the patient's EMR."
-            />
+            <div className="prescription__body-content-final">
+              {finalInstructions}
+            </div>
           </div>
         </div>
         <div className="prescription__footer">
@@ -129,4 +101,4 @@ const PrescriptionPage = ({
   );
 };
 
-export default PrescriptionPage;
+export default PrescriptionPagePrint;

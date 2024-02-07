@@ -45,7 +45,7 @@ const FamHistoryPU = ({
       </h1>
       {errMsgPost && <div className="famhistory__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="famhistory__err">{errMsg}</p>
       ) : (

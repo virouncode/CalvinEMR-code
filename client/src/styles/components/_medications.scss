@@ -68,6 +68,13 @@
     border-radius : 4px;
     padding: 10px 20px;
     margin-top: 20px;
+    &__btn-container {
+        text-align: center;
+        margin-bottom: 20px;
+        button {
+            margin-left: 5px;
+        }
+    }
     &__err {
         padding : 10px 20px;
         font-size: 0.8rem;
@@ -82,7 +89,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         p {
             padding:0;
             font-weight: bold;

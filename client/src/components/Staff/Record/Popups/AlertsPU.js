@@ -42,7 +42,7 @@ const AlertsPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
       </h1>
       {errMsgPost && <div className="alerts__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="alerts__err">{errMsg}</p>
       ) : (

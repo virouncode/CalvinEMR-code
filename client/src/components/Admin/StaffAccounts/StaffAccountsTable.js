@@ -78,7 +78,7 @@ const StaffAccountsTable = ({
         alignItems: "center",
       }}
     >
-      <CircularProgress />
+      <CircularProgress size="1rem" style={{ margin: "5px" }} />
     </div>
   );
 };

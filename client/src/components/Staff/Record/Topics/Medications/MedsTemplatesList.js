@@ -14,6 +14,8 @@ const MedsTemplatesList = ({
   setAddedMeds,
   patientId,
   progress,
+  setFinalInstructions,
+  body,
 }) => {
   const { auth, socket, user } = useAuth();
   const [newVisible, setNewVisible] = useState(false);
@@ -113,10 +115,12 @@ const MedsTemplatesList = ({
               key={med.id}
               addedMeds={addedMeds}
               setAddedMeds={setAddedMeds}
+              setFinalInstructions={setFinalInstructions}
+              body={body}
             />
           ))
         ) : (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         )}
       </ul>
       {newVisible && (

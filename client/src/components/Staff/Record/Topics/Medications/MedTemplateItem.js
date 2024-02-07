@@ -8,13 +8,26 @@ import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
 var _ = require("lodash");
 
-const MedTemplateItem = ({ med, addedMeds, setAddedMeds }) => {
+const MedTemplateItem = ({
+  med,
+  addedMeds,
+  setAddedMeds,
+  setFinalInstructions,
+  body,
+}) => {
   const { auth, socket } = useAuth();
   const [editVisible, setEditVisible] = useState(false);
 
   const handleClickMed = (e) => {
     const medToAdd = { ...med, temp_id: _.uniqueId() };
     setAddedMeds([...addedMeds, medToAdd]);
+    setFinalInstructions(
+      [...addedMeds, medToAdd]
+        .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
+        .join("\n\n") +
+        "\n\n" +
+        body
+    );
   };
 
   const handleEdit = () => {

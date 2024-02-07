@@ -1,6 +1,8 @@
 import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { getPatientRecord } from "../../../../../api/fetchRecords";
+import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
   formCT,
@@ -13,15 +15,21 @@ import useAuth from "../../../../../hooks/useAuth";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medicationSchema } from "../../../../../validation/medicationValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
-import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 var _ = require("lodash");
 
-const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
+const MedicationForm = ({
+  patientId,
+  addedMeds,
+  setAddedMeds,
+  progress,
+  setFinalInstructions,
+  body,
+}) => {
   //HOOKS
-  const { auth } = useAuth();
+  const { auth, user, socket } = useAuth();
   const [allergies, setAllergies] = useState([]);
   const [formDatas, setFormDatas] = useState({
     DrugIdentificationNumber: "",
@@ -90,7 +98,6 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
       DrugName: formDatas.DrugName.toUpperCase(),
       temp_id: _.uniqueId(),
     };
-
     //Validation
     try {
       await medicationSchema.validate(datasToAdd);
@@ -99,44 +106,126 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
       return;
     }
     //Submission
-    if (
-      await confirmAlert({
-        content:
-          "It is your responsibility to ensure that the instructions accurately match the fields on the form, add to RX ?",
-      })
-    ) {
-      setAddedMeds([...addedMeds, datasToAdd]);
-      setFormDatas({
-        DrugIdentificationNumber: "",
-        DrugName: "",
-        Strength: { Amount: "", UnitOfMeasure: "" },
-        Dosage: "",
-        DosageUnitOfMeasure: "",
-        Form: "",
-        Route: "",
-        Frequency: "",
-        Duration: "",
-        duration: {
-          Y: 0,
-          M: 0,
-          W: 0,
-          D: 0,
-        },
-        RefillDuration: "",
-        refill_duration: {
-          Y: 0,
-          M: 0,
-          W: 0,
-          D: 0,
-        },
-        Quantity: "",
-        RefillQuantity: "",
-        NumberOfRefills: "",
-        LongTermMedication: { ynIndicatorsimple: "N" },
-        Notes: "",
-        PrescriptionInstructions: "",
-        SubstitutionNotAllowed: "N",
+    setAddedMeds([...addedMeds, datasToAdd]);
+    setFinalInstructions(
+      [...addedMeds, datasToAdd]
+        .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
+        .join("\n\n") +
+        "\n\n" +
+        body
+    );
+    setFormDatas({
+      DrugIdentificationNumber: "",
+      DrugName: "",
+      Strength: { Amount: "", UnitOfMeasure: "" },
+      Dosage: "",
+      DosageUnitOfMeasure: "",
+      Form: "",
+      Route: "",
+      Frequency: "",
+      Duration: "",
+      duration: {
+        Y: 0,
+        M: 0,
+        W: 0,
+        D: 0,
+      },
+      RefillDuration: "",
+      refill_duration: {
+        Y: 0,
+        M: 0,
+        W: 0,
+        D: 0,
+      },
+      Quantity: "",
+      RefillQuantity: "",
+      NumberOfRefills: "",
+      LongTermMedication: { ynIndicatorsimple: "N" },
+      Notes: "",
+      PrescriptionInstructions: "",
+      SubstitutionNotAllowed: "N",
+    });
+  };
+
+  const handleSubmitAndSaveTemplate = async (e) => {
+    e.preventDefault();
+    //Formatting
+    const datasToAdd = {
+      ...formDatas,
+      DrugName: formDatas.DrugName.toUpperCase(),
+      temp_id: _.uniqueId(),
+    };
+    //Validation
+    try {
+      await medicationSchema.validate(datasToAdd);
+    } catch (err) {
+      setErrMsg(err.message);
+      return;
+    }
+    //Submission
+    setAddedMeds([...addedMeds, datasToAdd]);
+    setFormDatas({
+      DrugIdentificationNumber: "",
+      DrugName: "",
+      Strength: { Amount: "", UnitOfMeasure: "" },
+      Dosage: "",
+      DosageUnitOfMeasure: "",
+      Form: "",
+      Route: "",
+      Frequency: "",
+      Duration: "",
+      duration: {
+        Y: 0,
+        M: 0,
+        W: 0,
+        D: 0,
+      },
+      RefillDuration: "",
+      refill_duration: {
+        Y: 0,
+        M: 0,
+        W: 0,
+        D: 0,
+      },
+      Quantity: "",
+      RefillQuantity: "",
+      NumberOfRefills: "",
+      LongTermMedication: { ynIndicatorsimple: "N" },
+      Notes: "",
+      PrescriptionInstructions: "",
+      SubstitutionNotAllowed: "N",
+    });
+
+    //templates
+    const templateToPost = {
+      ...formDatas,
+      staff_id: user.id,
+      date_created: Date.now(),
+      created_by_id: user.id,
+      DrugName: formDatas.DrugName.toUpperCase(),
+    };
+    //Submission
+    try {
+      const response = await axiosXanoStaff.post(
+        "/medications_templates",
+        templateToPost,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+      socket.emit("message", {
+        route: "MEDS TEMPLATES",
+        action: "create",
+        content: { data: response.data },
       });
+      toast.success("Medication template successfully added", {
+        containerId: "B",
+      });
+    } catch (err) {
+      toast.error(`Unable to add medication template: ${err.message}`);
     }
   };
   const handleChange = (e) => {
@@ -414,7 +503,6 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
       ),
     });
   };
-
   const handleFrequencyChange = (value) => {
     setFormDatas({
       ...formDatas,
@@ -513,8 +601,14 @@ const MedicationForm = ({ patientId, addedMeds, setAddedMeds, progress }) => {
     <form className="medications-form" onSubmit={handleSubmit}>
       <div className="medications-form__title">
         <p>Medications</p>
-        <input type="submit" value="Add to RX" disabled={progress} />
       </div>
+      <div className="medications-form__btn-container">
+        <input type="submit" value="Add to RX" disabled={progress} />
+        <button onClick={handleSubmitAndSaveTemplate}>
+          Add to RX & templates
+        </button>
+      </div>
+
       {errMsg && <p className="medications-form__err">{errMsg}</p>}
       <div className="medications-form__allergies">
         <i

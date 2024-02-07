@@ -213,7 +213,7 @@ const SiteForm = ({ setAddVisible }) => {
             <label>Site logo: </label>
             <div className="site-form__row-image">
               {isLoadingFile ? (
-                <CircularProgress />
+                <CircularProgress size="1rem" style={{ margin: "5px" }} />
               ) : formDatas.logo ? (
                 <img
                   src={`${BASE_URL}${formDatas.logo?.path}`}

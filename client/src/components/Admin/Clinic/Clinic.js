@@ -72,7 +72,7 @@ const Clinic = () => {
       {!isLoading ? (
         sites && <SitesTable sites={sites} handleEditClick={handleEditClick} />
       ) : (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       )}
 
       {addVisible && (

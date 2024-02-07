@@ -70,7 +70,7 @@ What is the diagnosis and what treatment would you suggest ?`,
           demographicsInfos={demographicsInfos}
         />
       ) : isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : start ? (
         <CalvinAIDiscussion
           messages={messages}

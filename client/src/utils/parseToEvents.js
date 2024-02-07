@@ -50,7 +50,7 @@ export const parseToEvents = (
                 "#FEFEFE",
                 isSecretary,
                 userId,
-                sites.filter(({ id }) => id === appointment.site_id)[0].rooms
+                sites.find(({ id }) => id === appointment.site_id).rooms
               ) //grey
             : parseToEvent(
                 appointment,
@@ -66,7 +66,7 @@ export const parseToEvents = (
                 ].textColor,
                 isSecretary,
                 userId,
-                sites.filter(({ id }) => id === appointment.site_id)[0].rooms
+                sites.find(({ id }) => id === appointment.site_id).rooms
               )
           : parseToEvent(
               appointment,
@@ -74,7 +74,7 @@ export const parseToEvents = (
               "#FEFEFE",
               isSecretary,
               userId,
-              sites.filter(({ id }) => id === appointment.site_id)[0].rooms
+              sites.find(({ id }) => id === appointment.site_id).rooms
             ) //blue
     ),
     remainingStaffObjects,

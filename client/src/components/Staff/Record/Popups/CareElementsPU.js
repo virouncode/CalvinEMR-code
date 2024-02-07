@@ -482,7 +482,7 @@ const CareElementsPU = ({
       </h1>
       {errMsgPost && <div className="care-elements__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="care-elements__err">{errMsg}</p>
       ) : (

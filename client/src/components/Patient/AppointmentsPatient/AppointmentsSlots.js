@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getAvailableAppointments } from "../../../utils/getAvailableAppointments";
 import AppointmentSlotItem from "./AppointmentSlotItem";
 
@@ -42,7 +42,7 @@ const AppointmentsSlots = ({
             <div>No appointments available this week</div>
           )
         ) : (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         )}
       </div>
     )

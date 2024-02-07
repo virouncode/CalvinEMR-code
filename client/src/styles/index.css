@@ -11778,6 +11778,16 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
+.clinical-notes__form-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 90%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 4px;
+  text-align: center;
+}
 .clinical-notes__form-header {
   background: #D7D7D7;
   padding: 10px;
@@ -12422,6 +12432,13 @@ readers do not read off random characters that represent icons */
   padding: 10px 20px;
   margin-top: 20px;
 }
+.medications-form__btn-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.medications-form__btn-container button {
+  margin-left: 5px;
+}
 .medications-form__err {
   padding: 10px 20px;
   font-size: 0.8rem;
@@ -12436,7 +12453,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .medications-form__title p {
   padding: 0;
@@ -13668,9 +13685,14 @@ readers do not read off random characters that represent icons */
 .prescription__item {
   padding: 10px 5px;
 }
+.prescription__item-textarea {
+  width: 100%;
+  height: auto;
+  white-space: pre;
+}
 .prescription__page {
   width: 21cm;
-  max-height: 29.7cm;
+  height: 29.7cm;
   padding: 40px;
 }
 .prescription__medications {
@@ -13734,16 +13756,26 @@ readers do not read off random characters that represent icons */
   margin: 20px 0;
 }
 .prescription__body-content {
+  margin-top: 40px;
   padding: 0 20px;
   font-size: 0.8rem;
   white-space: pre;
 }
-.prescription__body-content textarea {
+.prescription__body-content-textarea {
   width: 100%;
-  height: 700px;
+  min-height: 100px;
   border: none;
   outline: none;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  white-space: pre;
+}
+.prescription__body-content-textarea:focus {
+  outline: none;
+}
+.prescription__body-content-final {
+  width: 100%;
+  font-size: 0.85rem;
+  white-space: pre;
 }
 .prescription__footer {
   height: 2%;
@@ -15327,9 +15359,9 @@ readers do not read off random characters that represent icons */
 }
 .new-appointments__confirm {
   padding: 10px 20px;
-  width: 30%;
+  width: 80%;
   font-size: 0.9rem;
-  margin: 0 auto;
+  margin: 10px auto;
   border-radius: 4px;
   text-align: center;
   color: forestgreen;
@@ -16244,32 +16276,32 @@ readers do not read off random characters that represent icons */
   width: 94%;
 }
 
-.sin-search {
+.hcn-search {
   margin-top: 50px;
   padding: 0 10px;
 }
-.sin-search label {
+.hcn-search label {
   font-weight: bold;
   margin-right: 10px;
 }
 
-.sin-results {
+.hcn-results {
   padding: 20px;
 }
-.sin-results__item {
+.hcn-results__item {
   cursor: pointer;
   display: flex;
   justify-content: flex-start;
 }
-.sin-results__item:hover {
+.hcn-results__item:hover {
   text-decoration: underline;
 }
-.sin-results__code {
+.hcn-results__code {
   font-weight: bold;
   display: inline-block;
   width: 20%;
 }
-.sin-results__name {
+.hcn-results__name {
   width: 80%;
 }
 
@@ -16403,6 +16435,9 @@ readers do not read off random characters that represent icons */
 .appointments-patient__item p {
   font-size: 0.85rem;
   width: 25%;
+}
+.appointments-patient__item input[type=checkbox] {
+  margin-right: 10px;
 }
 .appointments-patient__date {
   display: flex;
@@ -16854,7 +16889,7 @@ readers do not read off random characters that represent icons */
 }
 
 .sites__table-container {
-  width: 97%;
+  width: 98%;
   margin: 0 auto;
   overflow: scroll;
 }

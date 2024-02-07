@@ -10,6 +10,7 @@ import {
   staffIdToOHIP,
 } from "../../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { clinicalSchema } from "../../../../validation/clinicalValidation";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
@@ -33,6 +34,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   const [newTemplateVisible, setNewTemplateVisible] = useState(false);
   const [editTemplateVisible, setEditTemplateVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -75,6 +77,13 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //Validation
+    try {
+      await clinicalSchema.validate(formDatas);
+    } catch (err) {
+      setErrMsg(err.message);
+      return;
+    }
     try {
       const attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
@@ -106,20 +115,65 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
-      toast.error(`Error: unable to save progress note: ${err.message}`, {
+      toast.error(`Error: unable to save clinical note: ${err.message}`, {
         containerId: "A",
       });
     }
   };
 
   const handleSaveSignBillClick = async (e) => {
-    await handleSubmit(e);
+    e.preventDefault();
+    //Validation
+    try {
+      await clinicalSchema.validate(formDatas);
+    } catch (err) {
+      setErrMsg(err.message);
+      return;
+    }
+    try {
+      const attach_ids = (
+        await postPatientRecord("/attachments", user.id, auth.authToken, {
+          attachments_array: attachments,
+        })
+      ).data;
+
+      await postPatientRecord(
+        "/clinical_notes",
+        user.id,
+        auth.authToken,
+        {
+          ...formDatas,
+          attachments_ids: attach_ids,
+          ParticipatingProviders: [
+            {
+              Name: {
+                FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
+                LastName: staffIdToLastName(clinic.staffInfos, user.id),
+              },
+              OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+              DateTimeNoteCreated: Date.now(),
+            },
+          ],
+        },
+        socket,
+        "CLINICAL NOTES"
+      );
+      setAddVisible(false);
+      toast.success("Saved successfully", { containerId: "A" });
+    } catch (err) {
+      toast.error(`Error: unable to save clinical note: ${err.message}`, {
+        containerId: "A",
+      });
+    }
     window.open(
-      `/staff/billing/${demographicsInfos.SIN}/${Date.now()}`,
+      `/staff/billing/${patientId}/${
+        demographicsInfos.HealthCard?.Number
+      }/${Date.now()}`,
       "_blank"
     );
   };
   const handleChange = (e) => {
+    setErrMsg("");
     const name = e.target.name;
     const value = e.target.value;
     setFormDatas({ ...formDatas, [name]: value });
@@ -192,6 +246,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   };
 
   const handleSelectTemplate = (e) => {
+    setErrMsg("");
     const value = parseInt(e.target.value);
     setTemplateSelectedId(value);
     if (value !== -1 && value !== -2) {
@@ -259,6 +314,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           </div>
         </div>
         <div className="clinical-notes__form-body">
+          {errMsg && <p className="clinical-notes__form-err">{errMsg}</p>}
           <textarea
             name="MyClinicalNotesContent"
             onChange={handleChange}

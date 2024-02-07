@@ -535,7 +535,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
             <label>E-sign: </label>
             <div className="signup-staff__image">
               {isLoadingFile ? (
-                <CircularProgress />
+                <CircularProgress size="1rem" style={{ margin: "5px" }} />
               ) : formDatas.sign ? (
                 <img
                   src={`${BASE_URL}${formDatas.sign?.path}`}

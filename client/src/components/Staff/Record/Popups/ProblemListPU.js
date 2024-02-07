@@ -47,7 +47,7 @@ const ProblemListPU = ({
       </h1>
       {errMsgPost && <div className="problemlist__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="problemlist__err">{errMsg}</p>
       ) : (

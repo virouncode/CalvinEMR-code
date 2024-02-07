@@ -360,7 +360,7 @@ const LoginForm = () => {
         );
         const authToken = response?.data?.authToken;
         setAuth({ email, authToken });
-
+        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
         //================ USER ===================//
         const response2 = await axiosXanoAdmin.get(USERINFO_URL, {
           headers: {

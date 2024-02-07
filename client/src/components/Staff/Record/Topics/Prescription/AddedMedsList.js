@@ -1,7 +1,12 @@
 import React from "react";
 import AddedMedItem from "./AddedMedItem";
 
-const AddedMedsList = ({ addedMeds, setAddedMeds }) => {
+const AddedMedsList = ({
+  addedMeds,
+  setAddedMeds,
+  body,
+  setFinalInstructions,
+}) => {
   return (
     <ul className="prescription__list">
       {addedMeds.map((med) => (
@@ -9,6 +14,9 @@ const AddedMedsList = ({ addedMeds, setAddedMeds }) => {
           med={med}
           setAddedMeds={setAddedMeds}
           addedMeds={addedMeds}
+          body={body}
+          setFinalInstructions={setFinalInstructions}
+          key={med.temp_id}
         />
       ))}
     </ul>

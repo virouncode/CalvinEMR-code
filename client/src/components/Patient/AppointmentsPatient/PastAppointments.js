@@ -69,7 +69,7 @@ const PastAppointments = ({ pastAppointments }) => {
             <div>No past appointments</div>
           )
         ) : (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         )}
       </div>
     </div>

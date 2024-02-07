@@ -1,39 +1,30 @@
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuth from "../../../hooks/useAuth";
 import { toLocalDate } from "../../../utils/formatDates";
 import { onMessageBilling } from "../../../utils/socketHandlers/onMessageBilling";
-import BillingFilter from "./BillingFilter";
-import BillingForm from "./BillingForm";
-import BillingTable from "./BillingTable";
 
-const Billing = () => {
-  const { pid, date } = useParams();
+import BillingFilter from "../../Staff/Billing/BillingFilter";
+import BillingForm from "../../Staff/Billing/BillingForm";
+import BillingTable from "../../Staff/Billing/BillingTable";
+
+const BillingAdmin = () => {
   const { user, auth, socket } = useAuth();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [billings, setBillings] = useState(null);
   const [errMsg, setErrMsg] = useState("");
-  const [rangeStart, setRangeStart] = useState(
-    toLocalDate(
+  const [filterDatas, setFilterDatas] = useState({
+    date_start: toLocalDate(
       Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
-    )
-  ); //start of the month
-  const [rangeEnd, setRangeEnd] = useState(
-    toLocalDate(
+    ),
+    date_end: toLocalDate(
       Date.parse(
         new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
       )
-    )
-  ); //end of the month
-
-  useEffect(() => {
-    if (pid && date) {
-      setAddVisible(true);
-    }
-  }, [pid, date]);
+    ),
+  }); //current month
 
   const handleAdd = () => {
     setAddVisible(true);
@@ -43,47 +34,25 @@ const Billing = () => {
     const abortController = new AbortController();
     const fetchBillings = async () => {
       try {
-        let response;
-        if (user.title !== "Secretary") {
-          //billings concerning the user in range
-          response = await axiosXanoStaff.post(
-            `/billings_for_staff_in_range`,
-            { range_start: rangeStart, range_end: rangeEnd, staff_id: user.id },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          );
-        } else {
-          //all billings
-          response = await axiosXanoStaff.post(
-            `/billings_in_range`,
-            { range_start: rangeStart, range_end: rangeEnd },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          );
-        }
+        //all billings
+        const response = await axiosXanoAdmin.get(`/billings`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          signal: abortController.signal,
+        });
         if (abortController.signal.aborted) return;
         setBillings(response.data.sort((a, b) => b.date - a.date));
       } catch (err) {
-        if (err.name !== "CanceledError") {
-          toast.error(`Unable to fetch billings: ${err.message}`, {
-            containerId: "A",
-          });
-        }
+        toast.error(`Unable to fetch billings: ${err.message}`, {
+          containerId: "A",
+        });
       }
     };
     fetchBillings();
     return () => abortController.abort();
-  }, [auth.authToken, rangeEnd, rangeStart, user.id, user.title]);
+  }, [auth.authToken, user.id, user.title]);
 
   useEffect(() => {
     if (!socket) return;
@@ -117,16 +86,15 @@ const Billing = () => {
       {billings ? (
         <>
           <BillingFilter
+            filterDatas={filterDatas}
+            setFilterDatas={setFilterDatas}
             billings={billings}
-            rangeStart={rangeStart}
-            rangeEnd={rangeEnd}
-            setRangeStart={setRangeStart}
-            setRangeEnd={setRangeEnd}
           />
           <BillingTable
             billings={billings}
-            errMsg={errMsg}
+            setBillings={setBillings}
             setErrMsg={setErrMsg}
+            filterDatas={filterDatas}
           />
         </>
       ) : (
@@ -136,4 +104,4 @@ const Billing = () => {
   );
 };
 
-export default Billing;
+export default BillingAdmin;

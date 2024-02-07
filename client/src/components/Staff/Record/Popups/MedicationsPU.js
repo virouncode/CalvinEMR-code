@@ -49,7 +49,7 @@ const MedicationsPU = ({
       </h1>
       {errMsgPost && <div className="medications__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="medications__err">{errMsg}</p>
       ) : (
@@ -72,13 +72,15 @@ const MedicationsPU = ({
                 </tr>
               </thead>
               <tbody>
-                {datas.map((medication) => (
-                  <MedicationItem
-                    item={medication}
-                    key={medication.id}
-                    patientId={patientId}
-                  />
-                ))}
+                {datas
+                  .sort((a, b) => b.StartDate - a.StartDate)
+                  .map((medication) => (
+                    <MedicationItem
+                      item={medication}
+                      key={medication.id}
+                      patientId={patientId}
+                    />
+                  ))}
               </tbody>
             </table>
             <div className="medications__btn-container">

@@ -85,6 +85,10 @@ const ImmunizationForm = ({
     setFormDatas({ ...formDatas, [name]: value });
   };
 
+  const handleCancel = (e) => {
+    setAddVisible(false);
+  };
+
   return (
     <tr className="immunizations__form">
       <td>
@@ -183,7 +187,10 @@ const ImmunizationForm = ({
       <td>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</td>
       <td>{toLocalDate(Date.now())}</td>
       <td style={{ textAlign: "center" }}>
-        <input type="submit" value="Save" onClick={handleSubmit} />
+        <div className="immunizations__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button onClick={handleCancel}>Cancel</button>
+        </div>
       </td>
     </tr>
   );

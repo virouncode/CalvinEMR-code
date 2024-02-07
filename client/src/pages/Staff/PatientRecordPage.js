@@ -12,8 +12,7 @@ const PatientRecordPage = () => {
     <>
       <Helmet>
         <title>
-          Patient:{" "}
-          {patientIdToName(clinic.demographicsInfos, parseInt(params.id))}
+          EMR: {patientIdToName(clinic.demographicsInfos, parseInt(params.id))}
         </title>
       </Helmet>
       <section className="patient-record-section">

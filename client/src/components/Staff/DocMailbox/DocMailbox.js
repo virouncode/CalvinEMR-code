@@ -143,7 +143,7 @@ const DocMailbox = () => {
           )}
         </>
       ) : (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       )}
     </>
   );

@@ -73,7 +73,7 @@ const PatientRecord = () => {
         height: "100vh",
       }}
     >
-      <CircularProgress />
+      <CircularProgress size="1rem" style={{ margin: "5px" }} />
     </div>
   );
 };

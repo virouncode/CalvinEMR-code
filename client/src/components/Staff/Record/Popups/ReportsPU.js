@@ -50,7 +50,7 @@ const ReportsPU = ({
       </h1>
 
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="reports__err">{errMsg}</p>
       ) : (

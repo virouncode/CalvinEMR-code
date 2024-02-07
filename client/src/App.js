@@ -10,6 +10,7 @@ import RequireAuth from "./context/RequireAuth";
 import useAuth from "./hooks/useAuth";
 import useAutoLogout from "./hooks/useAutoLogout";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
+import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
 import {
@@ -127,7 +128,7 @@ const App = () => {
           <Route path="reference" element={<ReferencePage />} />
           <Route path="calvinai" element={<CalvinAIPage />} />
           <Route path="billing" element={<BillingPage />} />
-          <Route path="billing/:sin/:date" element={<BillingPage />} />
+          <Route path="billing/:pid/:hcn/:date" element={<BillingPage />} />
           <Route path="my-account" element={<MyAccountPage />} />
           <Route path="credentials" element={<CredentialsPage />} />
           <Route path="export" element={<ExportPage />} />
@@ -139,6 +140,7 @@ const App = () => {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="staff-accounts" element={<StaffAccountsPage />} />
           <Route path="clinic" element={<ClinicPage />} />
+          <Route path="billing" element={<BillingPageAdmin />} />
           <Route path="migration" element={<MigrationPage />} />
         </Route>
       </Route>

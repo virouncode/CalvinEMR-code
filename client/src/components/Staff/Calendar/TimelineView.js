@@ -18,7 +18,6 @@ const TimelineView = ({
   renderEventContent,
   site,
 }) => {
-  console.log("site", site);
   return (
     <FullCalendar
       plugins={[resourceTimeGrid, interaction]}

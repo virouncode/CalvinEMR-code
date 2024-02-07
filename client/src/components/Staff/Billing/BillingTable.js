@@ -1,15 +1,7 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
 import BillingTableItem from "./BillingTableItem";
 
-const BillingTable = ({ billings, setBillings, setErrMsg, filterDatas }) => {
-  const { user } = useAuth();
-  const filteredBillings = billings.filter(
-    (billing) =>
-      billing.date >= Date.parse(new Date(filterDatas.date_start)) &&
-      billing.date <= Date.parse(new Date(filterDatas.date_end))
-  );
-
+const BillingTable = ({ billings, errMsg, setErrMsg }) => {
   return (
     <table className="billing-table">
       <thead>
@@ -17,7 +9,8 @@ const BillingTable = ({ billings, setBillings, setErrMsg, filterDatas }) => {
           <th>Date</th>
           <th>Provider OHIP#</th>
           <th>Referring MD OHIP#</th>
-          <th>Patient SIN</th>
+          <th>Patient Health Card#</th>
+          <th>Patient name</th>
           <th>Diagnosis code</th>
           <th>Billing code</th>
           <th>Provider fee</th>
@@ -29,81 +22,80 @@ const BillingTable = ({ billings, setBillings, setErrMsg, filterDatas }) => {
         </tr>
       </thead>
       <tbody>
-        {filteredBillings.map((billing) => (
+        {billings.map((billing) => (
           <BillingTableItem
             key={billing.id}
             billing={billing}
-            setBillings={setBillings}
+            errMsg={errMsg}
             setErrMsg={setErrMsg}
           />
         ))}
       </tbody>
       <tfoot>
         <tr
-          tr
           className="billing-table__item"
           style={{ border: "solid 2px orange" }}
         >
-          <td colspan="6" style={{ fontWeight: "bold", border: "none" }}>
+          <td colSpan="7" style={{ fontWeight: "bold", border: "none" }}>
             Total fees
           </td>
           <td style={{ border: "none" }}>
             {Math.round(
-              filteredBillings
+              billings
                 .map(({ billing_code }) => billing_code.provider_fee / 10000)
                 .reduce((acc, current) => {
                   return acc + current;
-                }) * 10
-            ) / 10}{" "}
+                }, 0) * 100
+            ) / 100}{" "}
             $
           </td>
-          <td td style={{ border: "none" }}>
+          <td style={{ border: "none" }}>
             {Math.round(
-              filteredBillings
+              billings
                 .map(({ billing_code }) => billing_code.assistant_fee / 10000)
                 .reduce((acc, current) => {
                   return acc + current;
-                }) * 10
-            ) / 10}{" "}
+                }, 0) * 100
+            ) / 100}{" "}
             $
           </td>
-          <td td style={{ border: "none" }}>
+          <td style={{ border: "none" }}>
             {Math.round(
-              filteredBillings
+              billings
                 .map(({ billing_code }) => billing_code.specialist_fee / 10000)
                 .reduce((acc, current) => {
                   return acc + current;
-                }) * 10
-            ) / 10}{" "}
+                }, 0) * 100
+            ) / 100}{" "}
             $
           </td>
-          <td td style={{ border: "none" }}>
+          <td style={{ border: "none" }}>
             {Math.round(
-              filteredBillings
+              billings
                 .map(
                   ({ billing_code }) => billing_code.anaesthetist_fee / 10000
                 )
                 .reduce((acc, current) => {
                   return acc + current;
-                }) * 10
-            ) / 10}{" "}
+                }, 0) * 100
+            ) / 100}{" "}
             $
           </td>
-          <td td style={{ border: "none" }}>
+          <td style={{ border: "none" }}>
             {Math.round(
-              filteredBillings
+              billings
                 .map(
                   ({ billing_code }) =>
                     billing_code.non_anaesthetist_fee / 10000
                 )
                 .reduce((acc, current) => {
                   return acc + current;
-                }) * 10
-            ) / 10}{" "}
+                }, 0) * 100
+            ) / 100}{" "}
             $
           </td>
-          <td colspan="6" style={{ fontWeight: "bold", border: "none" }}>
-            Number of billings: {filteredBillings.length}
+          <td style={{ fontWeight: "bold", border: "none" }}>
+            Nbr of billings: {billings.length}
           </td>
         </tr>
       </tfoot>

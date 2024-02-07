@@ -48,7 +48,7 @@ const FamilyDoctorsPU = ({
       </h1>
       {errMsgPost && <div className="doctors__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="doctors__err">{errMsg}</p>
       ) : (

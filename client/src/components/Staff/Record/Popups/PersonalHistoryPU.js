@@ -174,7 +174,7 @@ const PersonalHistoryPU = ({
           </h1>
         </div>
         {isLoading ? (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         ) : errMsg ? (
           <p className="personalhistory__err">{errMsg}</p>
         ) : formDatas ? (

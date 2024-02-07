@@ -28,6 +28,9 @@
             font-size: 0.85rem;
             width:25%;
         }
+        input[type="checkbox"] {
+            margin-right: 10px;         
+        }
     }
     &__date {
         display: flex;

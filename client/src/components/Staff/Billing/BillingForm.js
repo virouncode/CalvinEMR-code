@@ -4,39 +4,46 @@ import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuth from "../../../hooks/useAuth";
 import { toLocalDate } from "../../../utils/formatDates";
+import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToOHIP } from "../../../utils/staffIdToName";
 import { billingFormSchema } from "../../../validation/billingValidation";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import DiagnosisSearch from "./DiagnosisSearch";
+import HcnSearch from "./HcnSearch";
+import PatientNameSearch from "./PatientNameSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
-import SinSearch from "./SinSearch";
 
 const BillingForm = ({ setAddVisible, setErrMsg }) => {
   const navigate = useNavigate();
-  const { sin, date } = useParams();
+  const { pid, hcn, date } = useParams();
   const { auth, user, clinic, socket } = useAuth();
   const [formDatas, setFormDatas] = useState({
     date: toLocalDate(Date.now()),
     provider_ohip_nbr: staffIdToOHIP(clinic.staffInfos, user.id),
     referrer_ohip_nbr: "",
-    patient_sin: "",
+    patient_hcn: "",
     diagnosis_code: "",
     billing_codes: [],
+    patient_id: "",
   });
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
-  const [sinSearchVisible, setSinSearchVisible] = useState(false);
+  const [hcnSearchVisible, setHcnSearchVisible] = useState(false);
+  const [patientNameSearchVisible, setPatientNameSearchVisible] =
+    useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
 
   useEffect(() => {
-    if (sin) {
+    if (date) {
+      console.log(typeof pid, pid);
       setFormDatas({
         ...formDatas,
-        patient_sin: sin,
+        patient_hcn: hcn || "",
+        patient_id: parseInt(pid) || "",
         date: toLocalDate(Date.parse(new Date(parseInt(date)))),
       });
       navigate("/staff/billing");
     }
-  }, [date, formDatas, sin, navigate]);
+  }, [date, formDatas, hcn, navigate, pid]);
 
   const handleChange = (e) => {
     setErrMsg("");
@@ -49,22 +56,29 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
   };
 
   const handleClickDiagnosis = (e, code) => {
+    setErrMsg("");
     setFormDatas({ ...formDatas, diagnosis_code: code });
     setDiagnosisSearchVisible(false);
   };
-  const handleClickHin = (e, sin) => {
-    setFormDatas({ ...formDatas, patient_sin: sin });
-    setSinSearchVisible(false);
+  const handleClickHcn = (e, hcn, patientId) => {
+    setErrMsg("");
+    setFormDatas({ ...formDatas, patient_hcn: hcn, patient_id: patientId });
+    setHcnSearchVisible(false);
+  };
+  const handleClickPatient = (e, patientId) => {
+    setErrMsg("");
+    setFormDatas({ ...formDatas, patient_id: patientId });
+    setPatientNameSearchVisible(false);
   };
   const handleClickRefOHIP = (e, ohip) => {
+    setErrMsg("");
     setFormDatas({ ...formDatas, referrer_ohip_nbr: ohip.toString() });
     setRefOHIPSearchVisible(false);
   };
-  const handleCancel = () => {
+  const handleCancel = (e) => {
     setErrMsg("");
     setAddVisible(false);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Validation
@@ -81,10 +95,19 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
       setErrMsg("Referrer OHIP nbr field must be 6-digits");
       return;
     }
+    if (formDatas.provider_ohip_nbr.length !== 6) {
+      setErrMsg("Referrer OHIP nbr field must be 6-digits");
+      return;
+    }
     if (
-      !clinic.demographicsInfos.find(({ SIN }) => SIN === formDatas.patient_sin)
+      formDatas.patient_hcn &&
+      !clinic.demographicsInfos.find(
+        ({ HealthCard }) => HealthCard.Number === formDatas.patient_hcn
+      )
     ) {
-      setErrMsg("There is no patient with this HIN in the clinic's database");
+      setErrMsg(
+        "There is no patient with this Health Card Number in the clinic's database"
+      );
       return;
     }
 
@@ -139,9 +162,8 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
           date_created: Date.now(),
           provider_id: user.id,
           referrer_ohip_billing_nbr: parseInt(formDatas.referrer_ohip_nbr),
-          patient_id: clinic.demographicsInfos.find(
-            ({ SIN }) => SIN === formDatas.patient_sin
-          ).patient_id,
+          patient_id: formDatas.patient_id,
+          patient_hcn: formDatas.patient_hcn,
           diagnosis_id: (
             await axiosXanoStaff.get(
               `/diagnosis_codes_for_code?code=${formDatas.diagnosis_code}`,
@@ -186,11 +208,6 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
               ({ id }) => id === response2.data.provider_id
             ).ohip_billing_nbr,
           },
-          patient_sin: {
-            SIN: clinic.demographicsInfos.find(
-              ({ patient_id }) => patient_id === response2.data.patient_id
-            ).SIN,
-          },
           billing_code: {
             billing_code: feeSchedule.data.billing_code,
             provider_fee: feeSchedule.data.provider_fee,
@@ -223,7 +240,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
       <div className="billing-form__title">Add a new billing</div>
       <div className="billing-form__row">
         <div className="billing-form__item">
-          <label htmlFor="">Date</label>
+          <label htmlFor="">Date*</label>
           <input
             type="date"
             value={formDatas.date}
@@ -232,7 +249,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
           />
         </div>
         <div className="billing-form__item">
-          <label htmlFor="">Provider OHIP#</label>
+          <label htmlFor="">Provider OHIP#*</label>
           <input
             type="text"
             value={formDatas.provider_ohip_nbr.toString()}
@@ -260,22 +277,24 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
       </div>
       <div className="billing-form__row">
         <div className="billing-form__item" style={{ position: "relative" }}>
-          <label htmlFor="">Patient SIN</label>
+          <label htmlFor="">Patient Health Card#</label>
           <input
             type="text"
-            value={formDatas.patient_sin}
-            name="patient_sin"
+            value={formDatas.patient_hcn}
+            name="patient_hcn"
             onChange={handleChange}
             autoComplete="off"
+            // readOnly
+            // style={{ width: "130px" }}
           />
           <i
             style={{ cursor: "pointer", position: "absolute", right: "5px" }}
             className="fa-solid fa-magnifying-glass"
-            onClick={() => setSinSearchVisible(true)}
+            onClick={() => setHcnSearchVisible(true)}
           ></i>
         </div>
         <div className="billing-form__item" style={{ position: "relative" }}>
-          <label htmlFor="">Diagnosis code</label>
+          <label htmlFor="">Diagnosis code*</label>
           <input
             type="text"
             value={formDatas.diagnosis_code}
@@ -290,7 +309,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
           ></i>
         </div>
         <div className="billing-form__item">
-          <label htmlFor="">Billing code(s)</label>
+          <label htmlFor="">Billing code(s)*</label>
           <input
             type="text"
             placeholder="A001,B423,F404,..."
@@ -305,21 +324,42 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
           />
         </div>
       </div>
+      <div className="billing-form__row">
+        <div className="billing-form__item" style={{ position: "relative" }}>
+          <label htmlFor="">Patient Name*</label>
+          <input
+            type="text"
+            value={patientIdToName(
+              clinic.demographicsInfos,
+              formDatas.patient_id
+            )}
+            name="patient_id"
+            autoComplete="off"
+            readOnly
+            style={{ width: "200px" }}
+          />
+          <i
+            style={{ cursor: "pointer", position: "absolute", right: "5px" }}
+            className="fa-solid fa-magnifying-glass"
+            onClick={() => setPatientNameSearchVisible(true)}
+          ></i>
+        </div>
+      </div>
       <div className="billing-form__btns">
         <input type="submit" />
         <button onClick={handleCancel}>Cancel</button>
       </div>
-      {sinSearchVisible && (
+      {hcnSearchVisible && (
         <FakeWindow
-          title="HEALTH INSURANCE NUMBER SEARCH"
+          title="HEALTH CARD NUMBER SEARCH"
           width={800}
           height={600}
           x={(window.innerWidth - 800) / 2}
           y={(window.innerHeight - 600) / 2}
           color="#94bae8"
-          setPopUpVisible={setSinSearchVisible}
+          setPopUpVisible={setHcnSearchVisible}
         >
-          <SinSearch handleClickHin={handleClickHin} />
+          <HcnSearch handleClickHcn={handleClickHcn} />
         </FakeWindow>
       )}
       {diagnosisSearchVisible && (
@@ -346,6 +386,19 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
           setPopUpVisible={setRefOHIPSearchVisible}
         >
           <ReferringOHIPSearch handleClickRefOHIP={handleClickRefOHIP} />
+        </FakeWindow>
+      )}
+      {patientNameSearchVisible && (
+        <FakeWindow
+          title="PATIENT NAME SEARCH"
+          width={800}
+          height={600}
+          x={(window.innerWidth - 800) / 2}
+          y={(window.innerHeight - 600) / 2}
+          color="#94bae8"
+          setPopUpVisible={setPatientNameSearchVisible}
+        >
+          <PatientNameSearch handleClickPatient={handleClickPatient} />
         </FakeWindow>
       )}
     </form>

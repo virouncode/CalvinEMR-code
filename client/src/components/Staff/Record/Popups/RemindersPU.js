@@ -47,7 +47,7 @@ const RemindersPU = ({
       </h1>
       {errMsgPost && <div className="reminders__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="reminders__err">{errMsg}</p>
       ) : (

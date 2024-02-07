@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { patientIdToName } from "../../../utils/patientIdToName";
 
-const SinSearch = ({ handleClickHin }) => {
+const HcnSearch = ({ handleClickHcn }) => {
   const [userInput, setUserInput] = useState("");
   const [results, setResults] = useState([]);
   const { clinic } = useAuth();
@@ -19,7 +19,7 @@ const SinSearch = ({ handleClickHin }) => {
 
   return (
     <>
-      <div className="sin-search">
+      <div className="hcn-search">
         <label htmlFor="">Enter a patient name</label>
         <input
           type="text"
@@ -28,16 +28,24 @@ const SinSearch = ({ handleClickHin }) => {
         />
       </div>
       {results.length > 0 ? (
-        <ul className="sin-results">
+        <ul className="hcn-results">
           {results.map((result) => (
             <li
-              className="sin-results__item"
+              className="hcn-results__item"
               key={result.id}
-              onClick={(e) => handleClickHin(e, result.SIN)}
+              onClick={(e) =>
+                handleClickHcn(e, result.HealthCard?.Number, result.patient_id)
+              }
             >
-              <span className="sin-results__code">{result.SIN}</span>{" "}
-              <span className="sin-results__name">
-                {patientIdToName(clinic.demographicsInfos, result.patient_id)}
+              <span className="hcn-results__code">
+                {result.HealthCard?.Number}
+              </span>{" "}
+              <span className="hcn-results__name">
+                {patientIdToName(
+                  clinic.demographicsInfos,
+                  result.patient_id,
+                  result.patient_id
+                )}
               </span>
             </li>
           ))}
@@ -47,4 +55,4 @@ const SinSearch = ({ handleClickHin }) => {
   );
 };
 
-export default SinSearch;
+export default HcnSearch;

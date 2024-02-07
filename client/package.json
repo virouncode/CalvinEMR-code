@@ -51,6 +51,7 @@
     "react-new-window": "^1.0.1",
     "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",
+    "react-to-pdf": "^1.0.1",
     "react-toastify": "^9.1.2",
     "react-use-websocket": "^3.0.0",
     "react-widgets": "^5.8.4",

@@ -1586,7 +1586,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
               </div>
               <div className="demographics-card__img">
                 {isLoadingFile ? (
-                  <CircularProgress />
+                  <CircularProgress size="1rem" style={{ margin: "5px" }} />
                 ) : formDatas.avatar ? (
                   <img
                     src={`${BASE_URL}${formDatas.avatar.path}`}
@@ -1640,7 +1640,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           </div>
         </>
       ) : (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       )}
       {newEnrolmentVisible && (
         <FakeWindow

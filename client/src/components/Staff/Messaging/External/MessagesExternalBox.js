@@ -56,7 +56,7 @@ const MessagesExternalBox = ({
             <p>{emptySectionMessages(section)}</p>
           )
         ) : (
-          <CircularProgress />
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
         )}
       </div>
       {newVisible && (

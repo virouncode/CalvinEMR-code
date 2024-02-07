@@ -74,7 +74,7 @@ const AppointmentsPU = ({
       </h1>
       {errMsgPost && <div className="appointments__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="appointments__err">{errMsg}</p>
       ) : (

@@ -45,7 +45,7 @@ const RelationshipsPU = ({
       </h1>
       {errMsgPost && <div className="relationships__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="relationships__err">{errMsg}</p>
       ) : (

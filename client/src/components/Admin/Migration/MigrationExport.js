@@ -201,7 +201,9 @@ const MigrationExport = () => {
         <button onClick={handleExport} disabled={isLoading}>
           Export
         </button>
-        {isLoading && <CircularProgress />}
+        {isLoading && (
+          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        )}
       </div>
     </div>
   );

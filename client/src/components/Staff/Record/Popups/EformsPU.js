@@ -136,7 +136,7 @@ const EformsPU = ({
         Patient e-forms <i className="fa-regular fa-newspaper"></i>
       </h1>
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="eforms__err">{errMsg}</p>
       ) : (

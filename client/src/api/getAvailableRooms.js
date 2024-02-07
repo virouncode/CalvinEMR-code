@@ -10,7 +10,6 @@ export const getAvailableRooms = async (
   authToken,
   controller = null
 ) => {
-  console.log(typeof siteId, siteId);
   try {
     const response = await axiosXanoStaff.post(
       "/appointments_in_range_and_sites",
@@ -41,7 +40,6 @@ export const getAvailableRooms = async (
       ?.rooms.filter(({ id }) => id !== "z")
       .map(({ id }) => id);
     const availableRooms = _.difference(allRooms, occupiedRooms);
-    console.log(availableRooms);
     return availableRooms;
   } catch (err) {
     if (err.name !== "CanceledError") throw err;

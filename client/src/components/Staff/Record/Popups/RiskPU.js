@@ -41,7 +41,7 @@ const RiskPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
       </h1>
       {errMsgPost && <div className="risk__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="risk__err">{errMsg}</p>
       ) : (

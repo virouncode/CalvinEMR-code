@@ -78,7 +78,6 @@ const AdminHeader = () => {
                   ? "header__link header__link--admin header__link--active"
                   : "header__link header__link--admin"
               }
-              target="_blank"
             >
               Billings
             </NavLink>

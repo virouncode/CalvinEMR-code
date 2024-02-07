@@ -45,7 +45,7 @@ const PastHealthPU = ({
       </h1>
       {errMsgPost && <div className="pasthealth__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress size="1rem" style={{ margin: "5px" }} />
       ) : errMsg ? (
         <p className="pasthealth__err">{errMsg}</p>
       ) : (

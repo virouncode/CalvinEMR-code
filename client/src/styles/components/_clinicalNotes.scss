@@ -56,6 +56,16 @@
         border-radius: 4px;
         overflow:hidden;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        &-err {
+            padding : 10px 20px;
+            font-size: 0.9rem;
+            width : 90%;
+            margin:10px auto;
+            color : red;
+            background-color:rgba(255, 0, 0, 0.403);
+            border-radius: 4px;
+            text-align: center;
+        }
     }
     &__form-header {
         background:#D7D7D7;

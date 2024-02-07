@@ -196,7 +196,7 @@ const ClinicalNotesCard = ({
         }))) ||
       !_.isEqual(tempFormDatas, formDatas)
     ) {
-      //First post the former progress note version to the progress note log tbl
+      //First post the former clinical note version to the clinical note log tbl
       const logDatas = { ...formDatas };
       logDatas.clinical_note_id = formDatas.id;
       if (formDatas.version_nbr !== 1) {
@@ -215,7 +215,7 @@ const ClinicalNotesCard = ({
           auth.authToken,
           logDatas
         );
-        //then put the new progress note version in the progress note tbl
+        //then put the new clinical note version in the clinical note tbl
         tempFormDatas.version_nbr = clinicalNote.version_nbr + 1; //increment version
         await putPatientRecord(
           "/clinical_notes",
@@ -246,7 +246,7 @@ const ClinicalNotesCard = ({
           content: { data: versionsResults },
         });
         // setVersions(versionsResults);
-        toast.success("Progress note saved successfully", { containerId: "A" });
+        toast.success("Cli note saved successfully", { containerId: "A" });
       } catch (err) {
         toast.error(`Error: unable to save clinical note: ${err.message}`, {
           containerId: "A",
