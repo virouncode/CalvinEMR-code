@@ -14,7 +14,6 @@ const twilio = require("twilio")(
 );
 const extractTextFromDoc = require("./extractTextFromDoc");
 // const bodyParser = require("body-parser");
-const convertJStoXML = require("./jsxml.js");
 const getExtension = require("./getExtension.js");
 
 const PORT = process.env.PORT || 4000;
@@ -155,17 +154,6 @@ app.post("/api/writeXML", async (req, res) => {
   }
 });
 //****************************************************//
-
-// //*************** Endpoint to connect to Xano **********//
-// // Create a custom API endpoint to receive data
-// app.post("/xano-message", (req, res) => {
-//   // Extract the message from the request body
-//   const message = req.body;
-//   // Broadcast the message to all connected clients
-//   io.emit(`xano message`, message);
-//   // Respond to the HTTP request
-//   res.status(200).send("Message sent successfully");
-// });
 
 //****************** MY APP *****************/
 
