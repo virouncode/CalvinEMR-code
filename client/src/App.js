@@ -81,6 +81,7 @@ const App = () => {
 
   useEffect(() => {
     // const socket = socketIOClient("http://localhost:3000");
+
     const socket = socketIOClient(
       "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
     );
