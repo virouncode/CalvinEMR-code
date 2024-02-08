@@ -1,7 +1,7 @@
 //Librairies
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { socketIOClient } from "socket.io-client";
+import socketIOClient from "socket.io-client";
 import AdminLayout from "./components/All/UI/Layouts/AdminLayout";
 import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
