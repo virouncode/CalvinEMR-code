@@ -58,7 +58,7 @@ const MigrationPatientSearchForm = ({ search, setSearch }) => {
             autoComplete="off"
             id="chart"
           />
-          <label htmlFor="health">SIN</label>
+          <label htmlFor="health">Health Card#</label>
           <input
             type="text"
             name="health"

@@ -584,8 +584,8 @@ const AccountPatientForm = () => {
                 {tempFormDatas.Gender}
               </div>
               <div className="patient-account__form-content-row">
-                <label>SIN: </label>
-                {tempFormDatas.SIN}
+                <label>Health Card#: </label>
+                {tempFormDatas.HealthCard?.Number}
               </div>
               <div className="patient-account__form-content-row">
                 <label>Email*: </label>

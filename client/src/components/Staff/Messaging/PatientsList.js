@@ -38,7 +38,7 @@ const PatientsList = ({ isPatientChecked, handleCheckPatient, search }) => {
             patient.PhoneNumber.find(
               ({ _phoneNumberType }) => _phoneNumberType === "R"
             )?.phoneNumber.includes(search) ||
-            patient.SIN.includes(search)
+            patient.HealthCard?.Number.includes(search)
         )
         .map((info) => (
           <PatientsListItem

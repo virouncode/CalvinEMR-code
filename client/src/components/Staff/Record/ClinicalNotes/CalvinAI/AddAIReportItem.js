@@ -42,6 +42,7 @@ const AddAIReportItem = ({
         )
         .replaceAll(demographicsInfos.Names?.LegalName?.LastName?.Part, "")
         .replaceAll(demographicsInfos.SIN, "")
+        .replaceAll(demographicsInfos.HealthCard?.Number, "")
         .replaceAll(
           demographicsInfos.PhoneNumber.find(
             ({ _phoneNumberType }) => _phoneNumberType === "C"

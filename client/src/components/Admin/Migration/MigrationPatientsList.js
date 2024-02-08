@@ -42,7 +42,7 @@ const MigrationPatientsList = ({
               patient.PhoneNumber.find(
                 ({ _phoneNumberType }) => _phoneNumberType === "R"
               )?.phoneNumber.includes(search.phone)) &&
-            patient.SIN.includes(search.sin)
+            patient.HealthCard?.Number.includes(search.hcn)
         )
         .map((info) => (
           <PatientsListItem

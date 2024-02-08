@@ -32,7 +32,7 @@ const GuestsSearchResults = ({
             ) &&
             toLocalDate(patient.DateOfBirth).includes(search.birth) &&
             patient.ChartNumber.includes(search.chart) &&
-            patient.SIN.includes(search.health) &&
+            patient.HealthCard?.Number.includes(search.health) &&
             !patientsGuestsInfos
               .map(({ patient_id }) => patient_id)
               .includes(patient.patient_id)

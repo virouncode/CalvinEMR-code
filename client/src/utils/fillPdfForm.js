@@ -53,9 +53,9 @@ export const fillPdfForm = async (
     const chartField = form.getFieldMaybe("chart_nbr");
     chartField.setText(patientInfos.ChartNumber);
   }
-  if (form.getFieldMaybe("health_insurance_nbr")) {
-    const healthField = form.getFieldMaybe("health_insurance_nbr");
-    healthField.setText(patientInfos.SIN);
+  if (form.getFieldMaybe("health_card_nbr")) {
+    const healthField = form.getFieldMaybe("health_card_nbr");
+    healthField.setText(patientInfos.HealthCard?.Number);
   }
   if (form.getFieldMaybe("date_of_birth")) {
     const birthField = form.getFieldMaybe("date_of_birth");
