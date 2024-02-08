@@ -65,21 +65,6 @@ app.post("/api/extractToText", async (req, res) => {
 
 //***********************************************************//
 
-//***************** Endpoint JS2XML ************************//
-app.post("/api/convertJSToXML", (req, res) => {
-  try {
-    const { jsObj } = req.body;
-    const result = convertJStoXML(jsObj);
-    res.send(result);
-    // res.send(JSON.stringify({ success: true }));
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-    // res.send(JSON.stringify({ success: false }));
-  }
-});
-
-//*********************************************************//
-
 //**************** Endpoint write XML File ****************//
 
 app.post("/api/writeXML", async (req, res) => {
