@@ -4,7 +4,7 @@
   z-index: 10;
   padding: 10px 15px;
   background: rgb(156,185,228);
-  background: linear-gradient(132deg, rgba(156,185,228,1) 0%, #638fd2 100%);
+  background: linear-gradient(132deg, $blue 0%, $blue2 100%);
   box-shadow:rgba(149, 157, 165, 0.8) 0px 3px 4px;
   display: grid;
   grid-template-columns: 20% 60% 20%;
@@ -46,12 +46,14 @@
   &__link {
     // color:$white;
     color:$black;
+    font-weight: bold;
+
     &:hover {
       // color:#f3f3f3;
       color:$black;
     }
     &--active {
-      font-weight: bold;
+      
       // border: solid 1px $white;
       border: solid 1px $black;
       padding:5px 10px;

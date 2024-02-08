@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import LoginCard from "../../components/All/Login/LoginCard";
+import LoginNewCard from "../../components/All/Login/LoginNewCard";
 
 const LoginPage = () => {
   return (
@@ -9,7 +9,8 @@ const LoginPage = () => {
         <title>Calvin EMR Login</title>
       </Helmet>
       <section className="login-section">
-        <LoginCard />
+        {/* <LoginCard /> */}
+        <LoginNewCard />
       </section>
     </>
   );

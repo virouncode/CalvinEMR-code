@@ -32,11 +32,11 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
   const printRef = useRef();
   const [sites, setSites] = useState(null);
   const [siteSelectedId, setSiteSelectedId] = useState(user.settings.site_id);
-  const [settings, setSettings] = useState();
   const [medsTemplates, setMedsTemplates] = useState(null);
   const [addedMeds, setAddedMeds] = useState([]);
   const [uniqueId, setUniqueId] = useState(uuidv4());
   const [body, setBody] = useState("");
+  const [printVisible, setPrintVisible] = useState(false);
   const [finalInstructions, setFinalInstructions] = useState("");
 
   useEffect(() => {
@@ -92,172 +92,191 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     return () => abortController.abort();
   }, [auth.authToken]);
 
-  const handleCancel = (e) => {
-    setPresVisible(false);
-  };
-
-  const handlePrint = async (e) => {
-    if (!siteSelectedId) {
-      alert("Please choose a site first");
-      return;
-    }
-    if (!body.trim() && addedMeds.length === 0) {
-      alert("Your prescription is empty !");
-      return;
-    }
-    if (
-      addedMeds.find(
-        ({ PrescriptionInstructions }) => !PrescriptionInstructions.trim()
-      )
-    ) {
-      alert(
-        "It seems that you have added one or more medications and deleted the corresponding instructions. Please click on the trash icon to remove the medication(s)."
-      );
-      return;
-    }
-    if (
-      addedMeds.length !== 0 ||
-      (addedMeds.length === 0 &&
-        (await confirmAlert({
-          content:
-            "It appears that you haven't utilized the forms on the right to add medications but instead entered free text. Please be aware that the prescription will be generated without recording any medications in the patient's electronic medical record. Continue ?",
-        })))
-    ) {
-      try {
-        //Create PDF and display print page
-        setProgress(true);
-        const element = printRef.current;
-        const canvas = await html2canvas(element, {
-          useCORS: true,
-        });
-        const dataURL = canvas.toDataURL("image/jpeg");
-        const pdf = new jsPDF({
-          unit: "cm",
-          compress: true,
-        });
-        pdf.addImage(dataURL, "JPEG", 0, 0, 21, 29.7);
-        const pdfDataURL = pdf.output("dataurl");
-
-        let fileToUpload = await axiosXanoStaff.post(
-          "/upload/attachment",
-          {
-            content: pdfDataURL,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+  useEffect(() => {
+    const generatePrescription = async () => {
+      if (!siteSelectedId) {
+        alert("Please choose a site first");
+        return;
+      }
+      if (!body.trim() && addedMeds.length === 0) {
+        alert("Your prescription is empty !");
+        return;
+      }
+      if (
+        addedMeds.find(
+          ({ PrescriptionInstructions }) => !PrescriptionInstructions.trim()
+        )
+      ) {
+        alert(
+          "It seems that you have added one or more medications and deleted the corresponding instructions. Please click on the trash icon to remove the medication(s)."
         );
+        return;
+      }
+      if (
+        addedMeds.length !== 0 ||
+        (addedMeds.length === 0 &&
+          (await confirmAlert({
+            content:
+              "It appears that you haven't utilized the forms on the right to add medications but instead entered free text. Please be aware that the prescription will be generated without recording any medications in the patient's electronic medical record. Continue ?",
+          })))
+      ) {
+        try {
+          //Create PDF and display print page
+          setProgress(true);
+          const element = printRef.current;
+          const canvas = await html2canvas(element, {
+            useCORS: true,
+          });
+          const dataURL = canvas.toDataURL("image/jpeg");
+          const pdf = new jsPDF({
+            unit: "cm",
+            compress: true,
+          });
+          pdf.addImage(dataURL, "JPEG", 0, 0, 21, 29.7);
+          const pdfDataURL = pdf.output("dataurl");
 
-        printJS(`${BASE_URL}${fileToUpload.data.path}`);
-
-        //Post the meds
-        if (addedMeds.length !== 0) {
-          for (let med of addedMeds) {
-            const datasToPost = {
-              ...med,
-              patient_id: patientId,
-              PrescriptionWrittenDate: Date.now(),
-              StartDate: Date.now(),
-              PrescribedBy: {
-                Name: {
-                  FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                  LastName: staffIdToLastName(clinic.staffInfos, user.id),
-                },
+          let fileToUpload = await axiosXanoStaff.post(
+            "/upload/attachment",
+            {
+              content: pdfDataURL,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.authToken}`,
               },
-              PrescriptionIdentifier: uniqueId,
-            };
-            if (datasToPost.hasOwnProperty("id")) delete datasToPost.id;
-            if (datasToPost.hasOwnProperty("temp_id"))
-              delete datasToPost.temp_id;
-            if (datasToPost.hasOwnProperty("staff_id"))
-              delete datasToPost.staff_id;
-            if (datasToPost.hasOwnProperty("date_created"))
-              delete datasToPost.date_created;
-            if (datasToPost.hasOwnProperty("created_by_id"))
-              delete datasToPost.created_by_id;
-            if (datasToPost.hasOwnProperty("updates"))
-              delete datasToPost.updates;
+            }
+          );
 
-            try {
-              await postPatientRecord(
-                "/medications",
-                user.id,
-                auth.authToken,
-                datasToPost,
-                socket,
-                "MEDICATIONS AND TREATMENTS"
-              );
-            } catch (err) {
-              toast.error(`Unable to add med to database: ${err.message}`);
+          printJS(`${BASE_URL}${fileToUpload.data.path}`);
+
+          //Post the meds
+          if (addedMeds.length !== 0) {
+            for (let med of addedMeds) {
+              const datasToPost = {
+                ...med,
+                patient_id: patientId,
+                PrescriptionWrittenDate: Date.now(),
+                StartDate: Date.now(),
+                PrescribedBy: {
+                  Name: {
+                    FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
+                    LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                  },
+                },
+                PrescriptionIdentifier: uniqueId,
+              };
+              if (datasToPost.hasOwnProperty("id")) delete datasToPost.id;
+              if (datasToPost.hasOwnProperty("temp_id"))
+                delete datasToPost.temp_id;
+              if (datasToPost.hasOwnProperty("staff_id"))
+                delete datasToPost.staff_id;
+              if (datasToPost.hasOwnProperty("date_created"))
+                delete datasToPost.date_created;
+              if (datasToPost.hasOwnProperty("created_by_id"))
+                delete datasToPost.created_by_id;
+              if (datasToPost.hasOwnProperty("updates"))
+                delete datasToPost.updates;
+
+              try {
+                await postPatientRecord(
+                  "/medications",
+                  user.id,
+                  auth.authToken,
+                  datasToPost,
+                  socket,
+                  "MEDICATIONS AND TREATMENTS"
+                );
+              } catch (err) {
+                toast.error(`Unable to add med to database: ${err.message}`);
+              }
             }
           }
-        }
 
-        //Create clinical note
-        const datasAttachment = [
-          {
-            file: fileToUpload.data,
-            alias: `Prescription (id:${uniqueId})`,
-            date_created: Date.now(),
-            created_by_id: user.id,
-            created_by_user_type: "staff",
-          },
-        ];
+          //Create clinical note
+          const datasAttachment = [
+            {
+              file: fileToUpload.data,
+              alias: `Prescription (id:${uniqueId})`,
+              date_created: Date.now(),
+              created_by_id: user.id,
+              created_by_user_type: "staff",
+            },
+          ];
 
-        const attach_ids = (
-          await postPatientRecord("/attachments", user.id, auth.authToken, {
-            attachments_array: datasAttachment,
-          })
-        ).data;
+          const attach_ids = (
+            await postPatientRecord("/attachments", user.id, auth.authToken, {
+              attachments_array: datasAttachment,
+            })
+          ).data;
 
-        await postPatientRecord(
-          "/clinical_notes",
-          user.id,
-          auth.authToken,
-          {
-            patient_id: demographicsInfos.patient_id,
-            subject: `Prescription (id:${uniqueId})`,
-            MyClinicalNotesContent: "See attachment",
-            ParticipatingProviders: [
-              {
-                Name: {
-                  FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                  LastName: staffIdToLastName(clinic.staffInfos, user.id),
+          await postPatientRecord(
+            "/clinical_notes",
+            user.id,
+            auth.authToken,
+            {
+              patient_id: demographicsInfos.patient_id,
+              subject: `Prescription (id:${uniqueId})`,
+              MyClinicalNotesContent: "See attachment",
+              ParticipatingProviders: [
+                {
+                  Name: {
+                    FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
+                    LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                  },
+                  OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+                  DateTimeNoteCreated: Date.now(),
                 },
-                OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
-                DateTimeNoteCreated: Date.now(),
-              },
-            ],
-            version_nbr: 1,
-            attachments_ids: attach_ids,
-          },
-          socket,
-          "CLINICAL NOTES"
-        );
-        setProgress(false);
-        setAddedMeds([]);
-        toast.success("Saved succesfully to clinical notes", {
-          containerId: "B",
-        });
-      } catch (err) {
-        setProgress(false);
-        toast.error(
-          `Error: unable to save prescription to clinical notes: ${err.message}`,
-          { containerId: "B" }
-        );
+              ],
+              version_nbr: 1,
+              attachments_ids: attach_ids,
+            },
+            socket,
+            "CLINICAL NOTES"
+          );
+          setProgress(false);
+          setAddedMeds([]);
+          setFinalInstructions("");
+          toast.success("Saved succesfully to clinical notes", {
+            containerId: "B",
+          });
+        } catch (err) {
+          setProgress(false);
+          toast.error(
+            `Error: unable to save prescription to clinical notes: ${err.message}`,
+            { containerId: "B" }
+          );
+        }
       }
+    };
+    if (printVisible) {
+      generatePrescription();
+      setPrintVisible(false);
     }
+  }, [
+    addedMeds,
+    auth.authToken,
+    body,
+    clinic.staffInfos,
+    demographicsInfos.patient_id,
+    patientId,
+    printVisible,
+    siteSelectedId,
+    socket,
+    uniqueId,
+    user.id,
+  ]);
+
+  const handleCancel = (e) => {
+    setPresVisible(false);
   };
 
   const handleChangeSite = async (e) => {
     setSiteSelectedId(parseInt(e.target.value));
     try {
       await axiosXanoStaff.put(
-        `/settings/${settings.id}`,
-        { ...settings, site_id: parseInt(e.target.value) },
+        `/settings/${user.settings.id}`,
+        { ...user.settings, site_id: parseInt(e.target.value) },
         {
           headers: {
             "Content-Type": "application/json",
@@ -269,6 +288,8 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
       console.log(err);
     }
   };
+
+  const handlePrint = () => setPrintVisible(true);
 
   const handleFax = async () => {
     // if (!siteSelectedId) {
@@ -410,15 +431,17 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           />
         </div>
       </div>
-      <PrescriptionPagePrint
-        printRef={printRef}
-        sites={sites}
-        siteSelectedId={siteSelectedId}
-        patientId={patientId}
-        demographicsInfos={demographicsInfos}
-        uniqueId={uniqueId}
-        finalInstructions={finalInstructions}
-      />
+      {printVisible && (
+        <PrescriptionPagePrint
+          printRef={printRef}
+          sites={sites}
+          siteSelectedId={siteSelectedId}
+          patientId={patientId}
+          demographicsInfos={demographicsInfos}
+          uniqueId={uniqueId}
+          finalInstructions={finalInstructions}
+        />
+      )}
       <ConfirmGlobal isPopUp={true} />
       <ToastContainer
         enableMultiContainer

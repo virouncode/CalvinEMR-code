@@ -20,7 +20,7 @@ const TempPwdForm = ({
         email: emailInput,
         password: tempPwd,
       });
-      setTempToken(response.data);
+      setTempToken(response.data.tempToken);
       setValidTempPwd(true);
     } catch (err) {}
   };

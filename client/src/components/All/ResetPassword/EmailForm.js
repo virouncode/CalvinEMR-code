@@ -21,7 +21,7 @@ const EmailForm = ({
     //verifier l'email
     try {
       const response = await axiosXanoReset.get(
-        `/${type}/email?email=${emailInput.toLowerCase()}`
+        `/${type}_with_email?email=${emailInput.toLowerCase()}`
       );
       const mail = response.data;
       if (!mail) {
@@ -33,19 +33,21 @@ const EmailForm = ({
           `/auth/${type}/request_temp_password?email=${emailInput.toLowerCase()}`
         )
       ).data;
+      console.log(user.temp_login);
 
       sendEmail(
-        user.email,
-        user.full_name,
+        // user.email,
+        "virounk@gmail.com",
+        user.full_name || "",
         "Temporary Password",
         "",
         "",
         `Please find your temporary password for your ${type} account: ${user.temp_login.temp_password}
 
-          This password will be active for 15 minutes, after this time, please make a new request.
-    
-    Best wishes,
-    Powered by Calvin EMR`
+            This password will be active for 15 minutes, after this time, please make a new request.
+
+      Best wishes,
+      Powered by Calvin EMR`
       );
       setRequestSent(true);
     } catch (err) {

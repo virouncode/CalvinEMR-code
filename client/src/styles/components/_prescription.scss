@@ -73,7 +73,6 @@
   &__patient-infos {
     font-size: 0.8rem;
     font-weight: bold;
-    width: 50%;
     padding: 5px 10px;
     p {
       padding: 0;
@@ -98,7 +97,6 @@
         border:none;
         outline: none;
         font-size: 0.85rem; 
-        white-space: pre;
         &:focus {
           outline: none;
         }
@@ -129,19 +127,5 @@
       }
     }
   }
-  &__add {
-    font-family:$font1, sans-serif;
-    font-size: 0.9rem;
-    width: 90%;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: flex-start;
-    label {
-      margin-right: 20px;
-    }
-    textarea {
-      width: 65%;
-      height: 200px;
-    }
-  }
+
 }

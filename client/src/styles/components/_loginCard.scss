@@ -1,99 +1,161 @@
-.login-card{ 
-    @include alignChidren("space-between");
-    border : solid 2px $blue;
-    border-radius: 20px;
-    width : 60%;
-    height : 80%;
-    overflow: hidden;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    .login-carousel {
-        background: rgb(156,185,228);
-        background: linear-gradient(140deg, $blue 0%, $blue2 100%);
-        height:100%;
-        width:50%;
-        padding : 20px;
+// .login-card{ 
+//     @include alignChidren("space-between");
+//     border : solid 2px $blue;
+//     border-radius: 20px;
+//     width : 60%;
+//     height : 80%;
+//     overflow: hidden;
+//     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+//     .login-carousel {
+//         background: rgb(156,185,228);
+//         background: linear-gradient(140deg, $blue 0%, $blue2 100%);
+//         height:100%;
+//         width:50%;
+//         padding : 20px;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         img {
+//             border-radius: 4px;
+//             overflow:hidden;
+//             width:60%;
+//         }
+//     }
+//     .login-container {
+//         height:100%;
+//         width:50%;
+//         background : $white;
+//         @include childCenter;
+//         .login-content {
+//             width:55%;
+//             .login-title {
+//                 font-size: 1.2rem;
+//                 text-align: center;
+//                 margin-bottom: 20px;
+//             }
+//             .login-errmsg {
+//                 font-size: 0.8rem;
+//                 color : red;
+//                 background-color:rgba(255, 0, 0, 0.403);
+//                 border-radius: 4px;
+//                 text-align: center;
+//             }
+//             .login-signup {
+//                 font-size: 0.7rem;
+//                 text-align: end;
+//                 margin: 5px 0;
+//                 padding : 0;
+//             }
+//             .login-forgot {
+//                 font-size: 0.7rem;
+//                 text-align: end;
+//                 margin-bottom: 5px;
+//                 padding : 0;
+//             }
+//             .login-form {
+//                 display: flex;
+//                 flex-direction: column;
+//                 justify-content: space-between;
+//                 width:100%;
+//                 label {
+//                     font-size:0.75rem;
+//                 }
+//                 &-row-radio {
+//                     margin: 30px auto 30px;
+//                     display: flex;
+//                     &-item {
+//                         display: flex;
+//                         align-items: center;
+//                         margin-right: 20px;
+//                         input{
+//                             width:10px;
+//                             margin: 0;
+//                             margin-right: 5px;
+//                         }
+//                     }
+//                 }
+//             }
+//             label{
+//                 font-size: 0.8rem;
+//                 color:$black;
+//                 font-weight: normal;
+//             }
+//             input {
+//                 font-size: 0.8rem;
+//                 width:100%;
+//                 margin:10px 0;
+//                 padding: 15px 10px;
+//             }
+//             button {
+//                 font-size: 0.9rem;
+//                 font-family: $font1, sans-serif;
+//                 padding: 5px 5px;
+//                 margin:10px 0;
+//                 border: solid 1px $grey;
+//                 color: $white;
+//             }
+//         }
+//     }  
+// }
+
+.login-newcard {
+    position: absolute;
+    top: 12%;
+    right: 8%;
+    &__title {
+        font-family: $font1;
+        font-style: italic;
+        font-weight: bold;
+        font-size: 2.5rem;
+        margin-bottom: 32px;
+    }
+}
+.login-form {
+    width:70%;
+    margin-left:auto;
+    &__row {
         display: flex;
         align-items: center;
-        justify-content: center;
-        img {
-            border-radius: 4px;
-            overflow:hidden;
-            width:60%;
+        justify-content: space-between;
+        margin: 0 auto 8px;
+        // width : 70%;
+        label {
+            font-weight: bold;
+        }
+        input {
+            background:transparent;
+            outline-color: $blue2;
         }
     }
-    .login-container {
-        height:100%;
-        width:50%;
-        background : $white;
-        @include childCenter;
-        .login-content {
-            width:55%;
-            .login-title {
-                font-size: 1.2rem;
-                text-align: center;
-                margin-bottom: 20px;
+    &__row-radio{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // width : 70%;
+        margin : 0 auto 40px;
+        &-item {
+            display: flex;
+            align-items: center;
+            input[type="radio"] {
+                margin-right: 8px;
+                opacity:none;
             }
-            .login-errmsg {
-                font-size: 0.8rem;
-                color : red;
-                background-color:rgba(255, 0, 0, 0.403);
-                border-radius: 4px;
-                text-align: center;
-            }
-            .login-signup {
-                font-size: 0.7rem;
-                text-align: end;
-                margin: 5px 0;
-                padding : 0;
-            }
-            .login-forgot {
-                font-size: 0.7rem;
-                text-align: end;
-                margin-bottom: 5px;
-                padding : 0;
-            }
-            .login-form {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                width:100%;
-                label {
-                    font-size:0.75rem;
-                }
-                &-row-radio {
-                    margin: 30px auto 30px;
-                    display: flex;
-                    &-item {
-                        display: flex;
-                        align-items: center;
-                        margin-right: 20px;
-                        input{
-                            width:10px;
-                            margin: 0;
-                            margin-right: 5px;
-                        }
-                    }
-                }
-            }
-            label{
-                font-size: 0.8rem;
-                color:$black;
-                font-weight: normal;
-            }
-            input {
-                font-size: 0.8rem;
-                width:100%;
-                margin:10px 0;
-                padding: 15px 10px;
-            }
-            button {
-                font-size: 0.9rem;
-                font-family: $font1, sans-serif;
-                padding: 5px 5px;
-                margin:10px 0;
-                border: solid 1px $grey;
-                color: $white;
+            label {
+                font-weight: bold;
             }
         }
-    }  
+    }
+    &__btn-container{
+        margin-top: 32px;
+        text-align: center;
+        margin-bottom: 8px;
+        button {
+            width: 100%;
+        }
+    }
+}
+.login-forgot {
+    font-size: 0.7rem;
+    text-align: end;
+    padding : 0;
 }

@@ -78,7 +78,7 @@ const ResetPasswordForm = ({
         }
       );
       setSuccesMsg(
-        "Your password has been reset successfully, we will redirect you to the login page"
+        "Your password has been reset successfully, you will be redirected to the login page"
       );
       setResetOk(true);
       setTimeout(() => navigate("/"), 5000);

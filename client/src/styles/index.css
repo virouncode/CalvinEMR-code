@@ -20,14 +20,15 @@
   font-weight: bold;
 }
 @font-face {
-  font-family: "Figtree";
-  src: url(../assets/fonts/Figtree-Regular.ttf);
-  font-weight: normal;
+  font-family: "Lato";
+  src: url(../assets/fonts/Lato-BoldItalic.ttf);
+  font-weight: bold;
+  font-style: italic;
 }
 @font-face {
-  font-family: "Figtree";
-  src: url(../assets/fonts/Figtree-Bold.ttf);
-  font-weight: bold;
+  font-family: "Lato";
+  src: url(../assets/fonts/Lato-Italic.ttf);
+  font-style: italic;
 }
 @font-face {
   font-family: "Inter";
@@ -56,7 +57,17 @@
 }
 
 .wrapper {
-  background: url("../assets/img/splash.jpg") center/cover;
+  background-color: #FEFEFE;
+  min-height: 100vh;
+  min-width: 1400px;
+  font-family: Lato, sans-serif;
+  color: #3D375A;
+  max-width: 100vw;
+  font-variant: normal;
+}
+
+.wrapper-login {
+  background: url("../assets/img/toronto.jpg") center/cover;
   min-height: 100vh;
   min-width: 1400px;
   font-family: Lato, sans-serif;
@@ -85,7 +96,7 @@ p {
 
 input[type=submit] {
   background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, rgb(156, 185, 228) 0%, rgb(99, 143, 210) 100%);
+  background: linear-gradient(139deg, #50B1C1 0%, #3f8d99 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color: #FEFEFE;
   border: none;
@@ -98,7 +109,7 @@ input[type=submit] {
   white-space: nowrap;
 }
 input[type=submit]:hover {
-  background: #327AE6;
+  background: #3f8d99;
 }
 input[type=submit]:disabled {
   opacity: 0.2;
@@ -110,7 +121,7 @@ input[type=submit]:active {
 
 button {
   background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, rgb(156, 185, 228) 0%, rgb(99, 143, 210) 100%);
+  background: linear-gradient(139deg, #50B1C1 0%, #3f8d99 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color: #FEFEFE;
   border: none;
@@ -123,7 +134,7 @@ button {
   white-space: nowrap;
 }
 button:hover {
-  background: #327AE6;
+  background: #3f8d99;
 }
 button:disabled {
   opacity: 0.2;
@@ -144,7 +155,7 @@ input {
   font-family: Lato, sans-serif, sans-serif;
 }
 input:focus {
-  outline: solid 2px #9CB9E4;
+  outline: solid 2px #50B1C1;
 }
 input:-moz-read-only {
   outline: none;
@@ -159,6 +170,7 @@ input[type=checkbox] {
 
 input[type=radio] {
   cursor: pointer;
+  accent-color: #3D375A;
 }
 
 textarea {
@@ -172,7 +184,7 @@ textarea {
   color: #3D375A;
 }
 textarea:focus {
-  outline: solid 2px #9CB9E4;
+  outline: solid 2px #50B1C1;
 }
 
 select {
@@ -186,7 +198,7 @@ select {
   font-family: Lato, sans-serif, sans-serif;
 }
 select:focus {
-  outline: solid 2px #9CB9E4;
+  outline: solid 2px #50B1C1;
 }
 
 @media print {
@@ -10781,7 +10793,7 @@ readers do not read off random characters that represent icons */
   z-index: 10;
   padding: 10px 15px;
   background: rgb(156, 185, 228);
-  background: linear-gradient(132deg, rgb(156, 185, 228) 0%, #638fd2 100%);
+  background: linear-gradient(132deg, #50B1C1 0%, #3f8d99 100%);
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   display: grid;
   grid-template-columns: 20% 60% 20%;
@@ -10817,12 +10829,12 @@ readers do not read off random characters that represent icons */
 }
 .header__link {
   color: #3D375A;
+  font-weight: bold;
 }
 .header__link:hover {
   color: #3D375A;
 }
 .header__link--active {
-  font-weight: bold;
   border: solid 1px #3D375A;
   padding: 5px 10px;
   border-radius: 40px;
@@ -10862,108 +10874,66 @@ readers do not read off random characters that represent icons */
   position: relative;
 }
 
-.login-card {
+.login-newcard {
+  position: absolute;
+  top: 12%;
+  right: 8%;
+}
+.login-newcard__title {
+  font-family: Lato, sans-serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-bottom: 32px;
+}
+
+.login-form {
+  width: 70%;
+  margin-left: auto;
+}
+.login-form__row {
   display: flex;
-  justify-content: "space-between";
   align-items: center;
-  border: solid 2px #9CB9E4;
-  border-radius: 20px;
-  width: 60%;
-  height: 80%;
-  overflow: hidden;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-}
-.login-card .login-carousel {
-  background: rgb(156, 185, 228);
-  background: linear-gradient(140deg, #9CB9E4 0%, #638fd2 100%);
-  height: 100%;
-  width: 50%;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.login-card .login-carousel img {
-  border-radius: 4px;
-  overflow: hidden;
-  width: 60%;
-}
-.login-card .login-container {
-  height: 100%;
-  width: 50%;
-  background: #FEFEFE;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.login-card .login-container .login-content {
-  width: 55%;
-}
-.login-card .login-container .login-content .login-title {
-  font-size: 1.2rem;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.login-card .login-container .login-content .login-errmsg {
-  font-size: 0.8rem;
-  color: red;
-  background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
-  text-align: center;
-}
-.login-card .login-container .login-content .login-signup {
-  font-size: 0.7rem;
-  text-align: end;
-  margin: 5px 0;
-  padding: 0;
-}
-.login-card .login-container .login-content .login-forgot {
-  font-size: 0.7rem;
-  text-align: end;
-  margin-bottom: 5px;
-  padding: 0;
-}
-.login-card .login-container .login-content .login-form {
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  width: 100%;
+  margin: 0 auto 8px;
 }
-.login-card .login-container .login-content .login-form label {
-  font-size: 0.75rem;
+.login-form__row label {
+  font-weight: bold;
 }
-.login-card .login-container .login-content .login-form-row-radio {
-  margin: 30px auto 30px;
-  display: flex;
+.login-form__row input {
+  background: transparent;
+  outline-color: #3f8d99;
 }
-.login-card .login-container .login-content .login-form-row-radio-item {
+.login-form__row-radio {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  justify-content: space-between;
+  margin: 0 auto 40px;
 }
-.login-card .login-container .login-content .login-form-row-radio-item input {
-  width: 10px;
-  margin: 0;
-  margin-right: 5px;
+.login-form__row-radio-item {
+  display: flex;
+  align-items: center;
 }
-.login-card .login-container .login-content label {
-  font-size: 0.8rem;
-  color: #3D375A;
-  font-weight: normal;
+.login-form__row-radio-item input[type=radio] {
+  margin-right: 8px;
+  opacity: none;
 }
-.login-card .login-container .login-content input {
-  font-size: 0.8rem;
+.login-form__row-radio-item label {
+  font-weight: bold;
+}
+.login-form__btn-container {
+  margin-top: 32px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.login-form__btn-container button {
   width: 100%;
-  margin: 10px 0;
-  padding: 15px 10px;
 }
-.login-card .login-container .login-content button {
-  font-size: 0.9rem;
-  font-family: Lato, sans-serif, sans-serif;
-  padding: 5px 5px;
-  margin: 10px 0;
-  border: solid 1px #cecdcd;
-  color: #FEFEFE;
+
+.login-forgot {
+  font-size: 0.7rem;
+  text-align: end;
+  padding: 0;
 }
 
 .calendar {
@@ -10990,7 +10960,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
-  background: #9CB9E4;
+  background: #50B1C1;
 }
 .calendar__left-bar {
   width: 14%;
@@ -11178,7 +11148,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
 }
 .flatpickr-weekdays, .flatpickr-weekday {
-  background-color: #9CB9E4 !important;
+  background-color: #50B1C1 !important;
 }
 .flatpickr-day {
   font-size: 0.7rem !important;
@@ -11209,7 +11179,7 @@ readers do not read off random characters that represent icons */
   line-height: 30px;
 }
 .flatpickr-month, .flatpickr-monthDropdown-months {
-  background-color: #9CB9E4 !important;
+  background-color: #50B1C1 !important;
 }
 
 .dayContainer {
@@ -11242,7 +11212,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
-  background: #9CB9E4;
+  background: #50B1C1;
   width: 100%;
 }
 
@@ -11617,7 +11587,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .patient-result table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .patient-result table thead th {
   text-decoration: underline;
@@ -11672,7 +11642,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .staff-result table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .staff-result table thead th {
   text-decoration: underline;
@@ -11734,7 +11704,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border-bottom: solid 0.5px grey;
 }
 .clinical-notes__toolbar {
@@ -11843,7 +11813,7 @@ readers do not read off random characters that represent icons */
 }
 .clinical-notes__card-header {
   padding: 5px 10px;
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .clinical-notes__card-header-row {
   display: flex;
@@ -12200,7 +12170,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pasthealth__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .pasthealth__table th {
@@ -12263,7 +12233,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .famhistory__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .famhistory__table thead th {
@@ -12326,7 +12296,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .risk__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .risk__table thead th {
@@ -12389,7 +12359,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .medications__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .medications__table th {
@@ -12609,7 +12579,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pharmacies__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .pharmacies__table thead th {
@@ -12664,7 +12634,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pharmacies-list__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .pharmacies-list__table th {
@@ -12734,7 +12704,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .doctors__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .doctors__table thead th {
@@ -12789,7 +12759,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .doctors-list__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .doctors-list__table th {
@@ -12920,7 +12890,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .reminders__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .reminders__table th {
@@ -12983,7 +12953,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pregnancies__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .pregnancies__table th {
@@ -13050,7 +13020,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .allergies__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .allergies__table th {
@@ -13110,7 +13080,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .alerts__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .alerts__table th {
@@ -13184,14 +13154,14 @@ readers do not read off random characters that represent icons */
   margin-bottom: 10px;
 }
 .recimmunizations__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .recimmunizations__table td {
   border: solid 1px #3D375A;
 }
 .recimmunizations__table th {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   padding: 5px;
   border: solid 1px #3D375A;
 }
@@ -13336,7 +13306,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .immunizations__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .immunizations__table th {
@@ -13402,7 +13372,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .reports__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .reports__table th {
@@ -13519,7 +13489,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .appointments__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .appointments__table th {
@@ -13584,7 +13554,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .problemlist__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .problemlist__table th {
@@ -13645,7 +13615,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   padding: 10px;
 }
 .confirm-dialog-header-logo img {
@@ -13740,7 +13710,6 @@ readers do not read off random characters that represent icons */
 .prescription__patient-infos {
   font-size: 0.8rem;
   font-weight: bold;
-  width: 50%;
   padding: 5px 10px;
 }
 .prescription__patient-infos p {
@@ -13767,7 +13736,6 @@ readers do not read off random characters that represent icons */
   border: none;
   outline: none;
   font-size: 0.85rem;
-  white-space: pre;
 }
 .prescription__body-content-textarea:focus {
   outline: none;
@@ -13793,21 +13761,6 @@ readers do not read off random characters that represent icons */
 }
 .prescription__sign-image img {
   height: 100%;
-}
-.prescription__add {
-  font-family: Lato, sans-serif, sans-serif;
-  font-size: 0.9rem;
-  width: 90%;
-  margin: 0 auto 10px;
-  display: flex;
-  align-items: flex-start;
-}
-.prescription__add label {
-  margin-right: 20px;
-}
-.prescription__add textarea {
-  width: 65%;
-  height: 200px;
 }
 
 .signup-patient__success {
@@ -13988,7 +13941,7 @@ readers do not read off random characters that represent icons */
 
 .myaccount-section__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: solid 2px #9CB9E4;
+  border: solid 2px #50B1C1;
   border-radius: 4px;
   background: #FEFEFE;
   padding: 20px;
@@ -14201,7 +14154,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #9CB9E4;
+  background: #50B1C1;
   border-radius: 4px 4px 0 0;
 }
 .messages-toolbar__title {
@@ -14420,7 +14373,7 @@ readers do not read off random characters that represent icons */
   border-bottom: solid 0.3px #cecdcd;
   height: 30px;
   font-size: 0.9rem;
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .messages-print__btn {
   display: flex;
@@ -14906,7 +14859,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .relationships__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .relationships__table th {
@@ -15068,7 +15021,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .eforms__table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .eforms__table th {
@@ -15405,7 +15358,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
 }
 .docmailbox__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
   border: solid 1px #3D375A;
 }
 .docmailbox__table th {
@@ -15601,7 +15554,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   width: 40%;
   margin: 0 auto 0;
-  border: solid 2px #9CB9E4;
+  border: solid 2px #50B1C1;
   border-radius: 4px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
@@ -15774,10 +15727,10 @@ readers do not read off random characters that represent icons */
   padding: 5px 10px;
 }
 .calvinai-discussion__send-btn {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .calvinai-discussion__send-btn:hover {
-  background-color: #638fd2;
+  background-color: #3f8d99;
 }
 .calvinai-discussion__input {
   height: 15%;
@@ -15831,7 +15784,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   flex-direction: column;
   background-color: #FEFEFE;
-  border: solid 2px #9CB9E4;
+  border: solid 2px #50B1C1;
   border-radius: 4px;
   padding: 20px;
 }
@@ -15853,10 +15806,10 @@ readers do not read off random characters that represent icons */
   padding: 5px 10px;
 }
 .calvinai-chat__send-btn {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .calvinai-chat__send-btn:hover {
-  background-color: #638fd2;
+  background-color: #3f8d99;
 }
 .calvinai-chat__input {
   height: 15%;
@@ -15934,7 +15887,7 @@ readers do not read off random characters that represent icons */
   width: 4em;
   height: 1em;
   padding: 10px;
-  background: #9CB9E4;
+  background: #50B1C1;
   border-radius: 20px;
   display: flex;
   justify-content: space-around;
@@ -16214,7 +16167,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .billing-table thead {
-  background: #9CB9E4;
+  background: #50B1C1;
   border: solid 1px #3D375A;
 }
 .billing-table th {
@@ -16306,7 +16259,7 @@ readers do not read off random characters that represent icons */
 }
 
 .reference {
-  border: solid 2px #9CB9E4;
+  border: solid 2px #50B1C1;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
   border-radius: 4px;
@@ -16852,7 +16805,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .patients-accounts__table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .patients-accounts__table thead th {
   text-decoration: underline;
@@ -16903,7 +16856,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .sites__table-container table thead {
-  background-color: #9CB9E4;
+  background-color: #50B1C1;
 }
 .sites__table-container table thead th {
   text-decoration: underline;

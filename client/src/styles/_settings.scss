@@ -20,15 +20,17 @@
     font-weight : bold;
 }
 @font-face {
-    font-family: "Figtree";
-    src: url(../assets/fonts/Figtree-Regular.ttf);
-    font-weight : normal;
+    font-family:"Lato";
+    src: url(../assets/fonts/Lato-BoldItalic.ttf);
+    font-weight : bold;
+    font-style: italic;
 }
 @font-face {
-    font-family:"Figtree";
-    src: url(../assets/fonts/Figtree-Bold.ttf);
-    font-weight : bold;
+    font-family:"Lato";
+    src: url(../assets/fonts/Lato-Italic.ttf);
+    font-style: italic;
 }
+
 @font-face {
     font-family: "Inter";
     src: url(../assets/fonts/Inter-Regular.woff);
@@ -60,8 +62,8 @@ $black : #3D375A;
 $grey : #cecdcd;
 $grey2 :rgb(163, 163, 163);
 $red : rgba(255, 0, 0, 0.536);
-$blue : #9CB9E4;
-$blue2 :#638fd2;
+$blue : #50B1C1;
+$blue2 :#3f8d99;
 $darkblue:#327AE6;
 $orange:#E6AA32;
 
@@ -164,7 +166,18 @@ $orange:#E6AA32;
 //     // user-select: none;
 // }
 .wrapper {  
-    background: url("../assets/img/splash.jpg") center/cover;
+    // background: url("../assets/img/splash.jpg") center/cover;
+    // background: url("../assets/img/toronto.jpg") center/cover;
+    background-color: $white;
+    min-height : 100vh;
+    min-width:1400px;
+    font-family: $font1;
+    color : $black;
+    max-width : 100vw;
+    font-variant: normal;
+}
+.wrapper-login {
+    background: url("../assets/img/toronto.jpg") center/cover;
     min-height : 100vh;
     min-width:1400px;
     font-family: $font1;
@@ -190,7 +203,7 @@ p {
 
 input[type="submit"] {
     background: rgb(156,185,228);
-    background: linear-gradient(139deg, rgba(156,185,228,1) 0%, rgba(99,143,210,1) 100%);
+    background: linear-gradient(139deg, $blue 0%, $blue2 100%);
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     color : $white;
     border: none;
@@ -202,7 +215,7 @@ input[type="submit"] {
     cursor: pointer;
     white-space: nowrap;
     &:hover{
-      background: $darkblue;
+      background: $blue2;
     }
     &:disabled {
       opacity:0.2;
@@ -214,7 +227,7 @@ input[type="submit"] {
 }
 button {
   background: rgb(156,185,228);
-  background: linear-gradient(139deg, rgba(156,185,228,1) 0%, rgba(99,143,210,1) 100%);
+  background: linear-gradient(139deg, $blue 0%, $blue2 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color : $white;
   border: none;
@@ -226,7 +239,7 @@ button {
   cursor: pointer;
   white-space: nowrap;
   &:hover{
-    background: $darkblue;
+    background: $blue2;
   }
   &:disabled {
     opacity:0.2;
@@ -262,6 +275,7 @@ input[type="checkbox"] {
 
 input[type="radio"] {
   cursor:pointer;
+  accent-color: $black;
 }
 
 textarea {
