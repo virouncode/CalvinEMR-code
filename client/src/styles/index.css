@@ -16538,6 +16538,33 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 
+.migration-import {
+  width: 97%;
+  margin: 32px auto 0;
+}
+.migration-import__viewer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.migration-import__viewer-xml {
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  overflow: scroll;
+  width: 49%;
+  height: 90vh;
+  padding: 16px;
+}
+.migration-import__viewer-js {
+  border: solid 1px #cecdcd;
+  border-radius: 4px;
+  overflow: scroll;
+  width: 49%;
+  height: 90vh;
+  padding: 16px;
+}
+
 .personalhistory-card {
   font-size: 0.8rem;
   width: 80%;

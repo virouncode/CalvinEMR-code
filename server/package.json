@@ -29,6 +29,7 @@
     "socket.io": "^4.7.2",
     "twilio": "^4.14.1",
     "xml-formatter": "^3.6.1",
+    "xml2js": "^0.6.2",
     "xmldom": "^0.6.0"
   },
   "devDependencies": {

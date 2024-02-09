@@ -8,6 +8,7 @@ import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToOHIP } from "../../../utils/staffIdToName";
 import { billingFormSchema } from "../../../validation/billingValidation";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import SelectSite from "../EventForm/SelectSite";
 import DiagnosisSearch from "./DiagnosisSearch";
 import HcnSearch from "./HcnSearch";
 import PatientNameSearch from "./PatientNameSearch";
@@ -25,12 +26,14 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
     diagnosis_code: "",
     billing_codes: [],
     patient_id: "",
+    site_id: user.settings.site_id,
   });
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
   const [hcnSearchVisible, setHcnSearchVisible] = useState(false);
   const [patientNameSearchVisible, setPatientNameSearchVisible] =
     useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
+  const [sites, setSites] = useState([]);
 
   useEffect(() => {
     if (date) {
@@ -45,6 +48,29 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
     }
   }, [date, formDatas, hcn, navigate, pid]);
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    const fetchSites = async () => {
+      try {
+        const response = await axiosXanoStaff.get("/sites", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          signal: abortController.signal,
+        });
+        if (abortController.signal.aborted) return;
+        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
+          containerId: "A",
+        });
+      }
+    };
+    fetchSites();
+    return () => abortController.abort();
+  }, [auth.authToken]);
+
   const handleChange = (e) => {
     setErrMsg("");
     const name = e.target.name;
@@ -54,7 +80,10 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
-
+  const handleChangeSite = (e) => {
+    const value = e.target.value;
+    setFormDatas({ ...formDatas, site_id: value });
+  };
   const handleClickDiagnosis = (e, code) => {
     setErrMsg("");
     setFormDatas({ ...formDatas, diagnosis_code: code });
@@ -176,6 +205,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
             )
           ).data.id,
           billing_code_id,
+          site_id: formDatas.site_id,
         };
         const response2 = await axiosXanoStaff.post("/billings", datasToPost, {
           headers: {
@@ -343,6 +373,13 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
             className="fa-solid fa-magnifying-glass"
             onClick={() => setPatientNameSearchVisible(true)}
           ></i>
+        </div>
+        <div className="billing-form__item">
+          <SelectSite
+            handleChangeSite={handleChangeSite}
+            sites={sites}
+            value={formDatas.site_id}
+          />
         </div>
       </div>
       <div className="billing-form__btns">

@@ -95,3 +95,31 @@
   }
 }
 
+.migration-import {
+  width : 97%;
+  margin : 32px auto 0;
+  &__viewer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    &-xml {
+      border: solid 1px $grey;
+      border-radius: 4px;
+      overflow:scroll;
+      width : 49%;
+      height: 90vh;
+      padding : 16px;
+    }
+    &-js {
+      border: solid 1px $grey;
+      border-radius: 4px;
+      overflow:scroll;
+      width : 49%;
+      height: 90vh;
+      padding : 16px;
+   
+    }
+  }
+}
+
