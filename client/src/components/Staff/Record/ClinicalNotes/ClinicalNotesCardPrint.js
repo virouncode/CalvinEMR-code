@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -10,7 +10,7 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {
-  const { auth, clinic } = useAuth();
+  const { auth, clinic } = useAuthContext();
   const [attachments, setAttachments] = useState([]);
 
   useEffect(() => {

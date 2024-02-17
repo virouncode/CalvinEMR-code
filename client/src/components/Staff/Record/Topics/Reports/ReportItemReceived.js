@@ -4,8 +4,9 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import { showDocument } from "../../../../../utils/showDocument";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -14,8 +15,8 @@ import {
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReportItemReceived = ({ item, showDocument, setErrMsgPost }) => {
-  const { auth, clinic, user, socket } = useAuth();
+const ReportItemReceived = ({ item, setErrMsgPost }) => {
+  const { auth, clinic, user, socket } = useAuthContext();
   const handleDeleteClick = async (e) => {
     setErrMsgPost("");
     if (

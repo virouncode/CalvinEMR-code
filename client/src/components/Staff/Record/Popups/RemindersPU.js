@@ -1,9 +1,9 @@
-import { CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ReminderForm from "../Topics/Reminders/ReminderForm";
 import ReminderItem from "../Topics/Reminders/ReminderItem";
 
@@ -47,7 +47,7 @@ const RemindersPU = ({
       </h1>
       {errMsgPost && <div className="reminders__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="reminders__err">{errMsg}</p>
       ) : (

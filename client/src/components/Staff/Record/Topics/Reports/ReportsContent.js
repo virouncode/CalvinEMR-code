@@ -1,7 +1,8 @@
-import { CircularProgress } from "@mui/material";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import { showDocument } from "../../../../../utils/showDocument";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const ReportsContent = ({ showDocument, datas, isLoading, errMsg }) => {
+const ReportsContent = ({ datas, isLoading, errMsg }) => {
   return !isLoading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
@@ -80,7 +81,7 @@ const ReportsContent = ({ showDocument, datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

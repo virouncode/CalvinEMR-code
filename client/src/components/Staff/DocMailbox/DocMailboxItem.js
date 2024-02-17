@@ -2,9 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
+import { showDocument } from "../../../utils/showDocument";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -12,14 +13,8 @@ import {
 } from "../../../utils/staffIdToName";
 import SignCell from "../Record/Topics/SignCell";
 
-const DocMailboxItem = ({
-  item,
-  showDocument,
-  setDocuments,
-  setForwardVisible,
-  forwardVisible,
-}) => {
-  const { clinic, auth, user, setUser, socket } = useAuth();
+const DocMailboxItem = ({ item, setForwardVisible, forwardVisible }) => {
+  const { clinic, auth, user, setUser, socket } = useAuthContext();
 
   const handleAcknowledge = async () => {
     try {

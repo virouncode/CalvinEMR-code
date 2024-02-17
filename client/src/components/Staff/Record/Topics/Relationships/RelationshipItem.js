@@ -7,18 +7,31 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuth from "../../../../../hooks/useAuth";
-import { patientIdToName } from "../../../../../utils/patientIdToName";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useFetchPatients from "../../../../../hooks/useFetchPatients";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { relations } from "../../../../../utils/relations";
 import { toInverseRelation } from "../../../../../utils/toInverseRelation";
+import { toPatientName } from "../../../../../utils/toPatientName";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import PatientsSelect from "../../../../All/UI/Lists/PatientsSelect";
 import RelationshipList from "../../../../All/UI/Lists/RelationshipList";
 import SignCell from "../SignCell";
 
-const RelationshipItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
-  //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+const RelationshipItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+  demographicsInfos,
+}) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 
@@ -26,6 +39,18 @@ const RelationshipItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
     setItemInfos(item);
   }, [item]);
 
+  //PATIENTS DATAS
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const { patients, loading, errMsg, hasMore } = useFetchPatients(
+    paging,
+    item.patient_id
+  );
+
+  //HANDLERS
   const handleChange = (e) => {
     setErrMsgPost("");
     let value = parseInt(e.target.value);
@@ -65,32 +90,53 @@ const RelationshipItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
         item.id,
         user.id,
         auth.authToken,
-        itemInfos,
-        socket,
-        "RELATIONSHIPS"
+        itemInfos
       );
-      //Post the inverse relation ship
+      //Emit socket apart to add relation_infos
+      socket.emit("message", {
+        route: "RELATIONSHIPS",
+        action: "update",
+        content: {
+          id: item.id,
+          data: {
+            ...itemInfos,
+            relation_infos: patients.find(
+              ({ patient_id }) => patient_id === itemInfos.relation_id
+            ),
+          },
+        },
+      });
+      //Post the inverse relationship
       let inverseRelationToPost = {};
       inverseRelationToPost.patient_id = itemInfos.relation_id;
-      const gender = clinic.demographicsInfos.filter(
-        ({ patient_id }) => patient_id === item.relation_id
-      )[0].gender_identification;
+      const gender = patients.find(
+        ({ patient_id }) => patient_id === itemInfos.relation_id
+      ).Gender;
       inverseRelationToPost.relationship = toInverseRelation(
         itemInfos.relationship,
         gender
       );
-      inverseRelationToPost.relation_id = itemInfos.patient_id;
+      inverseRelationToPost.relation_id = item.patient_id;
 
       if (inverseRelationToPost.relationship !== "Undefined") {
         await postPatientRecord(
           "/relationships",
           user.id,
           auth.authToken,
-          inverseRelationToPost,
-          socket,
-          "RELATIONSHIPS"
+          inverseRelationToPost
         );
       }
+      //Emit socket apart to add relation_infos
+      socket.emit("message", {
+        route: "RELATIONSHIPS",
+        action: "create",
+        content: {
+          data: {
+            ...inverseRelationToPost,
+            relation_infos: demographicsInfos,
+          },
+        },
+      });
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
@@ -171,6 +217,7 @@ const RelationshipItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
       <tr
         className="relationships-item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           <div className="relationships-item__relationship">
@@ -192,12 +239,16 @@ const RelationshipItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
               value={itemInfos.relation_id}
               name="relation_id"
               patientId={itemInfos.patient_id}
+              patients={patients}
+              hasMore={hasMore}
+              loading={loading}
+              setPaging={setPaging}
             />
           ) : (
-            patientIdToName(clinic.demographicsInfos, itemInfos.relation_id)
+            toPatientName(item.relation_infos)
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="relationships-item__btn-container">
             {!editVisible ? (

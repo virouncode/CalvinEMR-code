@@ -2,16 +2,27 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { provinceStateTerritoryCT } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { doctorSchema } from "../../../../../validation/doctorValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
-const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
+const FamilyDoctorForm = ({
+  editCounter,
+  setAddVisible,
+  setErrMsgPost,
+  errMsgPost,
+}) => {
   //HOOKS
-  const { auth, socket, user, clinic } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
   const [formDatas, setFormDatas] = useState({
     FirstName: "",
@@ -176,7 +187,8 @@ const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         socket,
         "FAMILY DOCTORS/SPECIALISTS"
       );
-      setAddNew(false);
+      editCounter.current -= 1;
+      setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
       toast.error(`Error: unable to add doctor: ${err.message}`, {
@@ -186,7 +198,7 @@ const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
   };
 
   const handleCancel = () => {
-    setAddNew(false);
+    setAddVisible(false);
   };
 
   return (
@@ -317,7 +329,7 @@ const FamilyDoctorForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

@@ -2,7 +2,7 @@
   border: solid 2px $blue;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
   display: grid;
   grid-template-columns: 33% 33% 33%;
@@ -45,7 +45,7 @@
     margin:0 auto 10px;
     color : red;
     background-color:rgba(255, 0, 0, 0.403);
-    border-radius: 4px;
+    border-radius: 6px;
     text-align: center;
   }
   &__form-row {

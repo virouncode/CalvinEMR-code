@@ -1,28 +1,35 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import useAuth from "../../../../hooks/useAuth";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import useIntersection from "../../../../hooks/useIntersection";
+import useUserContext from "../../../../hooks/useUserContext";
+import { toPatientName } from "../../../../utils/toPatientName";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import { default as MedicationItem } from "../Topics/Medications/MedicationItem";
 import PrescriptionPU from "./PrescriptionPU";
 
 const MedicationsPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
   demographicsInfos,
-  datas,
-  isLoading,
-  errMsg,
 }) => {
   //HOOKS
-  const { user, clinic } = useAuth();
+  const { user } = useUserContext();
   const editCounter = useRef(0);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [presVisible, setPresVisible] = useState(false);
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -48,13 +55,10 @@ const MedicationsPU = ({
         Patient medications and treatments <i className="fa-solid fa-pills"></i>
       </h1>
       {errMsgPost && <div className="medications__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="medications__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="medications__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="medications__table-container" ref={rootRef}>
             <table className="medications__table">
               <thead>
                 <tr>
@@ -64,40 +68,49 @@ const MedicationsPU = ({
                   <th>Dosage</th>
                   <th>Frequency</th>
                   <th>Duration</th>
-                  <th>Created By</th>
-                  <th>Created On</th>
+                  <th>Updated By</th>
+                  <th>Updated On</th>
                   <th style={{ textDecoration: "none", cursor: "default" }}>
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {datas
-                  .sort((a, b) => b.StartDate - a.StartDate)
-                  .map((medication) => (
-                    <MedicationItem
-                      item={medication}
-                      key={medication.id}
-                      patientId={patientId}
-                    />
-                  ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map(
+                      (item, index) =>
+                        (index =
+                          topicDatas.length - 1 ? (
+                            <MedicationItem
+                              item={item}
+                              key={item.id}
+                              patientId={patientId}
+                              lastItemRef={lastItemRef}
+                            />
+                          ) : (
+                            <MedicationItem
+                              item={item}
+                              key={item.id}
+                              patientId={patientId}
+                            />
+                          ))
+                    )
+                  : !loading && <EmptyRow colSpan="10" text="No medications" />}
+                {loading && <LoadingRow colSpan="10" />}
               </tbody>
             </table>
-            <div className="medications__btn-container">
-              {user.title === "Doctor" && (
-                <button onClick={handleNewRX}>New RX</button>
-              )}
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="medications__btn-container">
+            {user.title === "Doctor" && (
+              <button onClick={handleNewRX}>New RX</button>
+            )}
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       {presVisible && (
         <FakeWindow
-          title={`NEW PRESCRIPTION to ${patientIdToName(
-            clinic.demographicsInfos,
-            patientId
-          )}`}
+          title={`NEW PRESCRIPTION to ${toPatientName(demographicsInfos)}`}
           width={1400}
           height={750}
           x={(window.innerWidth - 1400) / 2}
@@ -109,26 +122,11 @@ const MedicationsPU = ({
             demographicsInfos={demographicsInfos}
             setPresVisible={setPresVisible}
             patientId={patientId}
-            resize={false}
           />
         </FakeWindow>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

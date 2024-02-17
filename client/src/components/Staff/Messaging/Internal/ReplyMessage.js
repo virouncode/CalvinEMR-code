@@ -1,10 +1,10 @@
-import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";
 
@@ -16,7 +16,7 @@ const ReplyMessage = ({
   patient,
   setCurrentMsgId,
 }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -215,9 +215,7 @@ const ReplyMessage = ({
           Send
         </button>
         <button onClick={handleCancel}>Cancel</button>
-        {isLoadingFile && (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
-        )}
+        {isLoadingFile && <CircularProgressMedium />}
       </div>
       <ToastContainer
         enableMultiContainer

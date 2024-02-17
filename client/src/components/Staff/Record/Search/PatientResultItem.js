@@ -8,9 +8,9 @@ import {
 import { toLocalDate } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
 
-const PatientResultItem = ({ patient }) => {
+const PatientResultItem = ({ patient, lastPatientRef }) => {
   return (
-    <tr>
+    <tr ref={lastPatientRef}>
       <td>
         <Tooltip title="Go to EMR" placement="top-start" arrow>
           <NavLink
@@ -18,14 +18,15 @@ const PatientResultItem = ({ patient }) => {
             className="record-link"
             target="_blank"
           >
-            {patient.Names.LegalName.LastName.Part}
+            {patient.Names.LegalName.LastName.Part || ""}
           </NavLink>
         </Tooltip>
       </td>
-      <td>{patient.Names.LegalName.FirstName.Part}</td>
-      <td>{patient.Names.LegalName.OtherName[0].Part}</td>
+      <td>{patient.Names.LegalName.FirstName.Part || ""}</td>
+      <td>{patient.Names.LegalName.OtherName?.[0]?.Part || ""}</td>
       <td>{toLocalDate(patient.DateOfBirth)}</td>
       <td>{getAge(toLocalDate(patient.DateOfBirth))}</td>
+      <td>{patient.ChartNumber}</td>
       <td>{patient.Email}</td>
       <td>
         {
@@ -52,7 +53,7 @@ const PatientResultItem = ({ patient }) => {
       <td>
         {
           patient.Address.find(({ _addressType }) => _addressType === "R")
-            .Structured.Line1
+            ?.Structured.Line1
         }
       </td>
       <td>

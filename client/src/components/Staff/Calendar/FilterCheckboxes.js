@@ -1,16 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
-import useAuth from "../../../hooks/useAuth";
+import React, { useEffect, useRef, useState } from "react";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../utils/categoryToTitle";
 import FilterCheckboxesSection from "./FilterCheckboxesSection";
 
-const FilterCheckboxes = ({
-  staffInfos,
-  hostsIds,
-  setHostsIds,
-  remainingStaff,
-}) => {
+const FilterCheckboxes = ({ hostsIds, setHostsIds, remainingStaff }) => {
   //======================= HOOKS ==========================//
-  const { user } = useAuth();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
   const [hostsCategories, sethostsCategories] = useState([]); //Array
   const [hostsDoctorsIds, setHostsDoctorsIds] = useState([]); //Array
   const [hostsNursesIds, setHostsNursesIds] = useState([]); //Array
@@ -417,7 +414,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Doctors"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -430,7 +426,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Nurses"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -443,7 +438,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Secretaries"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -456,7 +450,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Lab Techs"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -469,7 +462,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Ultra Sound Techs"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -482,7 +474,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Nutritionists"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -495,7 +486,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Psychologists"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -508,7 +498,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Physiotherapists"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -521,7 +510,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Medical Students"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -534,7 +522,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Nursing Students"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}
@@ -547,7 +534,6 @@ const FilterCheckboxes = ({
             isCategoryChecked={isCategoryChecked}
             handleCheckCategory={handleCheckCategory}
             category="Others"
-            staffInfos={staffInfos}
             isChecked={isChecked}
             handleCheck={handleCheck}
             remainingStaff={remainingStaff}

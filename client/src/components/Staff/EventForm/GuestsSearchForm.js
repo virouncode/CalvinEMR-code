@@ -1,12 +1,6 @@
 import React from "react";
 
-const GuestsSearchForm = ({ search, setSearch }) => {
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setSearch({ ...search, [name]: value });
-  };
-
+const GuestsSearchForm = ({ search, handleSearch }) => {
   return (
     <div className="search-bar">
       <p className="search-bar-title">Search by</p>
@@ -17,7 +11,7 @@ const GuestsSearchForm = ({ search, setSearch }) => {
             type="text"
             name="name"
             value={search.name}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>
@@ -27,7 +21,7 @@ const GuestsSearchForm = ({ search, setSearch }) => {
             type="text"
             name="email"
             value={search.email}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>
@@ -39,7 +33,7 @@ const GuestsSearchForm = ({ search, setSearch }) => {
             type="text"
             name="phone"
             value={search.phone}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>
@@ -49,29 +43,29 @@ const GuestsSearchForm = ({ search, setSearch }) => {
             type="text"
             name="birth"
             value={search.birth}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>
       </div>
       <div className="search-bar-row">
         <div className="search-bar-item">
-          <label>Chart #</label>
+          <label>Chart#</label>
           <input
             type="text"
             name="chart"
             value={search.chart}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>
         <div className="search-bar-item">
-          <label>Social Insurance #</label>
+          <label>Health Card#</label>
           <input
             type="text"
             name="health"
             value={search.health}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
           />
         </div>

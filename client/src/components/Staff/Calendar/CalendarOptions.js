@@ -3,13 +3,38 @@ import Availability from "./Availability";
 import FirstDaySelect from "./FirstDaySelect";
 import SlotSelect from "./SlotSelect";
 
-const CalendarOptions = ({ title }) => {
+const CalendarOptions = ({
+  scheduleMorning,
+  setScheduleMorning,
+  scheduleAfternoon,
+  setScheduleAfternoon,
+  unavailability,
+  setUnavailability,
+  availabilityId,
+  setAvailabilityId,
+  defaultDurationHours,
+  setDefaultDurationHours,
+  defaultDurationMin,
+  setDefaultDurationMin,
+}) => {
   return (
     <div className="calendar__options">
-      <p className="calendar__options-title">{title}</p>
       <SlotSelect />
       <FirstDaySelect />
-      <Availability />
+      <Availability
+        scheduleMorning={scheduleMorning}
+        setScheduleMorning={setScheduleMorning}
+        scheduleAfternoon={scheduleAfternoon}
+        setScheduleAfternoon={setScheduleAfternoon}
+        unavailability={unavailability}
+        setUnavailability={setUnavailability}
+        availabilityId={availabilityId}
+        setAvailabilityId={setAvailabilityId}
+        defaultDurationHours={defaultDurationHours}
+        setDefaultDurationHours={setDefaultDurationHours}
+        defaultDurationMin={defaultDurationMin}
+        setDefaultDurationMin={setDefaultDurationMin}
+      />
     </div>
   );
 };

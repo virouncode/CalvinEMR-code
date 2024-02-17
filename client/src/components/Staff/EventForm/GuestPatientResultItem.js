@@ -1,12 +1,21 @@
 import React from "react";
 
-const GuestPatientResultItem = ({ guest, handleAddGuest }) => {
+const GuestPatientResultItem = ({
+  guest,
+  handleAddGuest,
+  lastPatientRef = null,
+}) => {
   return (
-    <li key={guest.patient_id} data-key={guest.patient_id} data-type="patient">
+    <li
+      key={guest.patient_id}
+      data-key={guest.patient_id}
+      data-type="patient"
+      ref={lastPatientRef}
+    >
       <span>
         {guest.Names.LegalName.FirstName.Part}{" "}
-        {guest.Names.LegalName.OtherName.Part}{" "}
-        {guest.Names.LegalName.LastName.Part} (Patient)
+        {guest.Names.LegalName.OtherName?.[0]?.Part}{" "}
+        {guest.Names.LegalName.LastName.Part}
       </span>
       <i
         style={{ marginLeft: "10px", cursor: "pointer" }}

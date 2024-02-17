@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SignupStaffForm from "./SignupStaffForm";
@@ -11,7 +11,7 @@ const StaffAccounts = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState();
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   const [search, setSearch] = useState({
     name: "",
     email: "",

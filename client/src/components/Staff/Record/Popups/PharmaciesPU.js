@@ -1,24 +1,51 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { axiosXanoStaff } from "../../../../api/xanoStaff";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../hooks/useFetchDatas";
+import useTopicSocket from "../../../../hooks/useTopicSocket";
+import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import PharmaciesList from "../Topics/Pharmacies/PharmaciesList";
 import PharmacyCard from "../Topics/Pharmacies/PharmacyCard";
 
 const PharmaciesPU = ({
   patientId,
-  setPopUpVisible,
-  datas,
-  isLoading,
+  topicDatas,
+  loading,
   errMsg,
+  hasMore,
+  setPaging,
+  setPopUpVisible,
   demographicsInfos,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
-  const [errMsgPost, setErrMsgPost] = useState("");
+  const { auth } = useAuthContext();
+  const [
+    preferredPharmacy,
+    setPreferredPharmacy,
+    loadingPharmacy,
+    errPharmacy,
+  ] = useFetchDatas(
+    `/preferred_pharmacy_of_patient`,
+    axiosXanoStaff,
+    auth.authToken,
+    "patient_id",
+    patientId,
+    true
+  );
+
+  useTopicSocket(
+    "PREFERRED PHARMACY",
+    preferredPharmacy,
+    setPreferredPharmacy,
+    patientId
+  );
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -34,8 +61,6 @@ const PharmaciesPU = ({
   };
 
   const handleAdd = (e) => {
-    setErrMsgPost("");
-    editCounter.current += 1;
     setAddVisible((v) => !v);
   };
 
@@ -45,64 +70,43 @@ const PharmaciesPU = ({
         Patient preferred pharmacy{" "}
         <i className="fa-solid fa-prescription-bottle-medical"></i>
       </h1>
-      {errMsgPost && <div className="pharmacies__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="pharmacies__err">{errMsg}</p>
+      {loadingPharmacy ? (
+        <CircularProgressMedium />
+      ) : errPharmacy ? (
+        <p className="pharmacies__err">{errPharmacy}</p>
+      ) : !isObjectEmpty(preferredPharmacy) ? (
+        <PharmacyCard
+          pharmacy={preferredPharmacy}
+          demographicsInfos={demographicsInfos}
+        />
       ) : (
-        datas && (
-          <>
-            {datas.find(({ id }) => id === demographicsInfos.PreferredPharmacy)
-              ?.Name && (
-              <PharmacyCard
-                datas={datas}
-                demographicsInfos={demographicsInfos}
-              />
-            )}
-            <div className="pharmacies__btn-container">
-              {!datas.find(
-                ({ id }) => id === demographicsInfos.PreferredPharmacy
-              )?.Name ? (
-                <button onClick={handleAdd} disabled={addVisible}>
-                  Add a preferred pharmacy
-                </button>
-              ) : (
-                <button onClick={handleAdd} disabled={addVisible}>
-                  Change
-                </button>
-              )}
-              <button onClick={handleClose}>Close</button>
-            </div>
-            {addVisible && (
-              <PharmaciesList
-                datas={datas}
-                setErrMsgPost={setErrMsgPost}
-                patientId={patientId}
-                editCounter={editCounter}
-                demographicsInfos={demographicsInfos}
-                errMsgPost={errMsgPost}
-              />
-            )}
-          </>
-        )
+        <p>No preferred pharmacy</p>
+      )}
+      <div className="pharmacies__btn-container">
+        {isObjectEmpty(preferredPharmacy) ? (
+          <button onClick={handleAdd} disabled={addVisible}>
+            Add a preferred pharmacy
+          </button>
+        ) : (
+          <button onClick={handleAdd} disabled={addVisible}>
+            Change
+          </button>
+        )}
+        <button onClick={handleClose}>Close</button>
+      </div>
+      {addVisible && (
+        <PharmaciesList
+          topicDatas={topicDatas}
+          loading={loading}
+          errMsg={errMsg}
+          hasMore={hasMore}
+          setPaging={setPaging}
+          editCounter={editCounter}
+          demographicsInfos={demographicsInfos}
+        />
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

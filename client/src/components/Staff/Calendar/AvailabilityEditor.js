@@ -1,19 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { availabilitySchema } from "../../../validation/availabilityValidation";
 import DurationPicker from "../../All/UI/Pickers/DurationPicker";
 import AvailabilityItem from "./AvailabilityItem";
 
-const AvailabilityEditor = ({ setEditVisible }) => {
-  const { auth, user, socket } = useAuth();
-  const [scheduleMorning, setScheduleMorning] = useState(null);
-  const [scheduleAfternoon, setScheduleAfternoon] = useState(null);
-  const [unavailability, setUnavailability] = useState(null);
-  const [availabilityId, setAvailabilityId] = useState(0);
-  const [defaultDurationHours, setDefaultDurationHours] = useState(1);
-  const [defaultDurationMin, setDefaultDurationMin] = useState(0);
+const AvailabilityEditor = ({
+  setEditVisible,
+  scheduleMorning,
+  setScheduleMorning,
+  scheduleAfternoon,
+  setScheduleAfternoon,
+  unavailability,
+  setUnavailability,
+  availabilityId,
+  setAvailabilityId,
+  defaultDurationHours,
+  setDefaultDurationHours,
+  defaultDurationMin,
+  setDefaultDurationMin,
+}) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+
   const [errMsg, setErrMsg] = useState("");
   const days = [
     "monday",
@@ -25,45 +39,10 @@ const AvailabilityEditor = ({ setEditVisible }) => {
     "sunday",
   ];
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAvailability = async () => {
-      try {
-        const response = await axiosXanoStaff.get(
-          `/availability_for_staff?staff_id=${user.id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
-        if (abortController.signal.aborted) return;
-        setScheduleMorning(response.data.schedule_morning);
-        setScheduleAfternoon(response.data.schedule_afternoon);
-        setUnavailability(response.data.unavailability);
-        setAvailabilityId(response.data.id);
-        setDefaultDurationHours(response.data.default_duration_hours);
-        setDefaultDurationMin(response.data.default_duration_min);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(
-            `Error : unable fetch your availability: ${err.message}`,
-            {
-              containerId: "A",
-            }
-          );
-      }
-    };
-    fetchAvailability();
-    return () => abortController.abort();
-  }, [auth.authToken, user.id]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Validation
-    const datasToPost = {
+    const datasToPut = {
       staff_id: user.id,
       schedule_morning: scheduleMorning,
       schedule_afternoon: scheduleAfternoon,
@@ -73,23 +52,24 @@ const AvailabilityEditor = ({ setEditVisible }) => {
       date_created: Date.now(),
     };
     try {
-      await availabilitySchema.validate(datasToPost);
+      await availabilitySchema.validate(datasToPut);
     } catch (err) {
       setErrMsg(err.message);
       return;
     }
     //Submission
     try {
-      await axiosXanoStaff.put(`/availability/${availabilityId}`, datasToPost, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      await xanoPut(
+        "/availability",
+        axiosXanoStaff,
+        auth.authToken,
+        datasToPut,
+        availabilityId
+      );
       socket.emit("message", {
         route: "AVAILABILITY",
         action: "update",
-        content: { data: datasToPost },
+        content: { data: datasToPut },
       });
       setEditVisible(false);
       toast.success("Availability saved successfully", { containerId: "A" });

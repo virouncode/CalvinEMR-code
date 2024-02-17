@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import LinkForm from "./LinkForm";
 import MyLinkItem from "./MyLinkItem";
 
 const Reference = () => {
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [myLinks, setMyLinks] = useState(null);
   const [addVisible, setAddVisible] = useState(false);
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { sortByDate } from "../utils/socketHandlers/updates";
-import useAuth from "./useAuth";
+import useAuthContext from "./useAuthContext";
 
 const initialHttpState = {
   datas: null,
@@ -35,7 +35,7 @@ const httpReducer = (state, action) => {
 };
 
 export const useClinicalNotes = (url, patientId, order) => {
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const [httpState, dispatch] = useReducer(httpReducer, initialHttpState);
   const fetchRecord = useCallback(
     async (abortController, order) => {

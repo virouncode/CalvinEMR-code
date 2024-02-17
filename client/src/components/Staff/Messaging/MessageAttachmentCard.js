@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../api/fetchRecords";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -14,7 +14,7 @@ const MessageAttachmentCard = ({
   cardWidth = "30%",
   addable = true,
 }) => {
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const handleImgClick = () => {
     setPopUpVisible(true);

@@ -1,22 +1,21 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const FamHistoryContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const FamHistoryContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length >= 1 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.StartDate - a.StartDate)
-              .map((event) => (
-                <li key={event.id}>
-                  - {event.ProblemDiagnosisProcedureDescription} (
-                  {event.Relationship})
-                </li>
-              ))}
+            {topicDatas.slice(0, 4).map((event) => (
+              <li key={event.id}>
+                - {event.ProblemDiagnosisProcedureDescription} (
+                {event.Relationship})
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No family history"
@@ -24,7 +23,7 @@ const FamHistoryContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

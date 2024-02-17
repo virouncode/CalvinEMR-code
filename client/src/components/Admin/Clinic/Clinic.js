@@ -1,16 +1,16 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { onMessageSites } from "../../../utils/socketHandlers/onMessageSites";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SiteEdit from "./SiteEdit";
 import SiteForm from "./SiteForm";
 import SitesTable from "./SitesTable";
 
 const Clinic = () => {
-  const { auth, socket } = useAuth();
+  const { auth, socket } = useAuthContext();
   const [sites, setSites] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
@@ -72,7 +72,7 @@ const Clinic = () => {
       {!isLoading ? (
         sites && <SitesTable sites={sites} handleEditClick={handleEditClick} />
       ) : (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       )}
 
       {addVisible && (

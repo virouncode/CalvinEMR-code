@@ -4,7 +4,7 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { reminderSchema } from "../../../../../validation/reminderValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
@@ -12,7 +12,7 @@ import SignCell from "../SignCell";
 
 const ReminderItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 

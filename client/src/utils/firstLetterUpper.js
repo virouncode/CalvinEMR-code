@@ -1,7 +1,7 @@
 export const firstLetterUpper = (str) => {
   if (!str) return "";
-  if (str.includes(" ")) {
-    const names = str.split(" ");
+  if (str.includes(" ") || str.includes(",")) {
+    const names = str.split(/[\s,-]+/);
     const formattedName = names
       .map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
       .join(" ");

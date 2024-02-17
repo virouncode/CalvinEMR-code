@@ -1,83 +1,107 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import useIntersection from "../../../../../hooks/useIntersection";
+import EmptyRow from "../../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../../All/UI/Tables/LoadingRow";
 import FamilyDoctorForm from "./FamilyDoctorForm";
 import FamilyDoctorListItem from "./FamilyDoctorListItem";
 
 const FamilyDoctorsList = ({
-  handleAddItemClick,
   patientId,
-  setErrMsgPost,
-  errMsgPost,
   editCounter,
-  demographicsInfos,
-  datas,
+  doctors,
+  loadingDoctors,
+  errMsgDoctors,
+  hasMoreDoctors,
+  setPagingDoctors,
 }) => {
-  const [doctorsList, setDoctorsList] = useState(null);
-  const [addNew, setAddNew] = useState(false);
+  const [addVisible, setAddVisible] = useState(false);
+  const [errMsgPost, setErrMsgPost] = useState("");
 
-  useEffect(() => {
-    setDoctorsList(datas);
-  }, [datas]);
+  //INTERSECTION OBSERVER
+  const { rootRef: rootRefDoctors, lastItemRef: lastItemRefDoctors } =
+    useIntersection(loadingDoctors, hasMoreDoctors, setPagingDoctors);
 
   //HANDLERS
-  const handleAddNewClick = () => {
-    setAddNew((v) => !v);
+  const handleAdd = () => {
+    setErrMsgPost("");
+    editCounter.current += 1;
+    setAddVisible((v) => !v);
   };
 
   return (
     <>
       <div className="doctors-list__title">
         Doctors database
-        <button onClick={handleAddNewClick}>
-          Add a new doctor to database
-        </button>
+        <button onClick={handleAdd}>Add a new doctor to database</button>
       </div>
-      <table className="doctors-list__table">
-        <thead>
-          <tr>
-            <th>Last name</th>
-            <th>First name</th>
-            <th>Speciality</th>
-            <th>Licence#</th>
-            <th>OHIP#</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Province/State</th>
-            <th>Postal/Zip Code</th>
-            <th>Phone</th>
-            <th>Fax</th>
-            <th>Email</th>
-            <th>Updated By</th>
-            <th>Updated On</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {addNew && (
-            <FamilyDoctorForm
-              setDoctorsList={setDoctorsList}
-              setAddNew={setAddNew}
-              patientId={patientId}
-              setErrMsgPost={setErrMsgPost}
-              errMsgPost={errMsgPost}
-            />
-          )}
-          {doctorsList &&
-            doctorsList
-              // .filter(({ id }) => _.findIndex(datas, { id: id }) === -1)
-              .map((doctor) => (
-                <FamilyDoctorListItem
-                  key={doctor.id}
-                  item={doctor}
-                  handleAddItemClick={handleAddItemClick}
+      {errMsgPost && <div className="doctors-list__err">{errMsgPost}</div>}
+      {errMsgDoctors && (
+        <div className="doctors-list__err">{errMsgDoctors}</div>
+      )}
+      {!errMsgDoctors && (
+        <div className="doctors-list__table-container" ref={rootRefDoctors}>
+          <table className="doctors-list__table">
+            <thead>
+              <tr>
+                <th>Last name</th>
+                <th>First name</th>
+                <th>Speciality</th>
+                <th>Licence#</th>
+                <th>OHIP#</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Province/State</th>
+                <th>Postal/Zip Code</th>
+                <th>Phone</th>
+                <th>Fax</th>
+                <th>Email</th>
+                <th>Updated By</th>
+                <th>Updated On</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {addVisible && (
+                <FamilyDoctorForm
+                  editCounter={editCounter}
+                  setAddVisible={setAddVisible}
                   patientId={patientId}
                   setErrMsgPost={setErrMsgPost}
                   errMsgPost={errMsgPost}
-                  editCounter={editCounter}
-                  demographicsInfos={demographicsInfos}
                 />
-              ))}
-        </tbody>
-      </table>
+              )}
+              {doctors && doctors.length > 0
+                ? doctors.map((item, index) =>
+                    index === doctors.length - 1 ? (
+                      <FamilyDoctorListItem
+                        item={item}
+                        key={item.id}
+                        editCounter={editCounter}
+                        patientId={patientId}
+                        setErrMsgPost={setErrMsgPost}
+                        errMsgPost={errMsgPost}
+                        lastItemRef={lastItemRefDoctors}
+                      />
+                    ) : (
+                      <FamilyDoctorListItem
+                        item={item}
+                        key={item.id}
+                        editCounter={editCounter}
+                        patientId={patientId}
+                        setErrMsgPost={setErrMsgPost}
+                        errMsgPost={errMsgPost}
+                      />
+                    )
+                  )
+                : !loadingDoctors &&
+                  !addVisible && (
+                    <EmptyRow colSpan="15" text="Doctors database empty" />
+                  )}
+              {loadingDoctors && <LoadingRow colSpan="15" />}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 };

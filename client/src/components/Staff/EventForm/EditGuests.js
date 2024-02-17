@@ -1,39 +1,38 @@
-import React, { useEffect } from "react";
+import React from "react";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import GuestsList from "./GuestsList";
 import GuestsSearch from "./GuestsSearch";
 
 const EditGuests = ({
-  staffInfos,
-  demographicsInfos,
   tempFormDatas,
   setTempFormDatas,
   currentEvent,
   editable,
   hostId,
-  staffGuestsInfos,
-  setStaffGuestsInfos,
-  patientsGuestsInfos,
-  setPatientsGuestsInfos,
+  search,
+  setSearch,
+  paging,
+  setPaging,
+  loading,
+  err,
+  hasMore,
+  patientsDemographics,
 }) => {
   //=========================== HOOKS =========================//
+  const { staffInfos } = useStaffInfosContext();
 
-  useEffect(() => {
-    setStaffGuestsInfos(
-      staffInfos.filter(({ id }) => tempFormDatas.staff_guests_ids.includes(id))
-    );
-    setPatientsGuestsInfos(
-      demographicsInfos.filter(({ patient_id }) =>
-        tempFormDatas.patients_guests_ids.includes(patient_id)
-      )
-    );
-  }, [
-    demographicsInfos,
-    setPatientsGuestsInfos,
-    setStaffGuestsInfos,
-    staffInfos,
-    tempFormDatas.patients_guests_ids,
-    tempFormDatas.staff_guests_ids,
-  ]);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setSearch({ ...search, [name]: value });
+    setPaging({ ...paging, page: 1 });
+  };
+
+  // useEffect(() => {
+  //   setStaffGuestsInfos(
+  //     staffInfos.filter(({ id }) => tempFormDatas.staff_guests_ids.includes(id))
+  //   );
+  // }, [setStaffGuestsInfos, staffInfos, tempFormDatas.staff_guests_ids]);
 
   // //========================== EVENTS HANDLERS =======================//
 
@@ -44,7 +43,15 @@ const EditGuests = ({
     let patientsGuestsIdsUpdated = [...tempFormDatas.patients_guests_ids];
 
     if (guestType === "staff") {
-      staffGuestsIdsUpdated = [...staffGuestsIdsUpdated, guestId];
+      staffGuestsIdsUpdated = [
+        ...staffGuestsIdsUpdated,
+        {
+          staff_infos: {
+            id: guestId,
+            full_name: staffInfos.find(({ id }) => id === guestId).full_name,
+          },
+        },
+      ];
       setTempFormDatas({
         ...tempFormDatas,
         staff_guests_ids: staffGuestsIdsUpdated,
@@ -54,7 +61,17 @@ const EditGuests = ({
         staffGuestsIdsUpdated
       );
     } else {
-      patientsGuestsIdsUpdated = [...patientsGuestsIdsUpdated, guestId];
+      patientsGuestsIdsUpdated = [
+        ...patientsGuestsIdsUpdated,
+        {
+          patient_infos: {
+            patient_id: guestId,
+            Names: patientsDemographics.find(
+              ({ patient_id }) => patient_id === guestId
+            ).Names,
+          },
+        },
+      ];
       setTempFormDatas({
         ...tempFormDatas,
         patients_guests_ids: patientsGuestsIdsUpdated,
@@ -76,7 +93,7 @@ const EditGuests = ({
     if (parentType === "staff") {
       //i want to remove a staff guest
       staffGuestsIdsUpdated = staffGuestsIdsUpdated.filter(
-        (id) => id !== parentKey
+        ({ staff_infos }) => staff_infos.id !== parentKey
       );
       setTempFormDatas({
         ...tempFormDatas,
@@ -88,7 +105,7 @@ const EditGuests = ({
       );
     } else {
       patientsGuestsIdsUpdated = patientsGuestsIdsUpdated.filter(
-        (id) => id !== parentKey
+        ({ patient_infos }) => patient_infos.patient_id !== parentKey
       );
       setTempFormDatas({
         ...tempFormDatas,
@@ -106,20 +123,22 @@ const EditGuests = ({
       <div className="event-form__item event-form__item--guestlist">
         <label>Patients/Guests: </label>
         <GuestsList
-          patientsGuestsInfos={patientsGuestsInfos}
-          staffGuestsInfos={staffGuestsInfos}
+          patientsDemographics={patientsDemographics}
+          tempFormDatas={tempFormDatas}
           handleRemoveGuest={handleRemoveGuest}
         />
       </div>
       {editable && (
         <div className="event-form__item event-form__item--guestsearch">
           <GuestsSearch
-            handleAddGuest={handleAddGuest}
-            demographicsInfos={demographicsInfos}
-            staffInfos={staffInfos}
-            patientsGuestsInfos={patientsGuestsInfos}
-            staffGuestsInfos={staffGuestsInfos}
             hostId={hostId}
+            search={search}
+            handleSearch={handleSearch}
+            patientsDemographics={patientsDemographics}
+            handleAddGuest={handleAddGuest}
+            hasMore={hasMore}
+            setPaging={setPaging}
+            loading={loading}
           />
         </div>
       )}

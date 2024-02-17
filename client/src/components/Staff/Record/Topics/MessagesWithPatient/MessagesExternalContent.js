@@ -1,11 +1,11 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   const getSection = (message) => {
     if (message.deleted_by_staff_id === user.id) {
@@ -74,7 +74,7 @@ const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

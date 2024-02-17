@@ -1,39 +1,41 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const FamilyDoctorsContent = ({ datas, isLoading, errMsg, patientId }) => {
-  return !isLoading ? (
-    errMsg ? (
-      <p className="topic-content__err">{errMsg}</p>
+const FamilyDoctorsContent = ({
+  patientDoctors,
+  loadingPatientDoctors,
+  errMsgPatientDoctors,
+}) => {
+  return !loadingPatientDoctors ? (
+    errMsgPatientDoctors ? (
+      <p className="topic-content__err">{errMsgPatientDoctors}</p>
     ) : (
-      datas && (
-        <div className="topic-content">
-          {datas.length > 0
-            ? datas.filter(({ patients }) => patients.includes(patientId))
-                .length > 0
-              ? datas
-                  .filter(({ patients }) => patients.includes(patientId))
-                  .map((doctor) => (
-                    <span key={doctor.id}>
-                      Dr. {doctor.FirstName} {doctor.LastName},{" "}
-                      {doctor.speciality}, {doctor.Address.Structured.City},{" "}
-                      {toCodeTableName(
-                        provinceStateTerritoryCT,
-                        doctor.Address.Structured.CountrySubDivisionCode
-                      )}
-                    </span>
-                  ))
-              : "No family doctors"
-            : "No family doctors"}
-        </div>
-      )
+      <div className="topic-content">
+        {patientDoctors && patientDoctors.length > 0 ? (
+          <ul>
+            {patientDoctors.slice(0, 4).map((item) => (
+              <li key={item.id}>
+                - Dr. {item.FirstName} {item.LastName}, {item.speciality},{" "}
+                {item.Address.Structured.City},{" "}
+                {toCodeTableName(
+                  provinceStateTerritoryCT,
+                  item.Address.Structured.CountrySubDivisionCode
+                )}
+              </li>
+            ))}
+            <li>...</li>
+          </ul>
+        ) : (
+          "No family doctors"
+        )}
+      </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

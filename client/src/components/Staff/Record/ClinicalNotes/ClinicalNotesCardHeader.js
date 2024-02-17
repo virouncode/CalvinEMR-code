@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -25,7 +25,7 @@ const ClinicalNotesCardHeader = ({
   handleChange,
   handleTriangleProgressClick,
 }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
 
   return (
     <div className="clinical-notes__card-header">

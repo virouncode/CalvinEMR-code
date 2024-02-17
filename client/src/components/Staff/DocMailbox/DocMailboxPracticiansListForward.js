@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import DocMailboxPracticiansListItemForward from "./DocMailboxPracticiansListItemForward";
 
 const DocMailboxPracticiansListForward = ({
@@ -8,7 +8,7 @@ const DocMailboxPracticiansListForward = ({
   isPracticianChecked,
   categoryName,
 }) => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   return (
     <ul className="practicians-forward__category-list">
       {categoryInfos

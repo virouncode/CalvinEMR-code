@@ -2,16 +2,27 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { provinceStateTerritoryCT } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { pharmacySchema } from "../../../../../validation/pharmacyValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
-const PharmacyForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
+const PharmacyForm = ({
+  editCounter,
+  setAddVisible,
+  setErrMsgPost,
+  errMsgPost,
+}) => {
   //HOOKS
-  const { auth, clinic, user, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
   const [formDatas, setFormDatas] = useState({
     Name: "",
@@ -121,7 +132,6 @@ const PharmacyForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         break;
     }
   };
-
   const handleChangePostalOrZip = (e) => {
     setErrMsgPost("");
     setPostalOrZip(e.target.value);
@@ -139,18 +149,12 @@ const PharmacyForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
       },
     });
   };
-
-  const handleCancel = () => {
-    setAddNew(false);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
     const datasToPost = {
       ...formDatas,
     };
-
     datasToPost.Name = firstLetterUpper(datasToPost.Name);
     datasToPost.Address.Structured.Line1 = firstLetterUpper(
       datasToPost.Address.Structured.Line1
@@ -177,13 +181,18 @@ const PharmacyForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         socket,
         "PHARMACIES"
       );
-      setAddNew(false);
+      editCounter.current -= 1;
+      setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
       toast.error(`Error: unable to add pharmacy: ${err.message}`, {
         containerId: "B",
       });
     }
+  };
+
+  const handleCancel = () => {
+    setAddVisible(false);
   };
 
   return (
@@ -278,7 +287,7 @@ const PharmacyForm = ({ setAddNew, setErrMsgPost, errMsgPost }) => {
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

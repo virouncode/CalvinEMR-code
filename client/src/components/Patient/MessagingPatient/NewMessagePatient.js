@@ -1,14 +1,14 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
 import ContactsForPatient from "./ContactsForPatient";
 
 const NewMessagePatient = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientId, setRecipientId] = useState(0);
   const [subject, setSubject] = useState("");
@@ -221,9 +221,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
             Send
           </button>
           <button onClick={handleCancel}>Cancel</button>
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
       <ToastContainer

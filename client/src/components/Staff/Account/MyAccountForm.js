@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
 
@@ -13,7 +13,7 @@ const MyAccountForm = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);
-  const { auth, user, socket, clinic } = useAuth();
+  const { auth, user, socket, clinic } = useAuthContext();
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState("");
@@ -96,13 +96,13 @@ const MyAccountForm = () => {
       datasToPut.subspeciality = firstLetterUpper(datasToPut.subspeciality);
       datasToPut.date_created = Date.now();
 
-      if (
-        tempFormDatas.ohip_billing_nbr.toString().length !== 6 &&
-        tempFormDatas.title === "Doctor"
-      ) {
-        setErrMsg("OHIP billing number should be 6-digits");
-        return;
-      }
+      // if (
+      //   tempFormDatas.ohip_billing_nbr.toString().length !== 6 &&
+      //   tempFormDatas.title === "Doctor"
+      // ) {
+      //   setErrMsg("OHIP billing number should be 6-digits");
+      //   return;
+      // }
       datasToPut.ohip_billing_nbr = parseInt(datasToPut.ohip_billing_nbr);
       //Validation
       try {

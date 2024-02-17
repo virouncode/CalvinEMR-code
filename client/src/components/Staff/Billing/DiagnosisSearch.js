@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const DiagnosisSearch = ({ handleClickDiagnosis }) => {
   const [userInput, setUserInput] = useState("");
   const [results, setResults] = useState([]);
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
 
   useEffect(() => {
     const abortController = new AbortController();

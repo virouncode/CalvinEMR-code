@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import MessageExternal from "../../Staff/Messaging/External/MessageExternal";
 import MessagesExternalPrintPU from "../../Staff/Messaging/External/MessagesExternalPrintPU";
@@ -17,7 +17,7 @@ const MessagePatientDetail = ({
   setPopUpVisible,
 }) => {
   const [replyVisible, setReplyVisible] = useState(false);
-  const { auth, user, socket } = useAuth();
+  const { auth, user, socket } = useAuthContext();
   const [previousMsgs, setPreviousMsgs] = useState(null);
   const [attachments, setAttachments] = useState([]);
 

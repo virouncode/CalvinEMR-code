@@ -1,7 +1,6 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { useClinicalNotes } from "../../../../hooks/useClinicalNotes";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import { onMessageClinicalNotes } from "../../../../utils/socketHandlers/onMessageClinicalNotes";
@@ -10,6 +9,7 @@ import {
   isUpdated,
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
 import ClinicalNotesCard from "./ClinicalNotesCard";
 import ClinicalNotesForm from "./ClinicalNotesForm";
@@ -21,7 +21,7 @@ const ClinicalNotes = ({
   patientId,
 }) => {
   //hooks
-  const { user, socket, clinic } = useAuth();
+  const { user, socket, clinic } = useAuthContext();
   const [addVisible, setAddVisible] = useState(false);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [search, setSearch] = useState("");
@@ -172,7 +172,7 @@ const ClinicalNotes = ({
             )
           )
         ) : (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+          <CircularProgressMedium />
         )}
       </div>
     </div>

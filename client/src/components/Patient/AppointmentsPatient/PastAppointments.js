@@ -1,10 +1,10 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 
 const PastAppointments = ({ pastAppointments }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
 
   const optionsDate = {
     weekday: "short",
@@ -69,7 +69,7 @@ const PastAppointments = ({ pastAppointments }) => {
             <div>No past appointments</div>
           )
         ) : (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+          <CircularProgressMedium />
         )}
       </div>
     </div>

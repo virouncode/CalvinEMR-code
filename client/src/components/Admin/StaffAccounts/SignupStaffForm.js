@@ -1,17 +1,17 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { generatePassword } from "../../../utils/generatePassword";
 import { staffSchema } from "../../../validation/staffValidation";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupStaffForm = ({ setAddVisible }) => {
-  const { auth, socket, user } = useAuth();
+  const { auth, socket, user } = useAuthContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [formDatas, setFormDatas] = useState({
@@ -59,7 +59,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
     return () => abortController.abort();
   }, [auth.authToken]);
 
-  const handleChangeSite = (e) => {
+  const handleSiteChange = (e) => {
     setSiteId(parseInt(e.target.value));
   };
 
@@ -137,13 +137,13 @@ const SignupStaffForm = ({ setAddVisible }) => {
       setErrMsg(`Error: unable to sign up staff: ${err.message}`);
       return;
     }
-    if (
-      formDatas.ohip_billing_nbr.toString().length !== 6 &&
-      formDatas.title === "Doctor"
-    ) {
-      setErrMsg("OHIP Billing number should be 6-digits");
-      return;
-    }
+    // if (
+    //   formDatas.ohip_billing_nbr.toString().length !== 6 &&
+    //   formDatas.title === "Doctor"
+    // ) {
+    //   setErrMsg("OHIP Billing number should be 6-digits");
+    //   return;
+    // }
     if (!siteId) {
       setErrMsg("Clinic site field is required");
       return;
@@ -458,7 +458,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
           </div>
           <div className="signup-staff__row">
             <label>Clinic site*: </label>
-            <select value={siteId} onChange={handleChangeSite}>
+            <select value={siteId} onChange={handleSiteChange}>
               {sites.map((site) => (
                 <option value={site.id} name={site.id} key={site.id}>
                   {site.name}
@@ -535,7 +535,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
             <label>E-sign: </label>
             <div className="signup-staff__image">
               {isLoadingFile ? (
-                <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                <CircularProgressMedium />
               ) : formDatas.sign ? (
                 <img
                   src={`${BASE_URL}${formDatas.sign?.path}`}

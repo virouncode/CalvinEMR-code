@@ -5,7 +5,9 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { pharmacySchema } from "../../../../../validation/pharmacyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
@@ -13,15 +15,17 @@ import GenericList from "../../../../All/UI/Lists/GenericList";
 import SignCell from "../SignCell";
 
 const PharmacyItem = ({
-  patientId,
   item,
   editCounter,
-  errMsgPost,
   setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
   demographicsInfos,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   const [postalOrZip, setPostalOrZip] = useState("postal");
@@ -136,7 +140,6 @@ const PharmacyItem = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
-
     const datasToPut = {
       ...itemInfos,
     };
@@ -172,6 +175,15 @@ const PharmacyItem = ({
           socket,
           "PHARMACIES"
         );
+        socket.emit("message", {
+          route: "PREFERRED PHARMACY",
+          action: "update",
+          content: {
+            id: item.id,
+            data: datasToPut,
+          },
+          patientId: demographicsInfos.patient_id,
+        });
         editCounter.current -= 1;
         setEditVisible(false);
         toast.success("Saved successfully", { containerId: "B" });
@@ -192,22 +204,28 @@ const PharmacyItem = ({
     ) {
       //get patient demographics
       try {
-        const patientDemographics = clinic.demographicsInfos.find(
-          (patient) => patient.patient_id === parseInt(patientId)
-        );
         const newPatientDemographics = {
-          ...patientDemographics,
+          ...demographicsInfos,
           PreferredPharmacy: item.id,
         };
         await putPatientRecord(
           "/demographics",
-          patientDemographics.id,
+          demographicsInfos.id,
           user.id,
           auth.authToken,
           newPatientDemographics,
           socket,
           "DEMOGRAPHICS"
         );
+        socket.emit("message", {
+          route: "PREFERRED PHARMACY",
+          action: "refresh",
+          content: {
+            id: item.id,
+            data: item,
+          },
+          patientId: demographicsInfos.patient_id,
+        });
         toast.success("Updated patient preferred pharmacy", {
           containerId: "B",
         });
@@ -235,8 +253,9 @@ const PharmacyItem = ({
   return (
     itemInfos && (
       <tr
-        className="pharmacies__item"
+        className="pharmacies-list__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
@@ -362,7 +381,7 @@ const PharmacyItem = ({
             item.EmailAddress
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="pharmacies__item-btn-container">
             {!editVisible ? (

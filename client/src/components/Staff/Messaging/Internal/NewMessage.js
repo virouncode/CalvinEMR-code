@@ -1,18 +1,18 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { categoryToTitle } from "../../../../utils/categoryToTitle";
 import formatName from "../../../../utils/formatName";
 import { patientIdToName } from "../../../../utils/patientIdToName";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import Contacts from "../Contacts";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessage = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientsIds, setRecipientsIds] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -293,9 +293,7 @@ const NewMessage = ({ setNewVisible }) => {
             Send
           </button>
           <button onClick={handleCancel}>Cancel</button>
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
       <div className="new-message__patients">

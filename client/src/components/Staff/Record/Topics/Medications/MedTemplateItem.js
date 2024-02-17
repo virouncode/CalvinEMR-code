@@ -2,7 +2,7 @@ import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
@@ -15,7 +15,7 @@ const MedTemplateItem = ({
   setFinalInstructions,
   body,
 }) => {
-  const { auth, socket } = useAuth();
+  const { auth, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
 
   const handleClickMed = (e) => {

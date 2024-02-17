@@ -1,17 +1,17 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const StaffAccountEdit = ({ infos, setEditVisible }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
-  const { auth, socket } = useAuth();
+  const { auth, socket } = useAuthContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
 
@@ -88,13 +88,13 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
       datasToPut.subspeciality = firstLetterUpper(datasToPut.subspeciality);
       datasToPut.date_created = Date.now();
 
-      if (
-        formDatas.ohip_billing_nbr.toString().length !== 6 &&
-        formDatas.title === "Doctor"
-      ) {
-        setErrMsg("OHIP billing number should be 6-digits");
-        return;
-      }
+      // if (
+      //   formDatas.ohip_billing_nbr.toString().length !== 6 &&
+      //   formDatas.title === "Doctor"
+      // ) {
+      //   setErrMsg("OHIP billing number should be 6-digits");
+      //   return;
+      // }
       datasToPut.ohip_billing_nbr = parseInt(datasToPut.ohip_billing_nbr);
       //Validation
       try {
@@ -297,7 +297,7 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
               <label>E-sign: </label>
               <div className="staff-account__image">
                 {isLoadingFile ? (
-                  <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                  <CircularProgressMedium />
                 ) : formDatas.sign ? (
                   <img
                     src={`${BASE_URL}${formDatas.sign?.path}`}

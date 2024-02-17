@@ -1,24 +1,28 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FamilyDoctorItem from "../Topics/FamilyDoctors/FamilyDoctorItem";
 import FamilyDoctorsList from "../Topics/FamilyDoctors/FamilyDoctorsList";
 
 const FamilyDoctorsPU = ({
+  doctors,
+  loadingDoctors,
+  errMsgDoctors,
+  hasMoreDoctors,
+  setPagingDoctors,
+  patientDoctors,
+  loadingPatientDoctors,
+  errMsgPatientDoctors,
   patientId,
   setPopUpVisible,
-  datas,
-  isLoading,
-  errMsg,
-  demographicsInfos,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
-  const [errMsgPost, setErrMsgPost] = useState("");
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -32,28 +36,21 @@ const FamilyDoctorsPU = ({
       setPopUpVisible(false);
     }
   };
-
   const handleAdd = (e) => {
-    setErrMsgPost("");
-    editCounter.current += 1;
     setAddVisible((v) => !v);
   };
-
-  const handleAddItemClick = () => {};
 
   return (
     <>
       <h1 className="doctors__title">
         Patient family doctors <i className="fa-solid fa-user-doctor"></i>
       </h1>
-      {errMsgPost && <div className="doctors__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="doctors__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsgPatientDoctors && (
+        <div className="doctors__err">{errMsgPatientDoctors}</div>
+      )}
+      {!errMsgPatientDoctors && (
+        <>
+          <div className="doctors__table-container">
             <table className="doctors__table">
               <thead>
                 <tr>
@@ -73,53 +70,42 @@ const FamilyDoctorsPU = ({
                 </tr>
               </thead>
               <tbody>
-                {datas
-                  .filter((doctor) => doctor.patients.includes(patientId))
-                  .map((item) => (
-                    <FamilyDoctorItem
-                      item={item}
-                      patientId={patientId}
-                      key={item.id}
-                    />
-                  ))}
+                {patientDoctors && patientDoctors.length > 0
+                  ? patientDoctors.map((item, index) => (
+                      <FamilyDoctorItem
+                        item={item}
+                        patientId={patientId}
+                        key={item.id}
+                      />
+                    ))
+                  : !loadingPatientDoctors && (
+                      <EmptyRow colSpan="13" text="No family doctors" />
+                    )}
+                {loadingPatientDoctors && <LoadingRow colSpan="13" />}
               </tbody>
             </table>
-            <div className="doctors__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add a family doctor to patient
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-            {addVisible && (
-              <FamilyDoctorsList
-                handleAddItemClick={handleAddItemClick}
-                patientId={patientId}
-                setErrMsgPost={setErrMsgPost}
-                errMsgPost={errMsgPost}
-                editCounter={editCounter}
-                demographicsInfos={demographicsInfos}
-                datas={datas}
-              />
-            )}
-          </>
-        )
+          </div>
+          <div className="doctors__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add a family doctor to patient
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+          {addVisible && (
+            <FamilyDoctorsList
+              patientId={patientId}
+              editCounter={editCounter}
+              doctors={doctors}
+              loadingDoctors={loadingDoctors}
+              errMsgDoctors={errMsgDoctors}
+              hasMoreDoctors={hasMoreDoctors}
+              setPagingDoctors={setPagingDoctors}
+            />
+          )}
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

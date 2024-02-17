@@ -1,23 +1,30 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import FamHistoryEvent from "../Topics/Family/FamHistoryEvent";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FamHistoryForm from "../Topics/Family/FamHistoryForm";
+import FamHistoryItem from "../Topics/Family/FamHistoryItem";
 
 const FamHistoryPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
-  datas,
-  isLoading,
-  errMsg,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -44,13 +51,10 @@ const FamHistoryPU = ({
         Patient family history <i className="fa-solid fa-people-roof"></i>
       </h1>
       {errMsgPost && <div className="famhistory__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="famhistory__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="famhistory__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="famhistory__table-container" ref={rootRef}>
             <table className="famhistory__table">
               <thead>
                 <tr>
@@ -63,9 +67,7 @@ const FamHistoryPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -78,42 +80,45 @@ const FamHistoryPU = ({
                     errMsgPost={errMsgPost}
                   />
                 )}
-                {datas.map((event) => (
-                  <FamHistoryEvent
-                    event={event}
-                    key={event.id}
-                    editCounter={editCounter}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                  />
-                ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <FamHistoryItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          lastItemRef={lastItemRef}
+                        />
+                      ) : (
+                        <FamHistoryItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                        />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && (
+                      <EmptyRow colSpan="9" text="No family history" />
+                    )}
+                {loading && <LoadingRow colSpan="10" />}
               </tbody>
             </table>
-            <div className="famhistory__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="famhistory__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

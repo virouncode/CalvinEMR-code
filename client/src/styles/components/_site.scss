@@ -8,7 +8,7 @@
     margin-top: 50px;
     width: 97%;
     border: solid 1px $grey;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 20px;
   }
   &__err {
@@ -18,7 +18,7 @@
     margin:10px auto;
     color : red;
     background-color:rgba(255, 0, 0, 0.403);
-    border-radius: 4px;
+    border-radius: 6px;
     text-align: center;
   }
   &__row {

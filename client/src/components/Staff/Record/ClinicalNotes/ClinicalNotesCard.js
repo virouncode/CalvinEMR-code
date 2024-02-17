@@ -7,7 +7,7 @@ import {
   putPatientRecord,
 } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import { onMessageVersions } from "../../../../utils/socketHandlers/onMessageVersions";
@@ -44,7 +44,7 @@ const ClinicalNotesCard = ({
   const [attachments, setAttachments] = useState([]);
   const [bodyVisible, setBodyVisible] = useState(true);
   const bodyRef = useRef(null);
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [versionsLoading, setVersionsLoading] = useState(true);
   const [attachmentsLoading, setAttachmentsLoading] = useState(true);
@@ -233,7 +233,7 @@ const ClinicalNotesCard = ({
             patientId,
             auth.authToken
           )
-        ).filter(
+        ).data.filter(
           ({ clinical_note_id }) => clinical_note_id === clinicalNote.id
         );
 

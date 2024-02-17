@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import PatientsListItem from "../../Staff/Messaging/PatientsListItem";
@@ -12,7 +12,7 @@ const MigrationPatientsList = ({
   search,
   isLoading,
 }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   return (
     <ul className="migration-export__patients-list">
       <li className="patients__list-item">

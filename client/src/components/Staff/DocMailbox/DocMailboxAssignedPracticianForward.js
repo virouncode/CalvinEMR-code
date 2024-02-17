@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import DocMailboxPracticianCategoryForward from "./DocMailboxPracticianCategoryForward";
 
 const DocMailboxAssignedPracticianForward = ({
@@ -64,7 +64,7 @@ const DocMailboxAssignedPracticianForward = ({
     psychosInfos,
     othersInfos,
   ];
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const handleCancelForward = () => {
     setForwardVisible(false);
   };

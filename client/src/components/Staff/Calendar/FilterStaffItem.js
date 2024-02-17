@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import { categoryToTitle } from "../../../utils/categoryToTitle";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
@@ -10,7 +10,7 @@ const FilterStaffItem = ({
   handleCheck,
   color,
 }) => {
-  const { clinic } = useAuth();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <li>
       <input
@@ -23,7 +23,7 @@ const FilterStaffItem = ({
         style={{ accentColor: color }}
       />
       <label htmlFor={staff.id}>
-        {staffIdToTitleAndName(clinic.staffInfos, staff.id, true)}
+        {staffIdToTitleAndName(staffInfos, staff.id, true)}
       </label>
     </li>
   );

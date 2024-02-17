@@ -12,9 +12,7 @@ export const getLastUpdate = (data) => {
   if (!isUpdated(data)) {
     return;
   } else {
-    return data.updates
-      .sort((a, b) => b.date_updated - a.date_updated)
-      .slice(-1)[0];
+    return data.updates.sort((a, b) => b.date_updated - a.date_updated)[0];
   }
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import SignCellStaff from "../../Staff/Record/Topics/SignCellStaff";
 
 const StaffAccountItem = ({
@@ -13,7 +13,7 @@ const StaffAccountItem = ({
     setEditVisible((v) => !v);
   };
 
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
 
   return (
     <tr style={{ color: staff.account_status === "Suspended" && "red" }}>

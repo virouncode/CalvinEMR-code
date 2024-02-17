@@ -43,11 +43,10 @@ export const doctorSchema = yup.object({
       ),
   }),
   EmailAddress: yup.string().email("Invalid Email"),
-  ohip_billing_nbr: yup
-    .string()
-    .test(
-      "empty-or-6-chars",
-      "Invalid OHIP#, should be 6-digits",
-      (ohip) => !ohip || ohip.length === 6
-    ),
+  ohip_billing_nbr: yup.string(),
+  // .test(
+  //   "empty-or-6-chars",
+  //   "Invalid OHIP#, should be 6-digits",
+  //   (ohip) => !ohip || ohip.length === 6
+  // ),
 });

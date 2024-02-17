@@ -5,10 +5,14 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 
-const FamilyDoctorItem = ({ item, patientId }) => {
-  const { auth, user, socket } = useAuth();
+const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
 
   const handleRemoveFromPatient = async (e) => {
     try {
@@ -24,6 +28,14 @@ const FamilyDoctorItem = ({ item, patientId }) => {
         socket,
         "FAMILY DOCTORS/SPECIALISTS"
       );
+      socket.emit("message", {
+        route: "PATIENT DOCTORS",
+        action: "delete",
+        content: {
+          id: item.id,
+        },
+        patientId,
+      });
       toast.success("Removed successfully", { containerId: "B" });
     } catch (err) {
       toast.error(`Error: unable to update doctor:${err.message}`, {
@@ -33,7 +45,7 @@ const FamilyDoctorItem = ({ item, patientId }) => {
   };
 
   return (
-    <tr className="doctors__item">
+    <tr className="doctors__item" ref={lastItemRef}>
       <td>{item.LastName}</td>
       <td>{item.FirstName}</td>
       <td>{item.speciality}</td>

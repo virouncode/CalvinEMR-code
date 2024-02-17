@@ -1,8 +1,12 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getPatientRecord } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import { axiosXanoStaff } from "../../../../../api/xanoStaff";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { onMessageMedTemplate } from "../../../../../utils/socketHandlers/onMessageMedTemplate";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateForm from "./MedTemplateForm";
 import MedTemplateItem from "./MedTemplateItem";
@@ -17,10 +21,18 @@ const MedsTemplatesList = ({
   setFinalInstructions,
   body,
 }) => {
-  const { auth, socket, user } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [newVisible, setNewVisible] = useState(false);
-  const [allergies, setAllergies] = useState(null);
-  const [err, setErr] = useState("");
+  const [allergies, setAllergies, loadingAllergies, errAllergies] =
+    useFetchDatas(
+      "/allergies_for_patient",
+      axiosXanoStaff,
+      auth.authToken,
+      "patient_id",
+      patientId
+    );
   const [search, setSearch] = useState("");
   const [filteredMedsTemplates, setFilteredMedsTemplates] = useState(null);
 
@@ -34,28 +46,6 @@ const MedsTemplatesList = ({
       socket.off("message", onMessage);
     };
   }, [medsTemplates, setMedsTemplates, socket, user.id]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAllergies = async () => {
-      try {
-        const allergiesResults = await getPatientRecord(
-          "/allergies_for_patient",
-          patientId,
-          auth.authToken,
-          abortController
-        );
-        if (abortController.signal.aborted) return;
-        setAllergies(allergiesResults);
-      } catch (err) {
-        setErr(`Error: unable to fetch patient allergies: ${err.message}`);
-      }
-    };
-    fetchAllergies();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, patientId]);
 
   useEffect(() => {
     if (!medsTemplates) return;
@@ -88,23 +78,22 @@ const MedsTemplatesList = ({
           onChange={handleChange}
         />
       </div>
-      {err && <p>{err}</p>}
       <div className="med-templates__allergies">
         <i
           className="fa-solid fa-triangle-exclamation"
           style={{ color: "#ff0000" }}
         ></i>{" "}
         Patient Allergies :{" "}
-        {allergies ? (
-          allergies.length > 0 ? (
-            allergies
-              .map((allergy) => allergy.OffendingAgentDescription)
-              .join(", ")
-          ) : (
-            "No Allergies"
-          )
+        {loadingAllergies ? (
+          <CircularProgressSmall />
+        ) : errAllergies ? (
+          errAllergies
+        ) : allergies && allergies.length > 0 ? (
+          allergies
+            .map((allergy) => allergy.OffendingAgentDescription)
+            .join(", ")
         ) : (
-          <CircularProgress size="1rem" />
+          "No allergies"
         )}
       </div>
       <ul>
@@ -120,7 +109,7 @@ const MedsTemplatesList = ({
             />
           ))
         ) : (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+          <CircularProgressMedium />
         )}
       </ul>
       {newVisible && (

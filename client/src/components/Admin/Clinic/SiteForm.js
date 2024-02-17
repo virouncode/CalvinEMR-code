@@ -1,18 +1,18 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import { provinceStateTerritoryCT } from "../../../datas/codesTables";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { siteSchema } from "../../../validation/siteValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import RoomsForm from "./RoomsForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SiteForm = ({ setAddVisible }) => {
-  const { auth, socket, user } = useAuth();
+  const { auth, socket, user } = useAuthContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [err, setErr] = useState(false);
   const [formDatas, setFormDatas] = useState({
@@ -213,7 +213,7 @@ const SiteForm = ({ setAddVisible }) => {
             <label>Site logo: </label>
             <div className="site-form__row-image">
               {isLoadingFile ? (
-                <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                <CircularProgressMedium />
               ) : formDatas.logo ? (
                 <img
                   src={`${BASE_URL}${formDatas.logo?.path}`}

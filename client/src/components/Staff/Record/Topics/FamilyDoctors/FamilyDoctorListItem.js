@@ -5,7 +5,9 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { doctorSchema } from "../../../../../validation/doctorValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
@@ -13,14 +15,17 @@ import GenericList from "../../../../All/UI/Lists/GenericList";
 import SignCell from "../SignCell";
 
 const FamilyDoctorListItem = ({
-  patientId,
   item,
   editCounter,
+  patientId,
   setErrMsgPost,
   errMsgPost,
+  lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   const [postalOrZip, setPostalOrZip] = useState("postal");
@@ -158,7 +163,7 @@ const FamilyDoctorListItem = ({
 
     if (
       await confirmAlert({
-        content: `You're about to update ${itemInfos.DoctorName} infos, proceed ?`,
+        content: `You're about to update Dr. ${itemInfos.FirstName} ${itemInfos.LastName} infos, proceed ?`,
       })
     ) {
       try {
@@ -171,6 +176,15 @@ const FamilyDoctorListItem = ({
           socket,
           "FAMILY DOCTORS/SPECIALISTS"
         );
+        socket.emit("message", {
+          route: "PATIENT DOCTORS",
+          action: "update",
+          content: {
+            id: item.id,
+            data: datasToPut,
+          },
+          patientId,
+        });
         editCounter.current -= 1;
         setEditVisible(false);
         toast.success("Saved successfully", { containerId: "B" });
@@ -190,6 +204,7 @@ const FamilyDoctorListItem = ({
 
   const handleAddToPatient = async (e) => {
     try {
+      //Upadte doctors list
       await putPatientRecord(
         "/doctors",
         item.id,
@@ -202,6 +217,19 @@ const FamilyDoctorListItem = ({
         socket,
         "FAMILY DOCTORS/SPECIALISTS"
       );
+      //Add doctor to patient doctors
+      socket.emit("message", {
+        route: "PATIENT DOCTORS",
+        action: "create",
+        content: {
+          data: {
+            ...item,
+            patients: [...item.patients, patientId],
+          },
+        },
+        patientId,
+      });
+
       toast.success("Doctor added successfully", { containerId: "B" });
     } catch (err) {
       toast.error(`Error: unable to add doctor:${err.message}`, {
@@ -220,6 +248,7 @@ const FamilyDoctorListItem = ({
       <tr
         className="doctors__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
@@ -397,7 +426,7 @@ const FamilyDoctorListItem = ({
             item.EmailAddress
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="doctors__item-btn-container">
             {!editVisible ? (

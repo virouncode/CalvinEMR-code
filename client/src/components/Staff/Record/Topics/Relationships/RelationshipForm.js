@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-widgets/scss/styles.scss";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useFetchPatients from "../../../../../hooks/useFetchPatients";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { toInverseRelation } from "../../../../../utils/toInverseRelation";
@@ -16,13 +20,27 @@ const RelationshipForm = ({
   patientId,
   setErrMsgPost,
   errMsgPost,
+  demographicsInfos,
 }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     relationship: "",
     relation_id: "",
   });
+  //PATIENTS DATAS
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const { patients, loading, errMsg, hasMore } = useFetchPatients(
+    paging,
+    patientId
+  );
 
   //HANDLERS
   const handleChange = (e) => {
@@ -47,21 +65,32 @@ const RelationshipForm = ({
     //Submission
     try {
       //Post the relationship
-      await postPatientRecord(
+      const response = await postPatientRecord(
         "/relationships",
         user.id,
         auth.authToken,
-        formDatas,
-        socket,
-        "RELATIONSHIPS"
+        formDatas
       );
+      //Emit socket apart to add relation_infos
+      socket.emit("message", {
+        route: "RELATIONSHIPS",
+        action: "create",
+        content: {
+          data: {
+            ...response.data,
+            relation_infos: patients.find(
+              ({ patient_id }) => patient_id === formDatas.relation_id
+            ),
+          },
+        },
+      });
 
       //Post the inverse relationship
       let inverseRelationToPost = {};
       inverseRelationToPost.patient_id = formDatas.relation_id;
-      const gender = clinic.demographicsInfos.filter(
+      const gender = patients.find(
         ({ patient_id }) => patient_id === formDatas.relation_id
-      )[0].gender_identification;
+      ).Gender;
       inverseRelationToPost.relationship = toInverseRelation(
         formDatas.relationship,
         gender
@@ -69,14 +98,23 @@ const RelationshipForm = ({
       inverseRelationToPost.relation_id = formDatas.patient_id;
 
       if (inverseRelationToPost.relationship !== "Undefined") {
-        await postPatientRecord(
+        const response = await postPatientRecord(
           "/relationships",
           user.id,
           auth.authToken,
-          inverseRelationToPost,
-          socket,
-          "RELATIONSHIPS"
+          inverseRelationToPost
         );
+        //Emit socket apart to add relation_infos
+        socket.emit("message", {
+          route: "RELATIONSHIPS",
+          action: "create",
+          content: {
+            data: {
+              ...response.data,
+              relation_infos: demographicsInfos,
+            },
+          },
+        });
       }
       editCounter.current -= 1;
       setAddVisible(false);
@@ -114,10 +152,14 @@ const RelationshipForm = ({
           value={formDatas.relation_id}
           name="relation_id"
           patientId={patientId}
+          patients={patients}
+          hasMore={hasMore}
+          loading={loading}
+          setPaging={setPaging}
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const StaffAIChatAgreement = ({ setStart }) => {
-  const { user, auth } = useAuth();
+  const { user, auth } = useAuthContext();
   const [agreed, setAgreed] = useState(false);
   const handleCheck = (e) => {
     if (e.target.checked) setAgreed(true);

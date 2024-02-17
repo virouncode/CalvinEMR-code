@@ -2,7 +2,8 @@
     padding: 5px;
     background: $white;
     overflow-y: scroll;
-    max-height:600px;
+    max-height:500px;
+    border-radius: 0 0 6px 6px;
     &-section{
         margin-bottom:10px;
     }

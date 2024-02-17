@@ -3,22 +3,23 @@
 //no space : .class1.class2 apply to element that has both classes
 .calendar {
     z-index:1;
-    margin: 20px auto 20px;
+    margin: 10px auto 20px;
     width : 97%;
     min-height : 100%;
     display: flex;
     justify-content: space-between;
     &__options{
-        border : 1px solid rgb(218,218,218);
+        display: flex;
+        width: 97%;
+        margin: 0 auto;
         border-radius: 6px;
-        margin-top: 5px;
-        overflow: hidden;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border: solid 1px $grey;
         background: $white;
     }
     &__options-title {
         @include childCenter;
-        border-radius: 4px 4px 0 0;
+        border-radius: 6px 4px 0 0;
         font-size : 0.85rem;
         height: 50px;
         color : $black;
@@ -28,7 +29,7 @@
         width : 14%;
         .calendar__shortcutpickr {
             border-bottom : 1px solid rgb(218,218,218);
-            border-radius: 4px;      
+            border-radius: 6px;      
             box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
             .flatpickr{
                 &-calendar.animate.inline {
@@ -81,7 +82,7 @@
         position:relative;
         background:$white;
         border: solid 1px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 10px;
         //fullcalendar
         .fc .fc-timegrid-col.fc-day-today {

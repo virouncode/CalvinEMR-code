@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdListToTitleAndName } from "../../../../utils/staffIdListToTitleAndName";
@@ -16,7 +16,7 @@ const MessageThumbnail = ({
   msgsSelectedIds,
   section,
 }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const patient = clinic.demographicsInfos.find(
     ({ patient_id }) => patient_id === message.related_patient_id
   );

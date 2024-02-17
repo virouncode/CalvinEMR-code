@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const MessagesPatientLeftBar = ({
   section,
@@ -20,7 +20,7 @@ const MessagesPatientLeftBar = ({
       ? "messages-content__category messages-content__category--active"
       : "messages-content__category";
 
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   return (
     <div className="messages-content__leftbar">

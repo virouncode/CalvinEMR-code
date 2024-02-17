@@ -1,11 +1,11 @@
-import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import useUserContext from "../../../../../hooks/useUserContext";
 import fillPdfForm from "../../../../../utils/fillPdfForm";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import EformsList from "../../../../All/UI/Lists/EformsList";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const Eform = ({
   patientId,
@@ -13,55 +13,30 @@ const Eform = ({
   handleAddToRecord,
   isLoadingFile,
   setIsLoadingFile,
+  demographicsInfos,
 }) => {
-  const { auth, user, clinic } = useAuth();
-  const [eForms, setEforms] = useState([]);
+  console.log("demographics", demographicsInfos);
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const [eFormsBlank, setEformsBlank] = useFetchDatas(
+    "/eforms_blank",
+    axiosXanoStaff,
+    auth.authToken
+  );
   const [formSelectedId, setFormSelectedId] = useState("");
   const [formURL, setFormURL] = useState("");
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchEforms = async () => {
-      try {
-        const response = await axiosXanoStaff.get("/eforms_blank", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setEforms(response.data);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch eforms: ${err.message}`, {
-            containerId: "B",
-          });
-      }
-    };
-    fetchEforms();
-    return () => abortController.abort();
-  }, [auth.authToken]);
 
   const handleFormChange = async (e) => {
     setFormSelectedId(e.target.value);
     setIsLoadingFile(true);
+    const url = eFormsBlank.find(({ id }) => id === parseInt(e.target.value))
+      ?.file?.url;
+
     try {
-      setFormURL(
-        await fillPdfForm(
-          eForms.find(({ id }) => id === parseInt(e.target.value)).file.url,
-          clinic.demographicsInfos,
-          patientId,
-          {
-            full_name: staffIdToTitleAndName(clinic.staffInfos, user.id),
-            sign: user.sign,
-            phone: clinic.staffInfos.find(({ id }) => id === user.id)
-              .cell_phone,
-          }
-        )
-      );
+      setFormURL(await fillPdfForm(url, demographicsInfos, user));
       setIsLoadingFile(false);
     } catch (err) {
+      setIsLoadingFile(false);
       alert(`Can't fill in e-form: ${err.message}`);
     }
   };
@@ -80,7 +55,7 @@ const Eform = ({
               <EformsList
                 handleFormChange={handleFormChange}
                 formSelectedId={formSelectedId}
-                eforms={eForms}
+                eFormsBlank={eFormsBlank}
               />{" "}
             </li>
             <li>2. Fill-in the form with relevant informations</li>
@@ -101,9 +76,7 @@ const Eform = ({
                   <button onClick={handleAddToRecord} disabled={isLoadingFile}>
                     Add To Record
                   </button>{" "}
-                  {isLoadingFile && (
-                    <CircularProgress size="1rem" style={{ margin: "5px" }} />
-                  )}
+                  {isLoadingFile && <CircularProgressMedium />}
                   button and upload the file you just saved
                 </li>
               </ul>
@@ -113,7 +86,6 @@ const Eform = ({
             Close
           </button>
         </div>
-
         <div className="eforms__content">
           {formURL && (
             <iframe src={formURL} title="form" width="800" height="1000" />

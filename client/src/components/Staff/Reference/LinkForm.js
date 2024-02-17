@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkForm = ({ myLinks, setAddVisible }) => {
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [newLink, setNewLink] = useState({ name: "", url: "" });
   const [errMsg, setErrMsg] = useState("");
   const handleChange = (e) => {

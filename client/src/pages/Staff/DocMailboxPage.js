@@ -2,10 +2,10 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import DocMailbox from "../../components/Staff/DocMailbox/DocMailbox";
 import DocMailboxSecretary from "../../components/Staff/DocMailbox/DocMailboxSecretary";
-import useAuth from "../../hooks/useAuth";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const DocMailboxPage = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   return (
     <>
       <Helmet>

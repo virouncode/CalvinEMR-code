@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { sendMsgToOpenAI } from "../../../../../api/openapi";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import AddAIAttachments from "./AddAIAttachments";
 import AddAIReports from "./AddAIReports";
 
@@ -16,7 +16,7 @@ const CalvinAIPrompt = ({
   initialBody,
   demographicsInfos,
 }) => {
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const [isLoadingAttachmentText, setIsLoadingAttachmentText] = useState(false);
   const [isLoadingDocumentText, setIsLoadingDocumentText] = useState(false);
   const [reports, setReports] = useState([]);

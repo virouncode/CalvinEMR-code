@@ -1,10 +1,10 @@
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";
 
 const MessagesPrintPU = ({ message, previousMsgs, attachments }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   const handleClickPrint = (e) => {
     e.nativeEvent.view.print();
   };

@@ -33,7 +33,6 @@ const EmailForm = ({
           `/auth/${type}/request_temp_password?email=${emailInput.toLowerCase()}`
         )
       ).data;
-      console.log(user.temp_login);
 
       sendEmail(
         // user.email,

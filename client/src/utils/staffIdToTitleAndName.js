@@ -13,7 +13,7 @@ export const staffIdToTitleAndName = (staffInfos, staffId, format = false) => {
     return (
       (staffInfos.find(({ id }) => id === staffId)?.title === "Doctor"
         ? "Dr. "
-        : "") + staffInfos.find(({ id }) => id === staffId)?.full_name
+        : "") + (staffInfos.find(({ id }) => id === staffId)?.full_name || "")
     );
   }
 };

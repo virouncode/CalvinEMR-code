@@ -1,14 +1,11 @@
 .calendar {
     &__slot-select {
         padding : 5px;
+        margin-right: 32px;
         label {
             font-size : 0.8rem;
             font-weight: bold;
-            display: block;
-            margin-right : 5px;
-            @media (max-width: 1250px){
-                font-size : 0.7rem;
-            }
+            margin-right : 8px;
         }
         select {
             font-size : 0.7rem;

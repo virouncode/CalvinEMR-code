@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 
 const MessagesPatientToolBar = ({
@@ -19,7 +19,7 @@ const MessagesPatientToolBar = ({
   selectAllVisible,
   setSelectAllVisible,
 }) => {
-  const { auth, user, socket } = useAuth();
+  const { auth, user, socket } = useAuthContext();
   const handleChange = (e) => {
     setSearch(e.target.value);
   };

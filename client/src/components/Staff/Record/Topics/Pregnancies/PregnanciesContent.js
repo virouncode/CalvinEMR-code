@@ -1,6 +1,6 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const PregnanciesContent = ({ datas, isLoading, errMsg }) => {
   return !isLoading ? (
@@ -25,7 +25,7 @@ const PregnanciesContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

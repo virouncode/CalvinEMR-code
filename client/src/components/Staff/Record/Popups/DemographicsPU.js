@@ -1,6 +1,6 @@
-import { CircularProgress, Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { Tooltip } from "@mui/material";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import {
@@ -14,25 +14,31 @@ import {
   terminationReasonCT,
   toCodeTableName,
 } from "../../../../datas/codesTables";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { emergencyContactCaption } from "../../../../utils/emergencyContactCaption";
 import { enrolmentCaption } from "../../../../utils/enrolmentCaption";
 import { firstLetterUpper } from "../../../../utils/firstLetterUpper";
 import { toLocalDate, toLocalDateAndTime } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import { primaryPhysicianCaption } from "../../../../utils/primaryPhysicianCaption";
 import {
   getLastUpdate,
   isUpdated,
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import { demographicsSchema } from "../../../../validation/demographicsValidation";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../All/UI/Lists/GenericList";
 import StaffList from "../../../All/UI/Lists/StaffList";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import EnrolmentHistory from "../Topics/Demographics/EnrolmentHistory";
 import NewEnrolmentForm from "../Topics/Demographics/NewEnrolmentForm";
@@ -42,570 +48,139 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
   //============================= STATES ==============================//
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
-  const [formDatas, setFormDatas] = useState(null);
-  const { auth, user, clinic, socket } = useAuth();
-  const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const [postalOrZip, setPostalOrZip] = useState(
-    demographicsInfos.Address.find(({ _addressType }) => _addressType === "R")
-      .Structured.PostalZipCode.PostalCode
-      ? "postal"
-      : "zip"
+  const residencialAddress = demographicsInfos.Address?.find(
+    ({ _addressType }) => _addressType === "R"
+  )?.Structured;
+  const lastEnrolment = isObjectEmpty(
+    demographicsInfos.Enrolment?.EnrolmentHistory?.sort(
+      (a, b) => a.EnrollmentDate - b.EnrollmentDate
+    ).slice(-1)[0]
+  )
+    ? {}
+    : demographicsInfos.Enrolment?.EnrolmentHistory?.sort(
+        (a, b) => a.EnrollmentDate - b.EnrollmentDate
+      ).slice(-1)[0];
+  const emergencyContact = demographicsInfos.Contact?.find(
+    (contact) => contact.ContactPurpose?.PurposeAsEnum === "EC"
   );
-  const emergencyContact = demographicsInfos.Contact.length
-    ? demographicsInfos.Contact.find(
-        (contact) => contact.ContactPurpose?.PurposeAsEnum === "EC"
-      )
-    : {};
-
-  const [lastEnrolment, setLastEnrolment] = useState({});
+  const [formDatas, setFormDatas] = useState({
+    prefix: demographicsInfos.Names?.NamePrefix || "",
+    firstName: demographicsInfos.Names?.LegalName?.FirstName?.Part || "",
+    middleName: demographicsInfos.Names?.LegalName?.OtherName?.[0]?.Part || "",
+    lastName: demographicsInfos.Names?.LegalName?.LastName?.Part || "",
+    suffix: demographicsInfos.Names?.LastNameSuffix || "",
+    nickName:
+      demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0].Part || "",
+    chart: demographicsInfos.ChartNumber || "",
+    dob: toLocalDate(demographicsInfos.DateOfBirth),
+    age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),
+    healthNbr: demographicsInfos.HealthCard?.Number || "",
+    healthVersion: demographicsInfos.HealthCard?.Version || "",
+    healthExpiry: toLocalDate(demographicsInfos.HealthCard?.ExpiryDate),
+    healthProvince: demographicsInfos.HealthCard?.ProvinceCode || "",
+    gender: demographicsInfos.Gender || "",
+    sin: demographicsInfos.SIN || "",
+    email: demographicsInfos.Email || "",
+    cellphone:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "C"
+      )?.phoneNumber || "",
+    cellphoneExt:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "C"
+      )?.extension || "",
+    homephone:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "R"
+      )?.phoneNumber || "",
+    homephoneExt:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "R"
+      )?.extension || "",
+    workphone:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "W"
+      )?.phoneNumber || "",
+    workphoneExt:
+      demographicsInfos.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "W"
+      )?.extension || "",
+    line1: residencialAddress?.Line1 || "",
+    province: residencialAddress?.CountrySubDivisionCode || "",
+    postalCode: residencialAddress?.PostalZipCode.PostalCode || "",
+    zipCode: residencialAddress?.PostalZipCode.ZipCode || "",
+    city: residencialAddress?.City || "",
+    preferredOff: demographicsInfos.PreferredOfficialLanguage || "",
+    status:
+      demographicsInfos.PersonStatusCode?.PersonStatusAsEnum ||
+      demographicsInfos.PersonStatusCode?.PersonStatusAsPlainText ||
+      "",
+    assignedMd: demographicsInfos.assigned_staff_id,
+    enrolled: "", // A GERER
+    pPhysicianFirstName:
+      demographicsInfos.PrimaryPhysician?.Name?.FirstName || "",
+    pPhysicianLastName:
+      demographicsInfos.PrimaryPhysician?.Name?.LastName || "",
+    pPhysicianOHIP: demographicsInfos.PrimaryPhysician?.OHIPPhysicianId || "",
+    pPhysicianCPSO:
+      demographicsInfos.PrimaryPhysician?.PrimaryPhysicianCPSO || "",
+    rPhysicianFirstName: demographicsInfos.ReferredPhysician?.FirstName || "",
+    rPhysicianLastName: demographicsInfos.ReferredPhysician?.LastName || "",
+    fPhysicianFirstName: demographicsInfos.FamilyPhysician?.FirstName || "",
+    fPhysicianLastName: demographicsInfos.FamilyPhysician?.LastName || "",
+    emergencyFirstName: emergencyContact?.Name?.FirstName || "",
+    emergencyMiddleName: emergencyContact?.Name?.MiddleName || "",
+    emergencyLastName: emergencyContact?.Name?.LastName || "",
+    emergencyEmail: emergencyContact?.EmailAddress || "",
+    emergencyPhone:
+      emergencyContact?.PhoneNumber?.find(
+        ({ _phoneNumberType }) => _phoneNumberType === "C"
+      )?.phoneNumber || "",
+    avatar: demographicsInfos.avatar || null,
+  });
+  const [loadingFile, setLoadingFile] = useState(false);
+  const [postalOrZip, setPostalOrZip] = useState(
+    residencialAddress?.Structured?.PostalZipCode?.PostalCode ? "postal" : "zip"
+  );
   const [newEnrolmentVisible, setNewEnrolmentVisible] = useState(false);
   const [enrolmentHistoryVisible, setEnrolmentHistoryVisible] = useState(false);
-
-  useEffect(() => {
-    setFormDatas(demographicsInfos);
-    setLastEnrolment(
-      demographicsInfos.Enrolment.EnrolmentHistory.sort(
-        (a, b) => a.EnrollmentDate - b.EnrollmentDate
-      ).slice(-1)[0] || {}
-    );
-  }, [demographicsInfos]);
 
   const handleChangePostalOrZip = (e) => {
     setErrMsgPost("");
     setPostalOrZip(e.target.value);
-
     setFormDatas({
       ...formDatas,
-      Address: formDatas.Address.map((item) => {
-        return item._addressType === "R"
-          ? {
-              ...item,
-              Structured: {
-                ...item.Structured,
-                PostalZipCode: { PostalCode: "", ZipCode: "" },
-              },
-            }
-          : item;
-      }),
+      postalCode: "",
+      zipCode: "",
     });
   };
-
   const handleClickNewEnrolment = (e) => {
     setNewEnrolmentVisible(true);
   };
-
   const handleClickHistory = (e) => {
     setEnrolmentHistoryVisible(true);
   };
-
   const handleChange = (e) => {
     setErrMsgPost("");
     let value = e.target.value;
     const name = e.target.name;
-    switch (name) {
-      case "NamePrefix":
-        setFormDatas({
-          ...formDatas,
-          Names: { ...formDatas.Names, NamePrefix: value },
-        });
-        break;
-      case "LastNameSuffix":
-        setFormDatas({
-          ...formDatas,
-          Names: { ...formDatas.Names, LastNameSuffix: value },
-        });
-        break;
-      case "FirstName":
-        setFormDatas({
-          ...formDatas,
-          Names: {
-            ...formDatas.Names,
-            LegalName: {
-              ...formDatas.Names.LegalName,
-              FirstName: {
-                ...formDatas.Names.LegalName.FirstName,
-                Part: value,
-              },
-            },
-          },
-        });
-        break;
-      case "LastName":
-        setFormDatas({
-          ...formDatas,
-          Names: {
-            ...formDatas.Names,
-            LegalName: {
-              ...formDatas.Names.LegalName,
-              LastName: {
-                ...formDatas.Names.LegalName.LastName,
-                Part: value,
-              },
-            },
-          },
-        });
-        break;
-      case "OtherName":
-        setFormDatas({
-          ...formDatas,
-          Names: {
-            ...formDatas.Names,
-            LegalName: {
-              ...formDatas.Names.LegalName,
-              OtherName: [
-                {
-                  ...formDatas.Names.LegalName.OtherName[0],
-                  Part: value,
-                },
-              ],
-            },
-          },
-        });
-        break;
-      case "NickName":
-        setFormDatas({
-          ...formDatas,
-          Names: {
-            ...formDatas.Names,
-            OtherNames: [
-              {
-                ...formDatas.Names.OtherNames[0],
-                OtherName: [
-                  {
-                    ...formDatas.Names.OtherNames[0].OtherName[0],
-                    Part: value,
-                  },
-                ],
-              },
-            ],
-          },
-        });
-        break;
-      case "Gender":
-        setFormDatas({ ...formDatas, Gender: value });
-        break;
-      case "DateOfBirth":
-        setFormDatas({
-          ...formDatas,
-          DateOfBirth: Date.parse(new Date(value)),
-        });
-        break;
-      case "HealthCardNumber":
-        setFormDatas({
-          ...formDatas,
-          HealthCard: { ...formDatas.HealthCard, Number: value },
-        });
-        break;
-      case "HealthCardVersion":
-        setFormDatas({
-          ...formDatas,
-          HealthCard: { ...formDatas.HealthCard, Version: value },
-        });
-        break;
-      case "HealthCardExpiry":
-        setFormDatas({
-          ...formDatas,
-          HealthCard: {
-            ...formDatas.HealthCard,
-            ExpiryDate: Date.parse(new Date(value)),
-          },
-        });
-        break;
-      case "HealthCardProvince":
-        setFormDatas({
-          ...formDatas,
-          HealthCard: { ...formDatas.HealthCard, ProvinceCode: value },
-        });
-        break;
-      case "SIN":
-        setFormDatas({
-          ...formDatas,
-          SIN: value,
-        });
-        break;
-
-      case "Cellphone":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "C"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "CellphoneExt":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "C"
-              ? {
-                  ...item,
-                  extension: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "Homephone":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "R"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "HomephoneExt":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "R"
-              ? {
-                  ...item,
-                  extension: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "Workphone":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "W"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "WorkphoneExt":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "W"
-              ? {
-                  ...item,
-                  extension: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "Address":
-        setFormDatas({
-          ...formDatas,
-          Address: formDatas.Address.map((item) => {
-            return item._addressType === "R"
-              ? {
-                  ...item,
-                  Structured: {
-                    ...item.Structured,
-                    Line1: value,
-                  },
-                }
-              : item;
-          }),
-        });
-        break;
-      case "City":
-        setFormDatas({
-          ...formDatas,
-          Address: formDatas.Address.map((item) => {
-            return item._addressType === "R"
-              ? {
-                  ...item,
-                  Structured: {
-                    ...item.Structured,
-                    City: value,
-                  },
-                }
-              : item;
-          }),
-        });
-        break;
-      case "Province":
-        setFormDatas({
-          ...formDatas,
-          Address: formDatas.Address.map((item) => {
-            return item._addressType === "R"
-              ? {
-                  ...item,
-                  Structured: {
-                    ...item.Structured,
-                    CountrySubDivisionCode: value,
-                  },
-                }
-              : item;
-          }),
-        });
-        break;
-      case "PostalCode":
-        setFormDatas({
-          ...formDatas,
-          Address: formDatas.Address.map((item) => {
-            return item._addressType === "R"
-              ? {
-                  ...item,
-                  Structured: {
-                    ...item.Structured,
-                    PostalZipCode:
-                      postalOrZip === "postal"
-                        ? { PostalCode: value, ZipCode: "" }
-                        : { PostalCode: "", ZipCode: value },
-                  },
-                }
-              : item;
-          }),
-        });
-        break;
-      case "PreferredOfficialLanguage":
-        setFormDatas({
-          ...formDatas,
-          PreferredOfficialLanguage: value,
-        });
-        break;
-
-      case "PPFirstName":
-        setFormDatas({
-          ...formDatas,
-          PrimaryPhysician: {
-            ...formDatas.PrimaryPhysician,
-            Name: { ...formDatas.PrimaryPhysician.Name, FirstName: value },
-          },
-        });
-        break;
-      case "PPLastName":
-        setFormDatas({
-          ...formDatas,
-          PrimaryPhysician: {
-            ...formDatas.PrimaryPhysician,
-            Name: { ...formDatas.PrimaryPhysician.Name, LastName: value },
-          },
-        });
-        break;
-      case "PPOHIPPhysicianId":
-        setFormDatas({
-          ...formDatas,
-          PrimaryPhysician: {
-            ...formDatas.PrimaryPhysician,
-            OHIPPhysicianId: value,
-          },
-        });
-        break;
-      case "PPCPSO":
-        setFormDatas({
-          ...formDatas,
-          PrimaryPhysician: {
-            ...formDatas.PrimaryPhysician,
-            PrimaryPhysicianCPSO: value,
-          },
-        });
-        break;
-      case "RPFirstName":
-        setFormDatas({
-          ...formDatas,
-          ReferredPhysician: {
-            ...formDatas.ReferredPhysician,
-            FirstName: value,
-          },
-        });
-        break;
-      case "RPLastName":
-        setFormDatas({
-          ...formDatas,
-          ReferredPhysician: {
-            ...formDatas.ReferredPhysician,
-            LastName: value,
-          },
-        });
-        break;
-      case "FPFirstName":
-        setFormDatas({
-          ...formDatas,
-          FamilyPhysician: {
-            ...formDatas.FamilyPhysician,
-            FirstName: value,
-          },
-        });
-        break;
-      case "FPLastName":
-        setFormDatas({
-          ...formDatas,
-          FamilyPhysician: {
-            ...formDatas.FamilyPhysician,
-            LastName: value,
-          },
-        });
-        break;
-      case "CFirstName":
-        setFormDatas({
-          ...formDatas,
-          Contact: formDatas.Contact.length
-            ? formDatas.Contact.map((item) => {
-                return item.ContactPurpose?.PurposeAsEnum === "EC"
-                  ? {
-                      ...item,
-                      Name: {
-                        ...item.Name,
-                        FirstName: value,
-                      },
-                    }
-                  : item;
-              })
-            : [
-                {
-                  ContactPurpose: {
-                    PurposeAsEnum: "EC",
-                  },
-                  Name: { FirstName: value },
-                },
-              ],
-        });
-        break;
-      case "CMiddleName":
-        setFormDatas({
-          ...formDatas,
-          Contact: formDatas.Contact.length
-            ? formDatas.Contact.map((item) => {
-                return item.ContactPurpose?.PurposeAsEnum === "EC"
-                  ? {
-                      ...item,
-                      Name: {
-                        ...item.Name,
-                        MiddleName: value,
-                      },
-                    }
-                  : item;
-              })
-            : [
-                {
-                  ContactPurpose: {
-                    PurposeAsEnum: "EC",
-                  },
-                  Name: { MiddleName: value },
-                },
-              ],
-        });
-        break;
-      case "CLastName":
-        setFormDatas({
-          ...formDatas,
-          Contact: formDatas.Contact.length
-            ? formDatas.Contact.map((item) => {
-                return item.ContactPurpose?.PurposeAsEnum === "EC"
-                  ? {
-                      ...item,
-                      Name: {
-                        ...item.Name,
-                        LastName: value,
-                      },
-                    }
-                  : item;
-              })
-            : [
-                {
-                  ContactPurpose: {
-                    PurposeAsEnum: "EC",
-                  },
-                  Name: { LastName: value },
-                },
-              ],
-        });
-        break;
-      case "CEmailAddress":
-        setFormDatas({
-          ...formDatas,
-          Contact: formDatas.Contact.length
-            ? formDatas.Contact.map((item) => {
-                return item.ContactPurpose?.PurposeAsEnum === "EC"
-                  ? {
-                      ...item,
-                      EmailAddress: value,
-                    }
-                  : item;
-              })
-            : [
-                {
-                  ContactPurpose: {
-                    PurposeAsEnum: "EC",
-                  },
-                  EmailAddress: value,
-                },
-              ],
-        });
-        break;
-      case "CPhone":
-        setFormDatas({
-          ...formDatas,
-          Contact: formDatas.Contact.length
-            ? formDatas.Contact.map((item) => {
-                return item.ContactPurpose.PurposeAsEnum === "EC"
-                  ? {
-                      ...item,
-                      PhoneNumber: item.PhoneNumber?.length
-                        ? item.PhoneNumber.map((phone) => {
-                            return phone._phoneNumberType === "C"
-                              ? {
-                                  ...phone,
-                                  phoneNumber: value,
-                                }
-                              : phone;
-                          })
-                        : [
-                            {
-                              _phoneNumberType: "C",
-                              phoneNumber: value,
-                            },
-                          ],
-                    }
-                  : item;
-              })
-            : [
-                {
-                  ContactPurpose: {
-                    PurposeAsEnum: "EC",
-                  },
-                  PhoneNumber: [
-                    {
-                      _phoneNumberType: "C",
-                      phoneNumber: value,
-                    },
-                  ],
-                },
-              ],
-        });
-        break;
-      case "PersonStatusCode":
-        setFormDatas({
-          ...formDatas,
-          PersonStatusCode: {
-            PersonStatusAsEnum: value,
-          },
-        });
-        break;
-      case "assigned_staff_id":
-        setFormDatas({ ...formDatas, assigned_staff_id: parseInt(value) });
-        break;
-      default:
-        setFormDatas({ ...formDatas, [name]: value });
-        break;
+    if (name === "postalCode") {
+      postalOrZip === "postal"
+        ? setFormDatas({ ...formDatas, postalCode: value })
+        : setFormDatas({ ...formDatas, zipCode: value });
+      return;
     }
-    setErrMsgPost("");
+    if (name === "dob" || name === "healthExpiry") {
+      value = value === "" ? null : Date.parse(new Date(value));
+    }
+    setFormDatas({ ...formDatas, [name]: value });
   };
-
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -615,7 +190,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
       });
       return;
     }
-    setIsLoadingFile(true);
+    setLoadingFile(true);
     // setting up the reader
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -636,16 +211,15 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           }
         );
         setFormDatas({ ...formDatas, avatar: fileToUpload.data });
-        setIsLoadingFile(false);
+        setLoadingFile(false);
       } catch (err) {
         toast.error(`Error: unable to load file: ${err.message}`, {
           containerId: "B",
         });
-        setIsLoadingFile(false);
+        setLoadingFile(false);
       }
     };
   };
-
   const handleClose = async (e) => {
     if (!editVisible) {
       setPopUpVisible(false);
@@ -659,55 +233,243 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
       setPopUpVisible(false);
     }
   };
-
   const handleCancel = (e) => {
     setErrMsgPost("");
-    setFormDatas(demographicsInfos);
+    setFormDatas({
+      prefix: demographicsInfos.Names?.NamePrefix || "",
+      firstName: demographicsInfos.Names?.LegalName?.FirstName?.Part || "",
+      middleName:
+        demographicsInfos.Names?.LegalName?.OtherName?.[0]?.Part || "",
+      lastName: demographicsInfos.Names?.LegalName?.LastName?.Part || "",
+      suffix: demographicsInfos.Names?.LastNameSuffix || "",
+      nickName:
+        demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0].Part || "",
+      chart: demographicsInfos.ChartNumber || "",
+      dob: toLocalDate(demographicsInfos.DateOfBirth),
+      age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),
+      healthNbr: demographicsInfos.HealthCard?.Number || "",
+      healthVersion: demographicsInfos.HealthCard?.Version || "",
+      healthExpiry: toLocalDate(demographicsInfos.HealthCard?.ExpiryDate),
+      healthProvince: demographicsInfos.HealthCard?.ProvinceCode || "",
+      gender: demographicsInfos.Gender || "",
+      sin: demographicsInfos.SIN || "",
+      email: demographicsInfos.Email || "",
+      cellphone:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "C"
+        )?.phoneNumber || "",
+      cellphoneExt:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "C"
+        )?.extension || "",
+      homephone:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "R"
+        )?.phoneNumber || "",
+      homephoneExt:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "R"
+        )?.extension || "",
+      workphone:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "W"
+        )?.phoneNumber || "",
+      workphoneExt:
+        demographicsInfos.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "W"
+        )?.extension || "",
+      line1: residencialAddress?.Line1 || "",
+      province: residencialAddress?.CountrySubDivisionCode || "",
+      postalCode: residencialAddress?.PostalZipCode.PostalCode || "",
+      zipCode: residencialAddress?.PostalZipCode.ZipCode || "",
+      city: residencialAddress?.City || "",
+      preferredOff: demographicsInfos.PreferredOfficialLanguage || "",
+      status:
+        demographicsInfos.PersonStatusCode?.PersonStatusAsEnum ||
+        demographicsInfos.PersonStatusCode?.PersonStatusAsPlainText ||
+        "",
+      assignedMd: demographicsInfos.assigned_staff_id,
+      enrolled: "", // A GERER
+      pPhysicianFirstName:
+        demographicsInfos.PrimaryPhysician?.Name?.FirstName || "",
+      pPhysicianLastName:
+        demographicsInfos.PrimaryPhysician?.Name?.LastName || "",
+      pPhysicianOHIP: demographicsInfos.PrimaryPhysician?.OHIPPhysicianId || "",
+      pPhysicianCPSO:
+        demographicsInfos.PrimaryPhysician?.PrimaryPhysicianCPSO || "",
+      rPhysicianFirstName: demographicsInfos.ReferredPhysician?.FirstName || "",
+      rPhysicianLastName: demographicsInfos.ReferredPhysician?.LastName || "",
+      fPhysicianFirstName: demographicsInfos.FamilyPhysician?.FirstName || "",
+      fPhysicianLastName: demographicsInfos.FamilyPhysician?.LastName || "",
+      emergencyFirstName: emergencyContact?.Name?.FirstName || "",
+      emergencyMiddleName: emergencyContact?.Name?.MiddleName || "",
+      emergencyLastName: emergencyContact?.Name?.LastName || "",
+      emergencyEmail: emergencyContact?.EmailAddress || "",
+      emergencyPhone:
+        emergencyContact?.PhoneNumber?.find(
+          ({ _phoneNumberType }) => _phoneNumberType === "C"
+        )?.phoneNumber || "",
+      avatar: demographicsInfos.avatar || null,
+    });
     setEditVisible(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //Formatting
-    const datasToPut = {
-      ...formDatas,
-    };
-
     // Validation
     try {
-      await demographicsSchema.validate(datasToPut);
+      await demographicsSchema.validate(formDatas);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
     }
-
     //Formatting
-    datasToPut.Names.LegalName.FirstName.Part = firstLetterUpper(
-      datasToPut.Names.LegalName.FirstName.Part
-    );
-    datasToPut.Names.LegalName.LastName.Part = firstLetterUpper(
-      datasToPut.Names.LegalName.LastName.Part
-    );
-    datasToPut.Names.LegalName.OtherName[0].Part = firstLetterUpper(
-      datasToPut.Names.LegalName.OtherName[0].Part
-    );
-    datasToPut.Names.OtherNames[0].OtherName[0].Part = firstLetterUpper(
-      datasToPut.Names.OtherNames[0].OtherName[0].Part
-    );
-    datasToPut.Email = datasToPut.Email.toLowerCase();
-    datasToPut.Address.find(
-      ({ _addressType }) => _addressType === "R"
-    ).Structured.Line1 = firstLetterUpper(
-      datasToPut.Address.find(({ _addressType }) => _addressType === "R")
-        .Structured.Line1
-    );
-    datasToPut.Address.find(
-      ({ _addressType }) => _addressType === "R"
-    ).Structured.City = firstLetterUpper(
-      datasToPut.Address.find(({ _addressType }) => _addressType === "R")
-        .Structured.City
-    );
-
+    setFormDatas({
+      ...formDatas,
+      firstName: firstLetterUpper(formDatas.firstName),
+      lastName: firstLetterUpper(formDatas.lastName),
+      middleName: firstLetterUpper(formDatas.middleName),
+      nickName: firstLetterUpper(formDatas.nickName),
+      line1: firstLetterUpper(formDatas.line1),
+      city: firstLetterUpper(formDatas.city),
+      emergencyFirstName: firstLetterUpper(formDatas.emergencyFirstName),
+      emergencyMiddleName: firstLetterUpper(formDatas.emergencyMiddleName),
+      emergencyLastName: firstLetterUpper(formDatas.emergencyLastName),
+      emergencyEmail: formDatas.emergencyEmail.toLowerCase(),
+      pPhysicianFirstName: firstLetterUpper(formDatas.pPhysicianFirstName),
+      pPhysicianLastName: firstLetterUpper(formDatas.pPhysicianLastName),
+      rPhysicianFirstName: firstLetterUpper(formDatas.rPhysicianFirstName),
+      rPhysicianLastName: firstLetterUpper(formDatas.rPhysicianLastName),
+      fPhysicianFirstName: firstLetterUpper(formDatas.fPhysicianFirstName),
+      fPhysicianLastName: firstLetterUpper(formDatas.fPhysicianLastName),
+    });
+    const datasToPut = {
+      ...demographicsInfos,
+      avatar: formDatas.avatar,
+      assigned_staff_id: parseInt(formDatas.assignedMd),
+      Names: {
+        NamePrefix: formDatas.prefix,
+        LegalName: {
+          ...demographicsInfos.Names?.LegalName,
+          FirstName: {
+            ...demographicsInfos.Names?.LegalName?.FirstName,
+            Part: firstLetterUpper(formDatas.firstName),
+          },
+          LastName: {
+            ...demographicsInfos.Names?.LegalName?.LastName,
+            Part: firstLetterUpper(formDatas.lastName),
+          },
+          OtherName: [
+            {
+              ...demographicsInfos.Names?.LegalName?.OtherName?.[0],
+              Part: firstLetterUpper(formDatas.middleName),
+            },
+          ],
+        },
+        OtherNames: [
+          {
+            ...demographicsInfos.Names?.OtherNames?.[0],
+            OtherName: [
+              {
+                ...demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0],
+                Part: firstLetterUpper(formDatas.nickName),
+              },
+            ],
+          },
+        ],
+        LastNameSuffix: formDatas.suffix,
+      },
+      DateOfBirth: Date.parse(new Date(formDatas.dob)),
+      HealthCard: {
+        Number: formDatas.healthNbr,
+        Version: formDatas.healthVersion,
+        ExpiryDate: Date.parse(new Date(formDatas.healthExpiry)),
+        ProvinceCode: formDatas.healthProvince,
+      },
+      ChartNumber: formDatas.ChartNumber,
+      Gender: formDatas.gender,
+      Address: demographicsInfos.Address?.map((address) => {
+        return address._addressType !== "R"
+          ? address
+          : {
+              ...residencialAddress,
+              Structured: {
+                ...residencialAddress?.Structured,
+                Line1: firstLetterUpper(formDatas.line1),
+                City: firstLetterUpper(formDatas.city),
+                CountrySubDivisionCode: formDatas.province,
+                PostalZipCode: {
+                  PostalCode: formDatas.postalCode,
+                  ZipCode: formDatas.zipCode,
+                },
+              },
+              _addressType: "R",
+            };
+      }),
+      PhoneNumber: [
+        {
+          extension: formDatas.cellphoneExt,
+          phoneNumber: formDatas.cellphone,
+          _phoneNumberType: "C",
+        },
+        {
+          extension: formDatas.homephoneExt,
+          phoneNumber: formDatas.homephone,
+          _phoneNumberType: "H",
+        },
+        {
+          extension: formDatas.workphoneExt,
+          phoneNumber: formDatas.workphone,
+          _phoneNumberType: "W",
+        },
+      ],
+      PreferredOfficialLanguage: formDatas.preferredOff,
+      Contact: demographicsInfos.Contact?.map((contact) => {
+        return contact.ContactPurpose?.PurposeAsEnum !== "EC"
+          ? contact
+          : {
+              ContactPurpose: {
+                ...contact?.ContactPurpose,
+                PurposeAsEnum: "EC",
+              },
+              Name: {
+                FirstName: firstLetterUpper(formDatas.emergencyFirstName),
+                MiddleName: firstLetterUpper(formDatas.emergencyMiddleName),
+                LastName: firstLetterUpper(formDatas.emergencyLastName),
+              },
+              EmailAddress: formDatas.emergencyEmail.toLowerCase(),
+              PhoneNumber: [
+                {
+                  ...contact?.PhoneNumber?.[0],
+                  phoneNumber: formDatas.emergencyPhone,
+                },
+              ],
+              PrimaryPhysician: {
+                Name: {
+                  FirstName: firstLetterUpper(formDatas.pPhysicianFirstName),
+                  LastName: firstLetterUpper(formDatas.pPhysicianLastName),
+                },
+                OHIPPhysicianId: formDatas.pPhysicianOHIP,
+                PrimaryPhysicianCPSO: formDatas.pPhysicianCPSO,
+              },
+              Email: formDatas.email,
+              PersonStatusCode: {
+                ...demographicsInfos.PersonStatusCode,
+                PersonStatusAsEnum: formDatas.status,
+              },
+              SIN: formDatas.sin,
+              ReferredPhysician: {
+                FirstName: firstLetterUpper(formDatas.rPhysicianFirstName),
+                LastName: firstLetterUpper(formDatas.rPhysicianLastName),
+              },
+              FamilyPhysician: {
+                FirstName: firstLetterUpper(formDatas.fPhysicianFirstName),
+                LastName: firstLetterUpper(formDatas.fPhysicianLastName),
+              },
+              PreferredPharmacy: demographicsInfos.PreferredPharmacy,
+            };
+      }),
+    };
     //Submission
     try {
       await putPatientRecord(
@@ -755,14 +517,14 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   <>
                     <button
                       type="button"
-                      disabled={isLoadingFile}
+                      disabled={loadingFile}
                       onClick={handleSubmit}
                     >
                       Save
                     </button>
                     <button
                       type="button"
-                      disabled={isLoadingFile}
+                      disabled={loadingFile}
                       onClick={handleCancel}
                     >
                       Cancel
@@ -780,14 +542,14 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   <label>Name Prefix: </label>
                   {editVisible ? (
                     <GenericList
-                      name="NamePrefix"
+                      name="prefix"
                       list={namePrefixCT}
-                      value={formDatas.Names.NamePrefix}
+                      value={formDatas.prefix}
                       handleChange={handleChange}
                       placeHolder="Choose a name prefix..."
                     />
                   ) : (
-                    demographicsInfos.Names.NamePrefix
+                    formDatas.prefix
                   )}
                 </p>
                 <p>
@@ -796,13 +558,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                     <input
                       type="text"
                       required
-                      value={formDatas.Names.LegalName.FirstName.Part}
+                      value={formDatas.firstName}
                       onChange={handleChange}
-                      name="FirstName"
+                      name="firstName"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.Names.LegalName.FirstName.Part
+                    formDatas.firstName
                   )}
                 </p>
 
@@ -811,13 +573,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={formDatas.Names.LegalName.OtherName[0].Part}
+                      value={formDatas.middleName}
                       onChange={handleChange}
-                      name="OtherName"
+                      name="middleName"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.Names.LegalName.OtherName[0].Part
+                    formDatas.middleName
                   )}
                 </p>
                 <p>
@@ -826,27 +588,27 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                     <input
                       type="text"
                       required
-                      value={formDatas.Names?.LegalName?.LastName?.Part}
+                      value={formDatas.lastName}
                       onChange={handleChange}
-                      name="LastName"
+                      name="lastName"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.Names?.LegalName?.LastName?.Part
+                    formDatas.lastName
                   )}
                 </p>
                 <p>
                   <label>Name Suffix: </label>
                   {editVisible ? (
                     <GenericList
-                      name="LastNameSuffix"
+                      name="suffix"
                       list={nameSuffixCT}
-                      value={formDatas.Names?.LastNameSuffix}
+                      value={formDatas.suffix}
                       handleChange={handleChange}
                       placeHolder="Choose a name suffix..."
                     />
                   ) : (
-                    demographicsInfos.Names?.LastNameSuffix
+                    formDatas.suffix
                   )}
                 </p>
                 <p>
@@ -854,24 +616,18 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={
-                        formDatas.Names?.OtherNames?.length
-                          ? formDatas.Names?.OtherNames[0].OtherName[0].Part
-                          : ""
-                      }
+                      value={formDatas.nickName}
                       onChange={handleChange}
-                      name="NickName"
+                      name="nickName"
                       autoComplete="off"
                     />
-                  ) : demographicsInfos.Names.OtherNames.length ? (
-                    demographicsInfos.Names.OtherNames[0].OtherName[0].Part
                   ) : (
-                    ""
+                    formDatas.nickName
                   )}
                 </p>
                 <p>
                   <label>Chart#*: </label>
-                  {demographicsInfos.ChartNumber}
+                  {formDatas.ChartNumber}
                 </p>
                 <p>
                   <label>Date of birth*: </label>
@@ -879,31 +635,31 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                     <input
                       type="date"
                       required
-                      value={toLocalDate(formDatas.DateOfBirth)}
+                      value={formDatas.dob}
                       onChange={handleChange}
-                      name="DateOfBirth"
+                      name="dob"
                       max={toLocalDate(Date.now())}
                     />
                   ) : (
-                    toLocalDate(formDatas.DateOfBirth)
+                    formDatas.dob
                   )}
                 </p>
                 <p>
                   <label>Age: </label>
-                  {getAge(toLocalDate(formDatas.DateOfBirth))}
+                  {getAge(toLocalDate(formDatas.dob))}
                 </p>
                 <p>
                   <label>Health Card#</label>
                   {editVisible ? (
                     <input
                       type="text"
-                      value={formDatas.HealthCard.Number}
+                      value={formDatas.healthNbr}
                       onChange={handleChange}
-                      name="HealthCardNumber"
+                      name="healthNbr"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.HealthCard.Number
+                    formDatas.healthNbr
                   )}
                 </p>
                 <p>
@@ -911,13 +667,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={formDatas.HealthCard.Version}
+                      value={formDatas.healthVersion}
                       onChange={handleChange}
-                      name="HealthCardVersion"
+                      name="healthVersion"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.HealthCard.Version
+                    formDatas.healthVersion
                   )}
                 </p>
                 <p>
@@ -925,12 +681,12 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="date"
-                      value={toLocalDate(formDatas.HealthCard.ExpiryDate)}
+                      value={formDatas.healthExpiry}
                       onChange={handleChange}
-                      name="HealthCardExpiry"
+                      name="healthExpiry"
                     />
                   ) : (
-                    toLocalDate(formDatas.HealthCard.ExpiryDate)
+                    formDatas.healthExpiry
                   )}
                 </p>
                 <p>
@@ -938,15 +694,15 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <GenericList
                       list={provinceStateTerritoryCT}
-                      value={formDatas.HealthCard.ProvinceCode}
-                      name="HealthCardProvince"
+                      value={formDatas.healthProvince}
+                      name="healthProvince"
                       handleChange={handleChange}
                       noneOption={false}
                     />
                   ) : (
                     toCodeTableName(
                       provinceStateTerritoryCT,
-                      demographicsInfos.HealthCard.ProvinceCode
+                      formDatas.healthProvince
                     )
                   )}
                 </p>
@@ -955,13 +711,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <GenericList
                       list={genderCT}
-                      value={formDatas.Gender}
-                      name="Gender"
+                      value={formDatas.gender}
+                      name="gender"
                       handleChange={handleChange}
                       noneOption={false}
                     />
                   ) : (
-                    toCodeTableName(genderCT, demographicsInfos.Gender)
+                    toCodeTableName(genderCT, formDatas.gender)
                   )}
                 </p>
                 <p>
@@ -969,37 +725,31 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={formDatas.SIN}
+                      value={formDatas.sin}
                       onChange={handleChange}
-                      name="SIN"
+                      name="sin"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.SIN
+                    formDatas.sin
                   )}
                 </p>
                 <p>
                   <label>Email: </label>
-                  {demographicsInfos.Email}
+                  {formDatas.email}
                 </p>
                 <p>
                   <label>Cell Phone: </label>
                   {editVisible ? (
                     <input
                       type="tel"
-                      value={
-                        formDatas.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "C"
-                        )?.phoneNumber
-                      }
+                      value={formDatas.cellphone}
                       onChange={handleChange}
-                      name="Cellphone"
+                      name="cellphone"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.PhoneNumber.find(
-                      ({ _phoneNumberType }) => _phoneNumberType === "C"
-                    ).phoneNumber
+                    formDatas.cellphone
                   )}
                   {editVisible ? (
                     <>
@@ -1015,21 +765,15 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <input
                         style={{ width: "15%" }}
                         type="text"
-                        value={
-                          formDatas.PhoneNumber.find(
-                            ({ _phoneNumberType }) => _phoneNumberType === "C"
-                          ).extension
-                        }
+                        value={formDatas.cellphoneExt}
                         onChange={handleChange}
-                        name="CellphoneExt"
+                        name="cellphoneExt"
                         autoComplete="off"
                       />
                     </>
                   ) : (
                     <>
-                      {formDatas.PhoneNumber.find(
-                        ({ _phoneNumberType }) => _phoneNumberType === "C"
-                      ).extension && (
+                      {formDatas.cellphoneExt && (
                         <label
                           style={{
                             marginLeft: "30px",
@@ -1040,11 +784,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                           Ext
                         </label>
                       )}
-                      {
-                        demographicsInfos.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "C"
-                        ).extension
-                      }
+                      {formDatas.cellphoneExt}
                     </>
                   )}
                 </p>
@@ -1053,19 +793,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="tel"
-                      value={
-                        formDatas.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "R"
-                        ).phoneNumber
-                      }
+                      value={formDatas.homephone}
                       onChange={handleChange}
-                      name="Homephone"
+                      name="homephone"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.PhoneNumber.find(
-                      ({ _phoneNumberType }) => _phoneNumberType === "R"
-                    ).phoneNumber
+                    formDatas.homephone
                   )}
                   {editVisible ? (
                     <>
@@ -1081,21 +815,15 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <input
                         style={{ width: "15%" }}
                         type="text"
-                        value={
-                          formDatas.PhoneNumber.find(
-                            ({ _phoneNumberType }) => _phoneNumberType === "R"
-                          ).extension
-                        }
+                        value={formDatas.homephoneExt}
                         onChange={handleChange}
-                        name="CellphoneExt"
+                        name="homephoneExt"
                         autoComplete="off"
                       />
                     </>
                   ) : (
                     <>
-                      {formDatas.PhoneNumber.find(
-                        ({ _phoneNumberType }) => _phoneNumberType === "R"
-                      ).extension && (
+                      {formDatas.homephoneExt && (
                         <label
                           style={{
                             marginLeft: "30px",
@@ -1106,11 +834,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                           Ext
                         </label>
                       )}
-                      {
-                        demographicsInfos.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "R"
-                        ).extension
-                      }
+                      {formDatas.homephoneExt}
                     </>
                   )}
                 </p>
@@ -1119,19 +843,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="tel"
-                      value={
-                        formDatas.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "W"
-                        ).phoneNumber
-                      }
+                      value={formDatas.workphone}
                       onChange={handleChange}
-                      name="Workphone"
+                      name="workphone"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.PhoneNumber.find(
-                      ({ _phoneNumberType }) => _phoneNumberType === "W"
-                    ).phoneNumber
+                    formDatas.workphone
                   )}
                   {editVisible ? (
                     <>
@@ -1147,21 +865,15 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <input
                         style={{ width: "15%" }}
                         type="text"
-                        value={
-                          formDatas.PhoneNumber.find(
-                            ({ _phoneNumberType }) => _phoneNumberType === "W"
-                          ).extension
-                        }
+                        value={formDatas.workphoneExt}
                         onChange={handleChange}
-                        name="CellphoneExt"
+                        name="workphoneExt"
                         autoComplete="off"
                       />
                     </>
                   ) : (
                     <>
-                      {formDatas.PhoneNumber.find(
-                        ({ _phoneNumberType }) => _phoneNumberType === "W"
-                      ).extension && (
+                      {formDatas.workphoneExt && (
                         <label
                           style={{
                             marginLeft: "30px",
@@ -1172,11 +884,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                           Ext
                         </label>
                       )}
-                      {
-                        demographicsInfos.PhoneNumber.find(
-                          ({ _phoneNumberType }) => _phoneNumberType === "W"
-                        ).extension
-                      }
+                      {formDatas.workphoneExt}
                     </>
                   )}
                 </p>
@@ -1185,19 +893,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={
-                        formDatas.Address.find(
-                          ({ _addressType }) => _addressType === "R"
-                        ).Structured.Line1
-                      }
+                      value={formDatas.line1}
                       onChange={handleChange}
-                      name="Address"
+                      name="line1"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.Address.find(
-                      ({ _addressType }) => _addressType === "R"
-                    ).Structured.Line1
+                    formDatas.line1
                   )}
                 </p>
                 <p>
@@ -1205,20 +907,14 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <GenericList
                       list={provinceStateTerritoryCT}
-                      value={
-                        formDatas.Address.find(
-                          ({ _addressType }) => _addressType === "R"
-                        ).Structured.CountrySubDivisionCode
-                      }
-                      name="Province"
+                      value={formDatas.province}
+                      name="province"
                       handleChange={handleChange}
                     />
                   ) : (
                     toCodeTableName(
                       provinceStateTerritoryCT,
-                      demographicsInfos.Address.find(
-                        ({ _addressType }) => _addressType === "R"
-                      ).Structured.CountrySubDivisionCode
+                      formDatas.province
                     )
                   )}
                 </p>
@@ -1241,26 +937,18 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                         type="text"
                         value={
                           postalOrZip === "postal"
-                            ? formDatas.Address.find(
-                                ({ _addressType }) => _addressType === "R"
-                              ).Structured.PostalZipCode.PostalCode
-                            : formDatas.Address.find(
-                                ({ _addressType }) => _addressType === "R"
-                              ).Structured.PostalZipCode.ZipCode
+                            ? formDatas.postalCode
+                            : formDatas.zipCode
                         }
                         onChange={handleChange}
-                        name="PostalCode"
+                        name="postalCode"
                         autoComplete="off"
                       />
                     </>
                   ) : postalOrZip === "postal" ? (
-                    demographicsInfos.Address.find(
-                      ({ _addressType }) => _addressType === "R"
-                    ).Structured.PostalZipCode.PostalCode
+                    formDatas.postalCode
                   ) : (
-                    demographicsInfos.Address.find(
-                      ({ _addressType }) => _addressType === "R"
-                    )?.Structured.PostalZipCode.ZipCode
+                    formDatas.zipCode
                   )}
                 </p>
                 <p>
@@ -1268,19 +956,13 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <input
                       type="text"
-                      value={
-                        formDatas.Address.find(
-                          ({ _addressType }) => _addressType === "R"
-                        ).Structured.City
-                      }
+                      value={formDatas.city}
                       onChange={handleChange}
-                      name="City"
+                      name="city"
                       autoComplete="off"
                     />
                   ) : (
-                    demographicsInfos.Address.find(
-                      ({ _addressType }) => _addressType === "R"
-                    ).Structured.City
+                    formDatas.city
                   )}
                 </p>
                 <p>
@@ -1288,54 +970,46 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                   {editVisible ? (
                     <GenericList
                       list={officialLanguageCT}
-                      value={formDatas.PreferredOfficialLanguage}
-                      name="PreferredOfficialLanguage"
+                      value={formDatas.preferredOff}
+                      name="preferredOff"
                       handleChange={handleChange}
                       noneOption={false}
                     />
                   ) : (
-                    toCodeTableName(
-                      officialLanguageCT,
-                      demographicsInfos.PreferredOfficialLanguage
-                    )
+                    toCodeTableName(officialLanguageCT, formDatas.preferredOff)
                   )}
                 </p>
                 <p>
                   <label>Status: </label>
                   {editVisible ? (
                     <GenericList
-                      name="PersonStatusCode"
+                      name="status"
                       list={personStatusCT}
-                      value={formDatas.PersonStatusCode?.PersonStatusAsEnum}
+                      value={formDatas.status}
                       handleChange={handleChange}
                       placeHolder="Choose a status..."
                       noneOption={false}
                     />
                   ) : (
-                    toCodeTableName(
-                      personStatusCT,
-                      demographicsInfos.PersonStatusCode?.PersonStatusAsEnum
-                    )
+                    toCodeTableName(personStatusCT, formDatas.status)
                   )}
                 </p>
                 <p>
-                  <label>Assigned Clinic Practician: </label>
+                  <label>Assigned Clinic Physician: </label>
                   {editVisible ? (
                     <StaffList
-                      value={formDatas.assigned_staff_id}
-                      name="assigned_staff_id"
+                      value={formDatas.assignedMd}
+                      name="assignedMd"
                       handleChange={handleChange}
-                      staffInfos={clinic.staffInfos}
                     />
                   ) : (
                     staffIdToTitleAndName(
-                      clinic.staffInfos,
-                      demographicsInfos.assigned_staff_id,
+                      staffInfos,
+                      formDatas.assignedMd,
                       true
                     )
                   )}
                 </p>
-
                 <p>
                   <label>Enrolled to physician: </label>
                   {enrolmentCaption(lastEnrolment)}
@@ -1392,17 +1066,17 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>First Name: </label>
                       <input
                         type="text"
-                        value={formDatas.PrimaryPhysician?.Name?.FirstName}
+                        value={formDatas.pPhysicianFirstName}
                         onChange={handleChange}
-                        name="PPFirstName"
+                        name="pPhysicianFirstName"
                         autoComplete="off"
                       />
                       <label>Last Name: </label>
                       <input
                         type="text"
-                        value={formDatas.PrimaryPhysician?.Name?.LastName}
+                        value={formDatas.pPhysicianLastName}
                         onChange={handleChange}
-                        name="PPLastName"
+                        name="pPhysicianLastName"
                         autoComplete="off"
                       />
                     </p>
@@ -1410,17 +1084,17 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>OHIP#: </label>
                       <input
                         type="text"
-                        value={formDatas.PrimaryPhysician?.OHIPPhysicianId}
+                        value={formDatas.pPhysicianOHIP}
                         onChange={handleChange}
-                        name="PPOHIPPhysicianId"
+                        name="pPhysicianOHIP"
                         autoComplete="off"
                       />
                       <label>CPSO: </label>
                       <input
                         type="text"
-                        value={formDatas.PrimaryPhysician?.PrimaryPhysicianCPSO}
+                        value={formDatas.pPhysicianCPSO}
                         onChange={handleChange}
-                        name="PPCPSO"
+                        name="pPhysicianCPSO"
                         autoComplete="off"
                       />
                     </p>
@@ -1440,17 +1114,17 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>First Name: </label>
                       <input
                         type="text"
-                        value={formDatas.ReferredPhysician?.FirstName}
+                        value={formDatas.rPhysicianFirstName}
                         onChange={handleChange}
-                        name="RPFirstName"
+                        name="rPhysicianFirstName"
                         autoComplete="off"
                       />
                       <label>Last Name: </label>
                       <input
                         type="text"
-                        value={formDatas.ReferredPhysician?.LastName}
+                        value={formDatas.rPhysicianLastName}
                         onChange={handleChange}
-                        name="RPLastName"
+                        name="rPhysicianLastName"
                         autoComplete="off"
                       />
                     </p>
@@ -1469,17 +1143,17 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>First Name: </label>
                       <input
                         type="text"
-                        value={formDatas.FamilyPhysician?.FirstName}
+                        value={formDatas.fPhysicianFirstName}
                         onChange={handleChange}
-                        name="FPFirstName"
+                        name="fPhysicianFirstName"
                         autoComplete="off"
                       />
                       <label>Last Name: </label>
                       <input
                         type="text"
-                        value={formDatas.FamilyPhysician?.LastName}
+                        value={formDatas.fPhysicianLastName}
                         onChange={handleChange}
-                        name="FPLastName"
+                        name="fPhysicianLastName"
                         autoComplete="off"
                       />
                     </p>
@@ -1498,46 +1172,25 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>First Name: </label>
                       <input
                         type="text"
-                        value={
-                          formDatas.Contact?.length
-                            ? formDatas.Contact.find(
-                                (contact) =>
-                                  contact.ContactPurpose?.PurposeAsEnum === "EC"
-                              )?.Name?.FirstName || ""
-                            : ""
-                        }
+                        value={formDatas.emergencyFirstName}
                         onChange={handleChange}
-                        name="CFirstName"
+                        name="emergencyFirstName"
                         autoComplete="off"
                       />
                       <label>Middle Name: </label>
                       <input
                         type="text"
-                        value={
-                          formDatas.Contact?.length
-                            ? formDatas.Contact.find(
-                                (contact) =>
-                                  contact.ContactPurpose?.PurposeAsEnum === "EC"
-                              )?.Name?.MiddleName || ""
-                            : ""
-                        }
+                        value={formDatas.emergencyMiddleName}
                         onChange={handleChange}
-                        name="CMiddleName"
+                        name="emergencyMiddleName"
                         autoComplete="off"
                       />
                       <label>Last Name: </label>
                       <input
                         type="text"
-                        value={
-                          formDatas.Contact?.length
-                            ? formDatas.Contact.find(
-                                (contact) =>
-                                  contact.ContactPurpose?.PurposeAsEnum === "EC"
-                              )?.Name?.LastName || ""
-                            : ""
-                        }
+                        value={formDatas.emergencyLastName}
                         onChange={handleChange}
-                        name="CLastName"
+                        name="emergencyLastName"
                         autoComplete="off"
                       />
                     </p>
@@ -1545,34 +1198,17 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                       <label>Email: </label>
                       <input
                         type="email"
-                        value={
-                          formDatas.Contact?.length
-                            ? formDatas.Contact.find(
-                                (contact) =>
-                                  contact.ContactPurpose?.PurposeAsEnum === "EC"
-                              )?.EmailAddress || ""
-                            : ""
-                        }
+                        value={formDatas.emergencyEmail}
                         onChange={handleChange}
-                        name="CEmailAddress"
+                        name="emergencyEmail"
                         autoComplete="off"
                       />
                       <label>Phone: </label>
                       <input
                         type="text"
-                        value={
-                          formDatas.Contact?.length
-                            ? formDatas.Contact.find(
-                                (contact) =>
-                                  contact.ContactPurpose?.PurposeAsEnum === "EC"
-                              ).PhoneNumber?.find(
-                                ({ _phoneNumberType }) =>
-                                  _phoneNumberType === "C"
-                              ).phoneNumber || ""
-                            : ""
-                        }
+                        value={formDatas.emergencyPhone}
                         onChange={handleChange}
-                        name="CPhone"
+                        name="emergencyPhone"
                         autoComplete="off"
                       />
                     </p>
@@ -1585,8 +1221,8 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                 )}
               </div>
               <div className="demographics-card__img">
-                {isLoadingFile ? (
-                  <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                {loadingFile ? (
+                  <CircularProgressMedium />
                 ) : formDatas.avatar ? (
                   <img
                     src={`${BASE_URL}${formDatas.avatar.path}`}
@@ -1616,7 +1252,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                 <em>
                   Updated by{" "}
                   {staffIdToTitleAndName(
-                    clinic.staffInfos,
+                    staffInfos,
                     getLastUpdate(demographicsInfos).updated_by_id,
                     true
                   )}{" "}
@@ -1629,7 +1265,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
                 <em>
                   Created by{" "}
                   {staffIdToTitleAndName(
-                    clinic.staffInfos,
+                    staffInfos,
                     demographicsInfos.created_by_id,
                     true
                   )}{" "}
@@ -1640,7 +1276,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
           </div>
         </>
       ) : (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       )}
       {newEnrolmentVisible && (
         <FakeWindow
@@ -1660,10 +1296,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
       )}
       {enrolmentHistoryVisible && (
         <FakeWindow
-          title={`ENROLMENT HISTORY of ${patientIdToName(
-            clinic.demographicsInfos,
-            demographicsInfos.patient_id
-          )}`}
+          title={`ENROLMENT HISTORY of ${toPatientName(demographicsInfos)}`}
           width={1100}
           height={400}
           x={(window.innerWidth - 1100) / 2}
@@ -1680,21 +1313,7 @@ const DemographicsPU = ({ demographicsInfos, setPopUpVisible }) => {
         </FakeWindow>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

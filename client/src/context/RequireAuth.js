@@ -1,9 +1,11 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuthContext from "../hooks/useAuthContext";
+import useUserContext from "../hooks/useUserContext";
 
 const RequireAuth = ({ allowedAccesses }) => {
-  const { auth, user } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const location = useLocation();
 
   return allowedAccesses.includes(user.access_level) ? (

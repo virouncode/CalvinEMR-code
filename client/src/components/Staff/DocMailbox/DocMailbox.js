@@ -1,15 +1,15 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { onMessageDocMailbox } from "../../../utils/socketHandlers/onMessageDocMailbox";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import DocMailboxAssignedPracticianForward from "./DocMailboxAssignedPracticianForward";
 import DocMailboxItem from "./DocMailboxItem";
 
 const DocMailbox = () => {
   //HOOKS
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [documents, setDocuments] = useState(null);
   const [forwardVisible, setForwardVisible] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -51,29 +51,6 @@ const DocMailbox = () => {
       socket.off("message", onMessage);
     };
   }, [documents, socket, user.id]);
-
-  const showDocument = async (docUrl, docMime) => {
-    let docWindow;
-    if (!docMime.includes("officedocument")) {
-      docWindow = window.open(
-        docUrl,
-        "_blank",
-        "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=600, left=320, top=200"
-      );
-    } else {
-      docWindow = window.open(
-        `https://docs.google.com/gview?url=${docUrl}`,
-        "_blank",
-        "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=600, left=320, top=200"
-      );
-    }
-
-    if (docWindow === null) {
-      alert("Please disable your browser pop-up blocker and sign in again");
-      window.location.assign("/login");
-      return;
-    }
-  };
 
   //HANDLERS
 
@@ -117,9 +94,7 @@ const DocMailbox = () => {
                     <DocMailboxItem
                       item={document}
                       key={document.id}
-                      showDocument={showDocument}
                       setErrMsg={setErrMsg}
-                      setDocuments={setDocuments}
                       setForwardVisible={setForwardVisible}
                       forwardVisible={forwardVisible}
                     />
@@ -143,7 +118,7 @@ const DocMailbox = () => {
           )}
         </>
       ) : (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       )}
     </>
   );

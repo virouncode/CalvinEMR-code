@@ -1,46 +1,46 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { getResidualInfo } from "../../../../../utils/getResidualInfo";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const PersonalHistoryContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const PersonalHistoryContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length >= 1 ? (
           <>
             <p>
               <label>Occupations: </label>
-              {getResidualInfo("Occupations", datas[0])}
+              {getResidualInfo("Occupations", topicDatas[0])}
             </p>
             <p>
               <label>Income: </label>
-              {getResidualInfo("Income", datas[0])}
+              {getResidualInfo("Income", topicDatas[0])}
             </p>
             <p>
               <label>Religion: </label>
-              {getResidualInfo("Religion", datas[0])}
+              {getResidualInfo("Religion", topicDatas[0])}
             </p>
             <p>
               <label>Sexual orientation: </label>
-              {getResidualInfo("SexualOrientation", datas[0])}
+              {getResidualInfo("SexualOrientation", topicDatas[0])}
             </p>
             <p>
               <label>Special diet: </label>
-              {getResidualInfo("SpecialDiet", datas[0])}
+              {getResidualInfo("SpecialDiet", topicDatas[0])}
             </p>
             <p>
               <label>Smoking: </label>
-              {getResidualInfo("Smoking", datas[0])}
+              {getResidualInfo("Smoking", topicDatas[0])}
             </p>
             <p>
               <label>Alcohol: </label>
-              {getResidualInfo("Alcohol", datas[0])}
+              {getResidualInfo("Alcohol", topicDatas[0])}
             </p>
             <p>
               <label>Recreational drugs: </label>
-              {getResidualInfo("RecreationalDrugs", datas[0])}
+              {getResidualInfo("RecreationalDrugs", topicDatas[0])}
             </p>
           </>
         ) : (
@@ -49,7 +49,7 @@ const PersonalHistoryContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

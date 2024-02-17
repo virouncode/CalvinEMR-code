@@ -1,16 +1,16 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { sendEmail } from "../../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { patientIdToName } from "../../../../utils/patientIdToName";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessageExternal = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientId, setRecipientId] = useState(0);
   const [subject, setSubject] = useState("");
@@ -247,9 +247,7 @@ Powered by Calvin EMR`,
             Send
           </button>
           <button onClick={handleCancel}>Cancel</button>
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
       <div className="new-message__patients">

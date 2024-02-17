@@ -5,7 +5,7 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { problemListSchema } from "../../../../../validation/problemListValidation";
@@ -15,7 +15,7 @@ import SignCell from "../SignCell";
 
 const ProblemListItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 

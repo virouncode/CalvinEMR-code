@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const [agreed, setAgreed] = useState(true);
   const handleChange = (e) => {
     const id = e.target.id;

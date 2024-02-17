@@ -1,19 +1,17 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import useAuth from "../../../../../hooks/useAuth";
-import { patientIdToName } from "../../../../../utils/patientIdToName";
+import { toPatientName } from "../../../../../utils/toPatientName";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const RelationshipsContent = ({ datas, isLoading, errMsg }) => {
-  const { clinic } = useAuth();
-  return !isLoading ? (
+const RelationshipsContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas.map((item) => (
+            {topicDatas.slice(0, 4).map((item) => (
               <li key={item.id}>
                 - {item.relationship} of{" "}
                 <NavLink
@@ -21,7 +19,7 @@ const RelationshipsContent = ({ datas, isLoading, errMsg }) => {
                   className="topic-content__link"
                   target="_blank"
                 >
-                  {patientIdToName(clinic.demographicsInfos, item.relation_id)}
+                  {toPatientName(item.relation_infos)}
                 </NavLink>
               </li>
             ))}
@@ -32,7 +30,7 @@ const RelationshipsContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

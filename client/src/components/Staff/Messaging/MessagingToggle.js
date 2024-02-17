@@ -1,8 +1,8 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const MessagingToggle = ({ isTypeChecked, handleMsgsTypeChanged }) => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   return (
     <div className="messages-toggle">
       <div className="messages-toggle__radio">

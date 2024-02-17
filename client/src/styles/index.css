@@ -31,16 +31,6 @@
   font-style: italic;
 }
 @font-face {
-  font-family: "Inter";
-  src: url(../assets/fonts/Inter-Regular.woff);
-  font-weight: normal;
-}
-@font-face {
-  font-family: "Inter";
-  src: url(../assets/fonts/Inter-Bold.woff);
-  font-weight: bold;
-}
-@font-face {
   font-family: "Rubik";
   src: url(../assets/fonts/Rubik-Regular.ttf);
   font-weight: normal;
@@ -10938,25 +10928,26 @@ readers do not read off random characters that represent icons */
 
 .calendar {
   z-index: 1;
-  margin: 20px auto 20px;
+  margin: 10px auto 20px;
   width: 97%;
   min-height: 100%;
   display: flex;
   justify-content: space-between;
 }
 .calendar__options {
-  border: 1px solid rgb(218, 218, 218);
+  display: flex;
+  width: 97%;
+  margin: 0 auto;
   border-radius: 6px;
-  margin-top: 5px;
-  overflow: hidden;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: solid 1px #cecdcd;
   background: #FEFEFE;
 }
 .calendar__options-title {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px 4px 0 0;
+  border-radius: 6px 4px 0 0;
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
@@ -10967,7 +10958,7 @@ readers do not read off random characters that represent icons */
 }
 .calendar__left-bar .calendar__shortcutpickr {
   border-bottom: 1px solid rgb(218, 218, 218);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .calendar__left-bar .calendar__shortcutpickr .flatpickr-calendar.animate.inline {
@@ -11015,7 +11006,7 @@ readers do not read off random characters that represent icons */
   position: relative;
   background: #FEFEFE;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
 }
 .calendar__display .fc .fc-timegrid-col.fc-day-today {
@@ -11203,12 +11194,18 @@ readers do not read off random characters that represent icons */
   margin-top: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   width: 100%;
+  border-radius: 6px;
+  font-weight: bold;
+  height: 670px;
+  overflow-y: scroll;
 }
 .calendar__filter-title {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px 4px 0 0;
+  position: sticky;
+  top: 0;
+  border-radius: 6px 4px 0 0;
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
@@ -11228,7 +11225,7 @@ readers do not read off random characters that represent icons */
   align-items: center;
   margin-bottom: 10px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
 }
 .event-form__row--guest {
@@ -11282,18 +11279,42 @@ readers do not read off random characters that represent icons */
   display: grid;
   border: solid 1px #cecdcd;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   justify-content: space-between;
   grid-template-columns: 40% 60%;
   align-items: flex-start;
 }
 .event-form__item--guestsearch .results {
-  height: 170px;
-  overflow: scroll;
-  border: solid 1px #cecdcd;
-  padding: 10px;
-  border-radius: 4px;
   font-size: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.event-form__item--guestsearch .results__sertarien {
+  height: 400px;
+}
+.event-form__item--guestsearch .results__title {
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  background-color: #FEFEFE;
+  padding-top: 10px;
+}
+.event-form__item--guestsearch .results__patients {
+  border: solid 1px #cecdcd;
+  padding: 0 10px 10px;
+  border-radius: 6px;
+  height: 175px;
+  overflow: scroll;
+  width: 50%;
+}
+.event-form__item--guestsearch .results__staff {
+  border: solid 1px #cecdcd;
+  padding: 0 10px 10px;
+  border-radius: 6px;
+  height: 175px;
+  overflow: scroll;
+  width: 50%;
 }
 .event-form__item--guestsearch .search-bar {
   display: flex;
@@ -11413,7 +11434,8 @@ readers do not read off random characters that represent icons */
   padding: 5px;
   background: #FEFEFE;
   overflow-y: scroll;
-  max-height: 600px;
+  max-height: 500px;
+  border-radius: 0 0 6px 6px;
 }
 .filter-checkboxes-section {
   margin-bottom: 10px;
@@ -11445,17 +11467,12 @@ readers do not read off random characters that represent icons */
 
 .calendar__slot-select {
   padding: 5px;
+  margin-right: 32px;
 }
 .calendar__slot-select label {
   font-size: 0.8rem;
   font-weight: bold;
-  display: block;
-  margin-right: 5px;
-}
-@media (max-width: 1250px) {
-  .calendar__slot-select label {
-    font-size: 0.7rem;
-  }
+  margin-right: 8px;
 }
 .calendar__slot-select select {
   font-size: 0.7rem;
@@ -11463,17 +11480,12 @@ readers do not read off random characters that represent icons */
 
 .calendar__day-select {
   padding: 5px;
+  margin-right: 32px;
 }
 .calendar__day-select label {
   font-size: 0.8rem;
   font-weight: bold;
-  display: block;
-  margin-right: 5px;
-}
-@media (max-width: 1250px) {
-  .calendar__day-select label {
-    font-size: 0.7rem;
-  }
+  margin-right: 8px;
 }
 .calendar__day-select select {
   font-size: 0.7rem;
@@ -11576,23 +11588,29 @@ readers do not read off random characters that represent icons */
 }
 
 .patient-result {
-  overflow: scroll;
+  overflow-y: scroll;
+  position: relative;
+  height: 500px;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .patient-result table {
   table-layout: fixed;
   margin: 0 auto;
   background-color: #FEFEFE;
   border-collapse: collapse;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
   white-space: nowrap;
 }
 .patient-result table thead {
+  position: sticky;
+  top: 0;
   background-color: #50B1C1;
+  border-radius: 6px;
 }
 .patient-result table thead th {
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
-  padding: 2px 5px;
   font-size: 0.8rem;
   min-width: 150px;
 }
@@ -11605,22 +11623,27 @@ readers do not read off random characters that represent icons */
 .patient-result table thead th:nth-child(5) {
   min-width: 10px;
 }
-.patient-result table thead th:nth-child(12), .patient-result table thead th:nth-child(13), .patient-result table thead th:nth-child(14) {
+.patient-result table thead th:nth-child(13), .patient-result table thead th:nth-child(14), .patient-result table thead th:nth-child(15) {
   min-width: 130px;
+}
+.patient-result table tbody tr {
+  border-bottom: solid 1px #cecdcd;
 }
 .patient-result table tbody tr .record-link {
   text-decoration: underline;
   font-weight: bold;
 }
 .patient-result table tbody tr .record-link:hover {
-  color: #A4B9E2;
+  color: #50B1C1;
 }
 .patient-result table tbody tr td {
-  border: solid 1px #3D375A;
   font-size: 0.8rem;
-  padding: 2px 5px;
+  padding: 10px;
   overflow: hidden;
   text-align: center;
+}
+.patient-result table tbody tr td:nth-child(1), .patient-result table tbody tr td:nth-child(2), .patient-result table tbody tr td:nth-child(3) {
+  text-align: left;
 }
 
 .staff-result {
@@ -11744,7 +11767,7 @@ readers do not read off random characters that represent icons */
 .clinical-notes__form {
   border: solid 0.5px grey;
   margin: 4px;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -11755,7 +11778,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .clinical-notes__form-header {
@@ -11804,7 +11827,7 @@ readers do not read off random characters that represent icons */
   background-color: #FEFEFE;
   border: solid 0.5px grey;
   margin: 4px;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -12045,14 +12068,14 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
   width: 80%;
   margin: 60px auto;
-  border: 1px solid #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .demographics-card__header {
   display: flex;
   justify-content: space-between;
-  background: #cecdcd;
+  background: #50B1C1;
+  border-radius: 6px 6px 0 0;
   padding: 10px;
   align-items: center;
 }
@@ -12120,14 +12143,12 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .demographics-card__sign {
-  padding: 0 5px;
   text-align: right;
   font-size: 0.6rem;
-  margin-bottom: 10px;
 }
 .demographics-card__row-special {
   display: flex;
@@ -12160,8 +12181,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.pasthealth__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .pasthealth__table {
   table-layout: fixed;
@@ -12170,36 +12197,38 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pasthealth__table thead {
+  position: sticky;
+  top: 0;
   background: #50B1C1;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .pasthealth__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
-.pasthealth__event--notgoing, .pasthealth__form--notgoing {
+.pasthealth__item, .pasthealth__form {
+  border-bottom: solid 1px #cecdcd;
+}
+.pasthealth__item--notgoing, .pasthealth__form--notgoing {
   background: #cecdcd;
 }
-.pasthealth__event td, .pasthealth__form td {
+.pasthealth__item td, .pasthealth__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.pasthealth__event td input, .pasthealth__event td input[type=date], .pasthealth__form td input, .pasthealth__form td input[type=date] {
+.pasthealth__item td input, .pasthealth__item td input[type=date], .pasthealth__form td input, .pasthealth__form td input[type=date] {
   width: 100%;
 }
-.pasthealth__event td input[type=submit], .pasthealth__form td input[type=submit] {
+.pasthealth__item td input[type=submit], .pasthealth__form td input[type=submit] {
   width: auto;
 }
-.pasthealth__event-btn-container, .pasthealth__form-btn-container {
+.pasthealth__item-btn-container, .pasthealth__form-btn-container {
   display: flex;
   justify-content: center;
 }
-.pasthealth__event-btn-container button, .pasthealth__form-btn-container button {
+.pasthealth__item-btn-container button, .pasthealth__form-btn-container button {
   margin-left: 5px;
 }
 .pasthealth__btn-container {
@@ -12223,8 +12252,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.famhistory__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .famhistory__table {
   table-layout: fixed;
@@ -12233,36 +12268,38 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .famhistory__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
 .famhistory__table thead th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
 .famhistory__table thead th:nth-child(4) {
-  min-width: 20px;
+  min-width: 100px;
 }
-.famhistory__event td, .famhistory__form td {
+.famhistory__item, .famhistory__form {
+  border-bottom: solid 1px #cecdcd;
+}
+.famhistory__item td, .famhistory__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.famhistory__event td input, .famhistory__event td input[type=date], .famhistory__event td select, .famhistory__form td input, .famhistory__form td input[type=date], .famhistory__form td select {
+.famhistory__item td input, .famhistory__item td input[type=date], .famhistory__item td select, .famhistory__form td input, .famhistory__form td input[type=date], .famhistory__form td select {
   width: 100%;
 }
-.famhistory__event td input[type=submit], .famhistory__form td input[type=submit] {
+.famhistory__item td input[type=submit], .famhistory__form td input[type=submit] {
   width: auto;
 }
-.famhistory__event-btn-container, .famhistory__form-btn-container {
+.famhistory__item-btn-container, .famhistory__form-btn-container {
   display: flex;
   justify-content: center;
 }
-.famhistory__event-btn-container button, .famhistory__form-btn-container button {
+.famhistory__item-btn-container button, .famhistory__form-btn-container button {
   margin-left: 5px;
 }
 .famhistory__btn-container {
@@ -12286,8 +12323,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.risk__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .risk__table {
   table-layout: fixed;
@@ -12296,23 +12339,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .risk__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
-.risk__table thead th {
+.risk__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
-.risk__table thead th:nth-child(5) {
-  min-width: 50px;
+.risk__item, .risk__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .risk__item td, .risk__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .risk__item td input, .risk__form td input {
@@ -12349,8 +12391,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.medications__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .medications__table {
   table-layout: fixed;
@@ -12359,34 +12407,39 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .medications__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
 .medications__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
-.medications__event--notactive {
+.medications__item {
+  border-bottom: solid 1px #cecdcd;
+}
+.medications__item--notactive {
   background: #cecdcd;
 }
-.medications__event td {
+.medications__item td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.medications__event td input input {
+.medications__item td input input {
   width: 100%;
 }
-.medications__event td input input[type=submit] {
+.medications__item td input input[type=submit] {
   width: auto;
 }
-.medications__event-btn-container {
+.medications__item-btn-container {
   display: flex;
   justify-content: center;
+}
+.medications__item-btn-container button {
+  margin-left: 5px;
 }
 .medications__btn-container {
   text-align: center;
@@ -12416,7 +12469,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .medications-form__title {
@@ -12569,7 +12622,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .pharmacies__table {
@@ -12589,20 +12642,21 @@ readers do not read off random characters that represent icons */
   text-decoration: underline;
   cursor: pointer;
 }
-.pharmacies__item td, .pharmacies__form td {
-  text-align: center;
-  border: solid 1px black;
-  padding: 2px 5px;
-  word-break: break-word;
-  max-width: 370px;
+.pharmacies__form {
+  border-bottom: solid 1px #cecdcd;
 }
-.pharmacies__item td input, .pharmacies__item td select, .pharmacies__form td input, .pharmacies__form td select {
+.pharmacies__form td {
+  text-align: center;
+  padding: 10px;
+  word-break: break-word;
+}
+.pharmacies__form td input, .pharmacies__form td select {
   width: 100%;
 }
-.pharmacies__item td input[type=submit], .pharmacies__form td input[type=submit] {
+.pharmacies__form td input[type=submit] {
   width: auto;
 }
-.pharmacies__item .td--postal input, .pharmacies__item .td--postal select, .pharmacies__form .td--postal input, .pharmacies__form .td--postal select {
+.pharmacies__form .td--postal input, .pharmacies__form .td--postal select {
   width: 50%;
 }
 .pharmacies__item-btn-container, .pharmacies__form-btn-container {
@@ -12619,6 +12673,16 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
+.pharmacies-list__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 70%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
 .pharmacies-list__title {
   margin: 40px 0 20px;
   font-size: 0.9rem;
@@ -12627,6 +12691,12 @@ readers do not read off random characters that represent icons */
 .pharmacies-list__title button {
   margin-left: 20px;
 }
+.pharmacies-list__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .pharmacies-list__table {
   table-layout: fixed;
   min-width: 100%;
@@ -12634,23 +12704,25 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pharmacies-list__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
 .pharmacies-list__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
 .pharmacies-list__table th:nth-child(5) {
   min-width: 160px;
 }
+.pharmacies-list__item {
+  border-bottom: solid 1px #cecdcd;
+}
 .pharmacies-list__item td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .pharmacies-list__item td input, .pharmacies-list__item td select {
@@ -12659,11 +12731,13 @@ readers do not read off random characters that represent icons */
 .pharmacies-list__item td input[type=submit] {
   width: auto;
 }
+.pharmacies-list__item .td--postal input, .pharmacies-list__item .td--postal select {
+  width: 50%;
+}
 
 .pharmacies__card {
   width: 30%;
   margin: 0 auto;
-  border: solid 1px #cecdcd;
   border-radius: 4px;
   padding: 10px 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -12694,8 +12768,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.doctors__table-container {
+  height: 150px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .doctors__table {
   table-layout: fixed;
@@ -12704,20 +12784,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .doctors__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
-.doctors__table thead th {
+.doctors__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.doctors__item, .doctors__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .doctors__item td, .doctors__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .doctors__item td input, .doctors__item td select, .doctors__form td input, .doctors__form td select {
@@ -12744,6 +12826,16 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
+.doctors-list__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 70%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
 .doctors-list__title {
   margin: 40px 0 20px;
   font-size: 0.9rem;
@@ -12752,6 +12844,12 @@ readers do not read off random characters that represent icons */
 .doctors-list__title button {
   margin-left: 20px;
 }
+.doctors-list__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .doctors-list__table {
   table-layout: fixed;
   min-width: 100%;
@@ -12759,29 +12857,31 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .doctors-list__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
 .doctors-list__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
 .doctors-list__table th:nth-child(9) {
   min-width: 160px;
 }
-.doctors-list__item td {
+.doctors-list__item, .doctors-list__form {
+  border-bottom: solid 1px #cecdcd;
+}
+.doctors-list__item td, .doctors-list__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.doctors-list__item td input, .doctors-list__item td select {
+.doctors-list__item td input, .doctors-list__item td select, .doctors-list__form td input, .doctors-list__form td select {
   width: 100%;
 }
-.doctors-list__item td input[type=submit] {
+.doctors-list__item td input[type=submit], .doctors-list__form td input[type=submit] {
   width: auto;
 }
 
@@ -12798,13 +12898,13 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .care-elements__card {
   width: 80%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 0 auto;
   padding: 10px 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -12880,7 +12980,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .reminders__table {
@@ -12943,7 +13043,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .pregnancies__table {
@@ -13010,7 +13110,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .allergies__table {
@@ -13070,8 +13170,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.alerts__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .alerts__table {
   table-layout: fixed;
@@ -13080,23 +13186,25 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .alerts__table thead {
+  position: sticky;
+  top: 0;
   background: #50B1C1;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .alerts__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.alerts__item, .alerts__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .alerts__item td, .alerts__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.alerts__item td input, .alerts__form td input {
+.alerts__item td input, .alerts__item td input[type=date], .alerts__form td input, .alerts__form td input[type=date] {
   width: 100%;
 }
 .alerts__item td input[type=submit], .alerts__form td input[type=submit] {
@@ -13124,7 +13232,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .recimmunizations__title {
@@ -13296,7 +13404,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .immunizations__table {
@@ -13362,7 +13470,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .reports__table {
@@ -13408,7 +13516,7 @@ readers do not read off random characters that represent icons */
   padding: 20px 40px;
   width: 100%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .reports__form-btn-container {
@@ -13479,7 +13587,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .appointments__table {
@@ -13544,7 +13652,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .problemlist__table {
@@ -13602,7 +13710,7 @@ readers do not read off random characters that represent icons */
   z-index: 1000;
 }
 .confirm-dialog {
-  border-radius: 4px;
+  border-radius: 6px;
   width: 400px;
   position: absolute;
   left: 50%;
@@ -13768,7 +13876,7 @@ readers do not read off random characters that represent icons */
   width: 50%;
   font-size: 0.9rem;
   margin: 0 auto 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -13780,7 +13888,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .signup-patient__container {
@@ -13789,7 +13897,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #FEFEFE;
 }
 .signup-patient__form {
@@ -13864,7 +13972,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   font-size: 0.9rem;
   margin: 10px auto;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -13876,7 +13984,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .signup-staff__container {
@@ -13885,7 +13993,7 @@ readers do not read off random characters that represent icons */
   margin: 50px auto 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #FEFEFE;
 }
 .signup-staff__form {
@@ -13942,7 +14050,7 @@ readers do not read off random characters that represent icons */
 .myaccount-section__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 2px #50B1C1;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #FEFEFE;
   padding: 20px;
   width: 55%;
@@ -13953,7 +14061,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
   font-size: 0.9rem;
   margin: 0 auto;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -13966,7 +14074,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -14032,7 +14140,7 @@ readers do not read off random characters that represent icons */
 .staff-account__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #FEFEFE;
   padding: 20px;
   width: 95%;
@@ -14043,7 +14151,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
   font-size: 0.9rem;
   margin: 0 auto;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -14056,7 +14164,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -14129,7 +14237,7 @@ readers do not read off random characters that represent icons */
 
 .messages-toggle {
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: solid 1px #cecdcd;
   font-size: 0.9rem;
   text-align: center;
@@ -14155,7 +14263,7 @@ readers do not read off random characters that represent icons */
   align-items: center;
   justify-content: space-between;
   background: #50B1C1;
-  border-radius: 4px 4px 0 0;
+  border-radius: 6px 4px 0 0;
 }
 .messages-toolbar__title {
   width: 10%;
@@ -14365,7 +14473,7 @@ readers do not read off random characters that represent icons */
 .messages-print__section {
   -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
-  border-radius: 4px;
+  border-radius: 6px;
   border: solid 0.3px #cecdcd;
   overflow: hidden;
 }
@@ -14467,7 +14575,7 @@ readers do not read off random characters that represent icons */
 .new-message__contacts {
   width: 24%;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 20px auto;
   font-size: 0.8rem;
   padding: 5px 10px;
@@ -14478,7 +14586,7 @@ readers do not read off random characters that represent icons */
 .new-message__form {
   min-height: 250px;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 0 10px;
   margin: 20px auto;
   width: 50%;
@@ -14562,7 +14670,7 @@ readers do not read off random characters that represent icons */
 .new-message__patients {
   width: 24%;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 20px auto;
   font-size: 0.8rem;
   padding: 5px 10px;
@@ -14571,7 +14679,7 @@ readers do not read off random characters that represent icons */
 .reply-message__form {
   min-height: 250px;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 0 10px;
   margin: 20px auto;
   width: 90%;
@@ -14660,7 +14768,7 @@ readers do not read off random characters that represent icons */
 .forward-message__contacts {
   width: 20%;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 20px auto;
   font-size: 0.8rem;
   padding: 5px 10px;
@@ -14668,7 +14776,7 @@ readers do not read off random characters that represent icons */
 .forward-message__form {
   min-height: 250px;
   border: solid 0.3px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 0 10px;
   margin: 20px auto;
   width: 75%;
@@ -14802,7 +14910,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   margin: 0 auto 20px;
 }
@@ -14849,8 +14957,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.relationships__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .relationships__table {
   table-layout: fixed;
@@ -14859,14 +14973,14 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .relationships__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #50B1C1;
+  border-radius: 6px;
 }
 .relationships__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
 .relationships__btn-container {
@@ -14877,17 +14991,19 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
+.relationships-item, .relationships-form {
+  border-bottom: solid 1px #cecdcd;
+}
 .relationships-item td, .relationships-form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
+}
+.relationships-item td input, .relationships-item td select, .relationships-form td input, .relationships-form td select {
+  width: 150px;
 }
 .relationships-item td input[type=submit], .relationships-form td input[type=submit] {
   width: auto;
-}
-.relationships-item td input, .relationships-item td select, .relationships-form td input, .relationships-form td select {
-  width: 100%;
 }
 .relationships-item__relationship, .relationships-form__relationship {
   display: flex;
@@ -14937,7 +15053,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 
@@ -14982,7 +15098,7 @@ readers do not read off random characters that represent icons */
   width: 30%;
   font-size: 0.9rem;
   margin: 0 auto;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -14994,7 +15110,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 
@@ -15011,8 +15127,14 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
+}
+.eforms__table-container {
+  height: 200px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .eforms__table {
   table-layout: fixed;
@@ -15021,20 +15143,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .eforms__table thead {
+  position: sticky;
+  top: 0;
   background: #50B1C1;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .eforms__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.eforms__item {
+  border-bottom: solid 1px #cecdcd;
 }
 .eforms__item td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .eforms__item td input {
@@ -15058,7 +15182,7 @@ readers do not read off random characters that represent icons */
 .eforms__explainations {
   font-size: 0.9rem;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   margin: 0 10px;
 }
@@ -15080,7 +15204,7 @@ readers do not read off random characters that represent icons */
 .patient-account__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #FEFEFE;
   padding: 20px;
   width: 75%;
@@ -15091,7 +15215,7 @@ readers do not read off random characters that represent icons */
   width: 70%;
   font-size: 0.9rem;
   margin: 0 auto 20px;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -15103,7 +15227,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   margin: 0 auto 20px;
 }
@@ -15182,7 +15306,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .availability__heads {
@@ -15315,7 +15439,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   font-size: 0.9rem;
   margin: 10px auto;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -15340,7 +15464,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .docmailbox__instructions {
@@ -15381,7 +15505,7 @@ readers do not read off random characters that represent icons */
 .docmailbox__form {
   background-color: #FEFEFE;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.8rem;
   padding: 20px;
   display: flex;
@@ -15555,7 +15679,7 @@ readers do not read off random characters that represent icons */
   width: 40%;
   margin: 0 auto 0;
   border: solid 2px #50B1C1;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
 }
@@ -15572,7 +15696,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .reset-container-success {
@@ -15580,7 +15704,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
   font-size: 0.9rem;
   margin: 0 auto 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
   color: forestgreen;
   background-color: rgba(34, 139, 34, 0.4);
@@ -15737,7 +15861,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 6px;
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 5px 0;
@@ -15756,7 +15880,7 @@ readers do not read off random characters that represent icons */
 .calvinai-discussion__card {
   padding: 20px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin-bottom: 10px;
   display: flex;
@@ -15785,7 +15909,7 @@ readers do not read off random characters that represent icons */
   flex-direction: column;
   background-color: #FEFEFE;
   border: solid 2px #50B1C1;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
 }
 .calvinai-chat__content {
@@ -15816,7 +15940,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 6px;
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 5px 0;
@@ -15835,7 +15959,7 @@ readers do not read off random characters that represent icons */
 .calvinai-chat__card {
   padding: 20px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin-bottom: 10px;
   display: flex;
@@ -16068,7 +16192,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .billing__btn-container {
@@ -16084,7 +16208,7 @@ readers do not read off random characters that represent icons */
   margin: 20px auto;
   border: solid 1px #cecdcd;
   padding: 20px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 .billing-form__title {
   font-size: 1rem;
@@ -16262,7 +16386,7 @@ readers do not read off random characters that represent icons */
   border: solid 2px #50B1C1;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
   display: grid;
   grid-template-columns: 33% 33% 33%;
@@ -16304,7 +16428,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .reference__form-row {
@@ -16442,7 +16566,7 @@ readers do not read off random characters that represent icons */
 
 .migration-toggle {
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: solid 1px #cecdcd;
   font-size: 0.9rem;
   text-align: center;
@@ -16467,7 +16591,7 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   justify-content: space-between;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
 }
 .migration-export__form {
@@ -16489,7 +16613,7 @@ readers do not read off random characters that represent icons */
   width: 50%;
   height: 350px;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: scroll;
 }
 .migration-export__patient-search {
@@ -16550,7 +16674,7 @@ readers do not read off random characters that represent icons */
 }
 .migration-import__viewer-xml {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: scroll;
   width: 49%;
   height: 90vh;
@@ -16558,7 +16682,7 @@ readers do not read off random characters that represent icons */
 }
 .migration-import__viewer-js {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: scroll;
   width: 49%;
   height: 90vh;
@@ -16569,14 +16693,14 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
   width: 80%;
   margin: 60px auto;
-  border: 1px solid #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .personalhistory-card__header {
   display: flex;
   justify-content: space-between;
-  background-color: #cecdcd;
+  background-color: #50B1C1;
+  border-radius: 6px 6px 0 0;
   padding: 10px;
   align-items: center;
 }
@@ -16592,7 +16716,7 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 .personalhistory-card__sign {
-  padding: 0 5px;
+  padding: 5px;
   text-align: right;
   font-size: 0.6rem;
   margin-bottom: 10px;
@@ -16625,7 +16749,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 
@@ -16672,7 +16796,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 10px;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .med-templates__form-container {
@@ -16683,7 +16807,7 @@ readers do not read off random characters that represent icons */
 }
 .med-templates__list {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   height: 300px;
   padding: 10px 20px;
   overflow: scroll;
@@ -16713,7 +16837,7 @@ readers do not read off random characters that represent icons */
 
 .meds-results {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   margin-top: 1px;
   height: 500px;
   overflow: scroll;
@@ -16733,7 +16857,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .new-enrolment__form {
@@ -16770,7 +16894,6 @@ readers do not read off random characters that represent icons */
 }
 .enrolment-history__item {
   padding: 5px;
-  white-space: pre;
 }
 
 .suspended-container {
@@ -16804,7 +16927,7 @@ readers do not read off random characters that represent icons */
   height: 300px;
   width: 30%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: #FEFEFE;
   padding: 10px;
 }
@@ -16929,7 +17052,7 @@ readers do not read off random characters that represent icons */
   margin-top: 50px;
   width: 97%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
 }
 .site-form__err {
@@ -16939,7 +17062,7 @@ readers do not read off random characters that represent icons */
   margin: 10px auto;
   color: red;
   background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 4px;
+  border-radius: 6px;
   text-align: center;
 }
 .site-form__row {
@@ -17002,4 +17125,43 @@ readers do not read off random characters that represent icons */
   position: absolute;
   left: 15%;
   top: 13px;
+}
+
+.site-checkboxes {
+  padding: 5px;
+}
+.site-checkboxes__title {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.site-checkboxes__item {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: normal;
+  margin-left: 10px;
+}
+.site-checkboxes input[type=checkbox] {
+  margin-right: 5px;
+}
+
+.empty-row {
+  border-bottom: solid 1px #cecdcd;
+}
+.empty-row td {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.loading-row {
+  border-bottom: solid 1px #cecdcd;
+}
+.loading-row td {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
 }/*# sourceMappingURL=index.css.map */

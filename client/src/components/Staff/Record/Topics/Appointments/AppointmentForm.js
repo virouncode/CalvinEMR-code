@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import {
   fromLocalToISOStringNoMs,
@@ -34,7 +34,7 @@ const AppointmentForm = ({
   sites,
 }) => {
   //HOOKS
-  const { auth, clinic, user, socket } = useAuth();
+  const { auth, clinic, user, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     host_id: user.title === "Secretary" ? 0 : user.id,
     start: null,
@@ -81,7 +81,7 @@ const AppointmentForm = ({
     return user.title === "Secretary";
   };
 
-  const handleChangeSite = async (e) => {
+  const handleSiteChange = async (e) => {
     const value = parseInt(e.target.value);
     setFormDatas({ ...formDatas, site_id: value, room_id: "z" });
     if (formDatas.start && formDatas.end) {
@@ -523,7 +523,7 @@ const AppointmentForm = ({
       </td>
       <td>
         <SelectSite
-          handleChangeSite={handleChangeSite}
+          handleSiteChange={handleSiteChange}
           sites={sites}
           value={formDatas.site_id}
           label={false}

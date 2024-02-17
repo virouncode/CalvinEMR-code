@@ -1,19 +1,18 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const RiskContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const RiskContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.StartDate - a.StartDate)
-              .map((risk) => (
-                <li key={risk.id}>- {risk.RiskFactor}</li>
-              ))}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li key={item.id}>- {item.RiskFactor}</li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No risk factors"
@@ -21,7 +20,7 @@ const RiskContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

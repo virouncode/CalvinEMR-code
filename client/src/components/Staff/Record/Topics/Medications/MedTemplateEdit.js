@@ -10,7 +10,7 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
@@ -19,7 +19,7 @@ import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 
 const MedTemplateEdit = ({ setEditVisible, med }) => {
-  const { auth, socket, user } = useAuth();
+  const { auth, socket, user } = useAuthContext();
   const [formDatas, setFormDatas] = useState(med);
   const [errMsg, setErrMsg] = useState("");
 

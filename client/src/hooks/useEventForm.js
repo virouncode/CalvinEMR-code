@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuth from "./useAuth";
+import useAuthContext from "./useAuthContext";
 
 const initialState = {
   formDatas: null,
@@ -39,7 +39,7 @@ const httpReducer = (state, action) => {
 };
 
 export const useEventForm = (eventId) => {
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const [httpState, dispatch] = useReducer(httpReducer, initialState);
   const fetchEventFormDatas = useCallback(
     async (abortController) => {

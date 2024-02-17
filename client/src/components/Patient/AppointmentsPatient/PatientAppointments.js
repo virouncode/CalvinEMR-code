@@ -1,15 +1,15 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { onMessagePatientAppointments } from "../../../utils/socketHandlers/onMessagePatientAppointments";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import NewAppointment from "./NewAppointment";
 import NextAppointments from "./NextAppointments";
 import PastAppointments from "./PastAppointments";
 
 const PatientAppointments = () => {
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const [appointments, setAppointments] = useState(null);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const PatientAppointments = () => {
       <NewAppointment />{" "}
     </>
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

@@ -1,9 +1,9 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import PregnancyEvent from "../Topics/Pregnancies/PregnancyEvent";
 import PregnancyForm from "../Topics/Pregnancies/PregnancyForm";
 
@@ -46,7 +46,7 @@ const PregnanciesPU = ({
       </h1>
       {errMsgPost && <div className="pregnancies__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="pregnancies__err">{errMsg}</p>
       ) : (

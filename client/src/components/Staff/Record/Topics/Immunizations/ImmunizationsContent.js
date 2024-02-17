@@ -1,5 +1,5 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const ImmunizationsContent = ({ datas, isLoading, errMsg }) => {
   return !isLoading ? (
@@ -11,7 +11,7 @@ const ImmunizationsContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

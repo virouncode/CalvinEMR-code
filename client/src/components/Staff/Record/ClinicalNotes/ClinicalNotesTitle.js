@@ -1,6 +1,6 @@
 import React from "react";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { getAge } from "../../../../utils/getAge";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import TriangleButton from "../Buttons/TriangleButton";
@@ -12,7 +12,7 @@ const ClinicalNotesTitle = ({
   triangleRef,
   setSelectAllDisabled,
 }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   const handleTriangleClick = (e) => {
     e.target.classList.toggle("triangle--active");
     contentRef.current.classList.toggle("clinical-notes__content--active");

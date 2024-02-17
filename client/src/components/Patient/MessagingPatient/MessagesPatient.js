@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { filterAndSortExternalMessages } from "../../../utils/filterAndSortExternalMessages";
 import { searchMessagesExternal } from "../../../utils/searchMessagesExternal";
 import { onMessagesInboxExternal } from "../../../utils/socketHandlers/onMessagesInboxExternal";
@@ -17,7 +17,7 @@ const MessagesPatient = () => {
   const [msgsSelectedIds, setMsgsSelectedIds] = useState([]);
   const [currentMsgId, setCurrentMsgId] = useState(0);
   const [messages, setMessages] = useState(null);
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
 

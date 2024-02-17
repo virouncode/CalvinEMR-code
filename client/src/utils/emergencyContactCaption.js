@@ -11,7 +11,7 @@ export const emergencyContactCaption = (emergencyContact) => {
   const email = emergencyContact?.EmailAddress
     ? `, ${emergencyContact?.EmailAddress}`
     : "";
-  const phone = emergencyContact.PhoneNumber?.length
+  const phone = emergencyContact?.PhoneNumber?.length
     ? `, ${emergencyContact.PhoneNumber.map(
         ({ phoneNumber }) => phoneNumber
       ).join(", ")}`

@@ -2,7 +2,7 @@
   &__container {
       box-shadow: #959da533 0px 8px 24px;
       border: solid 1px $grey;
-      border-radius: 4px;
+      border-radius: 6px;
       background:$white;
       padding : 20px;
       width : 95%;
@@ -13,7 +13,7 @@
       width : 100%;
       font-size: 0.9rem;
       margin:0 auto;
-      border-radius: 4px;
+      border-radius: 6px;
       text-align: center;
       color: forestgreen;
       background-color: rgba(34, 139, 34, 0.4);
@@ -26,7 +26,7 @@
       margin:0 auto;
       color : red;
       background-color:rgba(255, 0, 0, 0.403);
-      border-radius: 4px;
+      border-radius: 6px;
       text-align: center;
       margin-bottom: 10px;
   }

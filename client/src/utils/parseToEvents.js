@@ -1,3 +1,4 @@
+import { toHostName } from "./toHostName";
 var _ = require("lodash");
 
 const colorsPalette = [
@@ -50,7 +51,7 @@ export const parseToEvents = (
                 "#FEFEFE",
                 isSecretary,
                 userId,
-                sites.find(({ id }) => id === appointment.site_id).rooms
+                sites?.find(({ id }) => id === appointment.site_id)?.rooms
               ) //grey
             : parseToEvent(
                 appointment,
@@ -66,7 +67,7 @@ export const parseToEvents = (
                 ].textColor,
                 isSecretary,
                 userId,
-                sites.find(({ id }) => id === appointment.site_id).rooms
+                sites?.find(({ id }) => id === appointment.site_id)?.rooms
               )
           : parseToEvent(
               appointment,
@@ -74,7 +75,7 @@ export const parseToEvents = (
               "#FEFEFE",
               isSecretary,
               userId,
-              sites.find(({ id }) => id === appointment.site_id).rooms
+              sites?.find(({ id }) => id === appointment.site_id)?.rooms
             ) //blue
     ),
     remainingStaffObjects,
@@ -100,16 +101,32 @@ export const parseToEvent = (
     editable: appointment.host_id === userId || isSecretary ? true : false, //if secretary give access
     resourceEditable:
       appointment.host_id === userId || isSecretary ? true : false, //if secretary give access
-    resourceId: rooms.find(({ id }) => id === appointment.room_id).id,
+    resourceId: rooms?.find(({ id }) => id === appointment.room_id).id,
     extendedProps: {
       host: appointment.host_id,
+      hostName: appointment.host_infos
+        ? toHostName(appointment.host_infos)
+        : "",
+      hostFirstName: appointment.host_infos
+        ? appointment.host_infos.first_name
+        : "",
+      hostLastName: appointment.host_infos
+        ? appointment.host_infos.last_name
+        : "",
+      hostOHIP: appointment.host_infos
+        ? appointment.host_infos.ohip_billing_nbr
+        : "",
       duration: appointment.Duration,
       purpose: appointment.AppointmentPurpose,
       status: appointment.AppointmentStatus,
       staffGuestsIds: appointment.staff_guests_ids,
       patientsGuestsIds: appointment.patients_guests_ids,
       siteId: appointment.site_id,
+      siteName: appointment.site_infos.name,
       roomId: appointment.room_id,
+      roomTitle: appointment.site_infos.rooms.find(
+        ({ id }) => id === appointment.room_id
+      ).title,
       updates: appointment.updates,
       date_created: appointment.date_created,
       created_by_id: appointment.created_by_id,

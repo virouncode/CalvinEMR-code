@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -12,7 +12,7 @@ const ClinicalNotesCardHeaderFolded = ({
   tempFormDatas,
   handleTriangleProgressClick,
 }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   return (
     <div className="clinical-notes__card-header clinical-notes__card-header--folded">
       <div className="clinical-notes__card-header--folded-title">

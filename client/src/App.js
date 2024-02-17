@@ -1,15 +1,13 @@
 //Librairies
 import React, { useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 import AdminLayout from "./components/All/UI/Layouts/AdminLayout";
 import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
 import RequireAuth from "./context/RequireAuth";
-import useAuth from "./hooks/useAuth";
-import useAutoLogout from "./hooks/useAutoLogout";
-import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
+import useSocketContext from "./hooks/useSocketContext";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
@@ -38,69 +36,68 @@ import PatientRecordPage from "./pages/Staff/PatientRecordPage";
 import ReferencePage from "./pages/Staff/ReferencePage";
 import SearchPatientPage from "./pages/Staff/SearchPatientPage";
 import SignupPatientPage from "./pages/Staff/SignupPatientPage";
-import { onMessageClinic } from "./utils/socketHandlers/onMessageClinic";
-import { onMessageUnread } from "./utils/socketHandlers/onMessageUnread";
 
 const App = () => {
-  useLocalStorageTracker();
-  const navigate = useNavigate();
-  const { user, setUser, setClinic, setAuth, setSocket, socket, clinic } =
-    useAuth();
+  const { setSocket } = useSocketContext();
+  // useLocalStorageTracker();
+  // const navigate = useNavigate();
+  // const { user, setUser, setClinic, setAuth, setSocket, socket, clinic } =
+  //   useAuthContext();
 
-  const logout = () => {
-    setAuth({});
-    setUser({});
-    setClinic({});
-    localStorage.removeItem("auth");
-    localStorage.removeItem("user");
-    localStorage.removeItem("clinic");
-    localStorage.removeItem("tabCounter");
-    localStorage.removeItem("lastAction");
-    localStorage.setItem("message", "logout");
-    localStorage.removeItem("message");
-  };
-  useAutoLogout(logout, 120);
+  // const logout = () => {
+  //   setAuth({});
+  //   setUser({});
+  //   setClinic({});
+  //   localStorage.removeItem("auth");
+  //   localStorage.removeItem("user");
+  //   localStorage.removeItem("clinic");
+  //   localStorage.removeItem("tabCounter");
+  //   localStorage.removeItem("lastAction");
+  //   localStorage.setItem("message", "logout");
+  //   localStorage.removeItem("message");
+  // };
+  // useAutoLogout(logout, 120);
+
+  // useEffect(() => {
+  //   const storageListener = (e) => {
+  //     if (e.key !== "message") return;
+  //     const message = e.newValue;
+  //     if (!message) return;
+  //     if (message === "logout") {
+  //       setUser({});
+  //       setClinic({});
+  //       setAuth({});
+  //       navigate("/");
+  //     }
+  //   };
+  //   window.addEventListener("storage", storageListener);
+  //   return () => {
+  //     window.removeEventListener("storage", storageListener);
+  //   };
+  // }, [navigate, setAuth, setClinic, setSocket, setUser]);
 
   useEffect(() => {
-    const storageListener = (e) => {
-      if (e.key !== "message") return;
-      const message = e.newValue;
-      if (!message) return;
-      if (message === "logout") {
-        setUser({});
-        setClinic({});
-        setAuth({});
-        navigate("/");
-      }
-    };
-    window.addEventListener("storage", storageListener);
-    return () => {
-      window.removeEventListener("storage", storageListener);
-    };
-  }, [navigate, setAuth, setClinic, setSocket, setUser]);
+    const socket = socketIOClient("http://localhost:3000");
 
-  useEffect(() => {
-    // const socket = socketIOClient("http://localhost:3000");
-
-    const socket = socketIOClient(
-      "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
-    );
+    // const socket = socketIOClient(
+    //   "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
+    // );
     setSocket(socket);
     return () => socket.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) => onMessageClinic(message, clinic, setClinic);
-    const onMessage2 = (message) => onMessageUnread(message, user, setUser);
-    socket.on("message", onMessage);
-    socket.on("message", onMessage2);
-    return () => {
-      socket.off("message", onMessage);
-      socket.off("message", onMessage2);
-    };
-  }, [clinic, setClinic, setUser, socket, user]);
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   const onMessage = (message) => onMessageClinic(message, clinic, setClinic);
+  //   const onMessage2 = (message) => onMessageUnread(message, user, setUser);
+  //   socket.on("message", onMessage);
+  //   socket.on("message", onMessage2);
+  //   return () => {
+  //     socket.off("message", onMessage);
+  //     socket.off("message", onMessage2);
+  //   };
+  // }, [clinic, setClinic, setUser, socket, user]);
 
   return (
     <Routes>

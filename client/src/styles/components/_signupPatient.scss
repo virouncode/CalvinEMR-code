@@ -4,7 +4,7 @@
         width : 50%;
         font-size: 0.9rem;
         margin:0 auto 10px;
-        border-radius: 4px;
+        border-radius: 6px;
         text-align: center;
         color: forestgreen;
         background-color: rgba(34, 139, 34, 0.4);
@@ -16,7 +16,7 @@
         margin:0 auto 10px;
         color : red;
         background-color:rgba(255, 0, 0, 0.403);
-        border-radius: 4px;
+        border-radius: 6px;
         text-align: center;
     }
     &__container {
@@ -25,7 +25,7 @@
         margin:0 auto;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         border: solid 1px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         background:$white;
     }
     &__form {

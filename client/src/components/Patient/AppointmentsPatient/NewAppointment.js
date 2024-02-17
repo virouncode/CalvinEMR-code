@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { getWeekRange } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import { onMessageAvailability } from "../../../utils/socketHandlers/onMessageAvailability";
@@ -25,7 +25,7 @@ const optionsTime = {
 };
 
 const NewAppointment = () => {
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [appointmentsInRange, setAppointmentsInRange] = useState(null);
   const [availability, setAvailability] = useState(null);
   const [rangeStart, setRangeStart] = useState(

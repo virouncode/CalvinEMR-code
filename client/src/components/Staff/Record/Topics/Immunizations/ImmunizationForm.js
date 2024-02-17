@@ -7,7 +7,7 @@ import {
   siteCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
@@ -22,7 +22,7 @@ const ImmunizationForm = ({
   setErrMsgPost,
   datas,
 }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     recommended: false,

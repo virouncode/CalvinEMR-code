@@ -1,21 +1,21 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import { reportClassCT, reportFormatCT } from "../../../datas/codesTables";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { getExtension } from "../../../utils/getExtension";
 import { reportSchema } from "../../../validation/reportValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import DocMailboxPatients from "./DocMailboxPatients";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     Format: "Binary",
   });
@@ -281,9 +281,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
           />
         </div>
         <div className="docmailbox__form-row">
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
         <div className="docmailbox__form-row">
           <input type="submit" value="Post" disabled={isLoadingFile} />

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import LinkEdit from "./LinkEdit";
 
 const MyLinkItem = ({ myLinks, link, setAddVisible }) => {
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const handleEdit = () => {
     setEditVisible((v) => !v);

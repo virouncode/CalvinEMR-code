@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkEdit = ({ link, myLinks, setEditVisible }) => {
   const [errMsg, setErrMsg] = useState("");
   const [editedLink, setEditedLink] = useState(link);
-  const { auth, socket, user, clinic } = useAuth();
+  const { auth, socket, user, clinic } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

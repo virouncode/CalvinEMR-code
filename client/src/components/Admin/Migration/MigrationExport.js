@@ -1,8 +1,7 @@
-import { CircularProgress } from "@mui/material";
 import dateFormat from "dateformat";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { exportPatientEMR } from "../../../utils/exports/exportsXML.";
 import { recordCategories } from "../../../utils/exports/recordCategories";
 import {
@@ -14,12 +13,13 @@ import {
   staffIdToLastName,
   staffIdToOHIP,
 } from "../../../utils/staffIdToName";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import MigrationPatientSearchForm from "./MigrationPatientSearchForm";
 import MigrationPatientsList from "./MigrationPatientsList";
 import MigrationRecordsList from "./MigrationRecordsList";
 
 const MigrationExport = () => {
-  const { auth, clinic, user } = useAuth();
+  const { auth, clinic, user } = useAuthContext();
   const [search, setSearch] = useState({
     name: "",
     email: "",
@@ -201,9 +201,7 @@ const MigrationExport = () => {
         <button onClick={handleExport} disabled={isLoading}>
           Export
         </button>
-        {isLoading && (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
-        )}
+        {isLoading && <CircularProgressMedium />}
       </div>
     </div>
   );

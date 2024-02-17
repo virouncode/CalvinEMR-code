@@ -5,51 +5,64 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
-import { famHistorySchema } from "../../../../../validation/famHistoryValidation";
+import { pastHealthSchema } from "../../../../../validation/pastHealthValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
-import RelativesList from "../../../../All/UI/Lists/RelativesList";
 import SignCell from "../SignCell";
 
-const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
+const PastHealthItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
-  const [eventInfos, setEventInfos] = useState(null);
+  const [itemInfos, setItemInfos] = useState(null);
 
   useEffect(() => {
-    setEventInfos(event);
-  }, [event]);
+    setItemInfos(item);
+  }, [item]);
 
   //HANDLERS
   const handleChange = (e) => {
     setErrMsgPost("");
     const name = e.target.name;
     let value = e.target.value;
-    if (name === "StartDate") {
+    if (
+      name === "ProcedureDate" ||
+      name === "OnsetOrEventDate" ||
+      name === "ResolvedDate"
+    ) {
       value = value === "" ? null : Date.parse(new Date(value));
     }
-    setEventInfos({ ...eventInfos, [name]: value });
+    setItemInfos({ ...itemInfos, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
     const formDatas = {
-      ...eventInfos,
-      ProblemDiagnosisProcedureDescription: firstLetterOfFirstWordUpper(
-        eventInfos.ProblemDiagnosisProcedureDescription
+      ...itemInfos,
+      PastHealthProblemDescriptionOrProcedures: firstLetterOfFirstWordUpper(
+        itemInfos.PastHealthProblemDescriptionOrProcedures
       ),
-      Treatment: firstLetterOfFirstWordUpper(eventInfos.Treatment),
-      Notes: firstLetterOfFirstWordUpper(eventInfos.Notes),
+      ProblemStatus: firstLetterOfFirstWordUpper(itemInfos.ProblemStatus),
+      Notes: firstLetterOfFirstWordUpper(itemInfos.Notes),
     };
 
     //Validation
     try {
-      await famHistorySchema.validate(formDatas);
+      await pastHealthSchema.validate(formDatas);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
@@ -57,20 +70,20 @@ const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     //Submission
     try {
       await putPatientRecord(
-        "/family_history",
-        event.id,
+        "/past_health",
+        item.id,
         user.id,
         auth.authToken,
         formDatas,
         socket,
-        "FAMILY HISTORY"
+        "PAST HEALTH"
       );
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
       toast.error(
-        `Error unable to update family history item: ${err.message}`,
+        `Error unable to update medical history item: ${err.message}`,
         { containerId: "B" }
       );
     }
@@ -80,18 +93,14 @@ const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     e.preventDefault();
     editCounter.current -= 1;
     setErrMsgPost("");
-    setEventInfos(event);
+    setItemInfos(item);
     setEditVisible(false);
-  };
-
-  const handleMemberChange = (value) => {
-    setEventInfos({ ...eventInfos, Relationship: value });
   };
 
   const handleEditClick = (e) => {
     editCounter.current += 1;
     setErrMsgPost("");
-    setEditVisible((v) => !v);
+    setEditVisible(true);
   };
 
   const handleDeleteClick = async (e) => {
@@ -103,16 +112,16 @@ const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     ) {
       try {
         await deletePatientRecord(
-          "/family_history",
-          event.id,
+          "/past_health",
+          item.id,
           auth.authToken,
           socket,
-          "FAMILY HISTORY"
+          "PAST HEALTH"
         );
         toast.success("Deleted successfully", { containerId: "B" });
       } catch (err) {
         toast.error(
-          `Error unable to delete family history item: ${err.message}`,
+          `Error unable to delete medical history item: ${err.message}`,
           { containerId: "B" }
         );
       }
@@ -120,100 +129,105 @@ const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
   };
 
   return (
-    eventInfos && (
+    itemInfos && (
       <tr
-        className="famhistory__event"
+        className="pasthealth__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
             <input
-              name="ProblemDiagnosisProcedureDescription"
+              name="PastHealthProblemDescriptionOrProcedures"
               type="text"
-              value={eventInfos.ProblemDiagnosisProcedureDescription}
+              value={itemInfos.PastHealthProblemDescriptionOrProcedures}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            eventInfos.ProblemDiagnosisProcedureDescription
-          )}
-        </td>
-        <td>
-          {editVisible ? (
-            <RelativesList
-              handleChange={handleMemberChange}
-              value={eventInfos.Relationship}
-            />
-          ) : (
-            eventInfos.Relationship
+            itemInfos.PastHealthProblemDescriptionOrProcedures
           )}
         </td>
         <td>
           {editVisible ? (
             <input
+              name="OnsetOrEventDate"
               type="date"
               max={toLocalDate(Date.now())}
-              name="StartDate"
-              value={toLocalDate(eventInfos.StartDate)}
+              value={toLocalDate(itemInfos.OnsetOrEventDate)}
               onChange={handleChange}
             />
           ) : (
-            toLocalDate(eventInfos.StartDate)
-          )}
-        </td>
-        <td>
-          {editVisible ? (
-            <input
-              type="text"
-              name="AgeAtOnset"
-              value={eventInfos.AgeAtOnset}
-              onChange={handleChange}
-            />
-          ) : (
-            eventInfos.AgeAtOnset
+            toLocalDate(itemInfos.OnsetOrEventDate)
           )}
         </td>
         <td>
           {editVisible ? (
             <GenericList
               list={lifeStageCT}
-              value={eventInfos.LifeStage}
+              value={itemInfos.LifeStage}
               name="LifeStage"
               handleChange={handleChange}
               placeHolder="Choose a lifestage..."
               noneOption={false}
             />
           ) : (
-            toCodeTableName(lifeStageCT, eventInfos.LifeStage)
+            toCodeTableName(lifeStageCT, itemInfos.LifeStage)
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              type="text"
-              name="Treatment"
-              value={eventInfos.Treatment}
+              name="ProcedureDate"
+              type="date"
+              max={toLocalDate(Date.now())}
+              value={toLocalDate(itemInfos.ProcedureDate)}
               onChange={handleChange}
             />
           ) : (
-            eventInfos.Treatment
+            toLocalDate(itemInfos.ProcedureDate)
           )}
         </td>
         <td>
           {editVisible ? (
             <input
+              name="ResolvedDate"
+              type="date"
+              max={toLocalDate(Date.now())}
+              value={toLocalDate(itemInfos.ResolvedDate)}
+              onChange={handleChange}
+            />
+          ) : (
+            toLocalDate(itemInfos.ResolvedDate)
+          )}
+        </td>
+        <td>
+          {editVisible ? (
+            <input
+              name="ProblemStatus"
               type="text"
+              value={itemInfos.ProblemStatus}
+              onChange={handleChange}
+            />
+          ) : (
+            itemInfos.ProblemStatus
+          )}
+        </td>
+        <td>
+          {editVisible ? (
+            <input
               name="Notes"
-              value={eventInfos.Notes}
+              type="text"
+              value={itemInfos.Notes}
               onChange={handleChange}
             />
           ) : (
-            eventInfos.Notes
+            itemInfos.Notes
           )}
         </td>
-        <SignCell item={event} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
-          <div className="famhistory__event-btn-container">
+          <div className="pasthealth__item-btn-container">
             {!editVisible ? (
               <>
                 <button onClick={handleEditClick}>Edit</button>
@@ -234,4 +248,4 @@ const FamHistoryEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
   );
 };
 
-export default FamHistoryEvent;
+export default PastHealthItem;

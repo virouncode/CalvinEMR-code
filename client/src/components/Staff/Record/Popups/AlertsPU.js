@@ -1,20 +1,31 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import AlertForm from "../Topics/Alerts/AlertForm";
 import AlertItem from "../Topics/Alerts/AlertItem";
 
-const AlertsPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
-  //HOOKS
+const AlertsPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
+  patientId,
+  setPopUpVisible,
+}) => {
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
 
-  //HANDLERS
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
+  //HANDLERS
   const handleClose = async (e) => {
     if (
       editCounter.current === 0 ||
@@ -41,13 +52,10 @@ const AlertsPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
         <i className="fa-solid fa-person-circle-question"></i>
       </h1>
       {errMsgPost && <div className="alerts__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="alerts__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="alerts__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="alerts__table-container" ref={rootRef}>
             <table className="alerts__table">
               <thead>
                 <tr>
@@ -57,9 +65,7 @@ const AlertsPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,42 +78,43 @@ const AlertsPU = ({ patientId, setPopUpVisible, datas, isLoading, errMsg }) => {
                     errMsgPost={errMsgPost}
                   />
                 )}
-                {datas.map((concern) => (
-                  <AlertItem
-                    item={concern}
-                    key={concern.id}
-                    editCounter={editCounter}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                  />
-                ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <AlertItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          lastItemRef={lastItemRef}
+                        />
+                      ) : (
+                        <AlertItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                        />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && <EmptyRow colSpan="6" text="No alerts" />}
+                {loading && <LoadingRow colSpan="6" />}
               </tbody>
             </table>
-            <div className="alerts__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="alerts__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

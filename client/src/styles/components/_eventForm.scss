@@ -9,7 +9,7 @@
         align-items: center;
         margin-bottom: 10px;
         border: solid 1px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 10px;
         &--guest {
             flex-direction: column;
@@ -64,18 +64,44 @@
             display:grid;
             border: solid 1px $grey;
             padding: 10px;
-            border-radius: 4px;
+            border-radius: 6px;
             justify-content: space-between;
             grid-template-columns: 40% 60%;
             align-items: flex-start;
             .results {
-                height:170px;
-                overflow:scroll;
-                border: solid 1px $grey;
-                padding: 10px;
-                border-radius: 4px;
                 font-size: 0.75rem;
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                &__sertarien {
+                    height:400px;
+                }
+                &__title {
+                    font-weight: bold;
+                    position: sticky;
+                    top:0;
+                    background-color: $white;
+                    padding-top: 10px;
+                }
+                &__patients {
+                    border: solid 1px $grey;
+                    padding: 0 10px 10px;
+                    border-radius: 6px;
+                    height:175px;
+                    overflow:scroll;
+                    width: 50%;
+                }
+                &__staff {
+                    border: solid 1px $grey;
+                    padding: 0 10px 10px;
+                    border-radius: 6px;
+                    height:175px;
+                    overflow:scroll;
+                    width: 50%;
+                }
             }
+            
+        
             .search-bar {
                 display: flex;
                 flex-direction: column;

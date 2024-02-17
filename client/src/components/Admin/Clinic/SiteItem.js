@@ -3,43 +3,22 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../datas/codesTables";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { adminIdToName } from "../../../utils/adminIdToName";
 import { toLocalDate } from "../../../utils/formatDates";
+import { showDocument } from "../../../utils/showDocument";
 import {
   getLastUpdate,
   isUpdated,
 } from "../../../utils/socketHandlers/updates";
 
 const SiteItem = ({ site, handleEditClick }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
 
   const handleClickLogo = (e) => {
     showDocument(site.logo?.url, site.logo?.mime);
   };
 
-  const showDocument = async (docUrl, docMime) => {
-    let docWindow;
-    if (!docMime.includes("officedocument")) {
-      docWindow = window.open(
-        docUrl,
-        "_blank",
-        "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=600, left=320, top=200"
-      );
-    } else {
-      docWindow = window.open(
-        `https://docs.google.com/gview?url=${docUrl}`,
-        "_blank",
-        "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no, width=800, height=600, left=320, top=200"
-      );
-    }
-
-    if (docWindow === null) {
-      alert("Please disable your browser pop-up blocker and sign in again");
-      window.location.assign("/login");
-      return;
-    }
-  };
   return (
     <>
       <tr>

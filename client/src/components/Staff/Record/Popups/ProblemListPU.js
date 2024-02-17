@@ -1,9 +1,9 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ProblemListForm from "../Topics/ProblemList/ProblemListForm";
 import ProblemListItem from "../Topics/ProblemList/ProblemListItem";
 
@@ -47,7 +47,7 @@ const ProblemListPU = ({
       </h1>
       {errMsgPost && <div className="problemlist__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="problemlist__err">{errMsg}</p>
       ) : (

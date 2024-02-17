@@ -1,10 +1,16 @@
 //Libraries
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
+import xanoPut from "../../../api/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
+import useAvailableRooms from "../../../hooks/useAvailableRooms";
 import { useEventForm } from "../../../hooks/useEventForm";
+import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import {
   toLocalDate,
@@ -17,6 +23,7 @@ import {
 } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { statuses } from "../../../utils/statuses";
+import { toSiteName } from "../../../utils/toSiteName";
 import { toRoomTitle } from "../../../validation/toRoomTitle";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import DurationPicker from "../../All/UI/Pickers/DurationPicker";
@@ -32,8 +39,6 @@ var _ = require("lodash");
 
 //MY COMPONENT
 const EventForm = ({
-  staffInfos,
-  demographicsInfos,
   currentEvent,
   setFormVisible,
   remainingStaff,
@@ -42,79 +47,48 @@ const EventForm = ({
   hostsIds,
   setHostsIds,
   sites,
+  setTimelineSiteId,
+  sitesIds,
+  setSitesIds,
 }) => {
   //=========================== HOOKS =================================//
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 15,
+    offset: 0,
+  });
+  const [search, setSearch] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    birth: "",
+    chart: "",
+    health: "",
+  });
+  const { loading, err, patientsDemographics, hasMore } =
+    usePatientsDemographics(search, paging);
   const [{ formDatas, tempFormDatas }, , setTempFormDatas] = useEventForm(
     currentEvent.current.id
   );
-  const [availableRooms, setAvailableRooms] = useState([]);
-  const { auth, user, clinic, socket } = useAuth();
-  const [staffGuestsInfos, setStaffGuestsInfos] = useState([]);
-  const [patientsGuestsInfos, setPatientsGuestsInfos] = useState([]);
+  const [availableRooms, setAvailableRooms] = useAvailableRooms(
+    parseInt(currentEvent.current.id),
+    Date.parse(currentEvent.current.start),
+    Date.parse(currentEvent.current.end),
+    sites,
+    currentEvent.current.extendedProps.siteId,
+    auth.authToken
+  );
   const [invitationVisible, setInvitationVisible] = useState(false);
-  const [hostSettings, setHostSettings] = useState(null);
-
   const fpStart = useRef(null); //flatpickr start date
   const fpEnd = useRef(null); //flatpickr end date
   const previousStart = useRef(currentEvent.current.start);
   const previousEnd = useRef(currentEvent.current.end);
   const initialColor = useRef(currentEvent.current.backgroundColor);
   const initialTextColor = useRef(currentEvent.current.textColor);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchSettings = async () => {
-      try {
-        const response = await axiosXanoStaff.get(
-          `/settings_for_staff?staff_id=${currentEvent.current.extendedProps.host}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
-        if (abortController.signal.aborted) return;
-        setHostSettings(response.data);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch settings: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchSettings();
-    return () => abortController.abort();
-  }, [auth.authToken, currentEvent]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAvailableRooms = async () => {
-      try {
-        const response = await getAvailableRooms(
-          parseInt(currentEvent.current.id),
-          Date.parse(currentEvent.current.start),
-          Date.parse(currentEvent.current.end),
-          sites,
-          currentEvent.current.extendedProps.siteId,
-          auth.authToken,
-          abortController
-        );
-        if (abortController.signal.aborted) return;
-        setAvailableRooms(response);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to get available rooms ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchAvailableRooms();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, currentEvent, sites]);
 
   //============================ HANDLERS ==========================//
 
@@ -137,11 +111,13 @@ const EventForm = ({
   };
 
   const handleHostChange = async (e) => {
-    const name = e.target.name;
     const value = parseInt(e.target.value);
     //Change event on calendar
     currentEvent.current.setExtendedProp("host", value);
-
+    currentEvent.current.setExtendedProp(
+      "hostName",
+      staffIdToTitleAndName(staffInfos, value, true)
+    );
     if (value === user.id) {
       currentEvent.current.setProp("color", "#6490D2");
       currentEvent.current.setProp("textColor", "#FEFEFE");
@@ -154,12 +130,15 @@ const EventForm = ({
       //CHECK HOST IN THE FILTER !!!!!!!!!!
     }
     //Update form datas
-    setTempFormDatas({ ...tempFormDatas, [name]: value });
+    setTempFormDatas({ ...tempFormDatas, host_id: value });
   };
-  const handleChangeSite = async (e) => {
+
+  const handleSiteChange = async (e) => {
     const value = parseInt(e.target.value);
     currentEvent.current.setExtendedProp("siteId", value);
+    currentEvent.current.setExtendedProp("siteName", toSiteName(sites, value));
     currentEvent.current.setExtendedProp("roomId", "z");
+    currentEvent.current.setExtendedProp("roomTitle", "To Be Determined");
     currentEvent.current.setResources(["z"]);
     setTempFormDatas({ ...tempFormDatas, site_id: value, room_id: "z" });
     if (tempFormDatas.start && tempFormDatas.end) {
@@ -176,7 +155,6 @@ const EventForm = ({
   };
 
   const handleRoomChange = async (e) => {
-    const name = e.target.name;
     const value = e.target.value;
     if (
       (isRoomOccupied(value) &&
@@ -191,9 +169,13 @@ const EventForm = ({
     ) {
       //Change event on calendar
       currentEvent.current.setExtendedProp("roomId", value);
+      currentEvent.current.setExtendedProp(
+        "roomTitle",
+        toRoomTitle(sites, tempFormDatas.site_id, value)
+      );
       currentEvent.current.setResources([value]);
       //Update form datas
-      setTempFormDatas({ ...tempFormDatas, [name]: value });
+      setTempFormDatas({ ...tempFormDatas, room_id: value });
     }
   };
 
@@ -222,11 +204,15 @@ const EventForm = ({
       return;
     }
     if (
-      tempFormDatas.room === "To be determined" ||
-      hypotheticAvailableRooms.includes(tempFormDatas.room) ||
-      (!hypotheticAvailableRooms.includes(tempFormDatas.room) &&
+      tempFormDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(tempFormDatas.room_id) &&
         (await confirmAlert({
-          content: `${tempFormDatas.room} will be occupied at this time slot, change start time anyway ?`,
+          content: `${toRoomTitle(
+            sites,
+            tempFormDatas.site_id,
+            tempFormDatas.room_id
+          )} will be occupied at this time slot, change start time anyway ?`,
         })))
     ) {
       //Change event start on calendar
@@ -276,11 +262,15 @@ const EventForm = ({
       });
     }
     if (
-      tempFormDatas.room === "To be determined" ||
-      hypotheticAvailableRooms.includes(tempFormDatas.room) ||
-      (!hypotheticAvailableRooms.includes(tempFormDatas.room) &&
+      tempFormDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(tempFormDatas.room_id) &&
         (await confirmAlert({
-          content: `${tempFormDatas.room} will be occupied at this time slot, change end time anyway ?`,
+          content: `${toRoomTitle(
+            sites,
+            tempFormDatas.site_id,
+            tempFormDatas.room_id
+          )} will be occupied at this time slot, change end time anyway ?`,
         })))
     ) {
       currentEvent.current.setEnd(date); //re-render
@@ -327,36 +317,94 @@ const EventForm = ({
     }
   };
 
-  const handleDurationHoursChange = (e) => {
+  const handleDurationHoursChange = async (e) => {
     const value = e.target.value;
     const hoursInt = value === "" ? 0 : parseInt(value);
     const minInt = parseInt(tempFormDatas.Duration % 60);
-    //change event on calendar
-    currentEvent.current.setEnd(
-      tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
-    );
-    //update form datas
-    setTempFormDatas({
-      ...tempFormDatas,
-      Duration: hoursInt * 60 + minInt,
-      end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
-    });
+    let hypotheticAvailableRooms;
+    try {
+      hypotheticAvailableRooms = await getAvailableRooms(
+        parseInt(currentEvent.current.id),
+        tempFormDatas.start,
+        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+        sites,
+        tempFormDatas.site_id,
+        auth.authToken
+      );
+    } catch (err) {
+      toast.error(`Error: unable to get available rooms: ${err.message}`, {
+        containerId: "A",
+      });
+      return;
+    }
+    if (
+      tempFormDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(tempFormDatas.room_id) &&
+        (await confirmAlert({
+          content: `${toRoomTitle(
+            sites,
+            tempFormDatas.site_id,
+            tempFormDatas.room_id
+          )} will be occupied at this time slot, change end time anyway ?`,
+        })))
+    ) {
+      //change event on calendar
+      currentEvent.current.setEnd(
+        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
+      );
+      //update form datas
+      setTempFormDatas({
+        ...tempFormDatas,
+        Duration: hoursInt * 60 + minInt,
+        end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+      });
+    }
   };
 
-  const handleDurationMinChange = (e) => {
+  const handleDurationMinChange = async (e) => {
     const value = e.target.value;
     const hoursInt = parseInt(tempFormDatas.Duration / 60);
     const minInt = value === "" ? 0 : parseInt(value);
-    //change event on calendar
-    currentEvent.current.setEnd(
-      tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
-    );
-    //update form datas
-    setTempFormDatas({
-      ...tempFormDatas,
-      Duration: hoursInt * 60 + minInt,
-      end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
-    });
+    let hypotheticAvailableRooms;
+    try {
+      hypotheticAvailableRooms = await getAvailableRooms(
+        parseInt(currentEvent.current.id),
+        tempFormDatas.start,
+        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+        sites,
+        tempFormDatas.site_id,
+        auth.authToken
+      );
+    } catch (err) {
+      toast.error(`Error: unable to get available rooms: ${err.message}`, {
+        containerId: "A",
+      });
+      return;
+    }
+    if (
+      tempFormDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(tempFormDatas.room_id) &&
+        (await confirmAlert({
+          content: `${toRoomTitle(
+            sites,
+            tempFormDatas.site_id,
+            tempFormDatas.room_id
+          )} will be occupied at this time slot, change end time anyway ?`,
+        })))
+    ) {
+      //change event on calendar
+      currentEvent.current.setEnd(
+        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
+      );
+      //update form datas
+      setTempFormDatas({
+        ...tempFormDatas,
+        Duration: hoursInt * 60 + minInt,
+        end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+      });
+    }
   };
 
   const handleInvitation = async (e) => {
@@ -366,72 +414,51 @@ const EventForm = ({
 
   const handleCancel = async (e) => {
     e.preventDefault();
-    if (_.isEqual(tempFormDatas, formDatas)) {
-      setTempFormDatas(formDatas);
-      currentEvent.current.setExtendedProp("host", formDatas.host_id);
-      currentEvent.current.setExtendedProp(
-        "purpose",
-        formDatas.AppointmentPurpose
-      );
-      currentEvent.current.setExtendedProp(
-        "status",
-        formDatas.AppointmentStatus
-      );
-      currentEvent.current.setStart(formDatas.start);
-      currentEvent.current.setEnd(formDatas.end);
-      currentEvent.current.setAllDay(formDatas.all_day);
-      currentEvent.current.setExtendedProp("roomId", formDatas.room_id);
-      currentEvent.current.setExtendedProp("siteId", formDatas.site_id);
-      currentEvent.current.setResources([formDatas.room_id]);
-      currentEvent.current.setExtendedProp(
-        "staffGuestsIds",
-        formDatas.staff_guests_ids
-      );
-      currentEvent.current.setExtendedProp(
-        "patientsGuestsIds",
-        formDatas.patients_guests_ids
-      );
-      currentEvent.current.setProp("color", initialColor.current);
-      currentEvent.current.setProp("textColor", initialTextColor.current);
-      setFormVisible(false);
-      setCalendarSelectable(true);
-    } else {
-      if (
-        await confirmAlert({
-          content:
-            "You didn't save the appointment since your last changes, close anyway ?",
-        })
-      ) {
-        setTempFormDatas(formDatas);
-        currentEvent.current.setExtendedProp("host", formDatas.host_id);
-        currentEvent.current.setExtendedProp(
-          "purpose",
-          formDatas.AppointmentPurpose
-        );
-        currentEvent.current.setExtendedProp(
-          "status",
-          formDatas.AppointmentStatus
-        );
-        currentEvent.current.setStart(formDatas.start);
-        currentEvent.current.setEnd(formDatas.end);
-        currentEvent.current.setAllDay(formDatas.all_day);
-        currentEvent.current.setExtendedProp("siteId", formDatas.site_id);
-        currentEvent.current.setExtendedProp("roomId", formDatas.room_id);
-        currentEvent.current.setResources([formDatas.room_id]);
-        currentEvent.current.setExtendedProp(
-          "staffGuestsIds",
-          formDatas.staff_guests_ids
-        );
-        currentEvent.current.setExtendedProp(
-          "patientsGuestsIds",
-          formDatas.patients_guests_ids
-        );
-        currentEvent.current.setProp("color", initialColor.current);
-        currentEvent.current.setProp("textColor", initialTextColor.current);
-        setFormVisible(false);
-        setCalendarSelectable(true);
-      }
-    }
+
+    currentEvent.current.setExtendedProp("host", formDatas.host_id);
+    currentEvent.current.setExtendedProp(
+      "hostName",
+      staffIdToTitleAndName(staffInfos, formDatas.host_id, true)
+    );
+    currentEvent.current.setExtendedProp(
+      "purpose",
+      formDatas.AppointmentPurpose
+    );
+    currentEvent.current.setExtendedProp("status", formDatas.AppointmentStatus);
+    currentEvent.current.setStart(formDatas.start);
+    currentEvent.current.setEnd(formDatas.end);
+    currentEvent.current.setAllDay(formDatas.all_day);
+    currentEvent.current.setExtendedProp("roomId", formDatas.room_id);
+    currentEvent.current.setExtendedProp(
+      "roomTitle",
+      toRoomTitle(sites, formDatas.site_id, formDatas.room_id)
+    );
+    currentEvent.current.setExtendedProp("siteId", formDatas.site_id);
+    currentEvent.current.setExtendedProp(
+      "siteName",
+      toSiteName(sites, formDatas.site_id)
+    );
+    currentEvent.current.setResources([formDatas.room_id]);
+    currentEvent.current.setExtendedProp(
+      "staffGuestsIds",
+      formDatas.staff_guests_ids
+    );
+    currentEvent.current.setExtendedProp(
+      "patientsGuestsIds",
+      formDatas.patients_guests_ids
+    );
+    currentEvent.current.setExtendedProp(
+      "staffGuestsIds",
+      formDatas.staff_guests_ids
+    );
+    currentEvent.current.setExtendedProp(
+      "patientsGuestsIds",
+      formDatas.patients_guests_ids
+    );
+    currentEvent.current.setProp("color", initialColor.current);
+    currentEvent.current.setProp("textColor", initialTextColor.current);
+    setFormVisible(false);
+    setCalendarSelectable(true);
   };
 
   const handleSubmit = async (e) => {
@@ -447,12 +474,16 @@ const EventForm = ({
     let endAllDay = new Date(startAllDay);
     endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
 
-    const datas = {
+    const datasToPut = {
       host_id: tempFormDatas.host_id,
       start: tempFormDatas.all_day ? startAllDay : tempFormDatas.start,
       end: tempFormDatas.all_day ? endAllDay : tempFormDatas.end,
-      patients_guests_ids: tempFormDatas.patients_guests_ids,
-      staff_guests_ids: tempFormDatas.staff_guests_ids,
+      patients_guests_ids: tempFormDatas.patients_guests_ids.map(
+        ({ patient_infos }) => patient_infos.patient_id
+      ),
+      staff_guests_ids: tempFormDatas.staff_guests_ids.map(
+        ({ staff_infos }) => staff_infos.id
+      ),
       room_id: tempFormDatas.room_id,
       all_day: tempFormDatas.all_day,
       date_created: tempFormDatas.date_created,
@@ -472,16 +503,16 @@ const EventForm = ({
       Provider: {
         Name: {
           FirstName: staffIdToFirstName(
-            clinic.staffInfos,
+            staffInfos,
             parseInt(tempFormDatas.host_id)
           ),
           LastName: staffIdToLastName(
-            clinic.staffInfos,
+            staffInfos,
             parseInt(tempFormDatas.host_id)
           ),
         },
         OHIPPhysicianId: staffIdToOHIP(
-          clinic.staffInfos,
+          staffInfos,
           parseInt(tempFormDatas.host_id)
         ),
       },
@@ -490,23 +521,21 @@ const EventForm = ({
       site_id: tempFormDatas.site_id,
     };
     try {
-      await axiosXanoStaff.put(
-        `/appointments/${currentEvent.current.id}`,
-        datas,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+      const response = await xanoPut(
+        "/appointments",
+        axiosXanoStaff,
+        auth.authToken,
+        datasToPut,
+        currentEvent.current.id
       );
+
       setHostsIds([...hostsIds, tempFormDatas.host_id]);
       socket.emit("message", {
         route: "EVENTS",
         action: "update",
         content: {
           id: currentEvent.current.id,
-          data: { id: currentEvent.current.id, ...datas },
+          data: response.data,
         },
       });
       socket.emit("message", {
@@ -514,10 +543,14 @@ const EventForm = ({
         action: "update",
         content: {
           id: currentEvent.current.id,
-          data: { id: currentEvent.current.id, ...datas },
+          data: response.data,
         },
       });
       setFormVisible(false);
+      setTimelineSiteId(response.data.site_id);
+      if (!sitesIds.includes(response.data.site_id)) {
+        setSitesIds([...sitesIds, response.data.site_id]);
+      }
       setCalendarSelectable(true);
       toast.success("Appointment saved successfully", { containerId: "A" });
     } catch (err) {
@@ -536,16 +569,14 @@ const EventForm = ({
     return availableRooms.includes(roomId) ? false : true;
   };
 
-  const isSecretary = () => {
-    return user.title === "Secretary" ? true : false;
-  };
-
   return (
     formDatas &&
+    tempFormDatas &&
     (!invitationVisible ? (
       <form
         className={
-          isSecretary() || currentEvent.current.extendedProps.host === user.id
+          user.title === "Secretary" ||
+          currentEvent.current.extendedProps.host === user.id
             ? "event-form"
             : "event-form event-form--uneditable"
         }
@@ -554,19 +585,14 @@ const EventForm = ({
         <div className="event-form__row">
           <div className="event-form__item">
             <label>Host </label>
-            {isSecretary() ? (
+            {user.title === "Secretary" ? (
               <HostsList
-                staffInfos={staffInfos}
                 handleHostChange={handleHostChange}
                 hostId={tempFormDatas.host_id}
               />
             ) : (
               <p>
-                {staffIdToTitleAndName(
-                  clinic.staffInfos,
-                  tempFormDatas.host_id,
-                  true
-                )}
+                {staffIdToTitleAndName(staffInfos, tempFormDatas.host_id, true)}
               </p>
             )}
           </div>
@@ -629,25 +655,32 @@ const EventForm = ({
         </div>
         <div className="event-form__row event-form__row--guest">
           <EditGuests
-            staffInfos={staffInfos}
-            demographicsInfos={demographicsInfos}
             tempFormDatas={tempFormDatas}
             setTempFormDatas={setTempFormDatas}
             currentEvent={currentEvent}
-            editable={isSecretary() || user.id === tempFormDatas.host_id}
+            editable={
+              user.title === "Secretary" || user.id === tempFormDatas.host_id
+            }
             hostId={tempFormDatas.host_id}
-            staffGuestsInfos={staffGuestsInfos}
-            setStaffGuestsInfos={setStaffGuestsInfos}
-            patientsGuestsInfos={patientsGuestsInfos}
-            setPatientsGuestsInfos={setPatientsGuestsInfos}
+            search={search}
+            setSearch={setSearch}
+            paging={paging}
+            setPaging={setPaging}
+            loading={loading}
+            err={err}
+            hasMore={hasMore}
+            patientsDemographics={patientsDemographics}
           />
         </div>
         <div className="event-form__row event-form__row--radio">
-          <SelectSite
-            handleChangeSite={handleChangeSite}
-            sites={sites}
-            value={tempFormDatas.site_id}
-          />
+          <div style={{ marginBottom: "5px" }}>
+            <SelectSite
+              handleSiteChange={handleSiteChange}
+              sites={sites}
+              value={tempFormDatas.site_id}
+            />
+          </div>
+
           <RoomsRadio
             handleRoomChange={handleRoomChange}
             roomSelectedId={tempFormDatas.room_id}
@@ -677,7 +710,7 @@ const EventForm = ({
           </div>
         </div>
         <div className="event-form__btns">
-          {isSecretary() ||
+          {user.title === "Secretary" ||
           currentEvent.current.extendedProps.host === user.id ? (
             <>
               <input type="submit" value="Save" />
@@ -685,7 +718,8 @@ const EventForm = ({
               <button
                 onClick={handleInvitation}
                 disabled={
-                  (!staffGuestsInfos.length && !patientsGuestsInfos.length) ||
+                  (!tempFormDatas.staff_guests_ids.length &&
+                    !tempFormDatas.patients_guests_ids.length) ||
                   !tempFormDatas.host_id
                 }
               >
@@ -704,9 +738,19 @@ const EventForm = ({
         staffInfos={staffInfos}
         start={tempFormDatas.start}
         end={tempFormDatas.end}
-        patientsGuestsInfos={patientsGuestsInfos}
-        staffGuestsInfos={staffGuestsInfos}
-        settings={hostSettings}
+        patientsGuestsInfos={
+          patientsDemographics.length > 0
+            ? tempFormDatas.patients_guests_ids.map(({ patient_infos }) =>
+                patientsDemographics.find(
+                  ({ patient_id }) => patient_id === patient_infos.patient_id
+                )
+              )
+            : []
+        }
+        staffGuestsInfos={tempFormDatas.staff_guests_ids.map((staffGuestId) =>
+          staffInfos.find(({ id }) => id === staffGuestId)
+        )}
+        sites={sites}
       />
     ))
   );

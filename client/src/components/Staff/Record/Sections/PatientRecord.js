@@ -1,38 +1,22 @@
-import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import useAuth from "../../../../hooks/useAuth";
-import { onMessagePatientRecord } from "../../../../utils/socketHandlers/onMessagePatientRecord";
-import ClinicalNotes from "../ClinicalNotes/ClinicalNotes";
+import usePatientDemoSocket from "../../../../hooks/usePatientDemoSocket";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import PatientMenuLeft from "./PatientMenuLeft";
-import PatientMenuRight from "./PatientMenuRight";
 
-const PatientRecord = () => {
+const PatientRecord = ({
+  demographicsInfos,
+  setDemographicsInfos,
+  loadingPatient,
+  errPatient,
+}) => {
   //HOOKS
-  const { clinic, socket } = useAuth();
-  const [demographicsInfos, setDemographicsInfos] = useState(null);
   const { id } = useParams();
   const [allContentsVisible, setAllContentsVisible] = useState(true);
 
-  useEffect(() => {
-    setDemographicsInfos(
-      clinic.demographicsInfos.find(
-        (patient) => patient.patient_id === parseInt(id)
-      )
-    );
-  }, [id, clinic.demographicsInfos]);
+  usePatientDemoSocket(demographicsInfos, setDemographicsInfos);
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessagePatientRecord(message, setDemographicsInfos);
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [socket]);
-
-  const handleClick = (e) => {
+  const handleClickFold = (e) => {
     setAllContentsVisible((v) => !v);
   };
 
@@ -41,7 +25,7 @@ const PatientRecord = () => {
       <button
         type="button"
         className="patient-record__fold"
-        onClick={handleClick}
+        onClick={handleClickFold}
       >
         {allContentsVisible ? "Fold All" : "Unfold All"}
       </button>
@@ -51,8 +35,10 @@ const PatientRecord = () => {
           setDemographicsInfos={setDemographicsInfos}
           patientId={parseInt(id)}
           allContentsVisible={allContentsVisible}
+          loadingPatient={loadingPatient}
+          errPatient={errPatient}
         />
-        <ClinicalNotes
+        {/* <ClinicalNotes
           demographicsInfos={demographicsInfos}
           allContentsVisible={allContentsVisible}
           patientId={parseInt(id)}
@@ -61,7 +47,7 @@ const PatientRecord = () => {
           demographicsInfos={demographicsInfos}
           patientId={parseInt(id)}
           allContentsVisible={allContentsVisible}
-        />
+        /> */}
       </div>
     </>
   ) : (
@@ -73,7 +59,7 @@ const PatientRecord = () => {
         height: "100vh",
       }}
     >
-      <CircularProgress size="1rem" style={{ margin: "5px" }} />
+      <CircularProgressMedium />
     </div>
   );
 };

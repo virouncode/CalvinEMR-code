@@ -1,35 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import GuestsSearchForm from "./GuestsSearchForm";
 import GuestsSearchResults from "./GuestsSearchResults";
 
 const GuestsSearch = ({
-  handleAddGuest,
-  staffInfos,
-  demographicsInfos,
-  staffGuestsInfos,
-  patientsGuestsInfos,
+  search,
+  handleSearch,
+  patientsDemographics,
   hostId,
+  handleAddGuest,
+  hasMore,
+  setPaging,
+  loading,
 }) => {
-  const [search, setSearch] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    birth: "",
-    chart: "",
-    health: "",
-  });
-
   return (
     <>
-      <GuestsSearchForm search={search} setSearch={setSearch} />
+      <GuestsSearchForm search={search} handleSearch={handleSearch} />
       <GuestsSearchResults
         search={search}
         handleAddGuest={handleAddGuest}
-        staffInfos={staffInfos}
-        demographicsInfos={demographicsInfos}
-        staffGuestsInfos={staffGuestsInfos}
-        patientsGuestsInfos={patientsGuestsInfos}
+        patientsDemographics={patientsDemographics}
         hostId={hostId}
+        hasMore={hasMore}
+        setPaging={setPaging}
+        loading={loading}
       />
     </>
   );

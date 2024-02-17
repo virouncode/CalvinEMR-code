@@ -1,9 +1,8 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -12,6 +11,7 @@ import {
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { clinicalSchema } from "../../../../validation/clinicalValidation";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 import ClinicalNotesTemplatesList from "./ClinicalNotesTemplatesList";
@@ -20,7 +20,7 @@ import NewTemplate from "./NewTemplate";
 
 const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   //hooks
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     subject: "Clinical note",
@@ -339,9 +339,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           <button type="button" onClick={handleCancelClick}>
             Cancel
           </button>
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
       </form>
       {newTemplateVisible && (

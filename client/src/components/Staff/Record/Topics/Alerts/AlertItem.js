@@ -4,16 +4,26 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { alertSchema } from "../../../../../validation/alertValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const AlertItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
+const AlertItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 
@@ -112,6 +122,7 @@ const AlertItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
       <tr
         className="alerts__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
@@ -126,19 +137,7 @@ const AlertItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
             itemInfos.AlertDescription
           )}
         </td>
-        <td>
-          {editVisible ? (
-            <input
-              name="Notes"
-              onChange={handleChange}
-              type="text"
-              value={itemInfos.Notes}
-              autoComplete="off"
-            />
-          ) : (
-            itemInfos.Notes
-          )}
-        </td>
+
         <td>
           {editVisible ? (
             <input
@@ -165,7 +164,20 @@ const AlertItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
             toLocalDate(itemInfos.EndDate)
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <td>
+          {editVisible ? (
+            <input
+              name="Notes"
+              onChange={handleChange}
+              type="text"
+              value={itemInfos.Notes}
+              autoComplete="off"
+            />
+          ) : (
+            itemInfos.Notes
+          )}
+        </td>
+        <SignCell item={item} />
         <td>
           <div className="alerts__item-btn-container">
             {!editVisible ? (

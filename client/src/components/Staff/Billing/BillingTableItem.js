@@ -1,13 +1,14 @@
-import { CircularProgress, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { billingItemSchema } from "../../../validation/billingValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import DiagnosisSearch from "./DiagnosisSearch";
 import SinSearch from "./HcnSearch";
@@ -15,7 +16,7 @@ import PatientNameSearch from "./PatientNameSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
 
 const BillingTableItem = ({ billing, errMsg, setErrMsg }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
@@ -185,14 +186,14 @@ const BillingTableItem = ({ billing, errMsg, setErrMsg }) => {
       return;
     }
 
-    if (itemInfos.referrer_ohip_nbr.length !== 6) {
-      setErrMsg("Referrer OHIP nbr field must be 6-digits");
-      return;
-    }
-    if (itemInfos.provider_ohip_nbr.length !== 6) {
-      setErrMsg("Referrer OHIP nbr field must be 6-digits");
-      return;
-    }
+    // if (itemInfos.referrer_ohip_nbr.length !== 6) {
+    //   setErrMsg("Referrer OHIP nbr field must be 6-digits");
+    //   return;
+    // }
+    // if (itemInfos.provider_ohip_nbr.length !== 6) {
+    //   setErrMsg("Referrer OHIP nbr field must be 6-digits");
+    //   return;
+    // }
     if (
       itemInfos.patient_hcn &&
       !clinic.demographicsInfos.find(
@@ -513,14 +514,6 @@ const BillingTableItem = ({ billing, errMsg, setErrMsg }) => {
               billing.billing_code.billing_code
             )}
           </td>
-          {console.log(
-            typeof billing.billing_code.assistant_fee,
-            billing.billing_code.assistant_fee
-          )}
-          {console.log(
-            typeof billing.billing_code.specialist_fee,
-            billing.billing_code.specialist_fee
-          )}
           <td>{billing.billing_code.provider_fee / 10000} $</td>
           <td>{billing.billing_code.assistant_fee / 10000} $</td>
           <td>{billing.billing_code.specialist_fee / 10000} $</td>
@@ -538,7 +531,7 @@ const BillingTableItem = ({ billing, errMsg, setErrMsg }) => {
                 ) : (
                   <>
                     {isPuting ? (
-                      <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                      <CircularProgressMedium />
                     ) : (
                       <input
                         type="submit"

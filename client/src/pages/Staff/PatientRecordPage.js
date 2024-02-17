@@ -1,27 +1,44 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
+import { axiosXanoStaff } from "../../api/xanoStaff";
 import PatientRecord from "../../components/Staff/Record/Sections/PatientRecord";
-import useAuth from "../../hooks/useAuth";
-import { patientIdToName } from "../../utils/patientIdToName";
+import useAuthContext from "../../hooks/useAuthContext";
+import useFetchDatas from "../../hooks/useFetchDatas";
+import usePatientDemoSocket from "../../hooks/usePatientDemoSocket";
+import { toPatientName } from "../../utils/toPatientName";
 
 const PatientRecordPage = () => {
-  const params = useParams();
-  const { clinic } = useAuth();
+  const { id } = useParams();
+  const { auth } = useAuthContext();
+  const [demographicsInfos, setDemographicsInfos, loading, err] = useFetchDatas(
+    `/demographics/${parseInt(id)}`,
+    axiosXanoStaff,
+    auth.authToken,
+    null,
+    null,
+    true
+  );
+  usePatientDemoSocket(demographicsInfos, setDemographicsInfos);
   return (
-    <>
-      <Helmet>
-        <title>
-          EMR: {patientIdToName(clinic.demographicsInfos, parseInt(params.id))}
-        </title>
-      </Helmet>
-      <section className="patient-record-section">
-        <h2 className="patient-record-section__title">
-          Patient Medical Record
-        </h2>
-        <PatientRecord />
-      </section>
-    </>
+    demographicsInfos && (
+      <>
+        <Helmet>
+          <title>{`EMR: ${toPatientName(demographicsInfos)}`}</title>
+        </Helmet>
+        <section className="patient-record-section">
+          <h2 className="patient-record-section__title">
+            Patient Medical Record
+          </h2>
+          <PatientRecord
+            demographicsInfos={demographicsInfos}
+            setDemographicsInfos={setDemographicsInfos}
+            loadingPatient={loading}
+            errPatient={err}
+          />
+        </section>
+      </>
+    )
   );
 };
 

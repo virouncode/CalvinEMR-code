@@ -10,7 +10,7 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
@@ -20,7 +20,7 @@ import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 
 const MedTemplateForm = ({ setNewVisible }) => {
   //HOOKS
-  const { auth, socket, user } = useAuth();
+  const { auth, socket, user } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     DrugIdentificationNumber: "",
     DrugName: "",

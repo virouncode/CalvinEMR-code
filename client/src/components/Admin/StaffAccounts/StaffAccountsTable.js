@@ -1,5 +1,5 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import StaffAccountItem from "./StaffAccountItem";
 
 const StaffAccountsTable = ({
@@ -78,7 +78,7 @@ const StaffAccountsTable = ({
         alignItems: "center",
       }}
     >
-      <CircularProgress size="1rem" style={{ margin: "5px" }} />
+      <CircularProgressMedium />
     </div>
   );
 };

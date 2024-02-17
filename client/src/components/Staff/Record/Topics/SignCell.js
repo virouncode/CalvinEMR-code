@@ -1,4 +1,5 @@
 import React from "react";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDate } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -6,7 +7,8 @@ import {
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 
-const SignCell = ({ item, staffInfos }) => {
+const SignCell = ({ item }) => {
+  const { staffInfos } = useStaffInfosContext();
   return (
     <>
       <td>

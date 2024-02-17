@@ -1,15 +1,15 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { getAge } from "../../../../../utils/getAge";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 import StaffAIAgreement from "../../../Agreement/StaffAIAgreement";
 import CalvinAIDiscussion from "./CalvinAIDiscussion";
 import CalvinAIPrompt from "./CalvinAIPrompt";
 
 const CalvinAI = ({ attachments, initialBody, demographicsInfos }) => {
-  const { user, auth } = useAuth();
+  const { user, auth } = useAuthContext();
   const [chatVisible, setChatVisible] = useState(false);
   const [start, setStart] = useState(false);
   const [messages, setMessages] = useState([
@@ -70,7 +70,7 @@ What is the diagnosis and what treatment would you suggest ?`,
           demographicsInfos={demographicsInfos}
         />
       ) : isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : start ? (
         <CalvinAIDiscussion
           messages={messages}

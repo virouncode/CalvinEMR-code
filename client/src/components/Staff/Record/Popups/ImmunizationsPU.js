@@ -1,7 +1,7 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ImmunizationsCaption from "../Topics/Immunizations/ImmunizationsCaption";
 import ImmunizationsTable from "../Topics/Immunizations/ImmunizationsTable";
 import RecImmunizationsTable from "../Topics/Immunizations/RecImmunizationsTable";
@@ -38,7 +38,7 @@ const ImmunizationsPU = ({
         <button onClick={handleClose}>Close</button>
       </h1>
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="immunizations__err">{errMsg}</p>
       ) : (

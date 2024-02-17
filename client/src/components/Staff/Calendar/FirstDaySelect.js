@@ -1,22 +1,24 @@
 import React from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const FirstDaySelect = () => {
-  const { auth, user, setUser } = useAuth();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
+
   const handleChange = async (e) => {
     const value = e.target.value;
     try {
-      await axiosXanoStaff.put(
-        `/settings/${user.settings.id}`,
-        { ...user.settings, first_day: value },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+      const datasToPut = { ...user.settings, first_day: value };
+      await xanoPut(
+        "/settings",
+        axiosXanoStaff,
+        auth.authToken,
+        datasToPut,
+        user.settings.id
       );
       setUser({
         ...user,

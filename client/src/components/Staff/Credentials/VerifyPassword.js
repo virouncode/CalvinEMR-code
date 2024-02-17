@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const VerifyPassword = ({ setVerified }) => {
   const LOGIN_URL = "/auth/login";
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const handleChange = (e) => {

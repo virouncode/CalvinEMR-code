@@ -5,17 +5,27 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { riskSchema } from "../../../../../validation/riskValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import SignCell from "../SignCell";
+import useUserContext from "../../../../../hooks/useUserContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
 
-const RiskItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
+const RiskItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 
@@ -114,6 +124,7 @@ const RiskItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
       <tr
         className="risk__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
@@ -209,7 +220,7 @@ const RiskItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
             itemInfos.Notes
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="risk__item-btn-container">
             {!editVisible ? (

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import AddressesList from "../../All/UI/Lists/AddressesList";
+import SelectSite from "./SelectSite";
 import TemplatesRadio from "./TemplatesRadio";
 
 const Invitation = ({
@@ -15,48 +16,25 @@ const Invitation = ({
   end,
   patientsGuestsInfos,
   staffGuestsInfos,
-  settings,
+  sites,
 }) => {
   //HOOKS
-  const { auth, user } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const [message, setMessage] = useState(
-    settings.invitation_templates.find(
+    user.settings.invitation_templates.find(
       ({ name }) => name === "In person appointment"
     ).message
   );
   const [intro, setIntro] = useState(
-    settings.invitation_templates.find(
+    user.settings.invitation_templates.find(
       ({ name }) => name === "In person appointment"
     ).intro
   );
   const [templateSelected, setTemplateSelected] = useState(
     "In person appointment"
   );
-  const [siteSelectedId, setSiteSelectedId] = useState(settings.site_id || "");
-  const [sites, setSites] = useState([]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchSites = async () => {
-      try {
-        const response = await axiosXanoStaff.get(`/sites`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setSites(response.data);
-      } catch (err) {
-        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
-          containerId: "A",
-        });
-      }
-    };
-    fetchSites();
-    return () => abortController.abort();
-  }, [auth.authToken]);
+  const [siteSelectedId, setSiteSelectedId] = useState(user.site_id || "");
 
   //HANDLERS
   const handleSend = async (e) => {
@@ -105,9 +83,8 @@ const Invitation = ({
     const adressToSend = clinic?.address;
     const postalCodeToSend = clinic?.postal_code;
     const cityToSend = clinic?.city;
-    const countryToSend = clinic?.country;
 
-    const infosToSend = settings.invitation_templates
+    const infosToSend = user.settings.invitation_templates
       .find(({ name }) => name === templateSelected)
       .infos.replace("[host_name]", hostName)
       .replace(
@@ -120,7 +97,7 @@ const Invitation = ({
       )
       .replace(
         "[address_of_clinic]",
-        `${clinicName} ${adressToSend} ${postalCodeToSend} ${cityToSend} ${countryToSend}`
+        `${clinicName} ${adressToSend} ${postalCodeToSend} ${cityToSend}`
       )
       .replace(
         "[video_call_link]",
@@ -131,7 +108,7 @@ const Invitation = ({
       const patientName =
         patientInfos.Names.LegalName.FirstName.Part +
         " " +
-        patientInfos.Names.LegalName.OtherName.Part +
+        patientInfos.Names.LegalName.OtherName?.[0]?.Part +
         " " +
         patientInfos.Names.LegalName.LastName.Part;
       try {
@@ -242,14 +219,14 @@ Powered by Calvin EMR`,
   const handleSendAndSave = async (e) => {
     e.preventDefault();
     handleSend(e);
-    const newTemplates = [...settings.invitation_templates];
+    const newTemplates = [...user.settings.invitation_templates];
     newTemplates.find(({ name }) => name === templateSelected).intro = intro;
     newTemplates.find(({ name }) => name === templateSelected).message =
       message;
     try {
       await axiosXanoStaff.put(
-        `/settings/${settings.id}`,
-        { ...settings, invitation_templates: newTemplates },
+        `/settings/${user.settings.id}`,
+        { ...user.settings, invitation_templates: newTemplates },
         {
           headers: {
             "Content-Type": "application/json",
@@ -258,7 +235,7 @@ Powered by Calvin EMR`,
         }
       );
     } catch (err) {
-      toast.error(`Error: unable to get user settings: ${err.message}`, {
+      toast.error(`Error: unable to save templates: ${err.message}`, {
         containerId: "A",
       });
     }
@@ -276,30 +253,18 @@ Powered by Calvin EMR`,
   const handleTemplateChange = (e) => {
     setTemplateSelected(e.target.name);
     setIntro(
-      settings.invitation_templates.find(({ name }) => name === e.target.name)
-        .intro
+      user.settings.invitation_templates.find(
+        ({ name }) => name === e.target.name
+      ).intro
     );
     setMessage(
-      settings.invitation_templates.find(({ name }) => name === e.target.name)
-        .message
+      user.settings.invitation_templates.find(
+        ({ name }) => name === e.target.name
+      ).message
     );
   };
   const handleSiteChange = async (e) => {
     setSiteSelectedId(parseInt(e.target.value));
-    try {
-      await axiosXanoStaff.put(
-        `/settings/${settings.id}`,
-        { ...settings, site_id: parseInt(e.target.value) },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
@@ -308,7 +273,7 @@ Powered by Calvin EMR`,
         <div className="invitation__row">
           <TemplatesRadio
             handleTemplateChange={handleTemplateChange}
-            templates={settings.invitation_templates}
+            templates={user.settings.invitation_templates}
             templateSelected={templateSelected}
           />
         </div>
@@ -331,22 +296,31 @@ Powered by Calvin EMR`,
               )
             </label>
           ) : (
-            <label>
-              Appointment Infos (read only)
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              <label>Appointment Infos (read only)</label>
               {templateSelected !== "Video appointment" &&
                 templateSelected !== "Phone appointment" &&
                 templateSelected !== "[Blank]" && (
-                  <AddressesList
-                    handleSiteChange={handleSiteChange}
-                    siteSelectedId={siteSelectedId}
-                    sites={sites}
-                  />
+                  <div>
+                    <SelectSite
+                      handleSiteChange={handleSiteChange}
+                      sites={sites}
+                      value={siteSelectedId}
+                    />
+                  </div>
                 )}
-            </label>
+            </div>
           )}
           <textarea
             value={
-              settings.invitation_templates.find(
+              user.settings.invitation_templates.find(
                 ({ name }) => name === templateSelected
               ).infos
             }

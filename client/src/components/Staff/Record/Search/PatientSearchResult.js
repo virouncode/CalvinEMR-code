@@ -1,12 +1,21 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
-import { toLocalDate } from "../../../../utils/formatDates";
+import useIntersection from "../../../../hooks/useIntersection";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import PatientResultItem from "./PatientResultItem";
 
-const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
-  return sortedPatientsInfos ? (
-    <div className="patient-result">
-      <table>
+const PatientSearchResult = ({
+  search,
+  patientsDemographics,
+  loading,
+  hasMore,
+  setPaging,
+}) => {
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
+
+  return (
+    <div className="patient-result" ref={rootRef}>
+      <table className="patient-result__table">
         <thead>
           <tr>
             <th>Last Name</th>
@@ -14,6 +23,7 @@ const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
             <th>Middle Name</th>
             <th>Date of birth</th>
             <th>Age</th>
+            <th>Chart#</th>
             <th>Email</th>
             <th>Cell phone</th>
             <th>Home phone</th>
@@ -26,43 +36,20 @@ const PatientSearchResult = ({ search, sortedPatientsInfos }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedPatientsInfos
-            .filter(
-              (patient) =>
-                (patient.Names.LegalName.FirstName.Part.toLowerCase().includes(
-                  search.name.toLowerCase()
-                ) ||
-                  patient.Names.LegalName.OtherName[0].Part.toLowerCase().includes(
-                    search.name.toLowerCase()
-                  ) ||
-                  patient.Names.LegalName.LastName.Part.toLowerCase().includes(
-                    search.name.toLowerCase()
-                  )) &&
-                patient.Email.toLowerCase().includes(
-                  search.email.toLowerCase()
-                ) &&
-                patient.PhoneNumber.find(({ phoneNumber }) =>
-                  phoneNumber.toLowerCase().includes(search.phone.toLowerCase())
-                ) &&
-                toLocalDate(patient.DateOfBirth).includes(search.birth) &&
-                patient.ChartNumber.includes(search.chart) &&
-                patient.HealthCard?.Number?.includes(search.health)
-            )
-            .map((patient) => (
+          {patientsDemographics.map((patient, index) =>
+            index === patientsDemographics.length - 1 ? (
+              <PatientResultItem
+                patient={patient}
+                key={patient.id}
+                lastPatientRef={lastItemRef}
+              />
+            ) : (
               <PatientResultItem patient={patient} key={patient.id} />
-            ))}
+            )
+          )}
+          {loading && <LoadingRow colSpan="15" />}
         </tbody>
       </table>
-    </div>
-  ) : (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <CircularProgress size="1rem" style={{ margin: "5px" }} />
     </div>
   );
 };

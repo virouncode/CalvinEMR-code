@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
-import { toWelcomeName } from "../../../utils/toWelcomeName";
+import useUserContext from "../../../hooks/useUserContext";
 
 const Welcome = () => {
   //=================== STATES =======================//
   const [helloMessage, setHelloMessage] = useState("");
-  const { user, clinic } = useAuth();
+  const { user } = useUserContext();
 
   useEffect(() => {
     const displayHello = () => {
@@ -34,7 +33,7 @@ const Welcome = () => {
         <div>
           {helloMessage}
           {", "}
-          {toWelcomeName(user, clinic.staffInfos, clinic.demographicsInfos)}
+          {user.full_name}
         </div>
       </section>
     )

@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 
 const ClinicalNotesToolBar = ({
   addVisible,
@@ -23,7 +23,7 @@ const ClinicalNotesToolBar = ({
   setOrder,
 }) => {
   //HOOKS
-  const { auth, user, setUser } = useAuth();
+  const { auth, user, setUser } = useAuthContext();
   //Events
   const handleClickSelectAll = (e) => {
     if (selectAll) {

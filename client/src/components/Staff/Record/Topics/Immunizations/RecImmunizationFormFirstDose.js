@@ -6,7 +6,7 @@ import {
   siteCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
@@ -25,7 +25,7 @@ const RecImmunizationFormFirstDose = ({
   setErrMsgPost,
 }) => {
   //HOOKS
-  const { auth, user, socket } = useAuth();
+  const { auth, user, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     ImmunizationName: "",
     ImmunizationType: type,

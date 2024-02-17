@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
@@ -27,7 +27,7 @@ const MessageExternalDetail = ({
   const [replyVisible, setReplyVisible] = useState(false);
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [previousMsgs, setPreviousMsgs] = useState(null);
   const [attachments, setAttachments] = useState([]);
   const messageContentRef = useRef(null);

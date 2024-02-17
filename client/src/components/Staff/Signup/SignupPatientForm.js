@@ -1,4 +1,3 @@
-import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../api/fetchRecords";
@@ -12,7 +11,7 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../datas/codesTables";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { createChartNbr } from "../../../utils/createChartNbr";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../utils/formatDates";
@@ -21,13 +20,14 @@ import { toInverseRelation } from "../../../utils/toInverseRelation";
 import { demographicsSchema } from "../../../validation/demographicsValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import StaffList from "../../All/UI/Lists/StaffList";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import RelationshipsForm from "./RelationshipsForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupPatientForm = () => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -1052,7 +1052,7 @@ const SignupPatientForm = () => {
             <label htmlFor="avatar">Avatar: </label>
             <div className="signup-patient__image">
               {isLoadingFile ? (
-                <CircularProgress size="1rem" style={{ margin: "5px" }} />
+                <CircularProgressMedium />
               ) : demographicsDatas.avatar ? (
                 <img
                   src={`${BASE_URL}${demographicsDatas.avatar?.path}`}

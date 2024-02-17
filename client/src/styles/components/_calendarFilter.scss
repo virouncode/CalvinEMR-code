@@ -3,10 +3,16 @@
         margin-top : 5px;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         width:100%;
+        border-radius:6px;
+        font-weight: bold;
+        height: 670px;
+        overflow-y: scroll;
     }
     &__filter-title {
         @include childCenter;
-        border-radius: 4px 4px 0 0;
+        position: sticky;
+        top:0;
+        border-radius: 6px 4px 0 0;
         font-size : 0.85rem;
         height: 50px;
         color : $black;

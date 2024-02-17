@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { toExportCSVName } from "../../../utils/toExportCSVName";
 
@@ -11,7 +11,7 @@ const BillingFilter = ({
   setRangeStart,
   setRangeEnd,
 }) => {
-  const { user, clinic } = useAuth();
+  const { user, clinic } = useAuthContext();
   const initialRangeStart = useRef(rangeStart);
   const initialRangeEnd = useRef(rangeEnd);
   const [all, setAll] = useState(false);

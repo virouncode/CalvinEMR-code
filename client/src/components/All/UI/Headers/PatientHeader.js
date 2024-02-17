@@ -1,10 +1,10 @@
 //Librairies
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 
 const PatientHeader = () => {
-  const { user, setUser, setAuth, setClinic } = useAuth();
+  const { user, setUser, setAuth, setClinic } = useAuthContext();
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth({});

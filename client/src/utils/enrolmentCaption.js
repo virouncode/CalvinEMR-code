@@ -43,5 +43,5 @@ export const enrolmentCaptionComplete = (enrolment) => {
       )}`
     : "";
 
-  return firstName + lastName + ohip + start + "\n" + end + reason;
+  return firstName + lastName + ohip + start + " " + end + reason;
 };

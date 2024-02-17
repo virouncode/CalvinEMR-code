@@ -1,23 +1,30 @@
-import { CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import RelationshipForm from "../Topics/Relationships/RelationshipForm";
 import RelationshipItem from "../Topics/Relationships/RelationshipItem";
 
 const RelationshipsPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
-  datas,
-  isLoading,
-  errMsg,
+  demographicsInfos,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -44,13 +51,10 @@ const RelationshipsPU = ({
         Patient relationships <i className="fa-solid fa-people-group"></i>
       </h1>
       {errMsgPost && <div className="relationships__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="relationships__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="relationships__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="relationships__table-container" ref={rootRef}>
             <table className="relationships__table">
               <thead>
                 <tr>
@@ -69,44 +73,51 @@ const RelationshipsPU = ({
                     patientId={patientId}
                     setErrMsgPost={setErrMsgPost}
                     errMsgPost={errMsgPost}
+                    demographicsInfos={demographicsInfos}
                   />
                 )}
-                {datas.map((item) => (
-                  <RelationshipItem
-                    item={item}
-                    key={item.id}
-                    editCounter={editCounter}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                  />
-                ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <RelationshipItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          lastItemRef={lastItemRef}
+                          patientId={patientId}
+                          demographicsInfos={demographicsInfos}
+                        />
+                      ) : (
+                        <RelationshipItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          patientId={patientId}
+                          demographicsInfos={demographicsInfos}
+                        />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && (
+                      <EmptyRow colSpan="5" text="No relationships" />
+                    )}
               </tbody>
             </table>
-            <div className="relationships__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="relationships__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

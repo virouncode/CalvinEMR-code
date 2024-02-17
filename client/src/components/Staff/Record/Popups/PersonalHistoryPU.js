@@ -1,8 +1,10 @@
-import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../utils/firstLetterUpper";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import { getResidualInfo } from "../../../../utils/getResidualInfo";
@@ -15,35 +17,40 @@ import { personalHistorySchema } from "../../../../validation/personalHistoryVal
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import PersonalHistoryForm from "../Topics/PersonalHistory/PersonalHistoryForm";
 
 const PersonalHistoryPU = ({
+  topicDatas,
+  loading,
+  errMsg,
   patientId,
   setPopUpVisible,
-  datas,
-  isLoading,
-  errMsg,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [formDatas, setFormDatas] = useState(null);
 
   useEffect(() => {
-    if (datas && datas.length > 0) {
+    if (topicDatas && topicDatas.length > 0) {
       setFormDatas({
-        Occupations: getResidualInfo("Occupations", datas[0]),
-        Income: getResidualInfo("Income", datas[0]),
-        Religion: getResidualInfo("Religion", datas[0]),
-        SexualOrientation: getResidualInfo("SexualOrientation", datas[0]),
-        SpecialDiet: getResidualInfo("SpecialDiet", datas[0]),
-        Smoking: getResidualInfo("Smoking", datas[0]),
-        Alcohol: getResidualInfo("Alcohol", datas[0]),
-        RecreationalDrugs: getResidualInfo("RecreationalDrugs", datas[0]),
+        Occupations: getResidualInfo("Occupations", topicDatas[0]),
+        Income: getResidualInfo("Income", topicDatas[0]),
+        Religion: getResidualInfo("Religion", topicDatas[0]),
+        SexualOrientation: getResidualInfo("SexualOrientation", topicDatas[0]),
+        SpecialDiet: getResidualInfo("SpecialDiet", topicDatas[0]),
+        Smoking: getResidualInfo("Smoking", topicDatas[0]),
+        Alcohol: getResidualInfo("Alcohol", topicDatas[0]),
+        RecreationalDrugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
       });
     }
-  }, [datas]);
+  }, [topicDatas]);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -71,14 +78,14 @@ const PersonalHistoryPU = ({
     e.preventDefault();
     setErrMsgPost("");
     setFormDatas({
-      Occupations: getResidualInfo("Occupations", datas[0]),
-      Income: getResidualInfo("Income", datas[0]),
-      Religion: getResidualInfo("Religion", datas[0]),
-      SexualOrientation: getResidualInfo("SexualOrientation", datas[0]),
-      SpecialDiet: getResidualInfo("SpecialDiet", datas[0]),
-      Smoking: getResidualInfo("Smoking", datas[0]),
-      Alcohol: getResidualInfo("Alcohol", datas[0]),
-      RecreationalDrugs: getResidualInfo("RecreationalDrugs", datas[0]),
+      Occupations: getResidualInfo("Occupations", topicDatas[0]),
+      Income: getResidualInfo("Income", topicDatas[0]),
+      Religion: getResidualInfo("Religion", topicDatas[0]),
+      SexualOrientation: getResidualInfo("SexualOrientation", topicDatas[0]),
+      SpecialDiet: getResidualInfo("SpecialDiet", topicDatas[0]),
+      Smoking: getResidualInfo("Smoking", topicDatas[0]),
+      Alcohol: getResidualInfo("Alcohol", topicDatas[0]),
+      RecreationalDrugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
     });
     setEditVisible(false);
   };
@@ -96,11 +103,11 @@ const PersonalHistoryPU = ({
 
     //Formatting
     const datasToPut = {
-      id: datas[0].id,
-      patient_id: datas[0].patient_id,
-      date_created: datas[0].date_created,
-      created_by_id: datas[0].created_by_id,
-      updates: datas[0].updates,
+      id: topicDatas[0].id,
+      patient_id: topicDatas[0].patient_id,
+      date_created: topicDatas[0].date_created,
+      created_by_id: topicDatas[0].created_by_id,
+      updates: topicDatas[0].updates,
       ResidualInfo: {
         DataElement: [
           {
@@ -145,7 +152,7 @@ const PersonalHistoryPU = ({
     try {
       await putPatientRecord(
         "/personal_history",
-        datas[0].id,
+        topicDatas[0].id,
         user.id,
         auth.authToken,
         datasToPut,
@@ -173,8 +180,8 @@ const PersonalHistoryPU = ({
             <i className="fa-solid fa-champagne-glasses"></i>
           </h1>
         </div>
-        {isLoading ? (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        {loading ? (
+          <CircularProgressMedium />
         ) : errMsg ? (
           <p className="personalhistory__err">{errMsg}</p>
         ) : formDatas ? (
@@ -317,25 +324,28 @@ const PersonalHistoryPU = ({
               </div>
             </form>
             <p className="personalhistory-card__sign">
-              {isUpdated(formDatas) ? (
+              {isUpdated(topicDatas[0]) ? (
                 <em>
                   Updated by{" "}
                   {staffIdToTitleAndName(
-                    clinic.staffInfos,
-                    getLastUpdate(datas[0]).updated_by_id,
+                    staffInfos,
+                    getLastUpdate(topicDatas[0]).updated_by_id,
                     true
                   )}{" "}
-                  on {toLocalDateAndTime(getLastUpdate(datas[0]).date_updated)}
+                  on{" "}
+                  {toLocalDateAndTime(
+                    getLastUpdate(topicDatas[0]).date_updated
+                  )}
                 </em>
               ) : (
                 <em>
                   Created by{" "}
                   {staffIdToTitleAndName(
-                    clinic.staffInfos,
-                    datas[0].created_by_id,
+                    staffInfos,
+                    topicDatas[0].created_by_id,
                     true
                   )}{" "}
-                  on {toLocalDateAndTime(datas[0].date_created)}
+                  on {toLocalDateAndTime(topicDatas[0].date_created)}
                 </em>
               )}
             </p>
@@ -347,21 +357,7 @@ const PersonalHistoryPU = ({
           />
         )}
         <ConfirmGlobal />
-        <ToastContainer
-          enableMultiContainer
-          containerId={"B"}
-          position="bottom-right"
-          autoClose={2000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          limit={1}
-        />
+        <ToastCalvin id="B" />
       </div>
     </>
   );

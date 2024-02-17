@@ -1,14 +1,14 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToName } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 
 const NextAppointments = ({ nextAppointments }) => {
-  const { user, auth, clinic, socket } = useAuth();
+  const { user, auth, clinic, socket } = useAuthContext();
   const [appointmentSelectedId, setAppointmentSelectedId] = useState(null);
 
   const optionsDate = {
@@ -166,7 +166,7 @@ Cellphone: ${user.demographics.cell_phone}`,
             <div>No next appointments</div>
           )
         ) : (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+          <CircularProgressMedium />
         )}
       </div>
       <div className="appointments-patient__btn">

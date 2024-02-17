@@ -6,96 +6,87 @@ import {
 import { toLocalDate } from "./formatDates";
 import { getAge } from "./getAge";
 import {
-  patientIdToFirstName,
-  patientIdToLastName,
-  patientIdToMiddleName,
-  patientIdToName,
-} from "./patientIdToName";
+  toPatientFirstName,
+  toPatientLastName,
+  toPatientMiddleName,
+  toPatientName,
+} from "./toPatientName";
 
-export const fillPdfForm = async (
-  url,
-  demographicsInfos,
-  patientId,
-  doctorInfos
-) => {
+export const fillPdfForm = async (url, demographicsInfos, doctorInfos) => {
   if (!demographicsInfos) return;
   const formUrl = url;
   const formPdfBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
   const pdfDoc = await PDFDocument.load(formPdfBytes);
   const form = pdfDoc.getForm();
-  const patientInfos = demographicsInfos.find(
-    ({ patient_id }) => patient_id === patientId
-  );
 
   if (form.getFieldMaybe("full_name")) {
     const fullNameField = form.getFieldMaybe("full_name");
-    fullNameField.setText(patientIdToName(demographicsInfos, patientId));
+    fullNameField.setText(toPatientName(demographicsInfos));
   }
   if (form.getFieldMaybe("first_name")) {
     const firstNameField = form.getFieldMaybe("first_name");
-    firstNameField.setText(patientIdToFirstName(demographicsInfos, patientId));
+    firstNameField.setText(toPatientFirstName(demographicsInfos));
   }
   if (form.getFieldMaybe("middle_name")) {
     const middleNameField = form.getFieldMaybe("middle_name");
-    middleNameField.setText(
-      patientIdToMiddleName(demographicsInfos, patientId)
-    );
+    middleNameField.setText(toPatientMiddleName(demographicsInfos));
   }
   if (form.getFieldMaybe("last_name")) {
     const lastNameField = form.getFieldMaybe("last_name");
-    lastNameField.setText(patientIdToLastName(demographicsInfos, patientId));
+    lastNameField.setText(toPatientLastName(demographicsInfos));
   }
   if (form.getFieldMaybe("gender")) {
     const genderField = form.getFieldMaybe("gender");
-    genderField.setText(patientInfos.Gender);
+    genderField.setText(demographicsInfos.Gender);
   }
   if (form.getFieldMaybe("chart_nbr")) {
     const chartField = form.getFieldMaybe("chart_nbr");
-    chartField.setText(patientInfos.ChartNumber);
+    chartField.setText(demographicsInfos.ChartNumber);
   }
   if (form.getFieldMaybe("health_card_nbr")) {
     const healthField = form.getFieldMaybe("health_card_nbr");
-    healthField.setText(patientInfos.HealthCard?.Number);
+    healthField.setText(demographicsInfos.HealthCard?.Number);
   }
   if (form.getFieldMaybe("date_of_birth")) {
     const birthField = form.getFieldMaybe("date_of_birth");
-    birthField.setText(toLocalDate(patientInfos.DateOfBirth));
+    birthField.setText(toLocalDate(demographicsInfos.DateOfBirth));
   }
   if (form.getFieldMaybe("age")) {
     const ageField = form.getFieldMaybe("age");
-    ageField.setText(getAge(patientInfos.DateOfBirth));
+    ageField.setText(getAge(demographicsInfos.DateOfBirth));
   }
   if (form.getFieldMaybe("email")) {
     const emailField = form.getFieldMaybe("email");
-    emailField.setText(patientInfos.Email);
+    emailField.setText(demographicsInfos.Email);
   }
   if (form.getFieldMaybe("preferred_phone")) {
     const phoneField = form.getFieldMaybe("preferred_phone");
     phoneField.setText(
-      patientInfos.PhoneNumber.find(
+      demographicsInfos.PhoneNumber.find(
         ({ _phoneNumberType }) => _phoneNumberType === "C"
       ).phoneNumber ||
-        patientInfos.PhoneNumber.find(
+        demographicsInfos.PhoneNumber.find(
           ({ _phoneNumberType }) => _phoneNumberType === "R"
         ).phoneNumber
     );
   }
 
   const address =
-    patientInfos.Address.find(({ _addressType }) => _addressType === "R")
+    demographicsInfos.Address.find(({ _addressType }) => _addressType === "R")
       ?.Structured ||
-    patientInfos.Address.find(({ _addressType }) => _addressType === "M")
+    demographicsInfos.Address.find(({ _addressType }) => _addressType === "M")
       ?.Structured;
 
   if (form.getFieldMaybe("address")) {
     const addressField = form.getFieldMaybe("address");
     if (!form.getFieldMaybe("postal_code")) {
       addressField.setText(
-        address.Line1 +
+        address?.Line1 +
           " " +
-          (address.PostalZipCode.PostalCode || address.PostalZipCode.ZipCode) +
+          (address?.PostalZipCode.PostalCode ||
+            address?.PostalZipCode.ZipCode) +
           " " +
-          address.City +
+          address?.City +
           " " +
           toCodeTableName(
             provinceStateTerritoryCT,
@@ -108,17 +99,17 @@ export const fillPdfForm = async (
   }
   if (form.getFieldMaybe("postal_code")) {
     const postalField = form.getFieldMaybe("postal_code");
-    postalField.setText(demographicsInfos.postal_code);
+    postalField.setText(
+      address?.PostalZipCode?.PostalCode || address?.PostalZipCode?.ZipCode
+    );
   }
   if (form.getFieldMaybe("province_state")) {
     const provinceField = form.getFieldMaybe("province_state");
-    provinceField.setText(
-      address.PostalZipCode.PostalCode || address.PostalZipCode.ZipCode
-    );
+    provinceField.setText(address?.CountrySubDivisionCode);
   }
   if (form.getFieldMaybe("city")) {
     const cityField = form.getFieldMaybe("city");
-    cityField.setText(address.City);
+    cityField.setText(address?.City);
   }
   // if (form.getFieldMaybe("country")) {
   //   const countryField = form.getFieldMaybe("country");

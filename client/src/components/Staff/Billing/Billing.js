@@ -1,18 +1,18 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { onMessageBilling } from "../../../utils/socketHandlers/onMessageBilling";
+import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import BillingFilter from "./BillingFilter";
 import BillingForm from "./BillingForm";
 import BillingTable from "./BillingTable";
 
 const Billing = () => {
   const { pid, date } = useParams();
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [billings, setBillings] = useState(null);
   const [errMsg, setErrMsg] = useState("");
@@ -130,7 +130,7 @@ const Billing = () => {
           />
         </>
       ) : (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       )}
     </div>
   );

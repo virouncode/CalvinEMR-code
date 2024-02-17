@@ -7,7 +7,7 @@
 }
 .messages-toggle {
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 6px;
     border : solid 1px $grey;
     font-size: 0.9rem;
     text-align: center;
@@ -32,7 +32,7 @@
     align-items: center;
     justify-content: space-between;
     background: $blue;
-    border-radius: 4px 4px 0 0;
+    border-radius: 6px 4px 0 0;
     &__title {
         width: 10%;
         font-size: 1.2rem;
@@ -241,7 +241,7 @@
     }
     &__section {
         print-color-adjust: exact;
-        border-radius: 4px;
+        border-radius: 6px;
         border:  solid 0.3px $grey;
         overflow: hidden;
     }
@@ -343,7 +343,7 @@
     &__contacts {
         width:24%;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         margin : 20px auto ;
         font-size: 0.8rem;
         padding : 5px 10px;
@@ -354,7 +354,7 @@
     &__form {
         min-height: 250px;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         padding : 0 10px;
         margin : 20px auto ;
         width : 50%;
@@ -438,7 +438,7 @@
     &__patients {
         width: 24%;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         margin : 20px auto ;
         font-size: 0.8rem;
         padding : 5px 10px;
@@ -448,7 +448,7 @@
     &__form {
         min-height: 250px;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         padding : 0 10px;
         margin : 20px auto ;
         width : 90%;
@@ -536,7 +536,7 @@
     &__contacts {
         width:20%;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         margin : 20px auto ;
         font-size: 0.8rem;
         padding : 5px 10px;
@@ -545,7 +545,7 @@
     &__form {
         min-height: 250px;
         border: solid 0.3px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         padding : 0 10px;
         margin : 20px auto ;
         width : 75%;
@@ -675,7 +675,7 @@
         margin:0 auto;
         color : red;
         background-color:rgba(255, 0, 0, 0.403);
-        border-radius: 4px;
+        border-radius: 6px;
         text-align: center;
         margin:0 auto 20px;
     }

@@ -1,26 +1,26 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import { showDocument } from "../../../../../utils/showDocument";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const EformsContent = ({ showDocument, datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const EformsContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.date_created - a.date_created)
-              .map((eform) => (
-                <li
-                  key={eform.id}
-                  onClick={() => showDocument(eform.file.url, eform.file.mime)}
-                  className="topic-content__link"
-                >
-                  - {eform.name} ({toLocalDate(eform.date_created)})
-                </li>
-              ))}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li
+                key={item.id}
+                onClick={() => showDocument(item.file.url, item.file.mime)}
+                className="topic-content__link"
+              >
+                - {item.name} ({toLocalDate(item.date_created)})
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No E-forms"
@@ -28,7 +28,7 @@ const EformsContent = ({ showDocument, datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

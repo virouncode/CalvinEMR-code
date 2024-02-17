@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { filterAndSortExternalMessages } from "../../../../utils/filterAndSortExternalMessages";
 import { searchMessagesExternal } from "../../../../utils/searchMessagesExternal";
 import { onMessagesInboxExternal } from "../../../../utils/socketHandlers/onMessagesInboxExternal";
@@ -19,7 +19,7 @@ const MessagesExternal = () => {
   const [msgsSelectedIds, setMsgsSelectedIds] = useState([]);
   const [currentMsgId, setCurrentMsgId] = useState(0);
   const [messages, setMessages] = useState(null);
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import AllergyForm from "../Topics/Allergies/AllergyForm";
 import AllergyItem from "../Topics/Allergies/AllergyItem";
 
@@ -47,7 +47,7 @@ const AllergiesPU = ({
       </h1>
       {errMsgPost && <div className="allergies__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="allergies__err">{errMsg}</p>
       ) : (

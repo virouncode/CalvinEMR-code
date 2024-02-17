@@ -1,4 +1,3 @@
-import { CircularProgress } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -9,7 +8,7 @@ import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../datas/codesTables";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import {
   bodyMassIndex,
@@ -30,6 +29,7 @@ import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../All/UI/Lists/GenericList";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CareElementHistory from "../Topics/CareElements/CareElementHistory";
 var _ = require("lodash");
@@ -42,7 +42,7 @@ const CareElementsPU = ({
   errMsg,
 }) => {
   //HOOKS
-  const { user, auth, socket, clinic } = useAuth();
+  const { user, auth, socket, clinic } = useAuthContext();
   const [errMsgPost, setErrMsgPost] = useState("");
   const editCounter = useRef(0);
   const [editVisible, setEditVisible] = useState(false);
@@ -482,7 +482,7 @@ const CareElementsPU = ({
       </h1>
       {errMsgPost && <div className="care-elements__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="care-elements__err">{errMsg}</p>
       ) : (

@@ -1,11 +1,11 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import AppointmentEvent from "../Topics/Appointments/AppointmentEvent";
 import AppointmentForm from "../Topics/Appointments/AppointmentForm";
 
@@ -18,7 +18,7 @@ const AppointmentsPU = ({
   errMsg,
 }) => {
   //HOOKS
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
@@ -74,7 +74,7 @@ const AppointmentsPU = ({
       </h1>
       {errMsgPost && <div className="appointments__err">{errMsgPost}</div>}
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="appointments__err">{errMsg}</p>
       ) : (

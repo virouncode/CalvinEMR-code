@@ -18,13 +18,7 @@ export const enrolmentSchema = yup.object({
           excludeEmptyString: true,
         }),
     }),
-    OHIPPhysicianId: yup
-      .string()
-      .test(
-        "empty-or-6-chars",
-        "Invalid Enrolled to physician OHIP#, should be 6-digits",
-        (ohip) => !ohip || ohip.length === 6
-      ),
+    OHIPPhysicianId: yup.string(),
   }),
   EnrollmentStatus: yup.string().required("Enrolment status field is required"),
   EnrollmentDate: yup

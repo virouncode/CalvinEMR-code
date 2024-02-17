@@ -1,5 +1,5 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessageDetail from "./MessageDetail";
 import MessagesOverview from "./MessagesOverview";
@@ -57,7 +57,7 @@ const MessagesBox = ({
             <p>{emptySectionMessages(section)}</p>
           )
         ) : (
-          <CircularProgress size="1rem" style={{ margin: "5px" }} />
+          <CircularProgressMedium />
         )}
       </div>
       {newVisible && (

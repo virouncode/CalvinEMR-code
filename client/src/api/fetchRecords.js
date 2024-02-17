@@ -1,56 +1,58 @@
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { createChartNbr } from "../utils/createChartNbr";
+import xanoDelete from "./xanoDelete";
+import xanoGet from "./xanoGet";
+import xanoPost from "./xanoPost";
+import xanoPut from "./xanoPut";
 
 export const getPatientRecord = async (
-  tableName,
+  url,
   patientId,
   authToken,
   abortController = null
 ) => {
   try {
-    const response = await axiosXanoStaff.get(
-      `${tableName}?patient_id=${patientId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        ...(abortController && { signal: abortController.signal }),
-      }
+    const response = xanoGet(
+      url,
+      axiosXanoStaff,
+      authToken,
+      "patient_id",
+      patientId,
+      abortController
     );
-    return response?.data;
+    return response;
   } catch (err) {
     if (err.name !== "CanceledError") throw err;
   }
 };
 
 export const postPatientRecord = async (
-  tableName,
-  authId,
+  url,
+  userId,
   authToken,
-  datas,
+  datasToPost,
   socket = null,
   topic = null,
   abortController = null
 ) => {
-  if (tableName !== "/clinical_notes_log") {
+  if (url !== "/clinical_notes_log") {
     //if it's the log we don't want to change the date of creation, for attachments this is assured by the bulk add
-    datas.created_by_id = authId;
-    datas.date_created = Date.now();
+    datasToPost.created_by_id = userId;
+    datasToPost.date_created = Date.now();
   }
   try {
-    const response = await axiosXanoStaff.post(tableName, datas, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      ...(abortController && { signal: abortController.signal }),
-    });
+    const response = await xanoPost(
+      url,
+      axiosXanoStaff,
+      authToken,
+      datasToPost,
+      abortController
+    );
     if (socket && topic) {
       if (topic === "PATIENTS") {
         response.data.chart_nbr = createChartNbr(
-          datas.date_of_birth,
-          datas.gender_identification,
+          datasToPost.date_of_birth,
+          datasToPost.gender_identification,
           response.data.id
         );
         socket.emit("message", {
@@ -80,52 +82,38 @@ export const postPatientRecord = async (
 };
 
 export const putPatientRecord = async (
-  tableName,
+  url,
   recordId,
-  authId,
+  userId,
   authToken,
-  datas,
+  datasToPut,
   socket = null,
   topic = null,
   abortController = null
 ) => {
-  // if (
-  //   tableName === "/patients" ||
-  //   (tableName === "/progress_notes" && datas.version_nbr !== 1)
-  // ) {
-  //   datas.updated_by_id = authId;
-  //   datas.date_updated = Date.now();
-  // } else if (tableName === "/vaccines") {
-  // } else {
-  //   datas.created_by_id = authId;
-  //   datas.date_created = Date.now();
-  // }
-
-  datas.updates.push({ updated_by_id: authId, date_updated: Date.now() });
+  datasToPut.updates.push({ updated_by_id: userId, date_updated: Date.now() });
 
   try {
-    const response = await axiosXanoStaff.put(
-      `${tableName}/${recordId}`,
-      datas,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        ...(abortController && { signal: abortController.signal }),
-      }
+    const response = await xanoPut(
+      url,
+      axiosXanoStaff,
+      authToken,
+      datasToPut,
+      recordId,
+      abortController
     );
     if (socket && topic) {
       socket.emit("message", {
         route: topic,
         action: "update",
-        content: { id: recordId, data: datas },
+        content: { id: recordId, data: datasToPut },
       });
       if (topic === "APPOINTMENTS") {
+        //if appointments put events as well
         socket.emit("message", {
           route: "EVENTS",
           action: "update",
-          content: { id: recordId, data: datas },
+          content: { id: recordId, data: datasToPut },
         });
       }
     }
@@ -136,7 +124,7 @@ export const putPatientRecord = async (
 };
 
 export const deletePatientRecord = async (
-  tableName,
+  url,
   recordId,
   authToken,
   socket,
@@ -144,13 +132,8 @@ export const deletePatientRecord = async (
   abortController = null
 ) => {
   try {
-    await axiosXanoStaff.delete(`${tableName}/${recordId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      ...(abortController && { signal: abortController.signal }),
-    });
+    await xanoDelete(url, axiosXanoStaff, authToken, recordId, abortController);
+
     if (socket && topic) {
       socket.emit("message", {
         route: topic,
@@ -169,7 +152,3 @@ export const deletePatientRecord = async (
     if (err.name !== "CanceledError") throw err;
   }
 };
-
-// message = { route: , content : { id : id du record }, action: “delete” }
-// message = { route:  ,content : { id : id du record, data : datas à updater }, action: “update” }
-// message = { route: ,content : { data : datas à crée }, action: “create” }

@@ -1,13 +1,9 @@
 import React from "react";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import HostOption from "./HostOption";
 
-const HostsList = ({
-  staffInfos,
-  handleHostChange,
-  hostId,
-  disabled = false,
-  style,
-}) => {
+const HostsList = ({ handleHostChange, hostId, disabled = false, style }) => {
+  const { staffInfos } = useStaffInfosContext();
   return (
     <select
       name="host_id"

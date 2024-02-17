@@ -79,7 +79,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 4px;
+        border-radius: 6px;
         border: solid 1px $grey;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         padding:5px 0;
@@ -98,7 +98,7 @@
     &__card {
         padding: 20px;
         border: solid 1px $grey;
-        border-radius: 4px;
+        border-radius: 6px;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         margin-bottom: 10px;
         display: flex;

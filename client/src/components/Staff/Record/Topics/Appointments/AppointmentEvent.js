@@ -5,7 +5,7 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import {
   firstLetterOfFirstWordUpper,
   firstLetterUpper,
@@ -44,7 +44,7 @@ const AppointmentEvent = ({
   sites,
 }) => {
   //HOOKS
-  const { auth, clinic, user, socket } = useAuth();
+  const { auth, clinic, user, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [eventInfos, setEventInfos] = useState(null);
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -111,7 +111,7 @@ const AppointmentEvent = ({
     return user.title === "Secretary";
   };
 
-  const handleChangeSite = async (e) => {
+  const handleSiteChange = async (e) => {
     const value = parseInt(e.target.value);
     setEventInfos({ ...eventInfos, site_id: value, room_id: "z" });
     if (eventInfos.start && eventInfos.end) {
@@ -623,7 +623,7 @@ const AppointmentEvent = ({
         <td>
           {editVisible ? (
             <SelectSite
-              handleChangeSite={handleChangeSite}
+              handleSiteChange={handleSiteChange}
               sites={sites}
               value={eventInfos.site_id}
               label={false}

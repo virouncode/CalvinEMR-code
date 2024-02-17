@@ -3,10 +3,10 @@ import { Helmet } from "react-helmet";
 import FakeWindow from "../../components/All/UI/Windows/FakeWindow";
 import PatientAIAgreement from "../../components/Patient/Agreement/PatientAIAgreement";
 import MessagesPatient from "../../components/Patient/MessagingPatient/MessagesPatient";
-import useAuth from "../../hooks/useAuth";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const PatientMessagesPage = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(
     !user.demographics.ai_consent_read
   );

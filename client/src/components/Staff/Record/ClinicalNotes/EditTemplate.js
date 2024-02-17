@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
@@ -15,7 +15,7 @@ const EditTemplate = ({
   setFormDatas,
   formDatas,
 }) => {
-  const { auth, user } = useAuth();
+  const { auth, user } = useAuthContext();
   const [editTemplateSelectedId, setEditTemplateSelectedId] = useState("");
   const [editedTemplate, setEditedTemplate] = useState({
     author_id: user.id,

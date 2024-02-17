@@ -4,7 +4,7 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { pregnancySchema } from "../../../../../validation/pregnancyValidation";
@@ -14,7 +14,7 @@ import SignCell from "../SignCell";
 
 const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [eventInfos, setEventInfos] = useState(null);
 

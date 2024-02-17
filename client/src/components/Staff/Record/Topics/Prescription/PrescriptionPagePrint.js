@@ -1,23 +1,24 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import logo from "../../../../../assets/img/logoLoginTest.png";
 import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getAge } from "../../../../../utils/getAge";
-import { patientIdToName } from "../../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../../utils/toPatientName";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const PrescriptionPagePrint = ({
   printRef,
   sites,
   siteSelectedId,
-  patientId,
   demographicsInfos,
   uniqueId,
   finalInstructions,
 }) => {
-  const { clinic, user } = useAuth();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
 
   return (
     <div ref={printRef} className="prescription__page">
@@ -27,7 +28,7 @@ const PrescriptionPagePrint = ({
             <>
               <div className="prescription__doctor-infos">
                 <p>
-                  {staffIdToTitleAndName(clinic.staffInfos, user.id)} (LIC.{" "}
+                  {staffIdToTitleAndName(staffInfos, user.id)} (LIC.{" "}
                   {user.licence_nbr})
                 </p>
                 <p>{sites.find(({ id }) => id === siteSelectedId)?.name}</p>
@@ -56,13 +57,13 @@ const PrescriptionPagePrint = ({
               </div>
             </>
           ) : (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
+            <CircularProgressMedium />
           )}
         </div>
         <div className="prescription__subheader">
           <div className="prescription__patient-infos">
             <p>
-              Patient: {patientIdToName(clinic.demographicsInfos, patientId)},{" "}
+              Patient: {toPatientName(demographicsInfos)},{" "}
               {toCodeTableName(genderCT, demographicsInfos.Gender)}
               <br />
               Born {toLocalDate(demographicsInfos.DateOfBirth)},{" "}

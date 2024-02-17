@@ -1,11 +1,11 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import PatientsListItem from "./PatientsListItem";
 
 const PatientsList = ({ isPatientChecked, handleCheckPatient, search }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   return (
     <ul>
       {clinic.demographicsInfos

@@ -11,7 +11,7 @@ import {
   reactionTypeCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { allergySchema } from "../../../../../validation/allergyValidation";
@@ -21,7 +21,7 @@ import SignCell from "../SignCell";
 
 const AllergyItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 

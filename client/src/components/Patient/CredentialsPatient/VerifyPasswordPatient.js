@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const VerifyPasswordPatient = ({ setVerified }) => {
   const LOGIN_URL = "/auth/login";
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const handleChange = (e) => {

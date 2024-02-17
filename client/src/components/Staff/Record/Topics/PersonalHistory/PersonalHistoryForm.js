@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { personalHistorySchema } from "../../../../../validation/personalHistoryValidation";
 
 const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
-  const { user, auth, socket } = useAuth();
+  const { user, auth, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({});
   const [errMsgPost, setErrMsgPost] = useState("");
 

@@ -1,12 +1,12 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 import SelectSite from "../../../EventForm/SelectSite";
 
 const PrescriptionActions = ({
   handlePrint,
   handleFax,
   handleCancel,
-  handleChangeSite,
+  handleSiteChange,
   sites,
   siteSelectedId,
   progress,
@@ -23,11 +23,11 @@ const PrescriptionActions = ({
         Cancel
       </button>
       <SelectSite
-        handleChangeSite={handleChangeSite}
+        handleSiteChange={handleSiteChange}
         value={siteSelectedId}
         sites={sites}
       />
-      {progress && <CircularProgress size="1rem" style={{ margin: "5px" }} />}
+      {progress && <CircularProgressMedium />}
     </div>
   );
 };

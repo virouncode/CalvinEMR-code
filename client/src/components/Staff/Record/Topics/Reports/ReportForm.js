@@ -1,4 +1,3 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
@@ -7,12 +6,13 @@ import {
   reportClassCT,
   reportFormatCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getExtension } from "../../../../../utils/getExtension";
 import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
 import { reportSchema } from "../../../../../validation/reportValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -25,7 +25,7 @@ const ReportForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     Format: "Binary",
@@ -430,9 +430,7 @@ const ReportForm = ({
           </div>
         )}
         <div className="reports__row">
-          {isLoadingFile && (
-            <CircularProgress size="1rem" style={{ margin: "5px" }} />
-          )}
+          {isLoadingFile && <CircularProgressMedium />}
         </div>
       </form>
       <div className="reports__preview">

@@ -1,10 +1,10 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import { cmToFeet, kgToLbs } from "../../../../../utils/measurements";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const CareElementsContent = ({ datas, isLoading, errMsg }) => {
   //HOOKS
@@ -95,7 +95,7 @@ const CareElementsContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

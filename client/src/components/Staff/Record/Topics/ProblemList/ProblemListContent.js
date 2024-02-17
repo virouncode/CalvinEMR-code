@@ -1,5 +1,5 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const ProblemListContent = ({ datas, isLoading, errMsg }) => {
   return !isLoading ? (
@@ -25,7 +25,7 @@ const ProblemListContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

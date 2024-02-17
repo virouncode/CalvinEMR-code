@@ -1,21 +1,20 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const PastHealthContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const PastHealthContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.OnsetOrEventDate - a.OnsetOrEventDate)
-              .map((event) => (
-                <li key={event.id}>
-                  - {event.PastHealthProblemDescriptionOrProcedures}
-                </li>
-              ))}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li key={item.id}>
+                - {item.PastHealthProblemDescriptionOrProcedures}
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No past health"
@@ -23,7 +22,7 @@ const PastHealthContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

@@ -1,9 +1,9 @@
-import { CircularProgress } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ReportForm from "../Topics/Reports/ReportForm";
 import ReportItemReceived from "../Topics/Reports/ReportItemReceived";
 import ReportItemSent from "../Topics/Reports/ReportItemSent";
@@ -11,10 +11,8 @@ import ReportItemSent from "../Topics/Reports/ReportItemSent";
 const ReportsPU = ({
   patientId,
   demographicsInfos,
-  showDocument,
   setPopUpVisible,
   datas,
-  setDatas,
   isLoading,
   errMsg,
 }) => {
@@ -50,7 +48,7 @@ const ReportsPU = ({
       </h1>
 
       {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
+        <CircularProgressMedium />
       ) : errMsg ? (
         <p className="reports__err">{errMsg}</p>
       ) : (
@@ -86,7 +84,6 @@ const ReportsPU = ({
                     <ReportItemReceived
                       item={document}
                       key={document.id}
-                      showDocument={showDocument}
                       setErrMsgPost={setErrMsgPost}
                       errMsgPost={errMsgPost}
                       demographicsInfos={demographicsInfos}
@@ -118,11 +115,7 @@ const ReportsPU = ({
                 {datas
                   .filter(({ DateTimeSent }) => DateTimeSent)
                   .map((document) => (
-                    <ReportItemSent
-                      item={document}
-                      key={document.id}
-                      showDocument={showDocument}
-                    />
+                    <ReportItemSent item={document} key={document.id} />
                   ))}
               </tbody>
             </table>

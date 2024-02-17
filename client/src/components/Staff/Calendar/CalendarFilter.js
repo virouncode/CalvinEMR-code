@@ -1,8 +1,11 @@
 import React from "react";
 import FilterCheckboxes from "./FilterCheckboxes";
+import SitesCheckboxes from "./SitesCheckboxes";
 
 const CalendarFilter = ({
-  staffInfos,
+  sites,
+  sitesIds,
+  setSitesIds,
   hostsIds,
   setHostsIds,
   remainingStaff,
@@ -10,8 +13,12 @@ const CalendarFilter = ({
   return (
     <div className="calendar__filter">
       <p className="calendar__filter-title">Show Calendars</p>
+      <SitesCheckboxes
+        sites={sites}
+        sitesIds={sitesIds}
+        setSitesIds={setSitesIds}
+      />
       <FilterCheckboxes
-        staffInfos={staffInfos}
         hostsIds={hostsIds}
         setHostsIds={setHostsIds}
         remainingStaff={remainingStaff}

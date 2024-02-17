@@ -5,7 +5,9 @@ import {
   enrollmentStatusCT,
   terminationReasonCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { enrolmentSchema } from "../../../../../validation/enrolmentValidation";
@@ -18,7 +20,9 @@ const EnrolmentEdit = ({
   demographicsInfos,
   enrolmentHistory,
 }) => {
-  const { user, socket, auth } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [err, setErr] = useState("");
   const [formDatas, setFormDatas] = useState(enrolment);
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-const EformsList = ({ handleFormChange, formSelectedId, eforms }) => {
+const EformsList = ({ handleFormChange, formSelectedId, eFormsBlank }) => {
   return (
     <select
       onChange={handleFormChange}
@@ -10,7 +10,7 @@ const EformsList = ({ handleFormChange, formSelectedId, eforms }) => {
       <option value="" disabled>
         Choose an e-form...
       </option>
-      {eforms.map((eform) => (
+      {eFormsBlank.map((eform) => (
         <option key={eform.id} value={eform.id}>
           {eform.name}
         </option>

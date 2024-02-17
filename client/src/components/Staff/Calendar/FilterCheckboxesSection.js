@@ -1,18 +1,19 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useUserContext from "../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../utils/categoryToTitle";
 import FilterStaffItem from "./FilterStaffItem";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 
 const FilterCheckboxesSection = ({
   isCategoryChecked,
   handleCheckCategory,
   category,
-  staffInfos,
   isChecked,
   handleCheck,
   remainingStaff,
 }) => {
-  const { user } = useAuth();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <ul>
       <li>

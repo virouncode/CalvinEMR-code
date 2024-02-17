@@ -30,24 +30,24 @@ export const onMessageEvents = (
   staffInfos,
   userId,
   isSecretary,
-  sites,
-  siteId,
-  timelineSiteId,
-  timelineVisible
+  sites
 ) => {
   if (message.route !== "EVENTS") return;
-  const rooms = timelineVisible
-    ? sites.find(({ id }) => id === timelineSiteId).rooms
-    : sites.find(({ id }) => id === siteId).rooms;
-  const remainingStaffObjects = staffInfos
-    .filter(({ id }) => id !== userId)
-    .map((staff, index) => {
-      return {
-        id: staff.id,
-        color: colorsPalette[index % colorsPalette.length].background,
-        textColor: colorsPalette[index % colorsPalette.length].text,
-      };
-    });
+  let rooms;
+  let remainingStaffObjects;
+
+  if (message.action !== "delete") {
+    rooms = sites.find(({ id }) => id === message.content.data.site_id).rooms;
+    remainingStaffObjects = staffInfos
+      .filter(({ id }) => id !== userId)
+      .map((staff, index) => {
+        return {
+          id: staff.id,
+          color: colorsPalette[index % colorsPalette.length].background,
+          textColor: colorsPalette[index % colorsPalette.length].text,
+        };
+      });
+  }
 
   switch (message.action) {
     case "create":
@@ -64,16 +64,12 @@ export const onMessageEvents = (
               ) //grey
             : parseToEvent(
                 message.content.data,
-                remainingStaffObjects[
-                  _.findIndex(remainingStaffObjects, {
-                    id: message.content.data.host_id,
-                  })
-                ].color,
-                remainingStaffObjects[
-                  _.findIndex(remainingStaffObjects, {
-                    id: message.content.data.host_id,
-                  })
-                ].textColor,
+                remainingStaffObjects.find(
+                  ({ id }) => id === message.content.data.host_id
+                ).color,
+                remainingStaffObjects.find(
+                  ({ id }) => id === message.content.data.host_id
+                ).textColor,
                 isSecretary,
                 userId,
                 rooms
@@ -102,16 +98,12 @@ export const onMessageEvents = (
               ) //grey
             : parseToEvent(
                 message.content.data,
-                remainingStaffObjects[
-                  _.findIndex(remainingStaffObjects, {
-                    id: message.content.data.host_id,
-                  })
-                ].color,
-                remainingStaffObjects[
-                  _.findIndex(remainingStaffObjects, {
-                    id: message.content.data.host_id,
-                  })
-                ].textColor,
+                remainingStaffObjects.find(
+                  ({ id }) => id === message.content.data.host_id
+                ).color,
+                remainingStaffObjects.find(
+                  ({ id }) => id === message.content.data.host_id
+                ).textColor,
                 isSecretary,
                 userId,
                 rooms

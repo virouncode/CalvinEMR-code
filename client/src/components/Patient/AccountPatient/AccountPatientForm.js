@@ -7,7 +7,7 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../datas/codesTables";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { emergencyContactCaption } from "../../../utils/emergencyContactCaption";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../utils/formatDates";
@@ -20,7 +20,7 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const AccountPatientForm = () => {
   //HOOKS
-  const { auth, user, clinic, setUser, socket } = useAuth();
+  const { auth, user, clinic, setUser, socket } = useAuthContext();
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);

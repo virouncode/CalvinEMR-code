@@ -1,19 +1,26 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { deletePatientRecord } from "../../../../../api/fetchRecords";
 import {
   dosageUnitCT,
   frequencyCT,
   strengthUnitCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { isMedicationActive } from "../../../../../utils/isMedicationActive";
+import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import SignCell from "../SignCell";
 import MedicationDetails from "./MedicationDetails";
 
-const MedicationItem = ({ item, patientId }) => {
+const MedicationItem = ({ item, lastItemRef = null }) => {
   //HOOKS
-  const { clinic } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [detailVisible, setDetailVisible] = useState(false);
 
   //HANDLERS
@@ -21,16 +28,40 @@ const MedicationItem = ({ item, patientId }) => {
     setDetailVisible((v) => !v);
   };
 
+  const handleDeleteClick = async (e) => {
+    if (
+      await confirmAlert({
+        content: "Do you really want to delete this item ?",
+      })
+    ) {
+      try {
+        await deletePatientRecord(
+          "/medications",
+          item.id,
+          auth.authToken,
+          socket,
+          "MEDICATIONS AND TREATMENTS"
+        );
+        toast.success("Deleted successfully", { containerId: "B" });
+      } catch (err) {
+        toast.error(`Error unable to delete medication item: ${err.message}`, {
+          containerId: "B",
+        });
+      }
+    }
+  };
+
   return (
     item && (
       <>
         <tr
-          className="medications__event"
+          className="medications__item"
           style={{
             backgroundColor: isMedicationActive(item.StartDate, item.duration)
               ? "#FEFEFE"
               : "#cecdcd",
           }}
+          ref={lastItemRef}
         >
           <td>
             {isMedicationActive(item.StartDate, item.duration)
@@ -52,10 +83,11 @@ const MedicationItem = ({ item, patientId }) => {
             {toCodeTableName(frequencyCT, item.Frequency) || item.Frequency}
           </td>
           <td>{item.Duration}</td>
-          <SignCell item={item} staffInfos={clinic.staffInfos} />
+          <SignCell item={item} />
           <td>
-            <div className="medications__event-btn-container">
+            <div className="medications__item-btn-container">
               <button onClick={handleDetailClick}>See details</button>
+              <button onClick={handleDeleteClick}>Delete</button>
             </div>
           </td>
         </tr>
@@ -71,11 +103,7 @@ const MedicationItem = ({ item, patientId }) => {
                 color="#931621"
                 setPopUpVisible={setDetailVisible}
               >
-                <MedicationDetails
-                  item={item}
-                  setDetailVisible={setDetailVisible}
-                  patientId={patientId}
-                />
+                <MedicationDetails item={item} />
               </FakeWindow>
             </td>
           </tr>

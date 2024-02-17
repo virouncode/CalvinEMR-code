@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 const CredentialsForm = () => {
   const navigate = useNavigate();
-  const { auth, user, socket } = useAuth();
+  const { auth, user, socket } = useAuthContext();
   const [credentials, setCredentials] = useState({
     email: auth.email,
     password: "",

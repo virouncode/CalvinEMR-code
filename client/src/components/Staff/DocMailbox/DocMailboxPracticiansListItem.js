@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
 const DocMailboxPracticiansListItem = ({
@@ -8,7 +8,7 @@ const DocMailboxPracticiansListItem = ({
   isPracticianChecked,
   categoryName,
 }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   return (
     <li className="practicians__list-item">
       <input

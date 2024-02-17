@@ -1,28 +1,39 @@
-import { CircularProgress } from "@mui/material";
 import { PDFDocument } from "pdf-lib";
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useIntersection from "../../../../hooks/useIntersection";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import ConfirmGlobal from "../../../All/Confirm/ConfirmGlobal";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Eform from "../Topics/Eforms/Eform";
 import EformItem from "../Topics/Eforms/EformItem";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const EformsPU = ({
-  patientId,
-  demographicsInfos,
-  setPopUpVisible,
-  datas,
+  topicDatas,
+  hasMore,
+  loading,
   errMsg,
-  isLoading,
-  showDocument,
+  setPaging,
+  patientId,
+  setPopUpVisible,
+  demographicsInfos,
 }) => {
   //HOOKS
-  const { auth, user, socket } = useAuth();
+  const { user } = useUserContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
   const [addVisible, setAddVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleAdd = (e) => {
@@ -117,6 +128,7 @@ const EformsPU = ({
                 containerId: "B",
               });
               setIsLoadingFile(false);
+              setAddVisible(false);
             } catch (err) {}
           };
         } catch (err) {
@@ -135,71 +147,65 @@ const EformsPU = ({
       <h1 className="eforms__title">
         Patient e-forms <i className="fa-regular fa-newspaper"></i>
       </h1>
-      {isLoading ? (
-        <CircularProgress size="1rem" style={{ margin: "5px" }} />
-      ) : errMsg ? (
-        <p className="eforms__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="eforms__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="eforms__table-container" ref={rootRef}>
             <table className="eforms__table">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Created By</th>
                   <th>Created On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {datas.map((eform) => (
-                  <EformItem
-                    item={eform}
-                    key={eform.id}
-                    showDocument={showDocument}
-                  />
-                ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <EformItem
+                          item={item}
+                          key={item.id}
+                          lastItemRef={lastItemRef}
+                        />
+                      ) : (
+                        <EformItem item={item} key={item.id} />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && (
+                      <EmptyRow colSpan="4" text="No risk factors" />
+                    )}
+                {loading && <LoadingRow colSpan="4" />}
               </tbody>
             </table>
-            <div className="eforms__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add e-form
-              </button>
-              <button onClick={handleClose} disabled={isLoadingFile}>
-                Close
-              </button>
-            </div>
-            {addVisible && (
-              <Eform
-                setAddVisible={setAddVisible}
-                patientId={patientId}
-                demographicsInfos={demographicsInfos}
-                handleAddToRecord={handleAddToRecord}
-                isLoadingFile={isLoadingFile}
-                setIsLoadingFile={setIsLoadingFile}
-              />
-            )}
-          </>
-        )
+          </div>
+
+          <div className="eforms__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add e-form
+            </button>
+            <button onClick={handleClose} disabled={isLoadingFile}>
+              Close
+            </button>
+          </div>
+        </>
       )}
+
+      {addVisible && (
+        <Eform
+          setAddVisible={setAddVisible}
+          patientId={patientId}
+          handleAddToRecord={handleAddToRecord}
+          isLoadingFile={isLoadingFile}
+          setIsLoadingFile={setIsLoadingFile}
+          demographicsInfos={demographicsInfos}
+        />
+      )}
+
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

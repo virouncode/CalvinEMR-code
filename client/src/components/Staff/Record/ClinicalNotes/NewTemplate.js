@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import CopyTemplatesList from "./CopyTemplatesList";
 
 const NewTemplate = ({
@@ -12,7 +12,7 @@ const NewTemplate = ({
   setFormDatas,
   formDatas,
 }) => {
-  const { auth, user } = useAuth();
+  const { auth, user } = useAuthContext();
   const [copyTemplateSelectedId, setCopyTemplateSelectedId] = useState("");
   const [newTemplate, setNewTemplate] = useState({ name: "", body: "" });
   const [errMsg, setErrMsg] = useState("");

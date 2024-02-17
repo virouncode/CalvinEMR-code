@@ -1,27 +1,25 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
 import { isMedicationActive } from "../../../../../utils/isMedicationActive";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const MedicationsContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const MedicationsContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length >= 1 ? (
           <ul>
-            {datas
+            {topicDatas
               .filter((med) => isMedicationActive(med.StartDate, med.duration))
-              .sort((a, b) => b.StartDate - a.StartDate)
+              .slice(0, 4)
               .map((medication) => (
                 <li key={medication.id}>
-                  -{" "}
-                  <strong>
-                    {medication.DrugName} {medication.Strength.Amount}{" "}
-                    {medication.Strength.UnitOfMeasure}
-                  </strong>
+                  - {medication.DrugName} {medication.Strength.Amount}{" "}
+                  {medication.Strength.UnitOfMeasure}
                 </li>
               ))}
+            <li>...</li>
           </ul>
         ) : (
           "No medications"
@@ -29,7 +27,7 @@ const MedicationsContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 

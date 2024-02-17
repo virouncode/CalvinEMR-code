@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDateAndTime } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
@@ -14,7 +14,7 @@ const MessagePatientThumbnail = ({
   msgsSelectedIds,
   section,
 }) => {
-  const { auth, user, setUser, clinic, socket } = useAuth();
+  const { auth, user, setUser, clinic, socket } = useAuthContext();
 
   const handleMsgClick = async (e) => {
     if (message.read_by_patient_id !== user.id) {

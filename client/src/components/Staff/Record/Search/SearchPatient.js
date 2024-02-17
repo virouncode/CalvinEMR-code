@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import useAuth from "../../../../hooks/useAuth";
-import { onMessageSearchPatients } from "../../../../utils/socketHandlers/onMessageSearchPatients";
+import React, { useState } from "react";
+import useAllPatientsDemoSocket from "../../../../hooks/useAllPatientsDemoSocket";
+import usePatientsDemographics from "../../../../hooks/usePatientsDemographics";
 import PatientSearchForm from "./PatientSearchForm";
 import PatientSearchResult from "./PatientSearchResult";
 
 const SearchPatient = () => {
-  const { clinic, socket, setClinic } = useAuth();
-  const [sortedPatientsInfos, setSortedPatientsInfos] = useState(
-    clinic.demographicsInfos
-  );
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 15,
+    offset: 0,
+  });
   const [search, setSearch] = useState({
     name: "",
     email: "",
@@ -17,29 +18,31 @@ const SearchPatient = () => {
     chart: "",
     health: "",
   });
+  const {
+    loading,
+    err,
+    patientsDemographics,
+    setPatientsDemographics,
+    hasMore,
+  } = usePatientsDemographics(search, paging);
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessageSearchPatients(
-        message,
-        sortedPatientsInfos,
-        setSortedPatientsInfos,
-        clinic,
-        setClinic
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [clinic, setClinic, socket, sortedPatientsInfos]);
+  useAllPatientsDemoSocket(patientsDemographics, setPatientsDemographics);
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setSearch({ ...search, [name]: value });
+    setPaging({ ...paging, page: 1 });
+  };
   return (
     <>
-      <PatientSearchForm setSearch={setSearch} search={search} />
+      <PatientSearchForm search={search} handleSearch={handleSearch} />
       <PatientSearchResult
         search={search}
-        sortedPatientsInfos={sortedPatientsInfos}
+        patientsDemographics={patientsDemographics}
+        loading={loading}
+        hasMore={hasMore}
+        setPaging={setPaging}
       />
     </>
   );

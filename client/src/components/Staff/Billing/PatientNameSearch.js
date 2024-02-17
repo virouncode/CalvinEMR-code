@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { patientIdToName } from "../../../utils/patientIdToName";
 
 const PatientNameSearch = ({ handleClickPatient }) => {
   const [userInput, setUserInput] = useState("");
   const [results, setResults] = useState([]);
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
 
   useEffect(() => {
     setResults(

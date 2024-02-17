@@ -1,7 +1,6 @@
 import { Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { getPatientRecord } from "../../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
@@ -11,13 +10,17 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medicationSchema } from "../../../../../validation/medicationValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
+import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
 var _ = require("lodash");
 
 const MedicationForm = ({
@@ -29,8 +32,9 @@ const MedicationForm = ({
   body,
 }) => {
   //HOOKS
-  const { auth, user, socket } = useAuth();
-  const [allergies, setAllergies] = useState([]);
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
     DrugIdentificationNumber: "",
     DrugName: "",
@@ -63,31 +67,14 @@ const MedicationForm = ({
     SubstitutionNotAllowed: "N",
   });
   const [errMsg, setErrMsg] = useState("");
-  const [errAllergies, setErrAllergies] = useState(null);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAllergies = async () => {
-      try {
-        const allergiesResults = await getPatientRecord(
-          "/allergies_for_patient",
-          patientId,
-          auth.authToken,
-          abortController
-        );
-        if (abortController.signal.aborted) return;
-        setAllergies(allergiesResults);
-      } catch (err) {
-        setErrAllergies(
-          `Error: unable to fetch patient allergies: ${err.message}`
-        );
-      }
-    };
-    fetchAllergies();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, patientId]);
+  const [allergies, setAllergies, loadingAllergies, errAllergies] =
+    useFetchDatas(
+      "/allergies_for_patient",
+      axiosXanoStaff,
+      auth.authToken,
+      "patient_id",
+      patientId
+    );
 
   //HANDLERS
   const handleSubmit = async (e) => {
@@ -616,13 +603,17 @@ const MedicationForm = ({
           style={{ color: "#ff0000" }}
         ></i>{" "}
         Patient Allergies :{" "}
-        {errAllergies
-          ? errAllergies
-          : allergies && allergies.length > 0
-          ? allergies
-              .map((allergy) => allergy.OffendingAgentDescription)
-              .join(", ")
-          : "No Allergies"}
+        {loadingAllergies ? (
+          <CircularProgressSmall />
+        ) : errAllergies ? (
+          errAllergies
+        ) : allergies && allergies.length > 0 ? (
+          allergies
+            .map((allergy) => allergy.OffendingAgentDescription)
+            .join(", ")
+        ) : (
+          "No allergies"
+        )}
       </div>
       <div className="med-templates__form-row">
         <label>Drug identification number</label>

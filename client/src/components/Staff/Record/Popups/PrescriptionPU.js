@@ -5,11 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import printJS from "print-js";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../hooks/useFetchDatas";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -18,6 +22,7 @@ import {
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MedicationForm from "../Topics/Medications/MedicationForm";
 import MedsTemplatesList from "../Topics/Medications/MedsTemplatesList";
 import PrescriptionActions from "../Topics/Prescription/PrescriptionActions";
@@ -27,70 +32,31 @@ import PrescriptionPagePrint from "../Topics/Prescription/PrescriptionPagePrint"
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
+
   const [progress, setProgress] = useState(false);
   const printRef = useRef();
-  const [sites, setSites] = useState(null);
-  const [siteSelectedId, setSiteSelectedId] = useState(user.settings.site_id);
-  const [medsTemplates, setMedsTemplates] = useState(null);
+  const [siteSelectedId, setSiteSelectedId] = useState(user.site_id);
   const [addedMeds, setAddedMeds] = useState([]);
   const [uniqueId, setUniqueId] = useState(uuidv4());
   const [body, setBody] = useState("");
   const [printVisible, setPrintVisible] = useState(false);
   const [finalInstructions, setFinalInstructions] = useState("");
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchTemplates = async () => {
-      try {
-        const response = await axiosXanoStaff.get(
-          `/medications_templates_for_staff?staff_id=${user.id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
-        if (abortController.signal.aborted) return;
-        setMedsTemplates(
-          response.data.sort((a, b) => a.DrugName.localeCompare(b.DrugName))
-        );
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch clinic sites: ${err.message}`, {
-            containerId: "B",
-          });
-      }
-    };
-    fetchTemplates();
-    return () => abortController.abort();
-  }, [auth.authToken, user.id]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchSites = async () => {
-      try {
-        const response = await axiosXanoStaff.get(`/sites`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setSites(response.data);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch clinic sites: ${err.message}`, {
-            containerId: "B",
-          });
-      }
-    };
-    fetchSites();
-    return () => abortController.abort();
-  }, [auth.authToken]);
+  const [medsTemplates, setMedsTemplates] = useFetchDatas(
+    "/medications_templates_for_staff",
+    axiosXanoStaff,
+    auth.authToken,
+    "staff_id",
+    user.id
+  );
+  const [sites, setSites] = useFetchDatas(
+    "/sites",
+    axiosXanoStaff,
+    auth.authToken
+  );
 
   useEffect(() => {
     const generatePrescription = async () => {
@@ -160,8 +126,8 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
                 StartDate: Date.now(),
                 PrescribedBy: {
                   Name: {
-                    FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                    LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                    FirstName: staffIdToFirstName(staffInfos, user.id),
+                    LastName: staffIdToLastName(staffInfos, user.id),
                   },
                 },
                 PrescriptionIdentifier: uniqueId,
@@ -221,10 +187,10 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
               ParticipatingProviders: [
                 {
                   Name: {
-                    FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                    LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                    FirstName: staffIdToFirstName(staffInfos, user.id),
+                    LastName: staffIdToLastName(staffInfos, user.id),
                   },
-                  OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+                  OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
                   DateTimeNoteCreated: Date.now(),
                 },
               ],
@@ -257,7 +223,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     addedMeds,
     auth.authToken,
     body,
-    clinic.staffInfos,
+    staffInfos,
     demographicsInfos.patient_id,
     patientId,
     printVisible,
@@ -271,22 +237,8 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     setPresVisible(false);
   };
 
-  const handleChangeSite = async (e) => {
+  const handleSiteChange = async (e) => {
     setSiteSelectedId(parseInt(e.target.value));
-    try {
-      await axiosXanoStaff.put(
-        `/settings/${user.settings.id}`,
-        { ...user.settings, site_id: parseInt(e.target.value) },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const handlePrint = () => setPrintVisible(true);
@@ -360,10 +312,10 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     //       ParticipatingProviders: [
     //         {
     //           Name: {
-    //             FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-    //             LastName: staffIdToLastName(clinic.staffInfos, user.id),
+    //             FirstName: staffIdToFirstName(staffInfos, user.id),
+    //             LastName: staffIdToLastName(staffInfos, user.id),
     //           },
-    //           OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+    //           OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
     //           DateTimeNoteCreated: Date.now(),
     //         },
     //       ],
@@ -392,7 +344,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
         handlePrint={handlePrint}
         handleFax={handleFax}
         handleCancel={handleCancel}
-        handleChangeSite={handleChangeSite}
+        handleSiteChange={handleSiteChange}
         sites={sites}
         siteSelectedId={siteSelectedId}
         progress={progress}
@@ -436,28 +388,13 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           printRef={printRef}
           sites={sites}
           siteSelectedId={siteSelectedId}
-          patientId={patientId}
           demographicsInfos={demographicsInfos}
           uniqueId={uniqueId}
           finalInstructions={finalInstructions}
         />
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

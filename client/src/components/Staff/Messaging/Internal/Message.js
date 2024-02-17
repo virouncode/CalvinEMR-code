@@ -1,11 +1,11 @@
 import React from "react";
-import useAuth from "../../../../hooks/useAuth";
+import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 
 const Message = ({ message, index }) => {
-  const { clinic } = useAuth();
+  const { clinic } = useAuthContext();
   return (
     <div
       className="message"

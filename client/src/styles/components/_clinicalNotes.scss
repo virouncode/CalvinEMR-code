@@ -53,7 +53,7 @@
     &__form {
         border: solid 0.5px grey;
         margin:4px;
-        border-radius: 4px;
+        border-radius: 6px;
         overflow:hidden;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         &-err {
@@ -63,7 +63,7 @@
             margin:10px auto;
             color : red;
             background-color:rgba(255, 0, 0, 0.403);
-            border-radius: 4px;
+            border-radius: 6px;
             text-align: center;
         }
     }
@@ -115,7 +115,7 @@
         background-color: $white;
         border: solid 0.5px grey;
         margin:4px;
-        border-radius: 4px;
+        border-radius: 6px;
         overflow:hidden;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         &--print {

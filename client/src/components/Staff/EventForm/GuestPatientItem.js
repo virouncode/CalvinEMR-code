@@ -10,7 +10,7 @@ const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
         target="_blank"
       >
         {guest.Names.LegalName.FirstName.Part}{" "}
-        {guest.Names.LegalName.OtherName.Part}{" "}
+        {guest.Names.LegalName.OtherName?.[0]?.Part}{" "}
         {guest.Names.LegalName.LastName.Part} (Patient){" "}
       </NavLink>
       <span data-key={guest.patient_id} data-type="patient">

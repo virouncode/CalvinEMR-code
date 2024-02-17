@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuth from "../../../hooks/useAuth";
+import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToOHIP } from "../../../utils/staffIdToName";
@@ -17,7 +17,7 @@ import ReferringOHIPSearch from "./ReferringOHIPSearch";
 const BillingForm = ({ setAddVisible, setErrMsg }) => {
   const navigate = useNavigate();
   const { pid, hcn, date } = useParams();
-  const { auth, user, clinic, socket } = useAuth();
+  const { auth, user, clinic, socket } = useAuthContext();
   const [formDatas, setFormDatas] = useState({
     date: toLocalDate(Date.now()),
     provider_ohip_nbr: staffIdToOHIP(clinic.staffInfos, user.id),
@@ -37,7 +37,6 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
 
   useEffect(() => {
     if (date) {
-      console.log(typeof pid, pid);
       setFormDatas({
         ...formDatas,
         patient_hcn: hcn || "",
@@ -80,7 +79,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
-  const handleChangeSite = (e) => {
+  const handleSiteChange = (e) => {
     const value = e.target.value;
     setFormDatas({ ...formDatas, site_id: value });
   };
@@ -120,14 +119,14 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
       setErrMsg(err.message);
       return;
     }
-    if (formDatas.referrer_ohip_nbr.length !== 6) {
-      setErrMsg("Referrer OHIP nbr field must be 6-digits");
-      return;
-    }
-    if (formDatas.provider_ohip_nbr.length !== 6) {
-      setErrMsg("Referrer OHIP nbr field must be 6-digits");
-      return;
-    }
+    // if (formDatas.referrer_ohip_nbr.length !== 6) {
+    //   setErrMsg("Referrer OHIP nbr field must be 6-digits");
+    //   return;
+    // }
+    // if (formDatas.provider_ohip_nbr.length !== 6) {
+    //   setErrMsg("Referrer OHIP nbr field must be 6-digits");
+    //   return;
+    // }
     if (
       formDatas.patient_hcn &&
       !clinic.demographicsInfos.find(
@@ -376,7 +375,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
         </div>
         <div className="billing-form__item">
           <SelectSite
-            handleChangeSite={handleChangeSite}
+            handleSiteChange={handleSiteChange}
             sites={sites}
             value={formDatas.site_id}
           />

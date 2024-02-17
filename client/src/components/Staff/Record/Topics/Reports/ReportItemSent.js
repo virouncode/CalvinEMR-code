@@ -1,13 +1,14 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import { showDocument } from "../../../../../utils/showDocument";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReportItemSent = ({ item, showDocument, setErrMsgPost }) => {
-  const { auth, clinic, user, socket } = useAuth();
+const ReportItemSent = ({ item, setErrMsgPost }) => {
+  const { auth, clinic, user, socket } = useAuthContext();
   const handleDeleteClick = async (e) => {
     setErrMsgPost("");
     if (

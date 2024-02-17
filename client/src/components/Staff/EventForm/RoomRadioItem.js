@@ -17,7 +17,7 @@ const RoomRadioItem = ({
         onChange={handleRoomChange}
         checked={isRoomSelected(roomId)}
       />
-      <label htmlFor={roomName}>
+      <label htmlFor={roomId}>
         {roomName} {isRoomOccupied(roomId) ? "(Occupied)" : ""}
       </label>
     </div>

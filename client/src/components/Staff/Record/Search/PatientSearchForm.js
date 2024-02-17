@@ -1,11 +1,6 @@
 import React from "react";
 
-const PatientSearchForm = ({ search, setSearch }) => {
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setSearch({ ...search, [name]: value });
-  };
+const PatientSearchForm = ({ search, handleSearch }) => {
   return (
     <div className="patient-search">
       <form className="patient-search__form">
@@ -15,7 +10,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="name"
             value={search.name}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="name"
             autoFocus
@@ -27,7 +22,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="email"
             value={search.email}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="email"
           />
@@ -38,7 +33,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="phone"
             value={search.phone}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="phone"
           />
@@ -49,7 +44,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="birth"
             value={search.birth}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="birth"
           />
@@ -60,7 +55,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="chart"
             value={search.chart}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="chart"
           />
@@ -71,7 +66,7 @@ const PatientSearchForm = ({ search, setSearch }) => {
             type="text"
             name="health"
             value={search.health}
-            onChange={handleChange}
+            onChange={handleSearch}
             autoComplete="off"
             id="health"
           />

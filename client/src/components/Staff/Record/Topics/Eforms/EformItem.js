@@ -1,14 +1,19 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
-import useAuth from "../../../../../hooks/useAuth";
+import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
+import { showDocument } from "../../../../../utils/showDocument";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 
-const EformItem = ({ item, showDocument }) => {
+const EformItem = ({ item, lastItemRef = null }) => {
   //HOOKS
-  const { auth, clinic, socket } = useAuth();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
 
   const handleDeleteClick = async (e) => {
     if (
@@ -34,7 +39,7 @@ const EformItem = ({ item, showDocument }) => {
   };
 
   return (
-    <tr className="eforms__item">
+    <tr className="eforms__item" ref={lastItemRef}>
       <td
         className="eforms__link"
         onClick={() => showDocument(item.file.url, item.file.mime)}
@@ -42,9 +47,7 @@ const EformItem = ({ item, showDocument }) => {
         {item.name}
       </td>
       <td>
-        <em>
-          {staffIdToTitleAndName(clinic.staffInfos, item.created_by_id, true)}
-        </em>
+        <em>{staffIdToTitleAndName(staffInfos, item.created_by_id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(item.date_created)}</em>

@@ -1,6 +1,6 @@
-import { CircularProgress } from "@mui/material";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
+import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const RemindersContent = ({ datas, isLoading, errMsg }) => {
   useEffect(() => {
@@ -34,7 +34,7 @@ const RemindersContent = ({ datas, isLoading, errMsg }) => {
       </div>
     )
   ) : (
-    <CircularProgress size="1rem" style={{ margin: "5px" }} />
+    <CircularProgressMedium />
   );
 };
 
