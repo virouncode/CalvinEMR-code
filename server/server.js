@@ -15,8 +15,8 @@ const twilio = require("twilio")(
 const extractTextFromDoc = require("./extractTextFromDoc");
 // const bodyParser = require("body-parser");
 const getExtension = require("./getExtension.js");
-const xml2js = require("xml2js");
-var stripPrefix = require("xml2js").processors.stripPrefix;
+// const xml2js = require("xml2js");
+// var stripPrefix = require("xml2js").processors.stripPrefix;
 
 const PORT = process.env.PORT || 4000;
 
@@ -158,20 +158,20 @@ app.post("/api/writeXML", async (req, res) => {
 //****************************************************//
 
 // //******** Endpoint transform XML string to JSON **********/
-app.post("/api/xmlToJs", (req, res) => {
-  try {
-    const { xmlContent } = req.body;
-    const parser = new xml2js.Parser({
-      explicitArray: false,
-      tagNameProcessors: [stripPrefix],
-    });
-    parser.parseString(xmlContent, function (err, result) {
-      res.send(result);
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+// app.post("/api/xmlToJs", (req, res) => {
+//   try {
+//     const { xmlContent } = req.body;
+//     const parser = new xml2js.Parser({
+//       explicitArray: false,
+//       tagNameProcessors: [stripPrefix],
+//     });
+//     parser.parseString(xmlContent, function (err, result) {
+//       res.send(result);
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 //***************************************************//
 
