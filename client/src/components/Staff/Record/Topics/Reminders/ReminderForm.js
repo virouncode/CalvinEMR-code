@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
@@ -15,10 +18,12 @@ const ReminderForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
-    active: true,
     reminder: "",
   });
   //HANDLERS
@@ -79,16 +84,6 @@ const ReminderForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
-        <select
-          name="active"
-          value={formDatas.active.toString()}
-          onChange={handleChange}
-        >
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </td>
-      <td>
         <input
           type="text"
           value={formDatas.reminder}
@@ -98,7 +93,7 @@ const ReminderForm = ({
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

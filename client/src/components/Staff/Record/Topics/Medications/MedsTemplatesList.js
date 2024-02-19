@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../hooks/useAuthContext";
-import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { onMessageMedTemplate } from "../../../../../utils/socketHandlers/onMessageMedTemplate";
@@ -25,14 +24,17 @@ const MedsTemplatesList = ({
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [newVisible, setNewVisible] = useState(false);
-  const [allergies, setAllergies, loadingAllergies, errAllergies] =
-    useFetchDatas(
-      "/allergies_for_patient",
-      axiosXanoStaff,
-      auth.authToken,
-      "patient_id",
-      patientId
-    );
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 20,
+    offset: 0,
+  });
+  const {
+    topicDatas: allergies,
+    loading: loadingAllergies,
+    errMsg: errAllergies,
+  } = useFetchTopicDatas("/allergies_for_patient", paging, patientId);
+
   const [search, setSearch] = useState("");
   const [filteredMedsTemplates, setFilteredMedsTemplates] = useState(null);
 

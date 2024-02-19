@@ -2,31 +2,27 @@ import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const RemindersContent = ({ datas, isLoading, errMsg }) => {
+const RemindersContent = ({ topicDatas, loading, errMsg }) => {
   useEffect(() => {
-    if (datas) {
-      datas.forEach((reminder) => {
+    if (topicDatas) {
+      topicDatas.forEach((reminder) => {
         if (reminder.active)
           toast.info(reminder.reminder, { autoClose: 3000, containerId: "A" });
       });
     }
-  }, [datas]);
+  }, [topicDatas]);
 
-  return !isLoading ? (
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas.filter((reminder) => reminder.active).length
-              ? datas
-                  .filter((reminder) => reminder.active)
-                  .sort((a, b) => b.date_created - a.date_created)
-                  .map((reminder) => (
-                    <li key={reminder.id}>- {reminder.reminder}</li>
-                  ))
-              : "No active reminder"}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li key={item.id}>- {item.reminder}</li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No reminders"

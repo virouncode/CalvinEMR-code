@@ -1,6 +1,7 @@
 import React from "react";
-import { genderCT } from "../../../../datas/codesTables";
+import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
 import { getAge } from "../../../../utils/getAge";
+import { toPatientName } from "../../../../utils/toPatientName";
 import ClinicalNotesCardPrint from "../ClinicalNotes/ClinicalNotesCardPrint";
 
 const ClinicalNotesPU = ({
@@ -21,25 +22,14 @@ const ClinicalNotesPU = ({
         }}
       >
         <em>
-          {demographicsInfos.Names.NamePrefix
-            ? `${demographicsInfos.Names.NamePrefix}. `
-            : ""}
-          {demographicsInfos.Names.LegalName.FirstName.Part}{" "}
-          {demographicsInfos.Names.LegalName.OtherName.Part
-            ? `${demographicsInfos.Names.LegalName.OtherName.Part} `
-            : ""}
-          {demographicsInfos.Names.LegalName.LastName.Part}{" "}
-          {demographicsInfos.Names.LastNameSuffix
-            ? `${demographicsInfos.Names.LastNameSuffix}. `
-            : ""}
-          ,{" "}
-          {genderCT.find(({ code }) => code === demographicsInfos.Gender)?.name}
-          , {getAge(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
+          {toPatientName(demographicsInfos)},{" "}
+          {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
+          {getAge(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
           {demographicsInfos.ChartNumber},{" "}
           <i className="fa-regular fa-envelope fa-sm"></i>{" "}
           {demographicsInfos.Email}, <i className="fa-solid fa-phone fa-sm"></i>{" "}
           {
-            demographicsInfos.PhoneNumber.find(
+            demographicsInfos.PhoneNumber?.find(
               ({ _phoneNumberType }) => _phoneNumberType === "C"
             )?.phoneNumber
           }

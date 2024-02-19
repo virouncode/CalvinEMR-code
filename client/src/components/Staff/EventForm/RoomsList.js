@@ -8,7 +8,6 @@ const RoomsList = ({
   isRoomOccupied,
   label = true,
 }) => {
-  //Rooms vector with all Rooms
   return (
     <>
       {label && <label>Room</label>}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -10,22 +11,22 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {
-  const { auth, clinic } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
 
   useEffect(() => {
     const fetchFiles = async () => {
       const response = (
-        await axiosXanoStaff.post(
-          "/attachments_for_clinical_note",
-          { attachments_ids: clinicalNote.attachments_ids },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        )
+        await axiosXanoStaff.get("/attachments_for_clinical_note", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
+            attachments_ids: clinicalNote.attachments_ids,
+          },
+        })
       ).data;
       setAttachments(response);
     };
@@ -36,6 +37,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
   const BODY_STYLE = {
     padding: "10px",
     textAlign: "justify",
+    whiteSpace: "pre",
   };
   const FOOTER_STYLE = {
     textAlign: "end",
@@ -50,7 +52,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           <p style={{ margin: "0", padding: "0" }}>
             <strong>From: </strong>
             {staffIdToTitleAndName(
-              clinic.staffInfos,
+              staffInfos,
               isUpdated(clinicalNote)
                 ? getLastUpdate(clinicalNote).updated_by_id
                 : clinicalNote.created_by_id,
@@ -82,7 +84,9 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
         </div>
       </div>
       <div style={BODY_STYLE}>
-        <p>{clinicalNote.MyClinicalNotesContent}</p>
+        <p style={{ whiteSpace: "pre" }}>
+          {clinicalNote.MyClinicalNotesContent}
+        </p>
         <ClinicalNotesAttachments
           attachments={attachments}
           deletable={false}
@@ -93,7 +97,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
             <p style={{ padding: "0", margin: "0" }}>
               Updated by{" "}
               {staffIdToTitleAndName(
-                clinic.staffInfos,
+                staffInfos,
                 getLastUpdate(clinicalNote).updated_by_id,
                 true
               )}{" "}
@@ -106,7 +110,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           <p style={{ padding: "0", margin: "0" }}>
             Created by{" "}
             {staffIdToTitleAndName(
-              clinic.staffInfos,
+              staffInfos,
               clinicalNote.created_by_id,
               true
             )}{" "}

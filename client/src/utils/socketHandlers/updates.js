@@ -16,8 +16,8 @@ export const getLastUpdate = (data) => {
   }
 };
 
-export const sortByDate = (array, ascending) => {
-  if (ascending) {
+export const sortByDate = (array, order) => {
+  if (order === "asc") {
     return array.sort(
       (a, b) =>
         (isUpdated(a) ? getLastUpdate(a).date_updated : a.date_created) -

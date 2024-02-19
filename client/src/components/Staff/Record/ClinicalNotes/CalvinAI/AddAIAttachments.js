@@ -1,19 +1,17 @@
-import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
+import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
 import AddAIAttachmentItem from "./AddAIAttachmentItem";
 
 const AddAIAttachments = ({
   attachments,
-  messages,
-  setMessages,
   demographicsInfos,
-  initialBody,
   isLoadingAttachmentText,
   setIsLoadingAttachmentText,
   isLoadingDocumentText,
   attachmentsTextsToAdd,
   setAttachmentsTextsToAdd,
-  reportsTextToAdd,
+  msgText,
+  setMsgText,
 }) => {
   const [attachmentsAddedIds, setAttachmentsAddedIds] = useState([]);
 
@@ -21,26 +19,22 @@ const AddAIAttachments = ({
     <div className="calvinai-prompt__attachments">
       <p>
         Add attachments datas
-        {isLoadingAttachmentText && (
-          <CircularProgress size="0.8rem" style={{ marginLeft: "5px" }} />
-        )}
+        {isLoadingAttachmentText && <CircularProgressSmall />}
       </p>
       {attachments.map((attachment) => (
         <AddAIAttachmentItem
-          attachment={attachment}
-          setMessages={setMessages}
-          messages={messages}
           key={attachment.id}
+          attachment={attachment}
           attachmentsAddedIds={attachmentsAddedIds}
           setAttachmentsAddedIds={setAttachmentsAddedIds}
           attachmentsTextsToAdd={attachmentsTextsToAdd}
           setAttachmentsTextsToAdd={setAttachmentsTextsToAdd}
-          reportsTextToAdd={reportsTextToAdd}
-          demographicsInfos={demographicsInfos}
-          initialBody={initialBody}
           isLoadingAttachmentText={isLoadingAttachmentText}
           setIsLoadingAttachmentText={setIsLoadingAttachmentText}
           isLoadingDocumentText={isLoadingDocumentText}
+          demographicsInfos={demographicsInfos}
+          msgText={msgText}
+          setMsgText={setMsgText}
         />
       ))}
     </div>

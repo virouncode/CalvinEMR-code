@@ -2,6 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useUserContext from "../../../../hooks/useUserContext";
 
 const ClinicalNotesToolBar = ({
   addVisible,
@@ -21,9 +22,12 @@ const ClinicalNotesToolBar = ({
   setAllBodiesVisible,
   order,
   setOrder,
+  paging,
+  setPaging,
 }) => {
   //HOOKS
-  const { auth, user, setUser } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
   //Events
   const handleClickSelectAll = (e) => {
     if (selectAll) {
@@ -61,10 +65,11 @@ const ClinicalNotesToolBar = ({
   const handleChangeOrder = async (e) => {
     const value = e.target.value;
     setOrder(value);
+    setPaging({ ...paging, page: 1 });
     try {
       await axiosXanoStaff.put(
         `settings/${user.settings.id}`,
-        { ...user.settings, progress_notes_order: value },
+        { ...user.settings, clinical_notes_order: value },
         {
           headers: {
             "Content-Type": "application/json",
@@ -74,13 +79,13 @@ const ClinicalNotesToolBar = ({
       );
       setUser({
         ...user,
-        settings: { ...user.settings, progress_notes_order: value },
+        settings: { ...user.settings, clinical_notes_order: value },
       });
       localStorage.setItem(
         "user",
         JSON.stringify({
           ...user,
-          settings: { ...user.settings, progress_notes_order: value },
+          settings: { ...user.settings, clinical_notes_order: value },
         })
       );
       toast.success("Saved preference", {
@@ -107,10 +112,10 @@ const ClinicalNotesToolBar = ({
           <input
             type="radio"
             name="order"
-            value="top"
+            value="desc"
             id="top"
             onChange={handleChangeOrder}
-            checked={order === "top"}
+            checked={order === "desc"}
           />
           <label htmlFor="top">Top</label>
         </div>
@@ -118,10 +123,10 @@ const ClinicalNotesToolBar = ({
           <input
             type="radio"
             name="order"
-            value="bottom"
+            value="asc"
             id="bottom"
             onChange={handleChangeOrder}
-            checked={order === "bottom"}
+            checked={order === "asc"}
           />
           <label htmlFor="bottom">Bottom</label>
         </div>

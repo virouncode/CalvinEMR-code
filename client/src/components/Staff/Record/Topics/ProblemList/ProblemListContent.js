@@ -1,23 +1,22 @@
 import React from "react";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const ProblemListContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const ProblemListContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.date_created - a.date_created)
-              .map((problem) => (
-                <li key={problem.id}>
-                  - {problem.ProblemDiagnosisDescription}
-                  {", "}
-                  {problem.ProblemDescription}
-                </li>
-              ))}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li key={item.id}>
+                - {item.ProblemDiagnosisDescription}
+                {", "}
+                {item.ProblemDescription}
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No problems"

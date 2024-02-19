@@ -3,6 +3,9 @@ import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import {
   fromLocalToISOStringNoMs,
@@ -34,7 +37,10 @@ const AppointmentForm = ({
   sites,
 }) => {
   //HOOKS
-  const { auth, clinic, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     host_id: user.title === "Secretary" ? 0 : user.id,
     start: null,
@@ -47,13 +53,11 @@ const AppointmentForm = ({
     AppointmentStatus: "Scheduled",
     AppointmentPurpose: "Appointment",
     AppointmentNotes: "",
-    site_id: user.settings.site_id,
+    site_id: user.site_id,
     room_id: "z",
   });
   const [availableRooms, setAvailableRooms] = useState(
-    sites
-      .find(({ id }) => id === user.settings.site_id)
-      ?.rooms.map(({ id }) => id)
+    sites.find(({ id }) => id === user.site_id)?.rooms.map(({ id }) => id)
   );
   const previousStartDate = useRef(toLocalDate(Date.now()));
   const previousEndDate = useRef(toLocalDate(Date.now()));
@@ -395,18 +399,12 @@ const AppointmentForm = ({
       Provider: {
         Name: {
           FirstName: staffIdToFirstName(
-            clinic.staffInfos,
+            staffInfos,
             parseInt(formDatas.host_id)
           ),
-          LastName: staffIdToLastName(
-            clinic.staffInfos,
-            parseInt(formDatas.host_id)
-          ),
+          LastName: staffIdToLastName(staffInfos, parseInt(formDatas.host_id)),
         },
-        OHIPPhysicianId: staffIdToOHIP(
-          clinic.staffInfos,
-          parseInt(formDatas.host_id)
-        ),
+        OHIPPhysicianId: staffIdToOHIP(staffInfos, parseInt(formDatas.host_id)),
       },
       AppointmentNotes: firstLetterOfFirstWordUpper(formDatas.AppointmentNotes),
     };
@@ -452,12 +450,12 @@ const AppointmentForm = ({
       <td style={{ minWidth: "170px" }}>
         {isSecretary() ? (
           <HostsList
-            staffInfos={clinic.staffInfos}
+            staffInfos={staffInfos}
             handleHostChange={handleHostChange}
             hostId={formDatas.host_id}
           />
         ) : (
-          <p>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</p>
+          <p>{staffIdToTitleAndName(staffInfos, user.id, true)}</p>
         )}
       </td>
       <td>
@@ -470,7 +468,7 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <div className="appointments__event-date-container">
+        <div className="appointments__item-date-container">
           <input
             type="date"
             value={formDatas.start !== null ? toLocalDate(formDatas.start) : ""}
@@ -490,7 +488,7 @@ const AppointmentForm = ({
         </div>
       </td>
       <td>
-        <div className="appointments__event-date-container">
+        <div className="appointments__item-date-container">
           <input
             type="date"
             value={formDatas.end !== null ? toLocalDate(formDatas.end) : ""}
@@ -535,7 +533,7 @@ const AppointmentForm = ({
           roomSelectedId={formDatas.room_id}
           rooms={sites
             .find(({ id }) => id === formDatas.site_id)
-            ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
+            ?.rooms?.sort((a, b) => a.id.localeCompare(b.id))}
           isRoomOccupied={isRoomOccupied}
           label={false}
         />
@@ -558,7 +556,7 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

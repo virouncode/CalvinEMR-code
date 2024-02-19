@@ -1,60 +1,46 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../hooks/useAuthContext";
+import React, { useRef, useState } from "react";
+import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { getAge } from "../../../../../utils/getAge";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../../All/UI/Toast/ToastCalvin";
 import StaffAIAgreement from "../../../Agreement/StaffAIAgreement";
 import CalvinAIDiscussion from "./CalvinAIDiscussion";
 import CalvinAIPrompt from "./CalvinAIPrompt";
 
 const CalvinAI = ({ attachments, initialBody, demographicsInfos }) => {
-  const { user, auth } = useAuthContext();
+  const { user } = useUserContext();
   const [chatVisible, setChatVisible] = useState(false);
-  const [start, setStart] = useState(false);
+  const [start, setStart] = useState(user.ai_consent);
+
+  const [msgText, setMsgText] = useState({
+    intro: `Hello I'm a doctor. My patient is a ${getAge(
+      demographicsInfos.DateOfBirth
+    )} year-old ${toCodeTableName(
+      genderCT,
+      demographicsInfos.Gender
+    )} with the following symptoms:`,
+    body: initialBody,
+    attachments: "Here are further informations that you may use: ",
+    reports: "",
+    question: "What is the diagnosis and what treatment would you suggest ?",
+  });
+  const [introMsg, setIntroMsg] = useState(
+    `Hello I'm a doctor. My patient is a ${getAge(
+      demographicsInfos.DateOfBirth
+    )} year-old ${toCodeTableName(
+      genderCT,
+      demographicsInfos.Gender
+    )} with the following symptoms:`
+  );
+
   const [messages, setMessages] = useState([
     {
-      content: `Hello I'm a doctor.
-
-My patient is a ${getAge(demographicsInfos.date_of_birth)} year-old ${
-        demographicsInfos.gender_at_birth
-      } with the following symptoms:
-    
-  ${initialBody}.
-    
-What is the diagnosis and what treatment would you suggest ?`,
       role: "user",
+      content: "",
     },
   ]);
   const [lastResponse, setLastResponse] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const abortControllerAI = useRef(null);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchStaffInfos = async () => {
-      try {
-        const response = await axiosXanoStaff.get(`/staff/${user.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setIsLoading(false);
-        setStart(response.data.ai_consent);
-      } catch (err) {
-        toast.error(`Cant fetch staff ai consent: ${err.message}`, {
-          containerId: "A",
-        });
-      }
-    };
-    fetchStaffInfos();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, user.id]);
 
   return (
     <>
@@ -68,10 +54,14 @@ What is the diagnosis and what treatment would you suggest ?`,
           attachments={attachments}
           initialBody={initialBody}
           demographicsInfos={demographicsInfos}
+          introMsg={introMsg}
+          setIntroMsg={setIntroMsg}
+          msgText={msgText}
+          setMsgText={setMsgText}
         />
-      ) : isLoading ? (
-        <CircularProgressMedium />
-      ) : start ? (
+      ) : !start ? (
+        <StaffAIAgreement setStart={setStart} setChatVisible={setChatVisible} />
+      ) : (
         <CalvinAIDiscussion
           messages={messages}
           setMessages={setMessages}
@@ -79,24 +69,8 @@ What is the diagnosis and what treatment would you suggest ?`,
           setLastResponse={setLastResponse}
           abortController={abortControllerAI}
         />
-      ) : (
-        <StaffAIAgreement setStart={setStart} setChatVisible={setChatVisible} />
       )}
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

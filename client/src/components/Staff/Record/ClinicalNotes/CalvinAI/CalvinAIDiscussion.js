@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { sendMsgToOpenAI } from "../../../../../api/openapi";
 import CalvinAIInput from "../../../CalvinAIChat/CalvinAIInput";
@@ -14,7 +14,7 @@ const CalvinAIDiscussion = ({
   const msgEndRef = useRef(null);
   const contentRef = useRef(null);
   const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [autoScroll, setAutoScroll] = useState(true);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const CalvinAIDiscussion = ({
     setMessages(updatedMessages);
     updatedMessages.push({ role: "assistant", content: "" });
     try {
-      setIsLoading(true);
+      setLoading(true);
       abortController.current = new AbortController();
       const stream = await sendMsgToOpenAI(
         [...messages, { role: "user", content: text }],
@@ -61,8 +61,9 @@ const CalvinAIDiscussion = ({
         setMessages(updatedMessages);
         setLastResponse((r) => r + (part.choices[0]?.delta?.content || ""));
       }
-      setIsLoading(false);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       toast.error(`CalvinAI is down: ${err.message}`, { containerId: "B" });
     }
   };
@@ -82,7 +83,7 @@ const CalvinAIDiscussion = ({
         handleChangeInput={handleChangeInput}
         value={inputText}
         handleAskGPT={handleAskGPT}
-        isLoading={isLoading}
+        loading={loading}
       />
     </div>
   );

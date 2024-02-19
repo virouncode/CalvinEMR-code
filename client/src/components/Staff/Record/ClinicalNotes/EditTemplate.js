@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
@@ -11,11 +13,12 @@ const EditTemplate = ({
   setEditTemplateVisible,
   myTemplates,
   setTemplateSelectedId,
-  setTemplates,
   setFormDatas,
   formDatas,
 }) => {
-  const { auth, user } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editTemplateSelectedId, setEditTemplateSelectedId] = useState("");
   const [editedTemplate, setEditedTemplate] = useState({
     author_id: user.id,
@@ -51,7 +54,7 @@ const EditTemplate = ({
     ) {
       try {
         await axiosXanoStaff.delete(
-          `/progress_notes_templates/${editTemplateSelectedId}`,
+          `/clinical_notes_templates/${editTemplateSelectedId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -59,18 +62,11 @@ const EditTemplate = ({
             },
           }
         );
-        //reload templates :
-        const response = await axiosXanoStaff.get("/progress_notes_templates", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
+        socket.emit("message", {
+          route: "CLINICAL TEMPLATES",
+          action: "delete",
+          content: { id: editTemplateSelectedId },
         });
-        setTemplates(
-          response.data.sort((a, b) =>
-            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-          )
-        );
         setEditTemplateVisible(false);
         setTemplateSelectedId("");
         setFormDatas({ ...formDatas, body: "" });
@@ -87,10 +83,9 @@ const EditTemplate = ({
     //save template
     const templateToPut = { ...editedTemplate };
     templateToPut.date_created = Date.now();
-
     try {
-      await axiosXanoStaff.put(
-        `/progress_notes_templates/${editTemplateSelectedId}`,
+      const response = await axiosXanoStaff.put(
+        `/clinical_notes_templates/${editTemplateSelectedId}`,
         templateToPut,
         {
           headers: {
@@ -99,19 +94,15 @@ const EditTemplate = ({
           },
         }
       );
-      //reload templates :
-      const response2 = await axiosXanoStaff.get("/progress_notes_templates", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
+      socket.emit("message", {
+        route: "CLINICAL TEMPLATES",
+        action: "update",
+        content: { id: editTemplateSelectedId, data: response.data },
       });
-      setTemplates(
-        response2.data.sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-        )
-      );
-      setFormDatas({ ...formDatas, body: editedTemplate.body });
+      setFormDatas({
+        ...formDatas,
+        MyClinicalNotesContent: editedTemplate.body,
+      });
       setTemplateSelectedId(editTemplateSelectedId);
       setEditTemplateVisible(false);
       toast.success("Saved successfully", { containerId: "B" });

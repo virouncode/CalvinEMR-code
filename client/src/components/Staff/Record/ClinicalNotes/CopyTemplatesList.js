@@ -6,7 +6,11 @@ const CopyTemplatesList = ({
   handleSelectCopyTemplate,
 }) => {
   return (
-    <select value={copyTemplateSelectedId} onChange={handleSelectCopyTemplate}>
+    <select
+      value={copyTemplateSelectedId}
+      onChange={handleSelectCopyTemplate}
+      style={{ marginLeft: "5px" }}
+    >
       <option disabled value="">
         an existing template
       </option>

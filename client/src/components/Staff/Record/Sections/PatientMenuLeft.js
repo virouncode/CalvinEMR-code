@@ -121,15 +121,14 @@ const PatientMenuLeft = ({
         demographicsInfos={demographicsInfos}
       />
       <PatientTopic
-        url="/personal_history_of_patient"
+        url="/reminders_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#CE2D4F"
-        topic="PERSONAL HISTORY"
-        patientName={toPatientName(demographicsInfos)}
+        topic="REMINDERS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="left"
-        demographicsInfos={demographicsInfos}
       />
     </div>
   );

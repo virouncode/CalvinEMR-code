@@ -6,40 +6,42 @@ import {
 import { cmToFeet, kgToLbs } from "../../../../../utils/measurements";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const CareElementsContent = ({ datas, isLoading, errMsg }) => {
+const CareElementsContent = ({ topicDatas, loading, errMsg }) => {
   //HOOKS
   const [lastDatas, setLastDatas] = useState(null);
   useEffect(() => {
-    if (datas && datas.length !== 0) {
+    if (topicDatas && topicDatas.length > 0) {
       setLastDatas({
-        SmokingStatus: datas[0].SmokingStatus.sort(
+        SmokingStatus: topicDatas[0].SmokingStatus?.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        SmokingPacks: datas[0].SmokingPacks.sort((a, b) => b.Date - a.Date)[0],
-        Weight: datas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
-        Height: datas[0].Height.sort((a, b) => b.Date - a.Date)[0],
-        WaistCircumference: datas[0].WaistCircumference.sort(
+        SmokingPacks: topicDatas[0].SmokingPacks?.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        BloodPressure: datas[0].BloodPressure.sort(
+        Weight: topicDatas[0].Weight?.sort((a, b) => b.Date - a.Date)[0],
+        Height: topicDatas[0].Height?.sort((a, b) => b.Date - a.Date)[0],
+        WaistCircumference: topicDatas[0].WaistCircumference?.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        bodyMassIndex: datas[0].bodyMassIndex.sort(
+        BloodPressure: topicDatas[0].BloodPressure?.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        bodySurfaceArea: datas[0].bodySurfaceArea.sort(
+        bodyMassIndex: topicDatas[0].bodyMassIndex?.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        bodySurfaceArea: topicDatas[0].bodySurfaceArea?.sort(
           (a, b) => b.Date - a.Date
         )[0],
       });
     }
-  }, [datas]);
+  }, [topicDatas]);
 
-  return !isLoading ? (
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 && lastDatas ? (
+        {topicDatas && topicDatas.length > 0 && lastDatas ? (
           <>
             <p>
               <label>Smoking: </label>

@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import CopyTemplatesList from "./CopyTemplatesList";
 
 const NewTemplate = ({
   setNewTemplateVisible,
   templates,
   setTemplateSelectedId,
-  setTemplates,
   setFormDatas,
   formDatas,
 }) => {
-  const { auth, user } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [copyTemplateSelectedId, setCopyTemplateSelectedId] = useState("");
   const [newTemplate, setNewTemplate] = useState({ name: "", body: "" });
   const [errMsg, setErrMsg] = useState("");
@@ -49,7 +53,7 @@ const NewTemplate = ({
     templateToSave.author_id = user.id;
     try {
       const response = await axiosXanoStaff.post(
-        "/progress_notes_templates",
+        "/clinical_notes_templates",
         templateToSave,
         {
           headers: {
@@ -58,19 +62,12 @@ const NewTemplate = ({
           },
         }
       );
-      //reload templates :
-      const response2 = await axiosXanoStaff.get("/progress_notes_templates", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
+      socket.emit("message", {
+        route: "CLINICAL TEMPLATES",
+        action: "create",
+        content: { data: response.data },
       });
-      setTemplates(
-        response2.data.sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-        )
-      );
-      setFormDatas({ ...formDatas, body: newTemplate.body });
+      setFormDatas({ ...formDatas, MyClinicalNotesContent: newTemplate.body });
       setTemplateSelectedId(response.data.id);
       setNewTemplateVisible(false);
       toast.success("Template saved succesfully", { containerId: "B" });
@@ -98,6 +95,7 @@ const NewTemplate = ({
           value={newTemplate.name}
           onChange={handleChange}
           placeholder="New template name"
+          autoComplete="off"
         />
       </div>
       <div className="new-template-body">
@@ -111,21 +109,7 @@ const NewTemplate = ({
         <button onClick={handleSave}>Save</button>
         <button onClick={handleCancel}>Cancel</button>
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
+import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
+
 import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../datas/codesTables";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import {
   bodyMassIndex,
@@ -18,7 +22,6 @@ import {
   kgToLbs,
   lbsToKg,
 } from "../../../../utils/measurements";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import {
   getLastUpdate,
   isUpdated,
@@ -30,19 +33,26 @@ import ConfirmGlobal, {
 } from "../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../All/UI/Lists/GenericList";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CareElementHistory from "../Topics/CareElements/CareElementHistory";
 var _ = require("lodash");
 
 const CareElementsPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
-  datas,
-  isLoading,
-  errMsg,
+  patientName,
 }) => {
   //HOOKS
-  const { user, auth, socket, clinic } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [errMsgPost, setErrMsgPost] = useState("");
   const editCounter = useRef(0);
   const [editVisible, setEditVisible] = useState(false);
@@ -95,34 +105,36 @@ const CareElementsPU = ({
   });
 
   useEffect(() => {
-    //datas[0] is the CareElements for patient
-    if (datas && datas.length > 0) {
-      //if there is already a CareElement record for patient, we get the last datas, else we have an empty object
+    //topicDatas[0] is the CareElements for patient
+    if (topicDatas && topicDatas.length > 0) {
+      //if there is already a CareElement record for patient, we get the last topicDatas, else we have an empty object
       const initialLastDatas = {
         patient_id: parseInt(patientId),
-        SmokingStatus: datas[0].SmokingStatus.sort(
+        SmokingStatus: topicDatas[0].SmokingStatus.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        SmokingPacks: datas[0].SmokingPacks.sort((a, b) => b.Date - a.Date)[0],
-        Weight: datas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
-        Height: datas[0].Height.sort((a, b) => b.Date - a.Date)[0],
-        WaistCircumference: datas[0].WaistCircumference.sort(
+        SmokingPacks: topicDatas[0].SmokingPacks.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        BloodPressure: datas[0].BloodPressure.sort(
+        Weight: topicDatas[0].Weight.sort((a, b) => b.Date - a.Date)[0],
+        Height: topicDatas[0].Height.sort((a, b) => b.Date - a.Date)[0],
+        WaistCircumference: topicDatas[0].WaistCircumference.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        bodyMassIndex: datas[0].bodyMassIndex.sort(
+        BloodPressure: topicDatas[0].BloodPressure.sort(
           (a, b) => b.Date - a.Date
         )[0],
-        bodySurfaceArea: datas[0].bodySurfaceArea.sort(
+        bodyMassIndex: topicDatas[0].bodyMassIndex.sort(
+          (a, b) => b.Date - a.Date
+        )[0],
+        bodySurfaceArea: topicDatas[0].bodySurfaceArea.sort(
           (a, b) => b.Date - a.Date
         )[0],
       };
       setFormDatas(initialLastDatas);
       setLastDatas(initialLastDatas);
     }
-  }, [datas, patientId]);
+  }, [topicDatas, patientId]);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -292,7 +304,7 @@ const CareElementsPU = ({
       return;
     }
 
-    if (datas.length === 0) {
+    if (topicDatas.length === 0) {
       //We create a Care Element
       const datasToPost = {
         patient_id: patientId,
@@ -342,55 +354,58 @@ const CareElementsPU = ({
         //If we didn't change anything
         return;
       }
-      //add a new element to each array if value different from last datas
+      //add a new element to each array if value different from last topicDatas
       const datasToPut = {
-        id: datas[0].id,
+        id: topicDatas[0].id,
         patient_id: parseInt(patientId),
-        date_created: datas[0].date_created,
-        created_by_id: datas[0].created_by_id,
-        updates: datas[0].updates,
+        date_created: topicDatas[0].date_created,
+        created_by_id: topicDatas[0].created_by_id,
+        updates: topicDatas[0].updates,
         SmokingStatus:
           formDatas.SmokingStatus?.Status !== lastDatas.SmokingStatus?.Status
-            ? [...datas[0].SmokingStatus, formDatas.SmokingStatus]
-            : [...datas[0].SmokingStatus],
+            ? [...topicDatas[0].SmokingStatus, formDatas.SmokingStatus]
+            : [...topicDatas[0].SmokingStatus],
         SmokingPacks:
           formDatas.SmokingPacks?.PerDay !== lastDatas.SmokingPacks?.PerDay
-            ? [...datas[0].SmokingPacks, formDatas.SmokingPacks]
-            : [...datas[0].SmokingPacks],
+            ? [...topicDatas[0].SmokingPacks, formDatas.SmokingPacks]
+            : [...topicDatas[0].SmokingPacks],
         Weight:
           formDatas.Weight?.Weight !== lastDatas.Weight?.Weight
-            ? [...datas[0].Weight, formDatas.Weight]
-            : [...datas[0].Weight],
+            ? [...topicDatas[0].Weight, formDatas.Weight]
+            : [...topicDatas[0].Weight],
         Height:
           formDatas.Height?.Height !== lastDatas.Height?.Height
-            ? [...datas[0].Height, formDatas.Height]
-            : [...datas[0].Height],
+            ? [...topicDatas[0].Height, formDatas.Height]
+            : [...topicDatas[0].Height],
         WaistCircumference:
           formDatas.WaistCircumference?.WaistCircumference !==
           lastDatas.WaistCircumference?.WaistCircumference
-            ? [...datas[0].WaistCircumference, formDatas.WaistCircumference]
-            : [...datas[0].WaistCircumference],
+            ? [
+                ...topicDatas[0].WaistCircumference,
+                formDatas.WaistCircumference,
+              ]
+            : [...topicDatas[0].WaistCircumference],
         BloodPressure:
           formDatas.BloodPressure?.SystolicBP !==
             lastDatas.BloodPressure?.SystolicBP ||
           formDatas.BloodPressure?.DiastolicBP !==
             lastDatas.BloodPressure?.DiastolicBP
-            ? [...datas[0].BloodPressure, formDatas.BloodPressure]
-            : [...datas[0].BloodPressure],
+            ? [...topicDatas[0].BloodPressure, formDatas.BloodPressure]
+            : [...topicDatas[0].BloodPressure],
         bodyMassIndex:
           formDatas.bodyMassIndex?.BMI !== lastDatas.bodyMassIndex?.BMI
-            ? [...datas[0].bodyMassIndex, formDatas.bodyMassIndex]
-            : [...datas[0].bodyMassIndex],
+            ? [...topicDatas[0].bodyMassIndex, formDatas.bodyMassIndex]
+            : [...topicDatas[0].bodyMassIndex],
         bodySurfaceArea:
           formDatas.bodySurfaceArea?.BSA !== lastDatas.bodySurfaceArea?.BSA
-            ? [...datas[0].bodySurfaceArea, formDatas.bodySurfaceArea]
-            : [...datas[0].bodySurfaceArea],
+            ? [...topicDatas[0].bodySurfaceArea, formDatas.bodySurfaceArea]
+            : [...topicDatas[0].bodySurfaceArea],
       };
       try {
         //Validating
         await putPatientRecord(
           "/care_elements",
-          datas[0].id,
+          topicDatas[0].id,
           user.id,
           auth.authToken,
           datasToPut,
@@ -413,58 +428,58 @@ const CareElementsPU = ({
     let historyDatasToPass = [];
     switch (row) {
       case "SMOKING STATUS":
-        historyDatasToPass = datas.length
-          ? datas[0].SmokingStatus?.length
-            ? datas[0].SmokingStatus.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].SmokingStatus?.length
+            ? topicDatas[0].SmokingStatus.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "SMOKING PACKS PER DAY":
-        historyDatasToPass = datas.length
-          ? datas[0].SmokingPacks?.length
-            ? datas[0].SmokingPacks.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].SmokingPacks?.length
+            ? topicDatas[0].SmokingPacks.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "WEIGHT":
-        historyDatasToPass = datas.length
-          ? datas[0].Weight?.length
-            ? datas[0].Weight.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].Weight?.length
+            ? topicDatas[0].Weight.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "HEIGHT":
-        historyDatasToPass = datas.length
-          ? datas[0].Height?.length
-            ? datas[0].Height.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].Height?.length
+            ? topicDatas[0].Height.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "WAIST CIRCUMFERENCE":
-        historyDatasToPass = datas.length
-          ? datas[0].WaistCircumference?.length
-            ? datas[0].WaistCircumference.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].WaistCircumference?.length
+            ? topicDatas[0].WaistCircumference.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "BLOOD PRESSURE":
-        historyDatasToPass = datas.length
-          ? datas[0].BloodPressure?.length
-            ? datas[0].BloodPressure.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].BloodPressure?.length
+            ? topicDatas[0].BloodPressure.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "BODY MASS INDEX":
-        historyDatasToPass = datas.length
-          ? datas[0].bodyMassIndex?.length
-            ? datas[0].bodyMassIndex.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].bodyMassIndex?.length
+            ? topicDatas[0].bodyMassIndex.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
       case "BODY SURFACE AREA":
-        historyDatasToPass = datas.length
-          ? datas[0].bodySurfaceArea?.length
-            ? datas[0].bodySurfaceArea.sort((a, b) => a.Date - b.Date)
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].bodySurfaceArea?.length
+            ? topicDatas[0].bodySurfaceArea.sort((a, b) => a.Date - b.Date)
             : []
           : [];
         break;
@@ -481,18 +496,18 @@ const CareElementsPU = ({
         Patient care elements <i className="fa-solid fa-ruler-combined"></i>
       </h1>
       {errMsgPost && <div className="care-elements__err">{errMsgPost}</div>}
-      {isLoading ? (
+      {loading ? (
         <CircularProgressMedium />
       ) : errMsg ? (
         <p className="care-elements__err">{errMsg}</p>
       ) : (
-        datas && (
+        topicDatas && (
           <>
             <div
               className="care-elements__card"
               style={{ border: errMsgPost && "solid 1.5px red" }}
             >
-              <div className="care-elements__row care-elements__row--title">
+              <div className="care-elements__card-title">
                 <span>Last informations</span>
                 <div className="care-elements__btn-container">
                   {!editVisible ? (
@@ -510,311 +525,324 @@ const CareElementsPU = ({
                   )}
                 </div>
               </div>
-              <div className="care-elements__row">
-                <label>Smoking:</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <GenericList
-                    list={ynIndicatorsimpleCT}
-                    name="SmokingStatus"
-                    handleChange={handleChange}
-                    value={formDatas.SmokingStatus?.Status}
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {toCodeTableName(
-                        ynIndicatorsimpleCT,
-                        formDatas.SmokingStatus?.Status
-                      )}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "SMOKING STATUS")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
+              <div className="care-elements__card-content">
+                <div className="care-elements__row">
+                  <label>Smoking:</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <GenericList
+                      list={ynIndicatorsimpleCT}
+                      name="SmokingStatus"
+                      handleChange={handleChange}
+                      value={formDatas.SmokingStatus?.Status}
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {toCodeTableName(
+                          ynIndicatorsimpleCT,
+                          formDatas.SmokingStatus?.Status
+                        )}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "SMOKING STATUS")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Smoking Packs (per day):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="SmokingPacks"
+                      onChange={handleChange}
+                      value={formDatas.SmokingPacks?.PerDay}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.SmokingPacks?.PerDay}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "SMOKING PACKS PER DAY")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Weight (kg):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="Weight"
+                      onChange={handleChange}
+                      value={formDatas.Weight?.Weight}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.Weight?.Weight}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) => handleClickHistory(e, "WEIGHT")}
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Weight (lbs):</label>
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="WeightLbs"
+                      onChange={handleChange}
+                      value={formDatas.WeightLbs}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {kgToLbs(formDatas.Weight?.Weight)}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) => handleClickHistory(e, "WEIGHT")}
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Height (cm):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="Height"
+                      onChange={handleChange}
+                      value={formDatas.Height?.Height}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.Height?.Height}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) => handleClickHistory(e, "HEIGHT")}
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Height (feet):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="HeightFeet"
+                      onChange={handleChange}
+                      value={formDatas.HeightFeet}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {cmToFeet(formDatas.Height?.Height)}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) => handleClickHistory(e, "HEIGHT")}
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Body Mass Index (kg/m2):</label>
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="bodyMassIndex"
+                      readOnly
+                      value={formDatas.bodyMassIndex?.BMI}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.bodyMassIndex?.BMI}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "BODY MASS INDEX")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Body Surface Area (m2):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="bodySurfaceArea"
+                      readOnly
+                      value={formDatas.bodySurfaceArea?.BSA}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.bodySurfaceArea?.BSA}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "BODY SURFACE AREA")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Waist Circumference (cm):</label>
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="WaistCircumference"
+                      value={formDatas.WaistCircumference?.WaistCircumference}
+                      onChange={handleChange}
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.WaistCircumference?.WaistCircumference}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "WAIST CIRCUMFERENCE")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Systolic (mmHg):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="SystolicBP"
+                      autoComplete="off"
+                      value={formDatas.BloodPressure?.SystolicBP}
+                      onChange={handleChange}
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.BloodPressure?.SystolicBP}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "BLOOD PRESSURE")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="care-elements__row">
+                  <label>Diastolic (mmHg):</label>
+                  {/* </Tooltip> */}
+                  {editVisible ? (
+                    <input
+                      type="text"
+                      name="DiastolicBP"
+                      value={formDatas.BloodPressure?.DiastolicBP}
+                      autoComplete="off"
+                      onChange={handleChange}
+                    />
+                  ) : (
+                    <div>
+                      <span className="care-elements__value">
+                        {formDatas.BloodPressure?.DiastolicBP}
+                      </span>
+                      <span className="care-elements__history">
+                        <i
+                          className="fa-solid fa-clock-rotate-left"
+                          onClick={(e) =>
+                            handleClickHistory(e, "BLOOD PRESSURE")
+                          }
+                        ></i>
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="care-elements__row">
-                <label>Smoking Packs (per day):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="SmokingPacks"
-                    onChange={handleChange}
-                    value={formDatas.SmokingPacks?.PerDay}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.SmokingPacks?.PerDay}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "SMOKING PACKS PER DAY")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Weight (kg):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="Weight"
-                    onChange={handleChange}
-                    value={formDatas.Weight?.Weight}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.Weight?.Weight}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "WEIGHT")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Weight (lbs):</label>
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="WeightLbs"
-                    onChange={handleChange}
-                    value={formDatas.WeightLbs}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {kgToLbs(formDatas.Weight?.Weight)}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "WEIGHT")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Height (cm):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="Height"
-                    onChange={handleChange}
-                    value={formDatas.Height?.Height}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.Height?.Height}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "HEIGHT")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Height (feet):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="HeightFeet"
-                    onChange={handleChange}
-                    value={formDatas.HeightFeet}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {cmToFeet(formDatas.Height?.Height)}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "HEIGHT")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Body Mass Index (kg/m2):</label>
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="bodyMassIndex"
-                    readOnly
-                    value={formDatas.bodyMassIndex?.BMI}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.bodyMassIndex?.BMI}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "BODY MASS INDEX")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Body Surface Area (m2):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="bodySurfaceArea"
-                    readOnly
-                    value={formDatas.bodySurfaceArea?.BSA}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.bodySurfaceArea?.BSA}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "BODY SURFACE AREA")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Waist Circumference (cm):</label>
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="WaistCircumference"
-                    value={formDatas.WaistCircumference?.WaistCircumference}
-                    onChange={handleChange}
-                    autoComplete="off"
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.WaistCircumference?.WaistCircumference}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) =>
-                          handleClickHistory(e, "WAIST CIRCUMFERENCE")
-                        }
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Systolic (mmHg):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="SystolicBP"
-                    autoComplete="off"
-                    value={formDatas.BloodPressure?.SystolicBP}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.BloodPressure?.SystolicBP}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "BLOOD PRESSURE")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="care-elements__row">
-                <label>Diastolic (mmHg):</label>
-                {/* </Tooltip> */}
-                {editVisible ? (
-                  <input
-                    type="text"
-                    name="DiastolicBP"
-                    value={formDatas.BloodPressure?.DiastolicBP}
-                    autoComplete="off"
-                    onChange={handleChange}
-                  />
-                ) : (
-                  <div>
-                    <span className="care-elements__value">
-                      {formDatas.BloodPressure?.DiastolicBP}
-                    </span>
-                    <span className="care-elements__history">
-                      <i
-                        className="fa-solid fa-clock-rotate-left"
-                        onClick={(e) => handleClickHistory(e, "BLOOD PRESSURE")}
-                      ></i>
-                    </span>
-                  </div>
-                )}
-              </div>
+
               <p className="care-elements__sign">
-                {datas && datas.length > 0 && isUpdated(datas[0]) ? (
+                {topicDatas &&
+                topicDatas.length > 0 &&
+                isUpdated(topicDatas[0]) ? (
                   <em>
                     Updated by{" "}
                     {staffIdToTitleAndName(
-                      clinic.staffInfos,
-                      getLastUpdate(datas[0]).updated_by_id,
+                      staffInfos,
+                      getLastUpdate(topicDatas[0]).updated_by_id,
                       true
                     )}{" "}
                     on{" "}
-                    {toLocalDateAndTime(getLastUpdate(datas[0]).date_updated)}
+                    {toLocalDateAndTime(
+                      getLastUpdate(topicDatas[0]).date_updated
+                    )}
                   </em>
                 ) : (
-                  datas &&
-                  datas.length > 0 && (
+                  topicDatas &&
+                  topicDatas.length > 0 && (
                     <em>
                       Created by{" "}
                       {staffIdToTitleAndName(
-                        clinic.staffInfos,
-                        datas[0].created_by_id,
+                        staffInfos,
+                        topicDatas[0].created_by_id,
                         true
                       )}{" "}
-                      on {toLocalDateAndTime(datas[0].date_created)}
+                      on {toLocalDateAndTime(topicDatas[0].date_created)}
                     </em>
                   )
                 )}
@@ -825,10 +853,7 @@ const CareElementsPU = ({
       )}
       {historyVisible && (
         <FakeWindow
-          title={`${historyTopic} HISTORY of ${patientIdToName(
-            clinic.demographicsInfos,
-            patientId
-          )}`}
+          title={`${historyTopic} HISTORY of ${patientName}`}
           width={800}
           height={600}
           x={(window.innerWidth - 800) / 2}
@@ -843,21 +868,7 @@ const CareElementsPU = ({
         </FakeWindow>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

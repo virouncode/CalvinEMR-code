@@ -86,7 +86,7 @@ p {
 
 input[type=submit] {
   background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, #50B1C1 0%, #3f8d99 100%);
+  background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color: #FEFEFE;
   border: none;
@@ -99,7 +99,7 @@ input[type=submit] {
   white-space: nowrap;
 }
 input[type=submit]:hover {
-  background: #3f8d99;
+  background: #6492d8;
 }
 input[type=submit]:disabled {
   opacity: 0.2;
@@ -111,7 +111,7 @@ input[type=submit]:active {
 
 button {
   background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, #50B1C1 0%, #3f8d99 100%);
+  background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color: #FEFEFE;
   border: none;
@@ -124,7 +124,7 @@ button {
   white-space: nowrap;
 }
 button:hover {
-  background: #3f8d99;
+  background: #6492d8;
 }
 button:disabled {
   opacity: 0.2;
@@ -145,7 +145,7 @@ input {
   font-family: Lato, sans-serif, sans-serif;
 }
 input:focus {
-  outline: solid 2px #50B1C1;
+  outline: solid 2px #93b5e9;
 }
 input:-moz-read-only {
   outline: none;
@@ -174,7 +174,7 @@ textarea {
   color: #3D375A;
 }
 textarea:focus {
-  outline: solid 2px #50B1C1;
+  outline: solid 2px #93b5e9;
 }
 
 select {
@@ -188,7 +188,7 @@ select {
   font-family: Lato, sans-serif, sans-serif;
 }
 select:focus {
-  outline: solid 2px #50B1C1;
+  outline: solid 2px #93b5e9;
 }
 
 @media print {
@@ -10783,7 +10783,7 @@ readers do not read off random characters that represent icons */
   z-index: 10;
   padding: 10px 15px;
   background: rgb(156, 185, 228);
-  background: linear-gradient(132deg, #50B1C1 0%, #3f8d99 100%);
+  background: linear-gradient(132deg, #93b5e9 0%, #6492d8 100%);
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   display: grid;
   grid-template-columns: 20% 60% 20%;
@@ -10892,7 +10892,7 @@ readers do not read off random characters that represent icons */
 }
 .login-form__row input {
   background: transparent;
-  outline-color: #3f8d99;
+  outline-color: #6492d8;
 }
 .login-form__row-radio {
   display: flex;
@@ -10951,7 +10951,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
-  background: #50B1C1;
+  background: #93b5e9;
 }
 .calendar__left-bar {
   width: 14%;
@@ -11139,7 +11139,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
 }
 .flatpickr-weekdays, .flatpickr-weekday {
-  background-color: #50B1C1 !important;
+  background-color: #93b5e9 !important;
 }
 .flatpickr-day {
   font-size: 0.7rem !important;
@@ -11170,7 +11170,7 @@ readers do not read off random characters that represent icons */
   line-height: 30px;
 }
 .flatpickr-month, .flatpickr-monthDropdown-months {
-  background-color: #50B1C1 !important;
+  background-color: #93b5e9 !important;
 }
 
 .dayContainer {
@@ -11209,7 +11209,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
-  background: #50B1C1;
+  background: #93b5e9;
   width: 100%;
 }
 
@@ -11605,7 +11605,7 @@ readers do not read off random characters that represent icons */
 .patient-result table thead {
   position: sticky;
   top: 0;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border-radius: 6px;
 }
 .patient-result table thead th {
@@ -11634,7 +11634,7 @@ readers do not read off random characters that represent icons */
   font-weight: bold;
 }
 .patient-result table tbody tr .record-link:hover {
-  color: #50B1C1;
+  color: #93b5e9;
 }
 .patient-result table tbody tr td {
   font-size: 0.8rem;
@@ -11665,7 +11665,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .staff-result table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .staff-result table thead th {
   text-decoration: underline;
@@ -11727,7 +11727,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border-bottom: solid 0.5px grey;
 }
 .clinical-notes__toolbar {
@@ -11761,11 +11761,10 @@ readers do not read off random characters that represent icons */
   padding-top: 0;
 }
 .clinical-notes__content--active {
-  max-height: 150vh;
+  max-height: 1300px;
   padding-top: 5px;
 }
 .clinical-notes__form {
-  border: solid 0.5px grey;
   margin: 4px;
   border-radius: 6px;
   overflow: hidden;
@@ -11780,6 +11779,10 @@ readers do not read off random characters that represent icons */
   background-color: rgba(255, 0, 0, 0.403);
   border-radius: 6px;
   text-align: center;
+}
+.clinical-notes__form-template select {
+  width: 150px;
+  margin-left: 5px;
 }
 .clinical-notes__form-header {
   background: #D7D7D7;
@@ -11825,7 +11828,6 @@ readers do not read off random characters that represent icons */
 }
 .clinical-notes__card {
   background-color: #FEFEFE;
-  border: solid 0.5px grey;
   margin: 4px;
   border-radius: 6px;
   overflow: hidden;
@@ -11836,7 +11838,7 @@ readers do not read off random characters that represent icons */
 }
 .clinical-notes__card-header {
   padding: 5px 10px;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .clinical-notes__card-header-row {
   display: flex;
@@ -12074,7 +12076,7 @@ readers do not read off random characters that represent icons */
 .demographics-card__header {
   display: flex;
   justify-content: space-between;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px 6px 0 0;
   padding: 10px;
   align-items: center;
@@ -12199,7 +12201,7 @@ readers do not read off random characters that represent icons */
 .pasthealth__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .pasthealth__table th {
@@ -12270,7 +12272,7 @@ readers do not read off random characters that represent icons */
 .famhistory__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .famhistory__table thead th {
@@ -12341,7 +12343,7 @@ readers do not read off random characters that represent icons */
 .risk__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .risk__table th {
@@ -12409,7 +12411,7 @@ readers do not read off random characters that represent icons */
 .medications__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .medications__table th {
@@ -12632,7 +12634,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pharmacies__table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border: solid 1px #3D375A;
 }
 .pharmacies__table thead th {
@@ -12706,7 +12708,7 @@ readers do not read off random characters that represent icons */
 .pharmacies-list__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .pharmacies-list__table th {
@@ -12786,7 +12788,7 @@ readers do not read off random characters that represent icons */
 .doctors__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .doctors__table th {
@@ -12859,7 +12861,7 @@ readers do not read off random characters that represent icons */
 .doctors-list__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .doctors-list__table th {
@@ -12903,11 +12905,24 @@ readers do not read off random characters that represent icons */
 }
 .care-elements__card {
   width: 80%;
-  border: solid 1px #cecdcd;
   border-radius: 6px;
   margin: 0 auto;
-  padding: 10px 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.care-elements__card-title {
+  border-radius: 6px 6px 0 0;
+  padding: 10px 20px;
+  background-color: #93b5e9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.care-elements__card-title span {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.care-elements__card-content {
+  padding: 20px;
 }
 .care-elements__row {
   display: flex;
@@ -12983,6 +12998,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.reminders__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .reminders__table {
   table-layout: fixed;
   min-width: 100%;
@@ -12990,23 +13011,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .reminders__table thead {
-  background: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .reminders__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
-.reminders__item--notactive, .reminders__form--notactive {
-  background-color: #cecdcd;
+.reminders__item, .reminders__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .reminders__item td, .reminders__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .reminders__item input, .reminders__form input {
@@ -13046,6 +13066,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.pregnancies__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .pregnancies__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13053,14 +13079,14 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .pregnancies__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .pregnancies__table th {
   min-width: 70px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
 .pregnancies__btn-container {
@@ -13071,29 +13097,31 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
-.pregnancies-event td, .pregnancies-form td {
+.pregnancies-item, .pregnancies-form {
+  border-bottom: solid 1px #cecdcd;
+}
+.pregnancies-item td, .pregnancies-form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   max-width: 380px;
 }
-.pregnancies-event select, .pregnancies-form select {
+.pregnancies-item select, .pregnancies-form select {
   width: 180px;
 }
-.pregnancies-event__input1, .pregnancies-form__input1 {
+.pregnancies-item__input1, .pregnancies-form__input1 {
   width: 100px;
 }
-.pregnancies-event__input2, .pregnancies-form__input2 {
+.pregnancies-item__input2, .pregnancies-form__input2 {
   width: 120px;
 }
-.pregnancies-event__input3, .pregnancies-form__input3 {
+.pregnancies-item__input3, .pregnancies-form__input3 {
   width: 50px;
 }
-.pregnancies-event__btn-container, .pregnancies-form__btn-container {
+.pregnancies-item__btn-container, .pregnancies-form__btn-container {
   display: flex;
   justify-content: center;
 }
-.pregnancies-event__btn-container button, .pregnancies-form__btn-container button {
+.pregnancies-item__btn-container button, .pregnancies-form__btn-container button {
   margin-left: 5px;
 }
 
@@ -13113,6 +13141,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.allergies__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .allergies__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13120,23 +13154,25 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .allergies__table thead {
-  background: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .allergies__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.allergies__item, .allergies__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .allergies__item td, .allergies__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.allergies__item input, .allergies__form input {
+.allergies__item input, .allergies__item select, .allergies__form input, .allergies__form select {
   width: 100%;
 }
 .allergies__item input[type=submit], .allergies__form input[type=submit] {
@@ -13188,7 +13224,7 @@ readers do not read off random characters that represent icons */
 .alerts__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .alerts__table th {
@@ -13262,14 +13298,14 @@ readers do not read off random characters that represent icons */
   margin-bottom: 10px;
 }
 .recimmunizations__table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border: solid 1px #3D375A;
 }
 .recimmunizations__table td {
   border: solid 1px #3D375A;
 }
 .recimmunizations__table th {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   padding: 5px;
   border: solid 1px #3D375A;
 }
@@ -13414,7 +13450,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .immunizations__table thead {
-  background: #50B1C1;
+  background: #93b5e9;
   border: solid 1px #3D375A;
 }
 .immunizations__table th {
@@ -13480,7 +13516,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .reports__table thead {
-  background: #50B1C1;
+  background: #93b5e9;
   border: solid 1px #3D375A;
 }
 .reports__table th {
@@ -13590,6 +13626,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.appointments__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .appointments__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13597,38 +13639,40 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .appointments__table thead {
-  background-color: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .appointments__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
 }
-.appointments__event td, .appointments__form td {
+.appointments__item, .appointments__form {
+  border-bottom: solid 1px #cecdcd;
+}
+.appointments__item td, .appointments__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-wrap: break-word;
 }
-.appointments__event select, .appointments__form select {
+.appointments__item select, .appointments__form select {
   width: 150px;
 }
-.appointments__event-date-container {
+.appointments__item-date-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 290px;
 }
-.appointments__event-date-container input[type=date] {
+.appointments__item-date-container input[type=date] {
   width: 150px;
 }
-.appointments__event-btn-container, .appointments__form-btn-container {
+.appointments__item-btn-container, .appointments__form-btn-container {
   display: flex;
 }
-.appointments__event-btn-container button, .appointments__form-btn-container button {
+.appointments__item-btn-container button, .appointments__form-btn-container button {
   margin-left: 5px;
 }
 .appointments__btn-container {
@@ -13655,6 +13699,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.problemlist__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .problemlist__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13662,23 +13712,25 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .problemlist__table thead {
-  background: #50B1C1;
-  border: solid 1px #3D375A;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .problemlist__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.problemlist__item, .problemlist__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .problemlist__item td, .problemlist__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
-.problemlist__item input, .problemlist__form input {
+.problemlist__item input, .problemlist__item select, .problemlist__form input, .problemlist__form select {
   width: 100%;
 }
 .problemlist__item input[type=submit], .problemlist__form input[type=submit] {
@@ -13723,7 +13775,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   padding: 10px;
 }
 .confirm-dialog-header-logo img {
@@ -14049,7 +14101,7 @@ readers do not read off random characters that represent icons */
 
 .myaccount-section__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: solid 2px #50B1C1;
+  border: solid 2px #93b5e9;
   border-radius: 6px;
   background: #FEFEFE;
   padding: 20px;
@@ -14262,7 +14314,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px 4px 0 0;
 }
 .messages-toolbar__title {
@@ -14481,7 +14533,7 @@ readers do not read off random characters that represent icons */
   border-bottom: solid 0.3px #cecdcd;
   height: 30px;
   font-size: 0.9rem;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .messages-print__btn {
   display: flex;
@@ -14975,7 +15027,7 @@ readers do not read off random characters that represent icons */
 .relationships__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .relationships__table th {
@@ -15145,7 +15197,7 @@ readers do not read off random characters that represent icons */
 .eforms__table thead {
   position: sticky;
   top: 0;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 6px;
 }
 .eforms__table th {
@@ -15482,7 +15534,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
 }
 .docmailbox__table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border: solid 1px #3D375A;
 }
 .docmailbox__table th {
@@ -15678,7 +15730,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   width: 40%;
   margin: 0 auto 0;
-  border: solid 2px #50B1C1;
+  border: solid 2px #93b5e9;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
@@ -15785,20 +15837,34 @@ readers do not read off random characters that represent icons */
   margin: 50px 0;
   height: 100%;
 }
+.calvinai-prompt label {
+  display: block;
+  width: 95%;
+  margin: 0 auto;
+  font-weight: bold;
+}
 .calvinai-prompt__title {
   margin-bottom: 20px;
   font-size: 1rem;
   padding: 5px 10px;
 }
-.calvinai-prompt__textarea {
+.calvinai-prompt textarea {
   width: 95%;
-  padding: 20px;
-  margin: 0 auto;
-  height: 70%;
+  padding: 10px;
+  margin: 0 auto 5px;
   display: block;
   resize: none;
   overflow: scroll;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.calvinai-prompt__intro-textarea, .calvinai-prompt__conclusion-textarea {
+  height: 40px;
+}
+.calvinai-prompt__body-textarea {
+  height: 100px;
+}
+.calvinai-prompt__attachments-textarea, .calvinai-prompt__reports-textarea {
+  height: 200px;
 }
 .calvinai-prompt__footer {
   padding: 20px 50px;
@@ -15811,7 +15877,15 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
 }
-.calvinai-prompt__attachments p, .calvinai-prompt__documents p {
+.calvinai-prompt__attachments, .calvinai-prompt__reports {
+  border: solid 1px #cecdcd;
+  height: 200px;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
+  width: 49%;
+}
+.calvinai-prompt__attachments p, .calvinai-prompt__reports p {
   padding: 0;
   font-weight: bold;
   margin-bottom: 10px;
@@ -15851,10 +15925,10 @@ readers do not read off random characters that represent icons */
   padding: 5px 10px;
 }
 .calvinai-discussion__send-btn {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .calvinai-discussion__send-btn:hover {
-  background-color: #3f8d99;
+  background-color: #6492d8;
 }
 .calvinai-discussion__input {
   height: 15%;
@@ -15908,7 +15982,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   flex-direction: column;
   background-color: #FEFEFE;
-  border: solid 2px #50B1C1;
+  border: solid 2px #93b5e9;
   border-radius: 6px;
   padding: 20px;
 }
@@ -15930,10 +16004,10 @@ readers do not read off random characters that represent icons */
   padding: 5px 10px;
 }
 .calvinai-chat__send-btn {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .calvinai-chat__send-btn:hover {
-  background-color: #3f8d99;
+  background-color: #6492d8;
 }
 .calvinai-chat__input {
   height: 15%;
@@ -16011,7 +16085,7 @@ readers do not read off random characters that represent icons */
   width: 4em;
   height: 1em;
   padding: 10px;
-  background: #50B1C1;
+  background: #93b5e9;
   border-radius: 20px;
   display: flex;
   justify-content: space-around;
@@ -16291,7 +16365,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .billing-table thead {
-  background: #50B1C1;
+  background: #93b5e9;
   border: solid 1px #3D375A;
 }
 .billing-table th {
@@ -16383,7 +16457,7 @@ readers do not read off random characters that represent icons */
 }
 
 .reference {
-  border: solid 2px #50B1C1;
+  border: solid 2px #93b5e9;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
   border-radius: 6px;
@@ -16699,7 +16773,7 @@ readers do not read off random characters that represent icons */
 .personalhistory-card__header {
   display: flex;
   justify-content: space-between;
-  background-color: #50B1C1;
+  background-color: #93b5e9;
   border-radius: 6px 6px 0 0;
   padding: 10px;
   align-items: center;
@@ -16955,7 +17029,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .patients-accounts__table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .patients-accounts__table thead th {
   text-decoration: underline;
@@ -17006,7 +17080,7 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
 }
 .sites__table-container table thead {
-  background-color: #50B1C1;
+  background-color: #93b5e9;
 }
 .sites__table-container table thead th {
   text-decoration: underline;

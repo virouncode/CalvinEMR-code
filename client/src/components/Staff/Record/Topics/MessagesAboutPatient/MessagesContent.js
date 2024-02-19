@@ -1,11 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import useAuthContext from "../../../../../hooks/useAuthContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const MessagesContent = ({ datas, isLoading, errMsg }) => {
-  const { user } = useAuthContext();
+const MessagesContent = ({ topicDatas, loading, errMsg }) => {
+  const { user } = useUserContext();
 
   const getSection = (message) => {
     if (message.deleted_by_staff_ids.includes(user.id)) {
@@ -17,25 +17,25 @@ const MessagesContent = ({ datas, isLoading, errMsg }) => {
       return "Inbox";
     }
   };
-  return !isLoading ? (
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas &&
-        datas.filter(
+        {topicDatas &&
+        topicDatas.filter(
           (message) =>
             message.from_id === user.id ||
             message.to_staff_ids.includes(user.id)
-        ).length >= 1 ? (
+        ).length > 0 ? (
           <ul>
-            {datas
+            {topicDatas
               .filter(
                 (message) =>
                   message.from_id === user.id ||
                   message.to_staff_ids.includes(user.id)
               )
-              .sort((a, b) => b.date_created - a.date_created)
+              .slice(0, 4)
               .map((message) => (
                 <li className="topic-content__item" key={message.id}>
                   <div className="topic-content__overview">
@@ -62,6 +62,7 @@ const MessagesContent = ({ datas, isLoading, errMsg }) => {
                   </div>
                 </li>
               ))}
+            <li>...</li>
           </ul>
         ) : (
           "No messages about patient"

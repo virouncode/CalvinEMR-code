@@ -2,12 +2,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { Button, TextField } from "@mui/material";
 import TypingDots from "../../All/UI/Buttons/TypingDots";
 
-const CalvinAIInput = ({
-  handleChangeInput,
-  value,
-  handleAskGPT,
-  isLoading,
-}) => {
+const CalvinAIInput = ({ handleChangeInput, value, handleAskGPT, loading }) => {
   return (
     <div className="calvinai-chat__input">
       <TextField
@@ -22,7 +17,7 @@ const CalvinAIInput = ({
           "& fieldset": { border: "none" },
         }}
       />
-      {isLoading ? (
+      {loading ? (
         <TypingDots text="" />
       ) : (
         <Button

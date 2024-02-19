@@ -1,23 +1,30 @@
 import React, { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import ProblemListForm from "../Topics/ProblemList/ProblemListForm";
 import ProblemListItem from "../Topics/ProblemList/ProblemListItem";
 
 const ProblemListPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
-  datas,
-  errMsg,
-  isLoading,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -46,13 +53,11 @@ const ProblemListPU = ({
         <i className="fa-solid fa-triangle-exclamation"></i>
       </h1>
       {errMsgPost && <div className="problemlist__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgressMedium />
-      ) : errMsg ? (
-        <p className="problemlist__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="problemlist__err">{errMsg}</div>}
+
+      {!errMsg && (
+        <>
+          <div className="problemlist__table-container" ref={rootRef}>
             <table className="problemlist__table">
               <thead>
                 <tr>
@@ -65,9 +70,7 @@ const ProblemListPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,42 +83,45 @@ const ProblemListPU = ({
                     errMsgPost={errMsgPost}
                   />
                 )}
-                {datas.map((allergy) => (
-                  <ProblemListItem
-                    item={allergy}
-                    key={allergy.id}
-                    editCounter={editCounter}
-                    setErrMsgPost={setErrMsgPost}
-                    errMsgPost={errMsgPost}
-                  />
-                ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <ProblemListItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          lastItemRef={lastItemRef}
+                        />
+                      ) : (
+                        <ProblemListItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                        />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && (
+                      <EmptyRow colSpan="10" text="No problem list" />
+                    )}
+                {loading && <LoadingRow colSpan="10" />}
               </tbody>
             </table>
-            <div className="problemlist__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="problemlist__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

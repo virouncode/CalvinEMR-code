@@ -5,14 +5,24 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { reminderSchema } from "../../../../../validation/reminderValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReminderItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
+const ReminderItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 
@@ -25,9 +35,6 @@ const ReminderItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
     setErrMsgPost("");
     const name = e.target.name;
     let value = e.target.value;
-    if (name === "active") {
-      value = value === "true";
-    }
     setItemInfos({ ...itemInfos, [name]: value });
   };
 
@@ -111,29 +118,10 @@ const ReminderItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
   return (
     itemInfos && (
       <tr
-        className={
-          item.active
-            ? "reminders__item"
-            : "reminders__item reminders__item--notactive"
-        }
+        className="reminders__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
-        <td>
-          {editVisible ? (
-            <select
-              name="active"
-              value={itemInfos.active.toString()}
-              onChange={handleChange}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          ) : itemInfos.active ? (
-            "Yes"
-          ) : (
-            "No"
-          )}
-        </td>
         <td>
           {editVisible ? (
             <input
@@ -147,7 +135,7 @@ const ReminderItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
             itemInfos.reminder
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="reminders__item-btn-container">
             {!editVisible ? (

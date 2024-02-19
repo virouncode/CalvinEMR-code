@@ -17,12 +17,26 @@
   }
   &__card {
     width: 80%;
-    border : solid 1px $grey;
     border-radius: 6px;
     margin: 0 auto;
-    padding : 10px 20px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
+  }
+  
+  &__card-title {
+    border-radius: 6px 6px 0 0;
+    padding:10px 20px;
+    background-color: $blue;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+  }
+  &__card-content {
+    padding: 20px;
   }
   &__row {
     display: flex;

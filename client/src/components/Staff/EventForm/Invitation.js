@@ -17,6 +17,7 @@ const Invitation = ({
   patientsGuestsInfos,
   staffGuestsInfos,
   sites,
+  siteId,
 }) => {
   //HOOKS
   const { auth } = useAuthContext();
@@ -34,7 +35,7 @@ const Invitation = ({
   const [templateSelected, setTemplateSelected] = useState(
     "In person appointment"
   );
-  const [siteSelectedId, setSiteSelectedId] = useState(user.site_id || "");
+  const [siteSelectedId, setSiteSelectedId] = useState(siteId || "");
 
   //HANDLERS
   const handleSend = async (e) => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import { getAge } from "../../../../utils/getAge";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import { toPatientName } from "../../../../utils/toPatientName";
+import CircularProgressSmall from "../../../All/UI/Progress/CircularProgressSmall";
 import TriangleButton from "../Buttons/TriangleButton";
 
 const ClinicalNotesTitle = ({
@@ -11,8 +11,9 @@ const ClinicalNotesTitle = ({
   contentRef,
   triangleRef,
   setSelectAllDisabled,
+  loadingPatient,
+  errPatient,
 }) => {
-  const { clinic } = useAuthContext();
   const handleTriangleClick = (e) => {
     e.target.classList.toggle("triangle--active");
     contentRef.current.classList.toggle("clinical-notes__content--active");
@@ -32,23 +33,28 @@ const ClinicalNotesTitle = ({
         />
         <strong style={{ marginLeft: "10px" }}>CLINICAL NOTES </strong>
       </div>
-      <span>
-        {patientIdToName(
-          clinic.demographicsInfos,
-          demographicsInfos.patient_id,
-          true
-        )}
-        , {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
-        {getAge(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
-        {demographicsInfos.ChartNumber},{" "}
-        <i className="fa-regular fa-envelope fa-sm"></i>{" "}
-        {demographicsInfos.Email}, <i className="fa-solid fa-phone fa-sm"></i>{" "}
-        {
-          demographicsInfos.PhoneNumber.find(
-            ({ _phoneNumberType }) => _phoneNumberType === "C"
-          )?.phoneNumber
-        }
-      </span>
+      {errPatient && <div>{errPatient}</div>}
+      {loadingPatient && (
+        <div>
+          Loading...
+          <CircularProgressSmall />
+        </div>
+      )}
+      {!loadingPatient && !errPatient && demographicsInfos && (
+        <span>
+          {toPatientName(demographicsInfos)},{" "}
+          {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
+          {getAge(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
+          {demographicsInfos.ChartNumber},{" "}
+          <i className="fa-regular fa-envelope fa-sm"></i>{" "}
+          {demographicsInfos.Email}, <i className="fa-solid fa-phone fa-sm"></i>{" "}
+          {
+            demographicsInfos.PhoneNumber?.find(
+              ({ _phoneNumberType }) => _phoneNumberType === "C"
+            )?.phoneNumber
+          }
+        </span>
+      )}
     </div>
   );
 };

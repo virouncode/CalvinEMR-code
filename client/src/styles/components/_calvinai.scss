@@ -1,20 +1,34 @@
 .calvinai-prompt {
     margin: 50px 0;
     height:100%;
+    label {
+        display: block;
+        width:95%;
+        margin:0 auto;
+        font-weight:bold;
+    }
     &__title {
         margin-bottom: 20px;
         font-size: 1rem;
         padding: 5px 10px;
     }
-    &__textarea {
+    textarea {
         width : 95%;
-        padding: 20px;
-        margin: 0 auto;
-        height: 70%;
+        padding: 10px;
+        margin: 0 auto 5px;
         display:block;
         resize: none;
         overflow: scroll;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+    &__intro-textarea, &__conclusion-textarea {
+        height: 40px;
+    }
+    &__body-textarea {
+        height: 100px;
+    }
+    &__attachments-textarea, &__reports-textarea {
+        height: 200px;
     }
     &__footer {
         padding: 20px 50px;
@@ -27,7 +41,13 @@
         display: flex;
         justify-content: space-between; 
     }
-    &__attachments, &__documents {
+    &__attachments, &__reports {
+        border: solid 1px $grey;
+        height:200px;
+        padding: 10px;
+        border-radius:6px;
+        overflow-y:scroll;
+        width:49%;
         p {
             padding: 0;
             font-weight: bold;

@@ -26,7 +26,7 @@ const BillingForm = ({ setAddVisible, setErrMsg }) => {
     diagnosis_code: "",
     billing_codes: [],
     patient_id: "",
-    site_id: user.settings.site_id,
+    site_id: user.site_id,
   });
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
   const [hcnSearchVisible, setHcnSearchVisible] = useState(false);

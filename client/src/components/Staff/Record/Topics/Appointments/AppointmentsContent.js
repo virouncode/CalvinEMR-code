@@ -1,37 +1,36 @@
 import React from "react";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const AppointmentsContent = ({ datas, errMsg, isLoading }) => {
-  return !isLoading ? (
+const AppointmentsContent = ({ topicDatas, errMsg, loading }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.start - a.start)
-              .map((appointment) => (
-                <li key={appointment.id}>
-                  -{" "}
-                  {!appointment.all_day
-                    ? new Date(appointment.start).toLocaleString("en-CA", {
-                        //local time
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                      })
-                    : new Date(appointment.start).toLocaleString("en-CA", {
-                        //local time
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                      }) + " All Day"}{" "}
-                  ({appointment.AppointmentPurpose})
-                </li>
-              ))}
+            {topicDatas.slice(0, 4).map((item) => (
+              <li key={item.id}>
+                -{" "}
+                {!item.all_day
+                  ? new Date(item.start).toLocaleString("en-CA", {
+                      //local time
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    })
+                  : new Date(item.start).toLocaleString("en-CA", {
+                      //local time
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    }) + " All Day"}{" "}
+                ({item.AppointmentPurpose})
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No appointments"

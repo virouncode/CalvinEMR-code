@@ -4,22 +4,21 @@ import {
   toCodeTableName,
 } from "../../../../../datas/codesTables";
 import { extractToText } from "../../../../../utils/extractToText";
-import { getAge } from "../../../../../utils/getAge";
 
 const AddAIAttachmentItem = ({
   attachment,
-  setMessages,
   attachmentsAddedIds,
   setAttachmentsAddedIds,
   attachmentsTextsToAdd,
   setAttachmentsTextsToAdd,
-  reportsTextToAdd,
-  initialBody,
-  demographicsInfos,
   isLoadingAttachmentText,
   setIsLoadingAttachmentText,
-  isLoadingDocumentText,
+  isLoadingReportText,
+  demographicsInfos,
+  msgText,
+  setMsgText,
 }) => {
+  //HANDLERS
   const isChecked = (id) => attachmentsAddedIds.includes(id);
   const handleChange = async (e) => {
     const checked = e.target.checked;
@@ -35,46 +34,50 @@ const AddAIAttachmentItem = ({
       textToAdd = textToAdd
         .replaceAll(demographicsInfos.Names?.LegalName?.FirstName?.Part, "")
         .replaceAll(
-          demographicsInfos.Names?.LegalName?.OtherName.length
-            ? demographicsInfos.Names?.LegalName?.OtherName[0].Part
-            : "",
+          demographicsInfos.Names?.LegalName?.OtherName?.[0]?.length,
           ""
         )
         .replaceAll(demographicsInfos.Names?.LegalName?.LastName?.Part, "")
         .replaceAll(demographicsInfos.SIN, "")
         .replaceAll(demographicsInfos.HealthCard?.Number, "")
         .replaceAll(
-          demographicsInfos.PhoneNumber.find(
+          demographicsInfos.PhoneNumber?.find(
             ({ _phoneNumberType }) => _phoneNumberType === "C"
           )?.phoneNumber,
           ""
         )
         .replaceAll(
-          demographicsInfos.PhoneNumber.find(
+          demographicsInfos.PhoneNumber?.find(
             ({ _phoneNumberType }) => _phoneNumberType === "W"
           )?.phoneNumber,
           ""
         )
         .replaceAll(
-          demographicsInfos.PhoneNumber.find(
+          demographicsInfos.PhoneNumber?.find(
             ({ _phoneNumberType }) => _phoneNumberType === "R"
           )?.phoneNumber,
           ""
         )
         .replaceAll(
-          demographicsInfos.Address.find(
+          demographicsInfos.Address?.find(
             ({ _addressType }) => _addressType === "R"
           )?.Structured?.Line1,
           ""
         )
         .replaceAll(
-          demographicsInfos.Address.find(
+          demographicsInfos.Address?.find(
             ({ _addressType }) => _addressType === "R"
           )?.Structured?.PostalZipCode?.PostalCode,
           ""
         )
         .replaceAll(
-          demographicsInfos.Address.find(
+          demographicsInfos.Address?.find(
+            ({ _addressType }) => _addressType === "R"
+          )?.Structured?.PostalZipCode?.ZipCode,
+          ""
+        )
+        .replaceAll(
+          demographicsInfos.Address?.find(
             ({ _addressType }) => _addressType === "R"
           )?.Structured?.CountrySubDivisionCode,
           ""
@@ -82,48 +85,15 @@ const AddAIAttachmentItem = ({
         .replaceAll(
           toCodeTableName(
             provinceStateTerritoryCT,
-            demographicsInfos.Address.find(
+            demographicsInfos.Address?.find(
               ({ _addressType }) => _addressType === "R"
             )?.Structured?.CountrySubDivisionCode
           ),
           ""
         )
         .replaceAll(
-          demographicsInfos.Address.find(
+          demographicsInfos.Address?.find(
             ({ _addressType }) => _addressType === "R"
-          )?.Structured?.City,
-          ""
-        )
-        .replaceAll(
-          demographicsInfos.Address.find(
-            ({ _addressType }) => _addressType === "M"
-          )?.Structured?.Line1,
-          ""
-        )
-        .replaceAll(
-          demographicsInfos.Address.find(
-            ({ _addressType }) => _addressType === "M"
-          )?.Structured?.PostalZipCode?.PostalCode,
-          ""
-        )
-        .replaceAll(
-          demographicsInfos.Address.find(
-            ({ _addressType }) => _addressType === "M"
-          )?.Structured?.CountrySubDivisionCode,
-          ""
-        )
-        .replaceAll(
-          toCodeTableName(
-            provinceStateTerritoryCT,
-            demographicsInfos.Address.find(
-              ({ _addressType }) => _addressType === "M"
-            )?.Structured?.CountrySubDivisionCode
-          ),
-          ""
-        )
-        .replaceAll(
-          demographicsInfos.Address.find(
-            ({ _addressType }) => _addressType === "M"
           )?.Structured?.City,
           ""
         )
@@ -143,33 +113,13 @@ const AddAIAttachmentItem = ({
       );
       setAttachmentsTextsToAdd(attachmentsTextsToAddUpdated);
     }
-    const newMessage = `Hello I'm a doctor.
-    
-My patient is a ${getAge(demographicsInfos.date_of_birth)} year-old ${
-      demographicsInfos.gender_at_birth
-    } with the following symptoms:
-
-${initialBody}.
-
-${
-  attachmentsTextsToAddUpdated.length || reportsTextToAdd.length
-    ? `Here are further informations that you may use:
-           
-${
-  attachmentsTextsToAddUpdated.length > 0
-    ? attachmentsTextsToAddUpdated.map(({ content }) => content).join("\n")
-    : ""
-}
-${
-  reportsTextToAdd.length > 0
-    ? reportsTextToAdd.map(({ content }) => content).join("\n")
-    : ""
-}`
-    : ""
-}
-    
-What is the diagnosis and what treatment would you suggest ?`;
-    setMessages([{ role: "user", content: newMessage }]);
+    setMsgText({
+      ...msgText,
+      attachments:
+        "Here are further informations that you may use: " +
+        "\n\n" +
+        attachmentsTextsToAddUpdated.map(({ content }) => content).join("\n\n"),
+    });
   };
 
   return (
@@ -179,7 +129,7 @@ What is the diagnosis and what treatment would you suggest ?`;
         id={attachment.id}
         checked={isChecked(attachment.id)}
         onChange={handleChange}
-        disabled={isLoadingAttachmentText || isLoadingDocumentText}
+        disabled={isLoadingAttachmentText || isLoadingReportText}
       />
       <label>{attachment.alias}</label>
     </div>

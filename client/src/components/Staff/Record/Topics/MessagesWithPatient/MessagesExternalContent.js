@@ -4,7 +4,7 @@ import useAuthContext from "../../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
+const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
   const { user } = useAuthContext();
 
   const getSection = (message) => {
@@ -19,20 +19,20 @@ const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
       return "Inbox";
     }
   };
-  return !isLoading ? (
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas &&
-        datas.filter(
+        {topicDatas &&
+        topicDatas.filter(
           (message) =>
             (message.from_id === user.id &&
               message.from_user_type === "staff") ||
             (message.to_id === user.id && message.to_user_type === "staff")
-        ).length >= 1 ? (
+        ).length > 0 ? (
           <ul className="topic-content__list">
-            {datas
+            {topicDatas
               .filter(
                 (message) =>
                   (message.from_id === user.id &&
@@ -40,7 +40,7 @@ const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
                   (message.to_id === user.id &&
                     message.to_user_type === "staff")
               )
-              .sort((a, b) => b.date_created - a.date_created)
+              .slice(0, 4)
               .map((message) => (
                 <li className="topic-content__item" key={message.id}>
                   <div className="topic-content__overview">
@@ -67,6 +67,7 @@ const MessagesExternalContent = ({ datas, isLoading, errMsg }) => {
                   </div>
                 </li>
               ))}
+            <li>...</li>
           </ul>
         ) : (
           "No messages with patient"

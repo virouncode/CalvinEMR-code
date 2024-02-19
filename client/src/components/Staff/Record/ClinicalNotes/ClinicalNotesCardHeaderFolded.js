@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
   getLastUpdate,
@@ -12,7 +12,7 @@ const ClinicalNotesCardHeaderFolded = ({
   tempFormDatas,
   handleTriangleProgressClick,
 }) => {
-  const { clinic } = useAuthContext();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <div className="clinical-notes__card-header clinical-notes__card-header--folded">
       <div className="clinical-notes__card-header--folded-title">
@@ -20,7 +20,7 @@ const ClinicalNotesCardHeaderFolded = ({
           <strong>From: </strong>
         </label>
         {staffIdToTitleAndName(
-          clinic.staffInfos,
+          staffInfos,
           isUpdated(tempFormDatas)
             ? getLastUpdate(tempFormDatas).updated_by_id
             : tempFormDatas.created_by_id,

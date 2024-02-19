@@ -751,6 +751,7 @@ const EventForm = ({
           staffInfos.find(({ id }) => id === staffGuestId)
         )}
         sites={sites}
+        siteId={tempFormDatas.site_id}
       />
     ))
   );

@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
+import useFetchDatas from "../../../../hooks/useFetchDatas";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -20,7 +25,10 @@ import NewTemplate from "./NewTemplate";
 
 const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   //hooks
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     subject: "Clinical note",
@@ -30,40 +38,15 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   });
   const [attachments, setAttachments] = useState([]);
   const [templateSelectedId, setTemplateSelectedId] = useState("");
-  const [templates, setTemplates] = useState([]);
   const [newTemplateVisible, setNewTemplateVisible] = useState(false);
   const [editTemplateVisible, setEditTemplateVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchTemplates = async () => {
-      try {
-        const response = await axiosXanoStaff.get("/clinical_notes_templates", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setTemplates(
-          response.data.sort((a, b) =>
-            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-          )
-        );
-      } catch (err) {
-        if (err.name !== "CanceledError") {
-          toast.error(`Error: unable to fetch templates: ${err.message}`, {
-            containerId: "A",
-          });
-        }
-      }
-    };
-    fetchTemplates();
-    return () => abortController.abort();
-  }, [auth.authToken]);
+  const [templates, setTemplates, loadingTemplates, errTemplates] =
+    useFetchDatas("/clinical_notes_templates", axiosXanoStaff, auth.authToken);
+
+  useClinicalTemplatesSocket(templates, setTemplates);
 
   //HANDLERS
   const handleCancelClick = async () => {
@@ -101,10 +84,10 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           ParticipatingProviders: [
             {
               Name: {
-                FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                FirstName: staffIdToFirstName(staffInfos, user.id),
+                LastName: staffIdToLastName(staffInfos, user.id),
               },
-              OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+              OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
               DateTimeNoteCreated: Date.now(),
             },
           ],
@@ -147,10 +130,10 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           ParticipatingProviders: [
             {
               Name: {
-                FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-                LastName: staffIdToLastName(clinic.staffInfos, user.id),
+                FirstName: staffIdToFirstName(staffInfos, user.id),
+                LastName: staffIdToLastName(staffInfos, user.id),
               },
-              OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+              OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
               DateTimeNoteCreated: Date.now(),
             },
           ],
@@ -254,7 +237,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
         ...formDatas,
         MyClinicalNotesContent: templates.find(
           ({ id }) => id === parseInt(value)
-        ).MyClinicalNotesContent,
+        ).body,
       });
     } else if (value === -1) {
       setNewTemplateVisible(true);
@@ -275,7 +258,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           <div className="clinical-notes__form-row">
             <p>
               <strong>From: </strong>
-              {staffIdToTitleAndName(clinic.staffInfos, user.id, true)}
+              {staffIdToTitleAndName(staffInfos, user.id, true)}
             </p>
             <div className="clinical-notes__form-template">
               <label>
@@ -349,7 +332,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           height={500}
           x={(window.innerWidth - 1000) / 2}
           y={(window.innerHeight - 500) / 2}
-          color={"#94bae8"}
+          color="#50B1C1"
           setPopUpVisible={setNewTemplateVisible}
           closeCross={false}
         >
@@ -370,7 +353,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           height={500}
           x={(window.innerWidth - 1000) / 2}
           y={(window.innerHeight - 500) / 2}
-          color={"#94bae8"}
+          color="#50B1C1"
           setPopUpVisible={setEditTemplateVisible}
         >
           <EditTemplate

@@ -1,4 +1,5 @@
 import React from "react";
+import CircularProgressSmall from "../../../All/UI/Progress/CircularProgressSmall";
 import AttachmentCard from "./AttachmentCard";
 
 const ClinicalNotesAttachments = ({
@@ -11,22 +12,28 @@ const ClinicalNotesAttachments = ({
   date,
 }) => {
   return (
-    attachments && (
-      <div className="clinical-notes__attachments">
-        {attachments.map((attachment) => (
-          <AttachmentCard
-            handleRemoveAttachment={handleRemoveAttachment}
-            attachment={attachment}
-            key={attachment.id}
-            deletable={deletable}
-            patientId={patientId}
-            addable={addable}
-            attachmentsLoading={attachmentsLoading}
-            date={date}
-          />
-        ))}
-      </div>
-    )
+    <div className="clinical-notes__attachments">
+      {attachments && attachments.length > 0
+        ? attachments.map((attachment) => (
+            <AttachmentCard
+              handleRemoveAttachment={handleRemoveAttachment}
+              attachment={attachment}
+              key={attachment.id}
+              deletable={deletable}
+              patientId={patientId}
+              addable={addable}
+              attachmentsLoading={attachmentsLoading}
+              date={date}
+            />
+          ))
+        : null}
+      {attachmentsLoading && (
+        <div>
+          Loading attachments...
+          <CircularProgressSmall />
+        </div>
+      )}
+    </div>
   );
 };
 

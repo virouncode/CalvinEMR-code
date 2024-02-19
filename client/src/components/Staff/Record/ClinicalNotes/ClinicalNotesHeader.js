@@ -17,23 +17,27 @@ const ClinicalNotesHeader = ({
   setPopUpVisible,
   selectAll,
   setSelectAll,
-  progressNotes,
+  clinicalNotes,
   allBodiesVisible,
   setAllBodiesVisible,
   order,
   setOrder,
+  paging,
+  setPaging,
+  loadingPatient,
+  errPatient,
 }) => {
   const [selectAllDisabled, setSelectAllDisabled] = useState(true);
   useEffect(() => {
-    if (!progressNotes) return;
-    if (progressNotes.length === 0 || !allContentsVisible) {
+    if (!clinicalNotes) return;
+    if (clinicalNotes.length === 0 || !allContentsVisible) {
       setSelectAllDisabled(true);
     } else {
       if (allContentsVisible) {
         setSelectAllDisabled(false);
       }
     }
-  }, [progressNotes, allContentsVisible]);
+  }, [clinicalNotes, allContentsVisible]);
   return (
     <div className="clinical-notes__header">
       <ClinicalNotesTitle
@@ -42,6 +46,8 @@ const ClinicalNotesHeader = ({
         contentRef={contentRef}
         triangleRef={triangleRef}
         setSelectAllDisabled={setSelectAllDisabled}
+        loadingPatient={loadingPatient}
+        errPatient={errPatient}
       />
       <ClinicalNotesToolBar
         addVisible={addVisible}
@@ -61,6 +67,8 @@ const ClinicalNotesHeader = ({
         setAllBodiesVisible={setAllBodiesVisible}
         order={order}
         setOrder={setOrder}
+        paging={paging}
+        setPaging={setPaging}
       />
     </div>
   );

@@ -6,6 +6,9 @@ import {
 } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import {
   firstLetterOfFirstWordUpper,
   firstLetterUpper,
@@ -36,26 +39,30 @@ import SelectSite from "../../../EventForm/SelectSite";
 import StatusList from "../../../EventForm/StatusList";
 import SignCell from "../SignCell";
 
-const AppointmentEvent = ({
-  event,
+const AppointmentItem = ({
+  item,
   editCounter,
   setErrMsgPost,
   errMsgPost,
   sites,
+  lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth, clinic, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
-  const [eventInfos, setEventInfos] = useState(null);
+  const [itemInfos, setEventInfos] = useState(null);
   const [availableRooms, setAvailableRooms] = useState([]);
-  const previousStartDate = useRef(toLocalDate(event.start));
-  const previousEndDate = useRef(toLocalDate(event.end));
-  const previousStartHours = useRef(toLocalHours(event.start));
-  const previousEndHours = useRef(toLocalHours(event.end));
-  const previousStartMin = useRef(toLocalMinutes(event.start));
-  const previousEndMin = useRef(toLocalMinutes(event.end));
-  const previousStartAMPM = useRef(toLocalAMPM(event.start));
-  const previousEndAMPM = useRef(toLocalAMPM(event.end));
+  const previousStartDate = useRef(toLocalDate(item.start));
+  const previousEndDate = useRef(toLocalDate(item.end));
+  const previousStartHours = useRef(toLocalHours(item.start));
+  const previousEndHours = useRef(toLocalHours(item.end));
+  const previousStartMin = useRef(toLocalMinutes(item.start));
+  const previousEndMin = useRef(toLocalMinutes(item.end));
+  const previousStartAMPM = useRef(toLocalAMPM(item.start));
+  const previousEndAMPM = useRef(toLocalAMPM(item.end));
   const startDateInput = useRef(null);
   const endDateInput = useRef(null);
   const startHourInput = useRef(null);
@@ -64,22 +71,22 @@ const AppointmentEvent = ({
   const endMinInput = useRef(null);
   const startAMPMInput = useRef(null);
   const endAMPMInput = useRef(null);
-  const minEndDate = useRef(toLocalDate(event.start));
+  const minEndDate = useRef(toLocalDate(item.start));
 
   useEffect(() => {
-    setEventInfos(event);
-  }, [event]);
+    setEventInfos(item);
+  }, [item]);
 
   useEffect(() => {
     const abortController = new AbortController();
     const fetchAvailableRooms = async () => {
       try {
         const availableRoomsResult = await getAvailableRooms(
-          parseInt(event.id),
-          event.start,
-          event.end,
+          parseInt(item.id),
+          item.start,
+          item.end,
           sites,
-          event.site_id,
+          item.site_id,
           auth.authToken,
           abortController
         );
@@ -98,11 +105,11 @@ const AppointmentEvent = ({
     };
   }, [
     auth.authToken,
-    event.end,
-    event.host_id,
-    event.id,
-    event.site_id,
-    event.start,
+    item.end,
+    item.host_id,
+    item.id,
+    item.site_id,
+    item.start,
     sites,
   ]);
 
@@ -113,12 +120,12 @@ const AppointmentEvent = ({
 
   const handleSiteChange = async (e) => {
     const value = parseInt(e.target.value);
-    setEventInfos({ ...eventInfos, site_id: value, room_id: "z" });
-    if (eventInfos.start && eventInfos.end) {
+    setEventInfos({ ...itemInfos, site_id: value, room_id: "z" });
+    if (itemInfos.start && itemInfos.end) {
       const availableRoomsResult = await getAvailableRooms(
-        parseInt(event.id),
-        eventInfos.start,
-        eventInfos.end,
+        parseInt(item.id),
+        itemInfos.start,
+        itemInfos.end,
         sites,
         value,
         auth.authToken
@@ -131,21 +138,21 @@ const AppointmentEvent = ({
     setErrMsgPost(false);
     const name = e.target.name;
     let value = e.target.value;
-    setEventInfos({ ...eventInfos, [name]: value });
+    setEventInfos({ ...itemInfos, [name]: value });
   };
 
   const handleHostChange = async (e) => {
     setErrMsgPost(false);
     const value = parseInt(e.target.value);
     setEventInfos({
-      ...eventInfos,
+      ...itemInfos,
       host_id: value,
       Provider: {
         Name: {
-          FirstName: staffIdToFirstName(clinic.staffInfos, value),
-          LastName: staffIdToLastName(clinic.staffInfos, value),
+          FirstName: staffIdToFirstName(staffInfos, value),
+          LastName: staffIdToLastName(staffInfos, value),
         },
-        OHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, value),
+        OHIPPhysicianId: staffIdToOHIP(staffInfos, value),
       },
     });
   };
@@ -159,13 +166,13 @@ const AppointmentEvent = ({
         (await confirmAlert({
           content: `${toRoomTitle(
             sites,
-            eventInfos.site_id,
+            itemInfos.site_id,
             value
           )} will be occupied at this time slot, choose this room anyway ?`,
         }))) ||
       !isRoomOccupied(value)
     ) {
-      setEventInfos({ ...eventInfos, [name]: value });
+      setEventInfos({ ...itemInfos, [name]: value });
     }
   };
 
@@ -178,11 +185,11 @@ const AppointmentEvent = ({
     const name = e.target.name;
 
     if (name === "date" && dateValue === "") {
-      setEventInfos({ ...eventInfos, start: null });
+      setEventInfos({ ...itemInfos, start: null });
       return;
     }
 
-    if (name === "date" && eventInfos.all_day) {
+    if (name === "date" && itemInfos.all_day) {
       const startAllDay = new Date(startDateInput.current.value).setHours(
         0,
         0,
@@ -191,7 +198,7 @@ const AppointmentEvent = ({
       );
       let endAllDay = new Date(startAllDay);
       endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
-      setEventInfos({ ...eventInfos, start: startAllDay, end: endAllDay });
+      setEventInfos({ ...itemInfos, start: startAllDay, end: endAllDay });
       return;
     }
 
@@ -204,26 +211,26 @@ const AppointmentEvent = ({
 
     value = Date.parse(new Date(value));
     const rangeEnd =
-      new Date(value) > new Date(eventInfos.end) ? value : eventInfos.end;
+      new Date(value) > new Date(itemInfos.end) ? value : itemInfos.end;
 
     let hypotheticAvailableRooms;
 
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
-        event.id,
+        item.id,
         value,
         rangeEnd,
         sites,
-        eventInfos.site_id,
+        itemInfos.site_id,
         auth.authToken
       );
 
       if (
-        eventInfos.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(eventInfos.room) ||
-        (!hypotheticAvailableRooms.includes(eventInfos.room) &&
+        itemInfos.room === "To be determined" ||
+        hypotheticAvailableRooms.includes(itemInfos.room) ||
+        (!hypotheticAvailableRooms.includes(itemInfos.room) &&
           (await confirmAlert({
-            content: `${eventInfos.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${itemInfos.room} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {
@@ -244,9 +251,9 @@ const AppointmentEvent = ({
             break;
         }
 
-        if (new Date(value) > new Date(eventInfos.end)) {
+        if (new Date(value) > new Date(itemInfos.end)) {
           setEventInfos({
-            ...eventInfos,
+            ...itemInfos,
             start: value,
             end: value,
             Duration: 0,
@@ -256,9 +263,9 @@ const AppointmentEvent = ({
           endAMPMInput.value = startAMPMInput.value;
         } else {
           setEventInfos({
-            ...eventInfos,
+            ...itemInfos,
             start: value,
-            Duration: Math.floor((eventInfos.end - value) / (1000 * 60)),
+            Duration: Math.floor((itemInfos.end - value) / (1000 * 60)),
           });
         }
       } else {
@@ -296,7 +303,7 @@ const AppointmentEvent = ({
     const name = e.target.name;
 
     if (name === "date" && dateValue === "") {
-      setEventInfos({ ...eventInfos, end: null });
+      setEventInfos({ ...itemInfos, end: null });
       return;
     }
 
@@ -312,19 +319,19 @@ const AppointmentEvent = ({
     let hypotheticAvailableRooms;
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
-        event.id,
-        eventInfos.start,
+        item.id,
+        itemInfos.start,
         value,
         sites,
-        eventInfos.site_id,
+        itemInfos.site_id,
         auth.authToken
       );
       if (
-        eventInfos.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(eventInfos.room) ||
-        (!hypotheticAvailableRooms.includes(eventInfos.room) &&
+        itemInfos.room === "To be determined" ||
+        hypotheticAvailableRooms.includes(itemInfos.room) ||
+        (!hypotheticAvailableRooms.includes(itemInfos.room) &&
           (await confirmAlert({
-            content: `${eventInfos.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${itemInfos.room} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {
@@ -344,9 +351,9 @@ const AppointmentEvent = ({
             break;
         }
         setEventInfos({
-          ...eventInfos,
+          ...itemInfos,
           end: value,
-          duration: Math.floor((value - eventInfos.start) / (1000 * 60)),
+          duration: Math.floor((value - itemInfos.start) / (1000 * 60)),
         });
       } else {
         switch (name) {
@@ -378,16 +385,16 @@ const AppointmentEvent = ({
     let value = e.target.value;
     value = value === "true"; //cast to boolean
     if (value) {
-      if (eventInfos.start === null) {
+      if (itemInfos.start === null) {
         setErrMsgPost("Please choose a start date first");
         return;
       }
-      const startAllDay = new Date(eventInfos.start).setHours(0, 0, 0, 0);
+      const startAllDay = new Date(itemInfos.start).setHours(0, 0, 0, 0);
       let endAllDay = new Date(startAllDay);
       endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
 
       setEventInfos({
-        ...eventInfos,
+        ...itemInfos,
         all_day: true,
         start: startAllDay,
         end: endAllDay,
@@ -395,9 +402,9 @@ const AppointmentEvent = ({
       });
     } else {
       setEventInfos({
-        ...eventInfos,
+        ...itemInfos,
         all_day: false,
-        Duration: Math.floor((eventInfos.end - eventInfos.start) / (1000 * 60)),
+        Duration: Math.floor((itemInfos.end - itemInfos.start) / (1000 * 60)),
       });
     }
   };
@@ -406,7 +413,7 @@ const AppointmentEvent = ({
     e.preventDefault();
     editCounter.current -= 1;
     setErrMsgPost("");
-    setEventInfos(event);
+    setEventInfos(item);
     setEditVisible(false);
   };
 
@@ -414,29 +421,21 @@ const AppointmentEvent = ({
     e.preventDefault();
     //Formatting
     const datasToPut = {
-      ...eventInfos,
-      AppointmentPurpose: firstLetterUpper(eventInfos.AppointmentPurpose),
-      AppointmentTime: toLocalTimeWithSeconds(eventInfos.start),
-      AppointmentDate: toLocalDate(eventInfos.start),
+      ...itemInfos,
+      AppointmentPurpose: firstLetterUpper(itemInfos.AppointmentPurpose),
+      AppointmentTime: toLocalTimeWithSeconds(itemInfos.start),
+      AppointmentDate: toLocalDate(itemInfos.start),
       Provider: {
         Name: {
           FirstName: staffIdToFirstName(
-            clinic.staffInfos,
-            parseInt(eventInfos.host_id)
+            staffInfos,
+            parseInt(itemInfos.host_id)
           ),
-          LastName: staffIdToLastName(
-            clinic.staffInfos,
-            parseInt(eventInfos.host_id)
-          ),
+          LastName: staffIdToLastName(staffInfos, parseInt(itemInfos.host_id)),
         },
-        OHIPPhysicianId: staffIdToOHIP(
-          clinic.staffInfos,
-          parseInt(eventInfos.host_id)
-        ),
+        OHIPPhysicianId: staffIdToOHIP(staffInfos, parseInt(itemInfos.host_id)),
       },
-      AppointmentNotes: firstLetterOfFirstWordUpper(
-        eventInfos.AppointmentNotes
-      ),
+      AppointmentNotes: firstLetterOfFirstWordUpper(itemInfos.AppointmentNotes),
     };
 
     //Validation
@@ -449,7 +448,7 @@ const AppointmentEvent = ({
     try {
       await putPatientRecord(
         "/appointments",
-        event.id,
+        item.id,
         user.id,
         auth.authToken,
         datasToPut,
@@ -482,7 +481,7 @@ const AppointmentEvent = ({
       try {
         await deletePatientRecord(
           "/appointments",
-          event.id,
+          item.id,
           auth.authToken,
           socket,
           "APPOINTMENTS"
@@ -504,22 +503,21 @@ const AppointmentEvent = ({
   };
 
   return (
-    eventInfos && (
+    itemInfos && (
       <tr
-        className="appointments__event"
+        className="appointments__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td style={{ minWidth: "170px" }}>
           {editVisible && isSecretary() ? (
             <HostsList
-              staffInfos={clinic.staffInfos}
+              staffInfos={staffInfos}
               handleHostChange={handleHostChange}
-              hostId={eventInfos.host_id}
+              hostId={itemInfos.host_id}
             />
           ) : (
-            <p>
-              {staffIdToTitleAndName(clinic.staffInfos, event.host_id, true)}
-            </p>
+            <p>{staffIdToTitleAndName(staffInfos, item.host_id, true)}</p>
           )}
         </td>
         <td>
@@ -527,21 +525,21 @@ const AppointmentEvent = ({
             <input
               type="text"
               name="AppointmentPurpose"
-              value={eventInfos.AppointmentPurpose}
+              value={itemInfos.AppointmentPurpose}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            event.AppointmentPurpose
+            item.AppointmentPurpose
           )}
         </td>
         <td>
           {editVisible ? (
-            <div className="appointments__event-date-container">
+            <div className="appointments__item-date-container">
               <input
                 type="date"
                 value={
-                  eventInfos.start !== null ? toLocalDate(eventInfos.start) : ""
+                  itemInfos.start !== null ? toLocalDate(itemInfos.start) : ""
                 }
                 onChange={handleStartChange}
                 ref={startDateInput}
@@ -549,15 +547,15 @@ const AppointmentEvent = ({
               />
               <TimePicker
                 handleChange={handleStartChange}
-                dateTimeValue={eventInfos.start}
+                dateTimeValue={itemInfos.start}
                 passingRefHour={startHourInput}
                 passingRefMin={startMinInput}
                 passingRefAMPM={startAMPMInput}
-                readOnly={eventInfos.all_day || !toLocalDate(eventInfos.start)}
+                readOnly={itemInfos.all_day || !toLocalDate(itemInfos.start)}
               />
             </div>
-          ) : event.start !== null ? (
-            new Date(event.start).toLocaleString("en-CA", {
+          ) : item.start !== null ? (
+            new Date(item.start).toLocaleString("en-CA", {
               year: "numeric",
               month: "numeric",
               day: "numeric",
@@ -570,29 +568,27 @@ const AppointmentEvent = ({
         </td>
         <td>
           {editVisible ? (
-            <div className="appointments__event-date-container">
+            <div className="appointments__item-date-container">
               <input
                 type="date"
-                value={
-                  eventInfos.end !== null ? toLocalDate(eventInfos.end) : ""
-                }
+                value={itemInfos.end !== null ? toLocalDate(itemInfos.end) : ""}
                 onChange={handleEndChange}
                 min={minEndDate.current}
                 ref={endDateInput}
-                readOnly={eventInfos.all_day}
+                readOnly={itemInfos.all_day}
                 name="date"
               />
               <TimePicker
                 handleChange={handleEndChange}
-                dateTimeValue={eventInfos.end}
+                dateTimeValue={itemInfos.end}
                 passingRefHour={endHourInput}
                 passingRefMin={endMinInput}
                 passingRefAMPM={endAMPMInput}
-                readOnly={eventInfos.all_day || !toLocalDate(eventInfos.end)}
+                readOnly={itemInfos.all_day || !toLocalDate(itemInfos.end)}
               />
             </div>
-          ) : event.end !== null ? (
-            new Date(event.end).toLocaleString("en-CA", {
+          ) : item.end !== null ? (
+            new Date(item.end).toLocaleString("en-CA", {
               year: "numeric",
               month: "numeric",
               day: "numeric",
@@ -607,14 +603,14 @@ const AppointmentEvent = ({
           {editVisible ? (
             <select
               name="all_day"
-              value={eventInfos.all_day.toString()}
+              value={itemInfos.all_day.toString()}
               onChange={handleAllDayChange}
               style={{ width: "50px" }}
             >
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
-          ) : event.all_day ? (
+          ) : item.all_day ? (
             "Yes"
           ) : (
             "No"
@@ -625,26 +621,26 @@ const AppointmentEvent = ({
             <SelectSite
               handleSiteChange={handleSiteChange}
               sites={sites}
-              value={eventInfos.site_id}
+              value={itemInfos.site_id}
               label={false}
             />
           ) : (
-            toSiteName(sites, event.site_id)
+            toSiteName(sites, item.site_id)
           )}
         </td>
         <td>
           {editVisible ? (
             <RoomsList
               handleRoomChange={handleRoomChange}
-              roomSelectedId={eventInfos.room_id}
+              roomSelectedId={itemInfos.room_id}
               rooms={sites
-                .find(({ id }) => id === eventInfos.site_id)
+                .find(({ id }) => id === itemInfos.site_id)
                 ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
               isRoomOccupied={isRoomOccupied}
               label={false}
             />
           ) : (
-            toRoomTitle(sites, event.site_id, event.room_id)
+            toRoomTitle(sites, item.site_id, item.room_id)
           )}
         </td>
         <td>
@@ -652,11 +648,11 @@ const AppointmentEvent = ({
             <StatusList
               handleChange={handleChange}
               statuses={statuses}
-              selectedStatus={eventInfos.AppointmentStatus}
+              selectedStatus={itemInfos.AppointmentStatus}
               label={false}
             />
           ) : (
-            event.AppointmentStatus
+            item.AppointmentStatus
           )}
         </td>
         <td>
@@ -664,18 +660,18 @@ const AppointmentEvent = ({
             <input
               type="text"
               name="AppointmentNotes"
-              value={eventInfos.AppointmentNotes}
+              value={itemInfos.AppointmentNotes}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            event.AppointmentNotes
+            item.AppointmentNotes
           )}
         </td>
-        <SignCell item={event} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} staffInfos={staffInfos} />
         <td>
-          {(isSecretary() || user.id === eventInfos.host_id) && (
-            <div className="appointments__event-btn-container">
+          {(isSecretary() || user.id === itemInfos.host_id) && (
+            <div className="appointments__item-btn-container">
               {!editVisible ? (
                 <>
                   <button onClick={handleEditClick}>Edit</button>
@@ -697,4 +693,4 @@ const AppointmentEvent = ({
   );
 };
 
-export default AppointmentEvent;
+export default AppointmentItem;

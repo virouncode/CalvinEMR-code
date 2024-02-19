@@ -6,6 +6,8 @@ import {
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { problemListSchema } from "../../../../../validation/problemListValidation";
@@ -13,9 +15,17 @@ import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import SignCell from "../SignCell";
 
-const ProblemListItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
+const ProblemListItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
 
@@ -123,6 +133,7 @@ const ProblemListItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
       <tr
         className="problemlist__item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
@@ -214,7 +225,7 @@ const ProblemListItem = ({ item, editCounter, setErrMsgPost, errMsgPost }) => {
             itemInfos.Notes
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="problemlist__item-btn-container">
             {!editVisible ? (

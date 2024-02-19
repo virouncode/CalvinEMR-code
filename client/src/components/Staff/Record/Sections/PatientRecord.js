@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import usePatientDemoSocket from "../../../../hooks/usePatientDemoSocket";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ClinicalNotes from "../ClinicalNotes/ClinicalNotes";
 import PatientMenuLeft from "./PatientMenuLeft";
+import PatientMenuRight from "./PatientMenuRight";
 
 const PatientRecord = ({
   demographicsInfos,
@@ -38,16 +40,18 @@ const PatientRecord = ({
           loadingPatient={loadingPatient}
           errPatient={errPatient}
         />
-        {/* <ClinicalNotes
+        <ClinicalNotes
           demographicsInfos={demographicsInfos}
           allContentsVisible={allContentsVisible}
           patientId={parseInt(id)}
+          loadingPatient={loadingPatient}
+          errPatient={errPatient}
         />
         <PatientMenuRight
           demographicsInfos={demographicsInfos}
           patientId={parseInt(id)}
           allContentsVisible={allContentsVisible}
-        /> */}
+        />
       </div>
     </>
   ) : (

@@ -5,7 +5,7 @@ const CalvinAIMessage = ({ role, message }) => {
   return (
     <div
       className="calvinai-discussion__card"
-      style={{ background: role === "user" ? "#FEFEFE" : "rgb(224 224 224)" }}
+      style={{ background: role === "user" ? "#FEFEFE" : "#50B1C1" }}
     >
       {role === "user" ? (
         <img

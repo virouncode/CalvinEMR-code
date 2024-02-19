@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const StaffAIAgreement = ({ setStart, setChatVisible }) => {
-  const { user, auth } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
   const [agreed, setAgreed] = useState(false);
+
   const handleCheck = (e) => {
     if (e.target.checked) setAgreed(true);
     else setAgreed(false);
@@ -25,6 +28,14 @@ const StaffAIAgreement = ({ setStart, setChatVisible }) => {
           Authorization: `Bearer ${auth.authToken}`,
         },
       });
+      setUser({ ...user, ai_consent: true });
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...user,
+          ai_consent: true,
+        })
+      );
       setStart(true);
     } else alert("Please agree to the terms and conditions");
   };
@@ -166,7 +177,9 @@ const StaffAIAgreement = ({ setStart, setChatVisible }) => {
         <label htmlFor="agreement">
           I agree to the terms and conditions outlined in this disclaimer.
         </label>
-        <button onClick={handleStart}>Start</button>
+        <button onClick={handleStart} disabled={!agreed}>
+          Start
+        </button>
         <button onClick={handleCancel}>Cancel</button>
       </div>
     </div>

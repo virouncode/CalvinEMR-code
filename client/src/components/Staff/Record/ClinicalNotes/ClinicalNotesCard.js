@@ -8,14 +8,19 @@ import {
 } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchAttachmentsForClinicalNote from "../../../../hooks/useFetchAttachmentsForClinicalNote";
+import useFetchVersions from "../../../../hooks/useFetchVersions";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
+import useVersionsSocket from "../../../../hooks/useVersionsSocket";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import { patientIdToName } from "../../../../utils/patientIdToName";
-import { onMessageVersions } from "../../../../utils/socketHandlers/onMessageVersions";
 import {
   getLastUpdate,
   isUpdated,
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CalvinAI from "./CalvinAI/CalvinAI";
@@ -35,29 +40,25 @@ const ClinicalNotesCard = ({
   setSelectAll,
   allBodiesVisible,
   demographicsInfos,
+  lastItemRef = null,
 }) => {
   //hooks
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
+  const bodyRef = useRef(null);
   const [editVisible, setEditVisible] = useState(false);
   const [tempFormDatas, setTempFormDatas] = useState(null);
   const [formDatas, setFormDatas] = useState(null);
-  const [versions, setVersions] = useState([]);
-  const [attachments, setAttachments] = useState([]);
   const [bodyVisible, setBodyVisible] = useState(true);
-  const bodyRef = useRef(null);
-  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
-  const [versionsLoading, setVersionsLoading] = useState(true);
-  const [attachmentsLoading, setAttachmentsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!socket || !versions) return;
-    const onMessage = (message) =>
-      onMessageVersions(message, versions, setVersions, clinicalNote.id);
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [clinicalNote.id, socket, versions]);
+  const { versions, setVersions, versionsLoading } = useFetchVersions(
+    patientId,
+    clinicalNote.id
+  );
+  useVersionsSocket(versions, setVersions, clinicalNote.id);
 
   useEffect(() => {
     if (clinicalNote) {
@@ -70,89 +71,8 @@ const ClinicalNotesCard = ({
     setBodyVisible(allBodiesVisible);
   }, [allBodiesVisible]);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchVersions = async () => {
-      try {
-        setVersionsLoading(true);
-        const versionsResults = (
-          await axiosXanoStaff.post(
-            "/clinical_notes_log_for_clinical_note_id",
-            { patient_id: patientId, clinical_note_id: clinicalNote.id },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              ...(abortController && { signal: abortController.signal }),
-            }
-          )
-        ).data;
-
-        if (abortController.signal.aborted) {
-          setVersionsLoading(false);
-          return;
-        }
-        versionsResults.forEach(
-          (version) => (version.id = version.clinical_note_id) //change id field value to clinical_note_id value to match progress_notes fields
-        );
-        versionsResults.sort((a, b) => a.version_nbr - b.version_nbr);
-
-        setVersions(versionsResults);
-        setVersionsLoading(false);
-      } catch (err) {
-        setVersionsLoading(false);
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch versions: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchVersions();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, patientId, clinicalNote.id]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAttachments = async () => {
-      try {
-        setAttachmentsLoading(true);
-        const response = (
-          await axiosXanoStaff.post(
-            "/attachments_for_clinical_note",
-            { attachments_ids: clinicalNote.attachments_ids },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          )
-        ).data;
-        if (abortController.signal.aborted) {
-          setAttachmentsLoading(false);
-          return;
-        }
-        setAttachments(
-          response.sort((a, b) => a.date_created - b.date_created)
-        );
-        setAttachmentsLoading(false);
-      } catch (err) {
-        setAttachmentsLoading(false);
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch attachments: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchAttachments();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, clinicalNote.attachments_ids]);
+  const { attachments, attachmentsLoading } =
+    useFetchAttachmentsForClinicalNote(clinicalNote.attachments_ids);
 
   //HANDLERS
   const handleTriangleProgressClick = (e) => {
@@ -307,7 +227,7 @@ const ClinicalNotesCard = ({
   };
 
   return tempFormDatas ? (
-    <div className="clinical-notes__card">
+    <div className="clinical-notes__card" ref={lastItemRef}>
       {bodyVisible ? (
         <ClinicalNotesCardHeader
           demographicsInfos={demographicsInfos}
@@ -358,7 +278,7 @@ const ClinicalNotesCard = ({
               <p style={{ padding: "0 10px" }}>
                 Updated by{" "}
                 {staffIdToTitleAndName(
-                  clinic.staffInfos,
+                  staffInfos,
                   getLastUpdate(tempFormDatas).updated_by_id,
                   true
                 )}{" "}
@@ -371,7 +291,7 @@ const ClinicalNotesCard = ({
             <p style={{ padding: "0 10px" }}>
               Created by{" "}
               {staffIdToTitleAndName(
-                clinic.staffInfos,
+                staffInfos,
                 tempFormDatas.created_by_id,
                 true
               )}{" "}
@@ -382,15 +302,12 @@ const ClinicalNotesCard = ({
       </div>
       {popUpVisible && (
         <FakeWindow
-          title={`CALVIN AI talk about ${patientIdToName(
-            clinic.demographicsInfos,
-            patientId
-          )}`}
+          title={`CALVIN AI talk about ${toPatientName(demographicsInfos)}`}
           width={1000}
           height={window.innerHeight}
           x={(window.innerWidth - 1000) / 2}
           y={0}
-          color="#9CB9E4"
+          color="#50B1C1"
           setPopUpVisible={setPopUpVisible}
         >
           <CalvinAI

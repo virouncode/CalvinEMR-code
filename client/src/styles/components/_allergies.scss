@@ -15,31 +15,37 @@
         border-radius: 6px;
         text-align: center;
     }
+    &__table-container {
+        height:400px;
+        overflow:scroll;
+        border-radius: 6px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
     &__table {
         table-layout:fixed;
         min-width:100%;
         border-collapse: collapse;
         font-size: 0.8rem;
         thead {
+            position: sticky;
+            top:0;
             background: $blue;
-            border: solid 1px $black;
+            border-radius: 6px;
         }
         th {
             min-width: 120px;
-            padding: 2px 5px;
-            border: solid 1px $black;
-            text-decoration: underline;
+            padding: 10px;
             cursor: pointer;
         }
     }
     &__item, &__form {
+        border-bottom:solid 1px $grey;
         td {
             text-align: center;
-            border: solid 1px $black;
-            padding: 2px 5px;
+            padding: 10px;
             word-break: break-word;
         }
-        input {
+        input,select {
             width: 100%;
         }
         input[type="submit"] {

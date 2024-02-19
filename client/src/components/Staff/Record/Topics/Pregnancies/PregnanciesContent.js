@@ -2,22 +2,20 @@ import React from "react";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const PregnanciesContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const PregnanciesContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length >= 1 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.date_of_event - a.date_of_event)
-              .map((pregnancy) => (
-                <li key={pregnancy.id}>
-                  - {pregnancy.description} (
-                  {toLocalDate(pregnancy.date_of_event)})
-                </li>
-              ))}
+            {topicDatas.map((item) => (
+              <li key={item.id}>
+                - {item.description} ({toLocalDate(item.date_of_event)})
+              </li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No pregnancies"

@@ -1,19 +1,18 @@
 import React from "react";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const AllergiesContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const AllergiesContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length >= 1 ? (
           <ul>
-            {datas
-              .sort((a, b) => b.date_created - a.date_created)
-              .map((allergy) => (
-                <li key={allergy.id}>- {allergy.OffendingAgentDescription}</li>
-              ))}
+            {topicDatas.map((item) => (
+              <li key={item.id}>- {item.OffendingAgentDescription}</li>
+            ))}
+            <li>...</li>
           </ul>
         ) : (
           "No allergies"

@@ -1,64 +1,67 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import NewWindow from "react-new-window";
-import useAuthContext from "../../../../hooks/useAuthContext";
-import { useClinicalNotes } from "../../../../hooks/useClinicalNotes";
+import useClinicalNotesSocket from "../../../../hooks/useClinicalNotesSocket";
+import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
+import useIntersection from "../../../../hooks/useIntersection";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import { onMessageClinicalNotes } from "../../../../utils/socketHandlers/onMessageClinicalNotes";
 import {
   getLastUpdate,
   isUpdated,
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
 import ClinicalNotesCard from "./ClinicalNotesCard";
 import ClinicalNotesForm from "./ClinicalNotesForm";
 import ClinicalNotesHeader from "./ClinicalNotesHeader";
+import LoadingClinical from "./LoadingClinical";
 
 const ClinicalNotes = ({
   demographicsInfos,
   allContentsVisible,
   patientId,
+  loadingPatient,
+  errPatient,
 }) => {
   //hooks
-  const { user, socket, clinic } = useAuthContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [addVisible, setAddVisible] = useState(false);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [search, setSearch] = useState("");
   const [checkedNotes, setCheckedNotes] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [allBodiesVisible, setAllBodiesVisible] = useState(false);
-  const [order, setOrder] = useState(
-    user.settings.progress_notes_order ?? "top"
-  );
-  const contentRef = useRef(null);
+  const [allBodiesVisible, setAllBodiesVisible] = useState(true);
   const triangleRef = useRef(null);
-  const [
-    { datas: clinicalNotes, isLoading, errMsg },
-    fetchRecord,
+  //DATAS
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 5,
+    offset: 0,
+  });
+  const {
+    clinicalNotes,
     setClinicalNotes,
-  ] = useClinicalNotes("/clinical_notes_for_patient", patientId, order);
+    order,
+    setOrder,
+    loading,
+    errMsg,
+    hasMore,
+  } = useFetchClinicalNotes(paging, patientId);
+  //INTERSECTION OBSERVER
+  const { rootRef: contentRef, lastItemRef } = useIntersection(
+    loading,
+    hasMore,
+    setPaging
+  );
 
   const checkAllNotes = () => {
     const allNotesIds = clinicalNotes.map(({ id }) => id);
     setCheckedNotes(allNotesIds);
   };
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessageClinicalNotes(
-        message,
-        clinicalNotes,
-        setClinicalNotes,
-        patientId,
-        order
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [patientId, clinicalNotes, setClinicalNotes, socket, order]);
+  useClinicalNotesSocket(clinicalNotes, setClinicalNotes, patientId, order);
 
   return (
     <div className="clinical-notes">
@@ -82,6 +85,10 @@ const ClinicalNotes = ({
         setAllBodiesVisible={setAllBodiesVisible}
         order={order}
         setOrder={setOrder}
+        paging={paging}
+        setPaging={setPaging}
+        loadingPatient={loadingPatient}
+        errPatient={errPatient}
       />
       {popUpVisible && (
         <NewWindow
@@ -122,19 +129,17 @@ const ClinicalNotes = ({
             demographicsInfos={demographicsInfos}
           />
         )}
-        {!isLoading ? (
-          errMsg ? (
-            <p className="clinical-notes__err">{errMsg}</p>
-          ) : clinicalNotes && clinicalNotes.length ? (
-            clinicalNotes
+        {errMsg && <p className="clinical-notes__err">{errMsg}</p>}
+        {clinicalNotes && clinicalNotes.length > 0
+          ? clinicalNotes
               .filter(
                 (note) =>
-                  staffIdToTitleAndName(clinic.staffInfos, note.created_by_id)
+                  staffIdToTitleAndName(staffInfos, note.created_by_id)
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                   (isUpdated(note) &&
                     staffIdToTitleAndName(
-                      clinic.staffInfos,
+                      staffInfos,
                       getLastUpdate(note).updated_by_id
                     )
                       .toLowerCase()
@@ -151,29 +156,41 @@ const ClinicalNotes = ({
                       getLastUpdate(note).date_updated
                     ).includes(search.toLowerCase()))
               )
-              .map((clinicalNote) => (
-                <ClinicalNotesCard
-                  clinicalNote={clinicalNote}
-                  clinicalNotes={clinicalNotes}
-                  setClinicalNotes={setClinicalNotes}
-                  order={order}
-                  patientId={patientId}
-                  key={clinicalNote.id}
-                  checkedNotes={checkedNotes}
-                  setCheckedNotes={setCheckedNotes}
-                  setSelectAll={setSelectAll}
-                  allBodiesVisible={allBodiesVisible}
-                  demographicsInfos={demographicsInfos}
-                />
-              ))
-          ) : (
-            !addVisible && (
-              <div style={{ padding: "5px" }}>No clinical notes</div>
-            )
-          )
-        ) : (
-          <CircularProgressMedium />
-        )}
+              .map((clinicalNote, index) =>
+                index === clinicalNotes.length - 1 ? (
+                  <ClinicalNotesCard
+                    clinicalNote={clinicalNote}
+                    clinicalNotes={clinicalNotes}
+                    setClinicalNotes={setClinicalNotes}
+                    order={order}
+                    patientId={patientId}
+                    key={clinicalNote.id}
+                    checkedNotes={checkedNotes}
+                    setCheckedNotes={setCheckedNotes}
+                    setSelectAll={setSelectAll}
+                    allBodiesVisible={allBodiesVisible}
+                    demographicsInfos={demographicsInfos}
+                    lastItemRef={lastItemRef}
+                  />
+                ) : (
+                  <ClinicalNotesCard
+                    clinicalNote={clinicalNote}
+                    clinicalNotes={clinicalNotes}
+                    setClinicalNotes={setClinicalNotes}
+                    order={order}
+                    patientId={patientId}
+                    key={clinicalNote.id}
+                    checkedNotes={checkedNotes}
+                    setCheckedNotes={setCheckedNotes}
+                    setSelectAll={setSelectAll}
+                    allBodiesVisible={allBodiesVisible}
+                    demographicsInfos={demographicsInfos}
+                  />
+                )
+              )
+          : !addVisible &&
+            !loading && <div style={{ padding: "5px" }}>No clinical notes</div>}
+        {loading && <LoadingClinical />}
       </div>
     </div>
   );

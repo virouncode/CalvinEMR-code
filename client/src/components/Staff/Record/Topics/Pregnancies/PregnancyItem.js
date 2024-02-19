@@ -5,6 +5,8 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { pregnancySchema } from "../../../../../validation/pregnancyValidation";
@@ -12,15 +14,23 @@ import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import PregnanciesList from "../../../../All/UI/Lists/PregnanciesList";
 import SignCell from "../SignCell";
 
-const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
+const PregnancyItem = ({
+  item,
+  editCounter,
+  setErrMsgPost,
+  errMsgPost,
+  lastItemRef = null,
+}) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
-  const [eventInfos, setEventInfos] = useState(null);
+  const [itemInfos, setItemInfos] = useState(null);
 
   useEffect(() => {
-    setEventInfos(event);
-  }, [event]);
+    setItemInfos(item);
+  }, [item]);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -33,14 +43,14 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     if (name === "term_nbr_of_weeks" || name === "term_nbr_of_days") {
       value = parseInt(value);
     }
-    setEventInfos({ ...eventInfos, [name]: value });
+    setItemInfos({ ...itemInfos, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Formatting
-    const datasToPut = { ...eventInfos };
-    const datasForValidation = { ...eventInfos };
+    const datasToPut = { ...itemInfos };
+    const datasForValidation = { ...itemInfos };
     if (datasForValidation.term_nbr_of_weeks === "") {
       datasForValidation.term_nbr_of_weeks = 0;
     }
@@ -58,7 +68,7 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     try {
       await putPatientRecord(
         "/pregnancies",
-        event.id,
+        item.id,
         user.id,
         auth.authToken,
         datasToPut,
@@ -70,7 +80,7 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
-      toast.error(`Error: unable to update pregnancy event: ${err.message}`, {
+      toast.error(`Error: unable to update pregnancy item: ${err.message}`, {
         containerId: "B",
       });
     }
@@ -80,7 +90,7 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
     e.preventDefault();
     editCounter.current -= 1;
     setErrMsgPost("");
-    setEventInfos(event);
+    setItemInfos(item);
     setEditVisible(false);
   };
 
@@ -100,7 +110,7 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
       try {
         await deletePatientRecord(
           "/pregnancies",
-          event.id,
+          item.id,
           auth.authToken,
           socket,
           "PREGNANCIES"
@@ -108,7 +118,7 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
 
         toast.success("Deleted successfully", { containerId: "B" });
       } catch (err) {
-        toast.error(`Error: unable to delete pregnancy event: ${err.message}`, {
+        toast.error(`Error: unable to delete pregnancy item: ${err.message}`, {
           containerId: "B",
         });
       }
@@ -116,20 +126,21 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
   };
 
   return (
-    eventInfos && (
+    itemInfos && (
       <tr
-        className="pregnancies-event"
+        className="pregnancies-item"
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        ref={lastItemRef}
       >
         <td>
           {editVisible ? (
             <PregnanciesList
-              value={eventInfos.description}
+              value={itemInfos.description}
               name="description"
               handleChange={handleChange}
             />
           ) : (
-            eventInfos.description
+            itemInfos.description
           )}
         </td>
         <td>
@@ -137,12 +148,12 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
             <input
               name="date_of_event"
               type="date"
-              value={toLocalDate(eventInfos.date_of_event)}
+              value={toLocalDate(itemInfos.date_of_event)}
               onChange={handleChange}
-              className="pregnancies-event__input2"
+              className="pregnancies-item__input2"
             />
           ) : (
-            toLocalDate(eventInfos.date_of_event)
+            toLocalDate(itemInfos.date_of_event)
           )}
         </td>
         <td>
@@ -150,13 +161,13 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
             <input
               name="premises"
               type="text"
-              value={eventInfos.premises}
+              value={itemInfos.premises}
               onChange={handleChange}
-              className="pregnancies-event__input1"
+              className="pregnancies-item__input1"
               autoComplete="off"
             />
           ) : (
-            eventInfos.premises
+            itemInfos.premises
           )}
         </td>
         <td>
@@ -172,31 +183,31 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
               <input
                 name="term_nbr_of_weeks"
                 type="number"
-                value={eventInfos.term_nbr_of_weeks}
+                value={itemInfos.term_nbr_of_weeks}
                 onChange={handleChange}
-                className="pregnancies-event__input3"
+                className="pregnancies-item__input3"
                 autoComplete="off"
               />
               w
               <input
                 name="term_nbr_of_days"
                 type="number"
-                value={eventInfos.term_nbr_of_days}
+                value={itemInfos.term_nbr_of_days}
                 onChange={handleChange}
-                className="pregnancies-event__input3"
+                className="pregnancies-item__input3"
                 autoComplete="off"
               />
               d
             </div>
           ) : (
             <div>
-              {eventInfos.term_nbr_of_weeks}w{eventInfos.term_nbr_of_days}d
+              {itemInfos.term_nbr_of_weeks}w{itemInfos.term_nbr_of_days}d
             </div>
           )}
         </td>
-        <SignCell item={event} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
-          <div className="pregnancies-event__btn-container">
+          <div className="pregnancies-item__btn-container">
             {!editVisible ? (
               <>
                 <button onClick={handleEditClick}>Edit</button>
@@ -217,4 +228,4 @@ const PregnancyEvent = ({ event, editCounter, setErrMsgPost, errMsgPost }) => {
   );
 };
 
-export default PregnancyEvent;
+export default PregnancyItem;

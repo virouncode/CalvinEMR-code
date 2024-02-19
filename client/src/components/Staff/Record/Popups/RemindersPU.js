@@ -1,25 +1,30 @@
 import { useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import ReminderForm from "../Topics/Reminders/ReminderForm";
 import ReminderItem from "../Topics/Reminders/ReminderItem";
 
 const RemindersPU = ({
+  topicDatas,
+  hasMore,
+  loading,
+  errMsg,
+  setPaging,
   patientId,
   setPopUpVisible,
-  datas,
-  setDatas,
-  isLoading,
-  errMsg,
 }) => {
   //HOOKS
-
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState(false);
+
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -46,23 +51,17 @@ const RemindersPU = ({
         Reminders <i className="fa-solid fa-bell"></i>
       </h1>
       {errMsgPost && <div className="reminders__err">{errMsgPost}</div>}
-      {isLoading ? (
-        <CircularProgressMedium />
-      ) : errMsg ? (
-        <p className="reminders__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
+      {errMsg && <div className="reminders__err">{errMsg}</div>}
+      {!errMsg && (
+        <>
+          <div className="reminders__table-container" ref={rootRef}>
             <table className="reminders__table">
               <thead>
                 <tr>
-                  <th>Active</th>
                   <th>Reminder</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -75,55 +74,43 @@ const RemindersPU = ({
                     errMsgPost={errMsgPost}
                   />
                 )}
-                {datas
-                  .filter((reminder) => reminder.active)
-                  .map((reminder) => (
-                    <ReminderItem
-                      item={reminder}
-                      key={reminder.id}
-                      editCounter={editCounter}
-                      setErrMsgPost={setErrMsgPost}
-                      errMsgPost={errMsgPost}
-                    />
-                  ))}
-                {datas
-                  .filter((reminder) => !reminder.active)
-                  .map((reminder) => (
-                    <ReminderItem
-                      item={reminder}
-                      key={reminder.id}
-                      editCounter={editCounter}
-                      setErrMsgPost={setErrMsgPost}
-                      errMsgPost={errMsgPost}
-                    />
-                  ))}
+                {topicDatas && topicDatas.length > 0
+                  ? topicDatas.map((item, index) =>
+                      index === topicDatas.length - 1 ? (
+                        <ReminderItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                          lastItemRef={lastItemRef}
+                        />
+                      ) : (
+                        <ReminderItem
+                          item={item}
+                          key={item.id}
+                          editCounter={editCounter}
+                          setErrMsgPost={setErrMsgPost}
+                          errMsgPost={errMsgPost}
+                        />
+                      )
+                    )
+                  : !loading &&
+                    !addVisible && <EmptyRow colSpan="4" text="No reminders" />}
+                {loading && <LoadingRow colSpan="4" />}
               </tbody>
             </table>
-            <div className="reminders__btn-container">
-              <button onClick={handleAdd} disabled={addVisible}>
-                Add
-              </button>
-              <button onClick={handleClose}>Close</button>
-            </div>
-          </>
-        )
+          </div>
+          <div className="reminders__btn-container">
+            <button onClick={handleAdd} disabled={addVisible}>
+              Add
+            </button>
+            <button onClick={handleClose}>Close</button>
+          </div>
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

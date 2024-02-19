@@ -2,17 +2,17 @@ import { toLocalDate } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const ReportsContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const ReportsContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {datas && datas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <>
             <p style={{ fontWeight: "bold" }}>Received</p>
             <ul>
-              {datas
+              {topicDatas
                 .filter(({ File }) => File)
                 .filter(({ RecipientName }) => !RecipientName?.FirstName)
                 .filter(({ acknowledged }) => !acknowledged)
@@ -33,7 +33,7 @@ const ReportsContent = ({ datas, isLoading, errMsg }) => {
                     - {report.name} ({toLocalDate(report.date_created)})
                   </li>
                 ))}
-              {datas
+              {topicDatas
                 .filter(({ File }) => File)
                 .filter(({ acknowledged }) => acknowledged)
                 .sort((a, b) => b.date_created - a.date_created)
@@ -56,7 +56,7 @@ const ReportsContent = ({ datas, isLoading, errMsg }) => {
             </ul>
             <p style={{ fontWeight: "bold", marginTop: "10px" }}>Sent</p>
             <ul>
-              {datas
+              {topicDatas
                 .filter(({ RecipientName }) => RecipientName?.FirstName)
                 .sort((a, b) => b.date_created - a.date_created)
                 .map((report) => (

@@ -1,3 +1,5 @@
+import { sortByDate } from "./updates";
+
 export const onMessageClinicalNotes = (
   message,
   clinicalNotes,
@@ -13,43 +15,13 @@ export const onMessageClinicalNotes = (
   switch (message.action) {
     case "create":
       const newClinicalNotes = [...clinicalNotes, message.content.data];
-      order === "top"
-        ? setClinicalNotes(
-            newClinicalNotes.sort(
-              (a, b) =>
-                (b.date_updated ? b.date_updated : b.date_created) -
-                (a.date_updated ? a.date_updated : a.date_created)
-            )
-          )
-        : setClinicalNotes(
-            newClinicalNotes.sort(
-              (a, b) =>
-                (a.date_updated ? a.date_updated : a.date_created) -
-                (b.date_updated ? b.date_updated : b.date_created)
-            )
-          );
+      setClinicalNotes(sortByDate(newClinicalNotes, order));
       break;
     case "update":
-      const progressNotesUpdated = clinicalNotes.map((progressNote) =>
-        progressNote.id === message.content.id
-          ? message.content.data
-          : progressNote
+      const progressNotesUpdated = clinicalNotes.map((item) =>
+        item.id === message.content.id ? message.content.data : item
       );
-      order === "top"
-        ? setClinicalNotes(
-            progressNotesUpdated.sort(
-              (a, b) =>
-                (b.date_updated ? b.date_updated : b.date_created) -
-                (a.date_updated ? a.date_updated : a.date_created)
-            )
-          )
-        : setClinicalNotes(
-            progressNotesUpdated.sort(
-              (a, b) =>
-                (a.date_updated ? a.date_updated : a.date_created) -
-                (b.date_updated ? b.date_updated : b.date_created)
-            )
-          );
+      setClinicalNotes(sortByDate(progressNotesUpdated, order));
       break;
     default:
       break;

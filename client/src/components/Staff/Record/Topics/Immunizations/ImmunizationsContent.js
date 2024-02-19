@@ -1,8 +1,8 @@
 import React from "react";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const ImmunizationsContent = ({ datas, isLoading, errMsg }) => {
-  return !isLoading ? (
+const ImmunizationsContent = ({ topicDatas, loading, errMsg }) => {
+  return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (

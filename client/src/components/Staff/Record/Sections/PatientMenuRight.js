@@ -1,40 +1,46 @@
 import React from "react";
+import { toPatientName } from "../../../../utils/toPatientName";
 import PatientTopic from "./PatientTopic";
 
 const PatientMenuRight = ({
+  demographicsInfos,
   patientId,
   allContentsVisible,
-  demographicsInfos,
 }) => {
   return (
     <div className="patient-record__menu">
       <PatientTopic
-        url="/care_elements_of_patient"
+        url="/personal_history_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#495867"
+        topic="PERSONAL HISTORY"
+        patientName={toPatientName(demographicsInfos)}
+        patientId={patientId}
+        allContentsVisible={allContentsVisible}
+        side="right"
+        demographicsInfos={demographicsInfos}
+      />
+      <PatientTopic
+        url="/care_elements_of_patient"
+        textColor="#FEFEFE"
+        backgroundColor="#577399"
         topic="CARE ELEMENTS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
-        side="rigth"
+        patientName={toPatientName(demographicsInfos)}
+        side="right"
       />
       <PatientTopic
         url="/problemlist_for_patient"
         textColor="#FEFEFE"
-        backgroundColor="#577399"
+        backgroundColor="#326771"
         topic="PROBLEM LIST"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
-      <PatientTopic
-        url="/reminders_for_patient"
-        textColor="#FEFEFE"
-        backgroundColor="#326771"
-        topic="REMINDERS"
-        patientId={patientId}
-        allContentsVisible={allContentsVisible}
-        side="right"
-      />
+
       <PatientTopic
         url="/pregnancies_for_patient"
         textColor="#FEFEFE"
@@ -42,6 +48,7 @@ const PatientMenuRight = ({
         topic="PREGNANCIES"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
       <PatientTopic
@@ -51,6 +58,7 @@ const PatientMenuRight = ({
         topic="ALLERGIES & ADVERSE REACTIONS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
       <PatientTopic
@@ -61,9 +69,11 @@ const PatientMenuRight = ({
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
-      <PatientTopic
+
+      {/* <PatientTopic
         url="/reports_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#931621"
@@ -71,28 +81,34 @@ const PatientMenuRight = ({
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
-      />
-      <PatientTopic
+      /> */}
+
+      {/* <PatientTopic
         url="/immunizations_of_patient"
         textColor="#FEFEFE"
-        backgroundColor="#28464b"
+        backgroundColor="#21201e"
         topic="IMMUNIZATIONS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
         demographicsInfos={demographicsInfos}
-      />
+      /> */}
+
       <PatientTopic
         url="/appointments_for_patient"
         textColor="#FEFEFE"
-        backgroundColor="#21201e"
+        backgroundColor="#28464b"
         topic="APPOINTMENTS"
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
+
       <PatientTopic
         url="/messages_about_patient"
         textColor="#FEFEFE"
@@ -101,6 +117,7 @@ const PatientMenuRight = ({
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
       <PatientTopic
@@ -111,6 +128,7 @@ const PatientMenuRight = ({
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
+        patientName={toPatientName(demographicsInfos)}
         side="right"
       />
     </div>

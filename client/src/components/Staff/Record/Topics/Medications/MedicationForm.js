@@ -11,7 +11,7 @@ import {
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
-import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
@@ -67,14 +67,16 @@ const MedicationForm = ({
     SubstitutionNotAllowed: "N",
   });
   const [errMsg, setErrMsg] = useState("");
-  const [allergies, setAllergies, loadingAllergies, errAllergies] =
-    useFetchDatas(
-      "/allergies_for_patient",
-      axiosXanoStaff,
-      auth.authToken,
-      "patient_id",
-      patientId
-    );
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 20,
+    offset: 0,
+  });
+  const {
+    topicDatas: allergies,
+    loading: loadingAllergies,
+    errMsg: errAllergies,
+  } = useFetchTopicDatas("/allergies_for_patient", paging, patientId);
 
   //HANDLERS
   const handleSubmit = async (e) => {
