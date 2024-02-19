@@ -100,101 +100,96 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
     setPopUpVisible(false);
   };
   return (
-    <div className="personalhistory-card">
-      <div className="personalhistory-card__header">
-        <h1>Patient personal history</h1>
-      </div>
-      <form className="personalhistory-form">
-        {errMsgPost && (
-          <div className="personalhistory-form__err">{errMsgPost}</div>
-        )}
-        <p>
-          <label>Occupations: </label>
-          <input
-            type="text"
-            value={formDatas.Occupations}
-            name="Occupations"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Income: </label>
-          <input
-            type="text"
-            value={formDatas.Income}
-            name="Income"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          {" "}
-          <label>Religion: </label>
-          <input
-            type="text"
-            value={formDatas.Religion}
-            name="Religion"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Sexual orientation: </label>
-          <input
-            type="text"
-            value={formDatas.SexualOrientation}
-            name="SexualOrientation"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Special diet: </label>
-          <input
-            type="text"
-            value={formDatas.SpecialDiet}
-            name="SpecialDiet"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Smoking: </label>
-          <input
-            type="text"
-            value={formDatas.Smoking}
-            name="Smoking"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Alcohol: </label>
-          <input
-            type="text"
-            value={formDatas.Alcohol}
-            name="Alcohol"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p>
-          <label>Recreational drugs: </label>
-          <input
-            type="text"
-            value={formDatas.RecreationalDrugs}
-            name="RecreationalDrugs"
-            onChange={handleChange}
-            autoComplete="off"
-          />
-        </p>
-        <p className="personalhistory-card__btns">
-          <button onClick={handleSubmit}>Save</button>
-          <button onClick={handleClose}>Close</button>
-        </p>
-      </form>
-    </div>
+    <form className="personalhistory-form">
+      {errMsgPost && (
+        <div className="personalhistory-form__err">{errMsgPost}</div>
+      )}
+      <p>
+        <label>Occupations: </label>
+        <input
+          type="text"
+          value={formDatas.Occupations}
+          name="Occupations"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Income: </label>
+        <input
+          type="text"
+          value={formDatas.Income}
+          name="Income"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        {" "}
+        <label>Religion: </label>
+        <input
+          type="text"
+          value={formDatas.Religion}
+          name="Religion"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Sexual orientation: </label>
+        <input
+          type="text"
+          value={formDatas.SexualOrientation}
+          name="SexualOrientation"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Special diet: </label>
+        <input
+          type="text"
+          value={formDatas.SpecialDiet}
+          name="SpecialDiet"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Smoking: </label>
+        <input
+          type="text"
+          value={formDatas.Smoking}
+          name="Smoking"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Alcohol: </label>
+        <input
+          type="text"
+          value={formDatas.Alcohol}
+          name="Alcohol"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p>
+        <label>Recreational drugs: </label>
+        <input
+          type="text"
+          value={formDatas.RecreationalDrugs}
+          name="RecreationalDrugs"
+          onChange={handleChange}
+          autoComplete="off"
+        />
+      </p>
+      <p className="personalhistory-card__btns">
+        <button onClick={handleSubmit}>Save</button>
+        <button onClick={handleClose}>Close</button>
+      </p>
+    </form>
   );
 };
 

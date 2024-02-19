@@ -7,6 +7,10 @@ const RelationshipRow = ({
   handleChange,
   handleDeleteRelationship,
   handleRelationshipChange,
+  patients,
+  setPaging,
+  loading,
+  hasMore,
 }) => {
   return (
     <div className="signup-patient__row-relationship">
@@ -17,10 +21,14 @@ const RelationshipRow = ({
       />{" "}
       of{" "}
       <PatientsSelect
-        id={item.id}
+        id={item.id} //the id of each item to relate the select element to my relationship
         handleChange={handleChange}
         value={item.relation_id}
         name="relation_id"
+        patients={patients}
+        setPaging={setPaging}
+        loading={loading}
+        hasMore={hasMore}
       />
       <i
         id={item.id}

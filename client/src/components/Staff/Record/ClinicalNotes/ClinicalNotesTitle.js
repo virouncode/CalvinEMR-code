@@ -2,7 +2,7 @@ import React from "react";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
 import { getAge } from "../../../../utils/getAge";
 import { toPatientName } from "../../../../utils/toPatientName";
-import CircularProgressSmall from "../../../All/UI/Progress/CircularProgressSmall";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import TriangleButton from "../Buttons/TriangleButton";
 
 const ClinicalNotesTitle = ({
@@ -34,12 +34,7 @@ const ClinicalNotesTitle = ({
         <strong style={{ marginLeft: "10px" }}>CLINICAL NOTES </strong>
       </div>
       {errPatient && <div>{errPatient}</div>}
-      {loadingPatient && (
-        <div>
-          Loading...
-          <CircularProgressSmall />
-        </div>
-      )}
+      {loadingPatient && <LoadingParagraph />}
       {!loadingPatient && !errPatient && demographicsInfos && (
         <span>
           {toPatientName(demographicsInfos)},{" "}

@@ -1,19 +1,27 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import useFetchPatients from "../../../hooks/useFetchPatients.js";
 import RelationshipRow from "./RelationshipRow.js";
 
 const RelationshipsForm = ({ relationships, setRelationships }) => {
   const idCounter = useRef(0);
 
+  //PATIENTS DATAS
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const { patients, loading, errMsg, hasMore } = useFetchPatients(paging);
+
   const handleChange = (e) => {
     const value = parseInt(e.target.value);
-    let updatedRelationships = [...relationships];
-    //ne pas prendre l'index mais filtrer sur l'id
-    updatedRelationships = updatedRelationships.map((item) => {
-      if (item.id === parseInt(e.target.id)) {
-        return { ...item, relation_id: value };
-      } else return item;
-    });
-    setRelationships(updatedRelationships);
+    setRelationships(
+      relationships.map((item) => {
+        return parseInt(item.id) === parseInt(e.target.id)
+          ? { ...item, relation_id: value, gender: e.target.dataset.gender }
+          : item;
+      })
+    );
   };
 
   const handleRelationshipChange = (value, itemId) => {
@@ -32,7 +40,7 @@ const RelationshipsForm = ({ relationships, setRelationships }) => {
     e.preventDefault();
     setRelationships([
       ...relationships,
-      { relation_id: "", relationship: "", id: idCounter.current },
+      { relation_id: "", relationship: "", id: idCounter.current, gender: "" },
     ]);
     idCounter.current = idCounter.current + 1;
   };
@@ -58,6 +66,10 @@ const RelationshipsForm = ({ relationships, setRelationships }) => {
             handleDeleteRelationship={handleDeleteRelationship}
             handleRelationshipChange={handleRelationshipChange}
             key={item.id}
+            patients={patients}
+            hasMore={hasMore}
+            loading={loading}
+            errMsg={errMsg}
           />
         ))}
     </>

@@ -4,6 +4,7 @@ import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import EmptyRow from "../../../All/UI/Tables/EmptyRow";
+import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import RelationshipForm from "../Topics/Relationships/RelationshipForm";
 import RelationshipItem from "../Topics/Relationships/RelationshipItem";
@@ -105,6 +106,7 @@ const RelationshipsPU = ({
                     !addVisible && (
                       <EmptyRow colSpan="5" text="No relationships" />
                     )}
+                {loading && <LoadingRow colSpan="5" />}
               </tbody>
             </table>
           </div>

@@ -37,10 +37,7 @@ const RelationshipForm = ({
     perPage: 10,
     offset: 0,
   });
-  const { patients, loading, errMsg, hasMore } = useFetchPatients(
-    paging,
-    patientId
-  );
+  const { patients, loading, errMsg, hasMore } = useFetchPatients(paging);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -128,6 +125,7 @@ const RelationshipForm = ({
 
   const handleCancel = (e) => {
     e.preventDefault();
+    editCounter.current -= 1;
     setErrMsgPost("");
     setAddVisible(false);
   };

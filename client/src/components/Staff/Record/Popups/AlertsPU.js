@@ -100,8 +100,8 @@ const AlertsPU = ({
                       )
                     )
                   : !loading &&
-                    !addVisible && <EmptyRow colSpan="6" text="No alerts" />}
-                {loading && <LoadingRow colSpan="6" />}
+                    !addVisible && <EmptyRow colSpan="7" text="No alerts" />}
+                {loading && <LoadingRow colSpan="7" />}
               </tbody>
             </table>
           </div>

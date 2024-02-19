@@ -6,9 +6,11 @@ import RecImmunizationCell from "./RecImmunizationCell";
 
 const RecImmunizationRow = ({
   type,
-  demographicsInfos,
+  patientDob,
   immunizationInfos,
   patientId,
+  loadingPatient,
+  errPatient,
 }) => {
   const immunization = recommendedImmunizationsList.find(
     (immunization) => immunization.type === type
@@ -39,8 +41,10 @@ const RecImmunizationRow = ({
         immunizationInfos={immunizationInfos.filter(
           ({ age }) => age === immunizationAge
         )}
-        demographicsInfos={demographicsInfos}
+        patientDob={patientDob}
         patientId={patientId}
+        loadingPatient={loadingPatient}
+        errPatient={errPatient}
       />
     ) : (
       <td style={{ backgroundColor: "grey" }}></td>

@@ -6,9 +6,7 @@ const ImmunizationsContent = ({ topicDatas, loading, errMsg }) => {
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
-      <div className="topic-content">
-        Please open the pop-up to see patient's immunizations details
-      </div>
+      <div className="topic-content">Open immunizations pop-up</div>
     )
   ) : (
     <CircularProgressMedium />

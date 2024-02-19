@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
+import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import RecImmunizationEditFirstDose from "./RecImmunizationEditFirstDose";
 import RecImmunizationEditSecondDose from "./RecImmunizationEditSecondDose";
@@ -12,12 +13,15 @@ const RecImmunizationItemDouble = ({
   type,
   route,
   immunizationInfos,
-  demographicsInfos,
+  patientDob,
   rangeStart,
   rangeEnd,
   patientId,
+  loadingPatient,
+  errPatient,
 }) => {
   //HOOKS
+
   const [formVisibleFirstDose, setFormVisibleFirstDose] = useState(false);
   const [formVisibleSecondDose, setFormVisibleSecondDose] = useState(false);
   const [editVisibleFirstDose, setEditVisibleFirstDose] = useState(false);
@@ -28,8 +32,8 @@ const RecImmunizationItemDouble = ({
   const INTERVAL_GRADE_7_STYLE = {
     color:
       new Date(
-        new Date(demographicsInfos.DateOfBirth).setFullYear(
-          new Date(demographicsInfos.DateOfBirth).getFullYear() + 15
+        new Date(patientDob).setFullYear(
+          new Date(patientDob).getFullYear() + 15
         )
       ) < new Date()
         ? "orange"
@@ -38,8 +42,8 @@ const RecImmunizationItemDouble = ({
   const INTERVAL_65_YEARS_STYLE = {
     color:
       new Date(
-        new Date(demographicsInfos.DateOfBirth).setFullYear(
-          new Date(demographicsInfos.DateOfBirth).getFullYear() + 70
+        new Date(patientDob).setFullYear(
+          new Date(patientDob).getFullYear() + 70
         )
       ) < new Date()
         ? "orange"
@@ -87,7 +91,10 @@ const RecImmunizationItemDouble = ({
           name={type}
           checked={isFirstDoseChecked()}
         />
-        {immunizationInfos.length &&
+        {loadingPatient && <LoadingParagraph />}
+        {!loadingPatient &&
+        !errPatient &&
+        immunizationInfos.length &&
         immunizationInfos.find(({ doseNumber }) => doseNumber === 1)?.Date ? (
           <label
             style={{
@@ -111,9 +118,8 @@ const RecImmunizationItemDouble = ({
                   Grade 7 to 12 &#40;til{" "}
                   {toLocalDate(
                     new Date(
-                      new Date(demographicsInfos.DateOfBirth).setFullYear(
-                        new Date(demographicsInfos.DateOfBirth).getFullYear() +
-                          15
+                      new Date(patientDob).setFullYear(
+                        new Date(patientDob).getFullYear() + 15
                       )
                     )
                   )}
@@ -128,16 +134,16 @@ const RecImmunizationItemDouble = ({
               <span style={INTERVAL_65_YEARS_STYLE}>
                 {toLocalDate(
                   new Date(
-                    new Date(demographicsInfos.DateOfBirth).setFullYear(
-                      new Date(demographicsInfos.DateOfBirth).getFullYear() + 65
+                    new Date(patientDob).setFullYear(
+                      new Date(patientDob).getFullYear() + 65
                     )
                   )
                 )}{" "}
                 to{" "}
                 {toLocalDate(
                   new Date(
-                    new Date(demographicsInfos.DateOfBirth).setFullYear(
-                      new Date(demographicsInfos.DateOfBirth).getFullYear() + 70
+                    new Date(patientDob).setFullYear(
+                      new Date(patientDob).getFullYear() + 70
                     )
                   )
                 )}

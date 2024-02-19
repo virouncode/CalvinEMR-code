@@ -5,8 +5,12 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
+import { showReportTextContent } from "../../../../../utils/showReportTextContent";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -15,10 +19,12 @@ import {
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReportItemReceived = ({ item, setErrMsgPost }) => {
-  const { auth, clinic, user, socket } = useAuthContext();
+const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const handleDeleteClick = async (e) => {
-    setErrMsgPost("");
     if (
       await confirmAlert({
         content: "Do you really want to delete this item ?",
@@ -30,7 +36,7 @@ const ReportItemReceived = ({ item, setErrMsgPost }) => {
           item.id,
           auth.authToken,
           socket,
-          "REPORTS"
+          "REPORTS RECEIVED"
         );
         socket.emit("message", {
           route: "DOCMAILBOX",
@@ -53,10 +59,10 @@ const ReportItemReceived = ({ item, setErrMsgPost }) => {
       datasToPut.ReportReviewed = [
         {
           Name: {
-            FirstName: staffIdToFirstName(clinic.staffInfos, user.id),
-            LastName: staffIdToLastName(clinic.staffInfos, user.id),
+            FirstName: staffIdToFirstName(staffInfos, user.id),
+            LastName: staffIdToLastName(staffInfos, user.id),
           },
-          ReviewingOHIPPhysicianId: staffIdToOHIP(clinic.staffInfos, user.id),
+          ReviewingOHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
           DateTimeReportReviewed: Date.now(),
         },
       ];
@@ -68,7 +74,7 @@ const ReportItemReceived = ({ item, setErrMsgPost }) => {
         auth.authToken,
         datasToPut,
         socket,
-        "REPORTS"
+        "REPORTS RECEIVED"
       );
 
       socket.emit("message", {
@@ -87,24 +93,25 @@ const ReportItemReceived = ({ item, setErrMsgPost }) => {
   };
 
   return (
-    <tr className="reports__item">
+    <tr className="reports__item" ref={lastItemReceivedRef}>
+      {console.log("item", item)}
       <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>
-      {item.Format === "Binary" ? (
-        <td
-          className="reports__link"
-          onClick={() => showDocument(item.File.url, item.File.mime)}
-          style={{
-            fontWeight: item.ReportReviewed.length ? "normal" : "bold",
-            color: item.ReportReviewed.length ? "black" : "blue",
-          }}
-        >
-          {item.File.name}
-        </td>
-      ) : (
-        <td>{item.Content.TextContent}</td>
-      )}
+      <td
+        className="reports__link"
+        onClick={() =>
+          item.File
+            ? showDocument(item.File?.url, item.File?.mime)
+            : showReportTextContent(item)
+        }
+        style={{
+          fontWeight: item.ReportReviewed.length ? "normal" : "bold",
+          color: item.ReportReviewed.length ? "black" : "blue",
+        }}
+      >
+        {item.File ? item.File.name : "See text content"}
+      </td>
       <td>{item.Class}</td>
       <td>{item.SubClass}</td>
       <td>{toLocalDate(item.EventDateTime)}</td>
@@ -145,7 +152,7 @@ const ReportItemReceived = ({ item, setErrMsgPost }) => {
         {item.RecipientName?.LastName || ""}
       </td>
       <td>{toLocalDate(item.DateTimeSent)}</td> */}
-      <SignCell item={item} staffInfos={clinic.staffInfos} />
+      <SignCell item={item} />
       <td>
         <div className="reports__item-btn-container">
           {" "}

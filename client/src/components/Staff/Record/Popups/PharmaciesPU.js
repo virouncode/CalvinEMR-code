@@ -7,7 +7,7 @@ import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import PharmaciesList from "../Topics/Pharmacies/PharmaciesList";
 import PharmacyCard from "../Topics/Pharmacies/PharmacyCard";
@@ -71,7 +71,7 @@ const PharmaciesPU = ({
         <i className="fa-solid fa-prescription-bottle-medical"></i>
       </h1>
       {loadingPharmacy ? (
-        <CircularProgressMedium />
+        <LoadingParagraph />
       ) : errPharmacy ? (
         <p className="pharmacies__err">{errPharmacy}</p>
       ) : !isObjectEmpty(preferredPharmacy) ? (

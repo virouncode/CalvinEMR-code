@@ -2,25 +2,23 @@ import React, { useRef, useState } from "react";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
-import useFetchTopicDatas from "../../../../hooks/useFetchTopicDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
-import FamilyDoctorsPU from "../Popups/FamilyDoctorsPU";
-import FamilyDoctorsContent from "../Topics/FamilyDoctors/FamilyDoctorsContent";
+import ImmunizationsPU from "../Popups/ImmunizationsPU";
+import ImmunizationsContent from "../Topics/Immunizations/ImmunizationsContent";
 import PatientTopicHeader from "./PatientTopicHeader";
 
-const PatientTopicDoctors = ({
+const PatientTopicImmunizations = ({
   textColor,
   backgroundColor,
   patientName,
+  patientDob,
   patientId,
   allContentsVisible,
   side,
+  loadingPatient,
+  errPatient,
 }) => {
-  //TOPICS
-  const topicDoctors = "FAMILY DOCTORS/SPECIALISTS";
-  const topicPatientDoctors = "PATIENT DOCTORS";
-
   //HOOKS
   const { auth } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
@@ -30,40 +28,16 @@ const PatientTopicDoctors = ({
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
 
   //DATAS
-  const [pagingDoctors, setPagingDoctors] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const {
-    topicDatas: doctors,
-    setTopicDatas: setDoctors,
-    loading: loadingDoctors,
-    errMsg: errMsgDoctors,
-    hasMore: hasMoreDoctors,
-  } = useFetchTopicDatas("/doctors", pagingDoctors, patientId);
-
-  useTopicSocket(topicDoctors, doctors, setDoctors, patientId);
-
-  const [
-    patientDoctors,
-    setPatientDoctors,
-    loadingPatientDoctors,
-    errMsgPatientDoctors,
-  ] = useFetchDatas(
-    "/doctors_of_patient",
+  const [topicDatas, setTopicDatas, loading, errMsg] = useFetchDatas(
+    "/immunizations_of_patient",
     axiosXanoStaff,
     auth.authToken,
     "patient_id",
     patientId
   );
 
-  useTopicSocket(
-    topicPatientDoctors,
-    patientDoctors,
-    setPatientDoctors,
-    patientId
-  );
+  //SOCKET
+  useTopicSocket("IMMUNIZATIONS", topicDatas, setTopicDatas, patientId);
 
   //HANDLERS
   const handlePopUpClick = (e) => {
@@ -84,7 +58,7 @@ const PatientTopicDoctors = ({
         style={TOPIC_STYLE}
       >
         <PatientTopicHeader
-          topic={topicDoctors}
+          topic="IMMUNIZATIONS"
           handleTriangleClick={handleTriangleClick}
           handlePopUpClick={handlePopUpClick}
           allContentsVisible={allContentsVisible}
@@ -99,32 +73,30 @@ const PatientTopicDoctors = ({
         }
         ref={containerRef}
       >
-        <FamilyDoctorsContent
-          patientDoctors={patientDoctors}
-          loadingPatientDoctors={loadingPatientDoctors}
-          errMsgPatientDoctors={errMsgPatientDoctors}
+        <ImmunizationsContent
+          topicDatas={topicDatas}
+          loading={loading}
+          errMsg={errMsg}
         />
         {popUpVisible && (
           <FakeWindow
-            title={`FAMILY DOCTORS & SPECIALISTS of ${patientName}`}
+            title={`IMMUNIZATIONS of ${patientName}`}
             width={1400}
-            height={600}
+            height={700}
             x={(window.innerWidth - 1400) / 2}
-            y={(window.innerHeight - 600) / 2}
+            y={(window.innerHeight - 700) / 2}
             color={backgroundColor}
             setPopUpVisible={setPopUpVisible}
           >
-            <FamilyDoctorsPU
-              doctors={doctors}
-              loadingDoctors={loadingDoctors}
-              errMsgDoctors={errMsgDoctors}
-              hasMoreDoctors={hasMoreDoctors}
-              setPagingDoctors={setPagingDoctors}
-              patientDoctors={patientDoctors}
-              loadingPatientDoctors={loadingPatientDoctors}
-              errMsgPatientDoctors={errMsgPatientDoctors}
+            <ImmunizationsPU
+              topicDatas={topicDatas}
+              loading={loading}
+              errMsg={errMsg}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
+              patientDob={patientDob}
+              loadingPatient={loadingPatient}
+              errPatient={errPatient}
             />
           </FakeWindow>
         )}
@@ -133,4 +105,4 @@ const PatientTopicDoctors = ({
   );
 };
 
-export default PatientTopicDoctors;
+export default PatientTopicImmunizations;

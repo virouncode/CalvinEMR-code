@@ -7,6 +7,9 @@ import {
   reportFormatCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getExtension } from "../../../../../utils/getExtension";
 import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
@@ -25,7 +28,10 @@ const ReportForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     Format: "Binary",
@@ -147,7 +153,7 @@ const ReportForm = ({
         auth.authToken,
         datasToPost,
         socket,
-        "REPORTS"
+        sentOrReceived === "Sent" ? "REPORTS SENT" : "REPORTS RECEIVED"
       );
       socket.emit("message", {
         route: "DOCMAILBOX",
@@ -168,6 +174,7 @@ const ReportForm = ({
     const file = e.target.files[0];
     if (!file) return;
     setErrMsgPost("");
+    setIsLoadingFile(true);
     if (file.size > 25000000) {
       setErrMsgPost("The file is over 25Mb, please choose another file");
       setIsLoadingFile(false);
@@ -218,7 +225,11 @@ const ReportForm = ({
       <form className="reports__content" onSubmit={handleSubmit}>
         {errMsgPost && <div className="reports__err">{errMsgPost}</div>}
         <div className="reports__form-btn-container">
-          <input type="submit" value="Save" />
+          <input
+            type="submit"
+            value={isLoadingFile ? "Loading" : "Save"}
+            disabled={isLoadingFile}
+          />
           <button type="button" onClick={handleCancel}>
             Cancel
           </button>
@@ -327,8 +338,8 @@ const ReportForm = ({
             />
           ) : (
             patientIdToAssignedStaffName(
-              clinic.demographicsInfos,
-              clinic.staffInfos,
+              demographicsInfos,
+              staffInfos,
               patientId
             )
           )}

@@ -47,6 +47,7 @@ const AllergyForm = ({
 
   const handleCancel = (e) => {
     e.preventDefault();
+    editCounter.current -= 1;
     setErrMsgPost("");
     setAddVisible(false);
   };

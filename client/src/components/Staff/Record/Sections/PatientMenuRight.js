@@ -1,11 +1,15 @@
 import React from "react";
 import { toPatientName } from "../../../../utils/toPatientName";
 import PatientTopic from "./PatientTopic";
+import PatientTopicImmunizations from "./PatientTopicImmunizations";
+import PatientTopicReports from "./PatientTopicReports";
 
 const PatientMenuRight = ({
   demographicsInfos,
   patientId,
   allContentsVisible,
+  loadingPatient,
+  errPatient,
 }) => {
   return (
     <div className="patient-record__menu">
@@ -40,7 +44,6 @@ const PatientMenuRight = ({
         patientName={toPatientName(demographicsInfos)}
         side="right"
       />
-
       <PatientTopic
         url="/pregnancies_for_patient"
         textColor="#FEFEFE"
@@ -73,29 +76,27 @@ const PatientMenuRight = ({
         side="right"
       />
 
-      {/* <PatientTopic
-        url="/reports_for_patient"
+      <PatientTopicReports
         textColor="#FEFEFE"
         backgroundColor="#931621"
-        topic="REPORTS"
         patientId={patientId}
         demographicsInfos={demographicsInfos}
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
-      /> */}
+      />
 
-      {/* <PatientTopic
-        url="/immunizations_of_patient"
+      <PatientTopicImmunizations
         textColor="#FEFEFE"
         backgroundColor="#21201e"
-        topic="IMMUNIZATIONS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
+        patientDob={demographicsInfos.DateOfBirth}
         side="right"
-        demographicsInfos={demographicsInfos}
-      /> */}
+        loadingPatient={loadingPatient}
+        errPatient={errPatient}
+      />
 
       <PatientTopic
         url="/appointments_for_patient"

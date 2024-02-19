@@ -13443,6 +13443,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.immunizations__table-container {
+  height: 300px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .immunizations__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13450,20 +13456,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .immunizations__table thead {
+  position: sticky;
+  top: 0;
   background: #93b5e9;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .immunizations__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.immunizations__item, .immunizations__form {
+  border-bottom: solid 1px #cecdcd;
 }
 .immunizations__item td, .immunizations__form td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .immunizations__item input, .immunizations__item select, .immunizations__form input, .immunizations__form select {
@@ -13509,6 +13517,12 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.reports__table-container {
+  height: 200px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .reports__table {
   table-layout: fixed;
   min-width: 100%;
@@ -13516,20 +13530,22 @@ readers do not read off random characters that represent icons */
   font-size: 0.8rem;
 }
 .reports__table thead {
+  position: sticky;
+  top: 0;
   background: #93b5e9;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .reports__table th {
   min-width: 120px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  padding: 10px;
   cursor: pointer;
+}
+.reports__item {
+  border-bottom: solid 1px #cecdcd;
 }
 .reports__item td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .reports__item-btn-container {
@@ -13541,7 +13557,6 @@ readers do not read off random characters that represent icons */
 }
 .reports__link {
   cursor: pointer;
-  color: #327AE6;
   text-decoration: underline;
 }
 .reports__form {
@@ -13945,7 +13960,7 @@ readers do not read off random characters that represent icons */
 }
 .signup-patient__container {
   padding: 20px;
-  width: 55%;
+  width: 70%;
   margin: 0 auto;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;

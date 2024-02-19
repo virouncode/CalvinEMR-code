@@ -77,11 +77,11 @@ const App = () => {
   // }, [navigate, setAuth, setClinic, setSocket, setUser]);
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:3000");
+    // const socket = socketIOClient("http://localhost:3000");
 
-    // const socket = socketIOClient(
-    //   "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
-    // );
+    const socket = socketIOClient(
+      "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
+    );
     setSocket(socket);
     return () => socket.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps

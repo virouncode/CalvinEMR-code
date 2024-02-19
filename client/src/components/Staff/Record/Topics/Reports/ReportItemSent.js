@@ -2,15 +2,19 @@ import React from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
+import { showReportTextContent } from "../../../../../utils/showReportTextContent";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
-const ReportItemSent = ({ item, setErrMsgPost }) => {
-  const { auth, clinic, user, socket } = useAuthContext();
+const ReportItemSent = ({ item, lastItemSentRef = null }) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const handleDeleteClick = async (e) => {
-    setErrMsgPost("");
     if (
       await confirmAlert({
         content: "Do you really want to delete this item ?",
@@ -22,7 +26,7 @@ const ReportItemSent = ({ item, setErrMsgPost }) => {
           item.id,
           auth.authToken,
           socket,
-          "REPORTS"
+          "REPORTS SENT"
         );
         toast.success("Deleted successfully", { containerId: "B" });
       } catch (err) {
@@ -34,24 +38,24 @@ const ReportItemSent = ({ item, setErrMsgPost }) => {
   };
 
   return (
-    <tr className="reports__item">
+    <tr className="reports__item" ref={lastItemSentRef}>
       <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>
-      {item.Format === "Binary" ? (
-        <td
-          className="reports__link"
-          onClick={() => showDocument(item.File.url, item.File.mime)}
-          style={{
-            fontWeight: item.ReportReviewed.length ? "normal" : "bold",
-            color: item.ReportReviewed.length ? "black" : "blue",
-          }}
-        >
-          {item.File.name}
-        </td>
-      ) : (
-        <td>{item.Content.TextContent}</td>
-      )}
+      <td
+        className="reports__link"
+        onClick={() =>
+          item.File
+            ? showDocument(item.File?.url, item.File?.mime)
+            : showReportTextContent(item)
+        }
+        style={{
+          fontWeight: item.ReportReviewed.length ? "normal" : "bold",
+          color: item.ReportReviewed.length ? "black" : "blue",
+        }}
+      >
+        {item.File ? item.File.name : "See text content"}
+      </td>
       <td>{item.Class}</td>
       <td>{item.SubClass}</td>
       <td>{toLocalDate(item.EventDateTime)}</td>
@@ -67,7 +71,7 @@ const ReportItemSent = ({ item, setErrMsgPost }) => {
         {item.RecipientName?.FirstName} {item.RecipientName?.LastName}
       </td>
       <td>{item.Notes}</td>
-      <SignCell item={item} staffInfos={clinic.staffInfos} />
+      <SignCell item={item} />
       <td>
         <div className="reports__item-btn-container">
           <button>Fax</button>

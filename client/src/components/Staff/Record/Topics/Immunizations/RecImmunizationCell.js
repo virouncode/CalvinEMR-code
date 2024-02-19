@@ -11,8 +11,10 @@ const RecImmunizationCell = ({
   immunizationId,
   dose,
   immunizationInfos,
-  demographicsInfos,
+  patientDob,
   patientId,
+  loadingPatient,
+  errPatient,
 }) => {
   return (
     immunizationInfos && (
@@ -33,15 +35,11 @@ const RecImmunizationCell = ({
             type={type}
             route={route}
             immunizationInfos={immunizationInfos[0] || {}}
-            rangeStart={
-              getVaccinationInterval(age, demographicsInfos.DateOfBirth)
-                .rangeStart
-            }
-            rangeEnd={
-              getVaccinationInterval(age, demographicsInfos.DateOfBirth)
-                .rangeEnd
-            }
+            rangeStart={getVaccinationInterval(age, patientDob).rangeStart}
+            rangeEnd={getVaccinationInterval(age, patientDob).rangeEnd}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         ) : //double dose
         dose === "double" ? (
@@ -50,16 +48,12 @@ const RecImmunizationCell = ({
             type={type}
             route={route}
             immunizationInfos={immunizationInfos}
-            demographicsInfos={demographicsInfos}
-            rangeStart={
-              getVaccinationInterval(age, demographicsInfos.DateOfBirth)
-                .rangeStart
-            }
-            rangeEnd={
-              getVaccinationInterval(age, demographicsInfos.DateOfBirth)
-                .rangeEnd
-            }
+            patientDob={patientDob}
+            rangeStart={getVaccinationInterval(age, patientDob).rangeStart}
+            rangeEnd={getVaccinationInterval(age, patientDob).rangeEnd}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         ) : (
           <RecImmunizationItemMultiple
@@ -67,7 +61,6 @@ const RecImmunizationCell = ({
             type={type}
             route={route}
             immunizationInfos={immunizationInfos}
-            demographicsInfos={demographicsInfos}
             patientId={patientId}
           />
         )}

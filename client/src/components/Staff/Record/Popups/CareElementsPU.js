@@ -32,7 +32,7 @@ import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../All/UI/Lists/GenericList";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CareElementHistory from "../Topics/CareElements/CareElementHistory";
@@ -497,7 +497,7 @@ const CareElementsPU = ({
       </h1>
       {errMsgPost && <div className="care-elements__err">{errMsgPost}</div>}
       {loading ? (
-        <CircularProgressMedium />
+        <LoadingParagraph />
       ) : errMsg ? (
         <p className="care-elements__err">{errMsg}</p>
       ) : (

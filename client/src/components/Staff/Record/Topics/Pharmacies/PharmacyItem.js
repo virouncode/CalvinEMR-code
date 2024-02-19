@@ -245,7 +245,10 @@ const PharmacyItem = ({
     setEditVisible((v) => !v);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (e) => {
+    e.preventDefault();
+    editCounter.current -= 1;
+    setErrMsgPost("");
     setEditVisible(false);
     setItemInfos(item);
   };

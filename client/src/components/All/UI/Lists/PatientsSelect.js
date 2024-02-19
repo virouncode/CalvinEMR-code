@@ -3,6 +3,7 @@ import useIntersection from "../../../../hooks/useIntersection";
 import { toPatientName } from "../../../../utils/toPatientName";
 
 const PatientsSelect = ({
+  id = null,
   handleChange,
   value,
   name,
@@ -16,7 +17,13 @@ const PatientsSelect = ({
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   return (
-    <select name={name} onChange={handleChange} value={value} ref={rootRef}>
+    <select
+      name={name}
+      onChange={handleChange}
+      value={value}
+      ref={rootRef}
+      id={id}
+    >
       <option value="" disabled>
         Choose a patient
       </option>
@@ -30,6 +37,7 @@ const PatientsSelect = ({
                   value={item.patient_id}
                   key={item.patient_id}
                   ref={lastItemRef}
+                  data-gender={item.Gender}
                 >
                   {toPatientName(item)}
                 </option>

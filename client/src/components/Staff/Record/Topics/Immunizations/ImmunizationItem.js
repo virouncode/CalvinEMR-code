@@ -12,6 +12,8 @@ import {
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
@@ -26,8 +28,11 @@ const ImmunizationItem = ({
   demographicsInfos,
   patientId,
   setErrMsgPost,
+  editCounter,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   useEffect(() => {
@@ -56,13 +61,14 @@ const ImmunizationItem = ({
 
   const handleCancel = (e) => {
     e.preventDefault();
+    editCounter.current -= 1;
     setErrMsgPost("");
     setItemInfos(item);
     setEditVisible(false);
   };
 
   const handleEditClick = () => {
-    // editCounter.current += 1;
+    editCounter.current += 1;
     setErrMsgPost("");
     setEditVisible((v) => !v);
   };
@@ -268,7 +274,7 @@ const ImmunizationItem = ({
             item.Notes
           )}
         </td>
-        <SignCell item={item} staffInfos={clinic.staffInfos} />
+        <SignCell item={item} />
         <td>
           <div className="immunizations__item-btn-container">
             {!editVisible ? (

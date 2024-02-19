@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
+import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import RecImmunizationEdit from "./RecImmunizationEdit";
 import RecImmunizationForm from "./RecImmunizationForm";
@@ -13,6 +14,8 @@ const RecImmunizationItemSingle = ({
   rangeStart,
   rangeEnd,
   patientId,
+  loadingPatient,
+  errPatient,
 }) => {
   //HOOKS
   const [formVisible, setFormVisible] = useState(false);
@@ -46,7 +49,8 @@ const RecImmunizationItemSingle = ({
         name={type}
         checked={isChecked()}
       />
-      {immunizationInfos.Date ? (
+      {loadingPatient && <LoadingParagraph />}
+      {!loadingPatient && !errPatient && immunizationInfos.Date ? (
         <label
           style={{
             color:

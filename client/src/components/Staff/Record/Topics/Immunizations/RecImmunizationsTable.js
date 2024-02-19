@@ -2,7 +2,13 @@ import React from "react";
 import SplittedHeader from "../../../../All/UI/Tables/SplittedHeader";
 import RecImmunizationRow from "./RecImmunizationRow";
 
-const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
+const RecImmunizationsTable = ({
+  datas,
+  patientId,
+  patientDob,
+  loadingPatient,
+  errPatient,
+}) => {
   const H_STYLE = {
     minWidth: "100px",
     padding: "2px 5px",
@@ -59,11 +65,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="DTaP-IPV-Hib"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "DTaP-IPV-Hib"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -74,11 +82,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Pneu-C-7"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Pneu-C-7"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -89,11 +99,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="ROT"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "ROT"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -104,11 +116,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Men-C"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Men-C"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -119,11 +133,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="MMR"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "MMR"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -134,11 +150,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Var"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Var"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -151,11 +169,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="MMR-Var"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "MMR-Var"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -168,11 +188,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="TdapIPV"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "TdapIPV"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -183,11 +205,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="HB"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "HB"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -198,11 +222,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Men-C"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Men-C"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -213,11 +239,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="HPV"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "HPV"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -230,11 +258,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Tdap"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Tdap"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -245,11 +275,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Td"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Td"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -260,11 +292,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Zos"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Zos"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -277,11 +311,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Pneu-P-23"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Pneu-P-23"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -292,11 +328,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Tdap_pregnancy"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Tdap_pregnancy"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
         <tr>
@@ -307,11 +345,13 @@ const RecImmunizationsTable = ({ demographicsInfos, datas, patientId }) => {
           </th>
           <RecImmunizationRow
             type="Inf"
-            demographicsInfos={demographicsInfos}
+            patientDob={patientDob}
             immunizationInfos={datas.filter(
               ({ ImmunizationType }) => ImmunizationType === "Inf"
             )}
             patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
           />
         </tr>
       </tbody>

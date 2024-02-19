@@ -105,9 +105,9 @@ const RiskPU = ({
                     )
                   : !loading &&
                     !addVisible && (
-                      <EmptyRow colSpan="9" text="No risk factors" />
+                      <EmptyRow colSpan="10" text="No risk factors" />
                     )}
-                {loading && <LoadingRow colSpan="9" />}
+                {loading && <LoadingRow colSpan="10" />}
               </tbody>
             </table>
           </div>

@@ -133,6 +133,8 @@ const PatientTopic = ({
             <DemographicsPU
               demographicsInfos={demographicsInfos}
               setPopUpVisible={setPopUpVisible}
+              loadingPatient={loadingPatient}
+              errPatient={errPatient}
             />
           </FakeWindow>
         )}
@@ -595,32 +597,6 @@ const PatientTopic = ({
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
-            />
-          </FakeWindow>
-        )} */}
-        {/*******************/}
-        {/* IMMUNIZATIONS */}
-        {/* {topic === "IMMUNIZATIONS" && (
-          <ImmunizationsContent datas={datas} loading={loading} err={err} />
-        )}
-        {topic === "IMMUNIZATIONS" && popUpVisible && (
-          <FakeWindow
-            title={`IMMUNIZATIONS of ${patientName}`}
-            width={1400}
-            height={700}
-            x={(window.innerWidth - 1400) / 2}
-            y={(window.innerHeight - 700) / 2}
-            color={backgroundColor}
-            setPopUpVisible={setPopUpVisible}
-          >
-            <ImmunizationsPU
-              datas={datas}
-              setDatas={setDatas}
-              loading={loading}
-              err={err}
-              setPopUpVisible={setPopUpVisible}
-              demographicsInfos={demographicsInfos}
-              patientId={patientId}
             />
           </FakeWindow>
         )} */}

@@ -9,7 +9,6 @@ const RecImmunizationItemMultiple = ({
   type,
   route,
   immunizationInfos,
-  demographicsInfos,
   patientId,
 }) => {
   const [formVisible, setFormVisible] = useState(false);

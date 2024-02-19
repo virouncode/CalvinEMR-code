@@ -8,6 +8,9 @@ import {
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
@@ -20,9 +23,12 @@ const ImmunizationForm = ({
   patientId,
   setAddVisible,
   setErrMsgPost,
-  datas,
+  editCounter,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     recommended: false,
@@ -63,6 +69,7 @@ const ImmunizationForm = ({
         socket,
         "IMMUNIZATIONS"
       );
+      editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
@@ -86,6 +93,9 @@ const ImmunizationForm = ({
   };
 
   const handleCancel = (e) => {
+    e.preventDefault();
+    editCounter.current -= 1;
+    setErrMsgPost("");
     setAddVisible(false);
   };
 
@@ -184,7 +194,7 @@ const ImmunizationForm = ({
           autoComplete="off"
         />
       </td>
-      <td>{staffIdToTitleAndName(clinic.staffInfos, user.id, true)}</td>
+      <td>{staffIdToTitleAndName(staffInfos, user.id, true)}</td>
       <td>{toLocalDate(Date.now())}</td>
       <td style={{ textAlign: "center" }}>
         <div className="immunizations__form-btn-container">

@@ -1,22 +1,40 @@
-import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
-import ConfirmGlobal from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import React, { useRef, useState } from "react";
+import ConfirmGlobal, {
+  confirmAlert,
+} from "../../../All/Confirm/ConfirmGlobal";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import ImmunizationsCaption from "../Topics/Immunizations/ImmunizationsCaption";
 import ImmunizationsTable from "../Topics/Immunizations/ImmunizationsTable";
 import RecImmunizationsTable from "../Topics/Immunizations/RecImmunizationsTable";
 
 const ImmunizationsPU = ({
-  datas,
-  isLoading,
+  topicDatas,
+  loading,
   errMsg,
-  setPopUpVisible,
-  demographicsInfos,
   patientId,
+  setPopUpVisible,
+  patientDob,
+  loadingPatient,
+  errPatient,
 }) => {
+  //HOOKS
   const [errMsgPost, setErrMsgPost] = useState("");
-  const handleClose = () => {
-    setPopUpVisible(false);
+  const editCounter = useRef(0);
+
+  //HANDLERS
+
+  const handleClose = async (e) => {
+    if (
+      editCounter.current === 0 ||
+      (editCounter.current > 0 &&
+        (await confirmAlert({
+          content:
+            "Do you really want to close the window ? Your changes will be lost",
+        })))
+    ) {
+      setPopUpVisible(false);
+    }
   };
   const handleClickReference = () => {
     const docWindow = window.open(
@@ -37,62 +55,46 @@ const ImmunizationsPU = ({
         Patient immunizations <i className="fa-solid fa-syringe"></i>
         <button onClick={handleClose}>Close</button>
       </h1>
-      {isLoading ? (
-        <CircularProgressMedium />
-      ) : errMsg ? (
-        <p className="immunizations__err">{errMsg}</p>
-      ) : (
-        datas && (
-          <>
-            <h2 className="immunizations__subtitle">
-              Recommended{" "}
-              <span
-                style={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                  color: "blue",
-                  marginLeft: "10px",
-                  fontWeight: "normal",
-                }}
-                onClick={handleClickReference}
-              >
-                (Reference)
-              </span>
-            </h2>
-            <RecImmunizationsTable
-              demographicsInfos={demographicsInfos}
-              datas={datas.filter(({ recommended }) => recommended === true)}
-              patientId={patientId}
-            />
-            <ImmunizationsCaption />
-            <h2 className="immunizations__subtitle">Others</h2>
-            {errMsgPost && <p className="immunizations__err">{errMsgPost}</p>}
-            <ImmunizationsTable
-              demographicsInfos={demographicsInfos}
-              datas={datas.filter(({ recommended }) => recommended === false)}
-              setErrMsgPost={setErrMsgPost}
-              errMsgPost={errMsgPost}
-              patientId={patientId}
-            />
-          </>
-        )
+      {errMsg && <div className="immunizations__err">{errMsg}</div>}
+      {loading && <LoadingParagraph />}
+      {!errMsg && (
+        <>
+          <h2 className="immunizations__subtitle">
+            Recommended{" "}
+            <span
+              style={{
+                textDecoration: "underline",
+                cursor: "pointer",
+                color: "blue",
+                marginLeft: "10px",
+                fontWeight: "normal",
+              }}
+              onClick={handleClickReference}
+            >
+              (Reference)
+            </span>
+          </h2>
+          <RecImmunizationsTable
+            patientDob={patientDob}
+            datas={topicDatas.filter(({ recommended }) => recommended)}
+            patientId={patientId}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
+          />
+          <ImmunizationsCaption />
+          <h2 className="immunizations__subtitle">Others</h2>
+          {errMsgPost && <p className="immunizations__err">{errMsgPost}</p>}
+          <ImmunizationsTable
+            datas={topicDatas.filter(({ recommended }) => !recommended)}
+            setErrMsgPost={setErrMsgPost}
+            errMsgPost={errMsgPost}
+            patientId={patientId}
+            editCounter={editCounter}
+          />
+        </>
       )}
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </>
   );
 };

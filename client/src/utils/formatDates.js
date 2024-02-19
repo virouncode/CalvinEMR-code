@@ -5,7 +5,7 @@ export const toISOStringNoMs = (date) => {
 
 export const toLocalDate = (timestamp) => {
   //2022-03-14T14:40:00Z  =>  2022-03-14 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   const newDate = date.toISOString().slice(0, 10);
@@ -14,7 +14,7 @@ export const toLocalDate = (timestamp) => {
 
 export const toLocalDateAndTime = (timestamp, hour12 = true) => {
   //2022-03-14T14:40:00Z  =>  2022-03-14, 16:40 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
@@ -27,7 +27,7 @@ export const toLocalDateAndTime = (timestamp, hour12 = true) => {
 
 export const toLocalDateAndTimeWithSeconds = (timestamp, hour12 = true) => {
   //2022-03-14T14:40:00Z  =>  2022-03-14, 16:40:45 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   const newDate = date.toISOString().slice(0, 10);
@@ -40,7 +40,7 @@ export const toLocalDateAndTimeWithSeconds = (timestamp, hour12 = true) => {
 
 export const toLocalTime = (timestamp) => {
   //2022-03-14T14:40:00Z  =>  16:40 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset()); //milliseconds in local time zone
   const newTime = date.toISOString().slice(11, 16); //time in local time zone
@@ -49,7 +49,7 @@ export const toLocalTime = (timestamp) => {
 
 export const toLocalTimeWithSeconds = (timestamp) => {
   //2022-03-14T14:40:00Z  =>  16:40:25 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset()); //milliseconds in local time zone
   const newTime = date.toISOString().slice(11, 19); //time in local time zone
@@ -57,7 +57,7 @@ export const toLocalTimeWithSeconds = (timestamp) => {
 };
 
 export const toLocalHours = (timestamp, hour12 = true) => {
-  if (!timestamp) {
+  if (!timestamp || isNaN(timestamp)) {
     return "";
   }
   const date = new Date(timestamp);
@@ -76,19 +76,19 @@ export const toLocalHours = (timestamp, hour12 = true) => {
 };
 
 export const toLocalMinutes = (timestamp) => {
-  if (timestamp === "") return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const newTime = toLocalTime(timestamp);
   return newTime.slice(3, 5);
 };
 
 export const toLocalSeconds = (timestamp) => {
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const newTime = toLocalTimeWithSeconds(timestamp);
   return newTime.slice(6, 8);
 };
 
 export const toLocalAMPM = (timestamp) => {
-  if (!timestamp) return "";
+  if (!timestamp || isNaN(timestamp)) return "";
   const date = new Date(timestamp);
   let localHours = date.getHours();
   const AMPM = localHours < 12 ? "AM" : "PM";

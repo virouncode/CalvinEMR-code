@@ -17,7 +17,7 @@ import { personalHistorySchema } from "../../../../validation/personalHistoryVal
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import PersonalHistoryForm from "../Topics/PersonalHistory/PersonalHistoryForm";
 
@@ -181,7 +181,7 @@ const PersonalHistoryPU = ({
           </h1>
         </div>
         {loading ? (
-          <CircularProgressMedium />
+          <LoadingParagraph />
         ) : errMsg ? (
           <p className="personalhistory__err">{errMsg}</p>
         ) : formDatas ? (
@@ -190,7 +190,6 @@ const PersonalHistoryPU = ({
               {errMsgPost && (
                 <div className="personalhistory-form__err">{errMsgPost}</div>
               )}
-
               <p>
                 <label>Occupations: </label>
                 {editVisible ? (

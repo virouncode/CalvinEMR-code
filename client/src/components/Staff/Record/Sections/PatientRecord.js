@@ -51,6 +51,8 @@ const PatientRecord = ({
           demographicsInfos={demographicsInfos}
           patientId={parseInt(id)}
           allContentsVisible={allContentsVisible}
+          loadingPatient={loadingPatient}
+          errPatient={errPatient}
         />
       </div>
     </>
