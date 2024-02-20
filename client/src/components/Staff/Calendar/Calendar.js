@@ -9,6 +9,7 @@ import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailabilty from "../../../hooks/useAvailability";
 import useCalendarShortcuts from "../../../hooks/useCalendarShortcuts";
 import useEvents from "../../../hooks/useEvents";
+import useEventsSocket from "../../../hooks/useEventsSocket";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -17,7 +18,6 @@ import {
   toLocalDate,
   toLocalTimeWithSeconds,
 } from "../../../utils/formatDates";
-import { onMessageEvents } from "../../../utils/socketHandlers/onMessageEvents";
 import { toPatientName } from "../../../utils/toPatientName";
 import { toSiteName } from "../../../utils/toSiteName";
 import { toRoomTitle } from "../../../validation/toRoomTitle";
@@ -35,7 +35,6 @@ import ToggleView from "./ToggleView";
 
 //MY COMPONENT
 const Calendar = () => {
-  console.log("render");
   //================================ FUNCTIONS =====================================//
   const setCalendarSelectable = (selectable) => {
     fcRef.current.calendar.currentData.options.selectable = selectable;
@@ -45,7 +44,6 @@ const Calendar = () => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
-
   const [timelineVisible, setTimelineVisible] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [rangeStart, setRangeStart] = useState(new Date().setHours(0, 0, 0));
@@ -116,24 +114,7 @@ const Calendar = () => {
     setFormVisible,
     setCalendarSelectable
   );
-
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessageEvents(
-        message,
-        events,
-        setEvents,
-        staffInfos,
-        user.id,
-        user.title === "Secretary",
-        sites
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [events, setEvents, sites, socket, staffInfos, user.id, user.title]);
+  useEventsSocket(events, setEvents, sites);
 
   //=============================== EVENTS HANDLERS =================================//
   const handleShortcutpickrChange = (selectedDates, dateStr) => {

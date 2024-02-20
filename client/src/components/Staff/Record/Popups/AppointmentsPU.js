@@ -120,7 +120,7 @@ const AppointmentsPU = ({
                     )
                   : !loading &&
                     !addVisible && (
-                      <EmptyRow colSpan="12" text="No past health" />
+                      <EmptyRow colSpan="12" text="No appointments" />
                     )}
                 {loading && <LoadingRow colSpan="12" />}
               </tbody>

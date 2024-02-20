@@ -4,8 +4,6 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
   // On vire tout ce qui ne concerne pas directement un patient ou que un patient
   if (
     topic === "DEMOGRAPHICS" //because there is already a socket on the patientRecord component
-    // ||
-    // topic === "APPOINTMENTS" ||
     // topic === "MESSAGES ABOUT PATIENT" ||
     // topic === "MESSAGES WITH PATIENT"
   )
@@ -29,14 +27,29 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
       default:
         break;
     }
-  } else if (topic === "FAMILY DOCTORS/SPECIALISTS" || topic === "PHARMACIES") {
-    console.log(topic);
-    //we don't care about the patientId because the doctors/pharmacies database are used for everyone
+  } else if (topic === "PREFERRED PHARMACY") {
     switch (message.action) {
-      case "create":
+      case "update":
+        if (datas.id === message.content.id) {
+          //la pharmacie en question est la pref du patient
+          setDatas(message.content.data);
+        }
+        break;
+      case "refresh":
+        if (message.patientId === patientId) {
+          //le message concerne le patient actuel
+          setDatas(message.content.data);
+        }
+        break;
+      default:
+        break;
+    }
+  } else if (topic === "FAMILY DOCTORS/SPECIALISTS" || topic === "PHARMACIES") {
+    switch (message.action) {
+      case "create": //we don't check because the doctors/pharmacies database are used for everyone
         setDatas([message.content.data, ...datas]);
         break;
-      case "update":
+      case "update": //we don't check because the doctors/pharmacies database are used for everyone
         setDatas(
           datas.map((item) =>
             item.id === message.content.id ? message.content.data : item
@@ -46,15 +59,62 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
       default:
         break;
     }
-  } else if (topic === "PREFERRED PHARMACY") {
+  } else if (message.route === "APPOINTMENTS") {
+    //we talk about the patient's appointments, don't think about the calendar because it is connected to useEventsSocket
+    console.log(message);
     switch (message.action) {
-      case "update":
-        if (datas.id !== message.content.id) break; //la pharmacie en question n'est pas la pref du patient
-        setDatas(message.content.data); //c'est la pref du patient: on change les infos de la pharmacie
+      case "create":
+        if (
+          message.content.data.patients_guests_ids.find(
+            ({ patient_infos }) => patient_infos.patient_id === patientId
+          )
+        ) {
+          //the new appointment contains the current patient
+          setDatas([...datas, message.content.data]);
+        }
         break;
-      case "refresh":
-        if (message.patientId !== patientId) return; //ca ne doit concerner que le patient actuel
-        setDatas(message.content.data);
+      case "update":
+        if (
+          message.content.data.patients_guests_ids.find(
+            ({ patient_infos }) => patient_infos.patient_id === patientId
+          )
+        ) {
+          //the appointment to update contains the current patient
+          if (
+            datas.find(
+              ({ id }) => parseInt(id) === parseInt(message.content.id)
+            ) //the patient's appointmts already contains the appointment
+          ) {
+            setDatas(
+              datas.map((item) =>
+                item.id === message.content.id ? message.content.data : item
+              )
+            );
+          } else {
+            //the patient was added to an exiting appointment
+            setDatas([message.content.data, ...datas]);
+          }
+        } else {
+          //the appointment to update doesn't contains the patientId
+          if (
+            datas.find(
+              ({ id }) => parseInt(id) === parseInt(message.content.id)
+            ) //the patient's appointmts already contains the appointment => the patient was removed from this appointment => delete the appointment
+          ) {
+            setDatas(
+              datas.filter(
+                ({ id }) => parseInt(id) !== parseInt(message.content.id)
+              )
+            );
+          }
+        }
+        break;
+      case "delete": //delete the appointment for all guests
+        setDatas(
+          datas.filter(
+            ({ id }) => parseInt(id) !== parseInt(message.content.id)
+          )
+        );
         break;
       default:
         break;
@@ -134,105 +194,3 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
 // //     default:
 // //       break;
 // //   }
-// if (message.route !== topic || message.patient_id !== patientId) {
-//   //si ça ne concerne pas le topic ou le patient
-//   return;
-// }
-
-// if (message.route === "APPOINTMENTS") {
-//   switch (message.action) {
-//     case "create":
-//       if (!message.content.data.patients_guests_ids.includes(patientId)) {
-//         break;
-//       }
-//       setDatas([...datas, message.content.data]);
-//       break;
-//     case "update":
-//       if (!message.content.data.patients_guests_ids.includes(patientId)) {
-//         if (
-//           datas.find(({ id }) => parseInt(id) === parseInt(message.content.id))
-//         ) {
-//           setDatas(
-//             datas.filter(
-//               ({ id }) => parseInt(id) !== parseInt(message.content.id)
-//             )
-//           );
-//           break;
-//         } else {
-//           break;
-//         }
-//       } else if (
-//         datas.find(({ id }) => parseInt(id) === parseInt(message.content.id))
-//       ) {
-//         setDatas(
-//           datas.map((item) =>
-//             item.id === message.content.id ? message.content.data : item
-//           )
-//         );
-//         break;
-//       } else {
-//         setDatas([...datas, message.content.data]);
-//         break;
-//       }
-//     case "delete":
-//       setDatas(
-//         datas.filter(({ id }) => parseInt(id) !== parseInt(message.content.id))
-//       );
-//       break;
-//     default:
-//       break;
-//   }
-// } else if (
-//   message.route === "FAMILY DOCTORS/SPECIALISTS" ||
-//   message.route === "PHARMACIES"
-// ) {
-//   switch (message.action) {
-//     case "create":
-//       setDatas([message.content.data, ...datas]);
-//       break;
-//     case "update":
-//       setDatas(
-//         datas.map((item) =>
-//           item.id === message.content.id ? message.content.data : item
-//         )
-//       );
-//       break;
-//     case "delete":
-//       setDatas(datas.filter((item) => item.id !== message.content.id));
-//       break;
-//     case "refresh":
-//       setDatas([...datas]);
-//       break;
-//     default:
-//       break;
-//   }
-// } else if (message.route === "PATIENT DOCTORS") {
-//   switch (message.action) {
-//     case "create":
-//       if (!message.content.data.patients.includes(patientId)) {
-//         break;
-//       }
-//       setDatas([message.content.data, ...datas]);
-//       break;
-//     case "update":
-//       if (!message.content.data.patients.includes(patientId)) {
-//         break;
-//       }
-//       setDatas(
-//         datas.map((item) =>
-//           item.id === message.content.id ? message.content.data : item
-//         )
-//       );
-//       break;
-//     case "delete":
-//       if (message.content.patient_id !== patientId) break;
-//       setDatas(datas.filter((item) => item.id !== message.content.id));
-//       break;
-//     case "refresh":
-//       setDatas([...datas]);
-//       break;
-//     default:
-//       break;
-//   }
-// } else {
-// }

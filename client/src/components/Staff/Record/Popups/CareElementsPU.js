@@ -191,11 +191,11 @@ const CareElementsPU = ({
           Weight: { Weight: value, WeightUnit: "kg", Date: Date.now() },
           WeightLbs: kgToLbs(value),
           bodyMassIndex: {
-            BMI: bodyMassIndex(formDatas.Height.Height, value),
+            BMI: bodyMassIndex(formDatas.Height?.Height, value),
             Date: Date.now(),
           },
           bodySurfaceArea: {
-            BSA: bodySurfaceArea(formDatas.Height.Height, value),
+            BSA: bodySurfaceArea(formDatas.Height?.Height, value),
             Date: Date.now(),
           },
         });
@@ -210,11 +210,11 @@ const CareElementsPU = ({
           },
           WeightLbs: value,
           bodyMassIndex: {
-            BMI: bodyMassIndex(formDatas.Height.Height, lbsToKg(value)),
+            BMI: bodyMassIndex(formDatas.Height?.Height, lbsToKg(value)),
             Date: Date.now(),
           },
           bodySurfaceArea: {
-            BSA: bodySurfaceArea(formDatas.Height.Height, lbsToKg(value)),
+            BSA: bodySurfaceArea(formDatas.Height?.Height, lbsToKg(value)),
             Date: Date.now(),
           },
         });
@@ -225,11 +225,11 @@ const CareElementsPU = ({
           Height: { Height: value, HeightUnit: "cm", Date: Date.now() },
           HeightFeet: cmToFeet(value),
           bodyMassIndex: {
-            BMI: bodyMassIndex(value, formDatas.Weight.Weight),
+            BMI: bodyMassIndex(value, formDatas.Weight?.Weight),
             Date: Date.now(),
           },
           bodySurfaceArea: {
-            BSA: bodySurfaceArea(value, formDatas.Weight.Weight),
+            BSA: bodySurfaceArea(value, formDatas.Weight?.Weight),
             Date: Date.now(),
           },
         });
@@ -244,11 +244,11 @@ const CareElementsPU = ({
           },
           HeightFeet: value,
           bodyMassIndex: {
-            BMI: bodyMassIndex(feetToCm(value), formDatas.Weight.Weight),
+            BMI: bodyMassIndex(feetToCm(value), formDatas.Weight?.Weight),
             Date: Date.now(),
           },
           bodySurfaceArea: {
-            BSA: bodySurfaceArea(feetToCm(value), formDatas.Weight.Weight),
+            BSA: bodySurfaceArea(feetToCm(value), formDatas.Weight?.Weight),
             Date: Date.now(),
           },
         });
@@ -534,7 +534,7 @@ const CareElementsPU = ({
                       list={ynIndicatorsimpleCT}
                       name="SmokingStatus"
                       handleChange={handleChange}
-                      value={formDatas.SmokingStatus?.Status}
+                      value={formDatas.SmokingStatus?.Status || ""}
                     />
                   ) : (
                     <div>
@@ -563,7 +563,7 @@ const CareElementsPU = ({
                       type="text"
                       name="SmokingPacks"
                       onChange={handleChange}
-                      value={formDatas.SmokingPacks?.PerDay}
+                      value={formDatas.SmokingPacks?.PerDay || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -590,7 +590,7 @@ const CareElementsPU = ({
                       type="text"
                       name="Weight"
                       onChange={handleChange}
-                      value={formDatas.Weight?.Weight}
+                      value={formDatas.Weight?.Weight || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -614,7 +614,7 @@ const CareElementsPU = ({
                       type="text"
                       name="WeightLbs"
                       onChange={handleChange}
-                      value={formDatas.WeightLbs}
+                      value={formDatas.WeightLbs || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -639,7 +639,7 @@ const CareElementsPU = ({
                       type="text"
                       name="Height"
                       onChange={handleChange}
-                      value={formDatas.Height?.Height}
+                      value={formDatas.Height?.Height || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -664,7 +664,7 @@ const CareElementsPU = ({
                       type="text"
                       name="HeightFeet"
                       onChange={handleChange}
-                      value={formDatas.HeightFeet}
+                      value={formDatas.HeightFeet || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -688,7 +688,7 @@ const CareElementsPU = ({
                       type="text"
                       name="bodyMassIndex"
                       readOnly
-                      value={formDatas.bodyMassIndex?.BMI}
+                      value={formDatas.bodyMassIndex?.BMI || ""}
                       autoComplete="off"
                     />
                   ) : (
@@ -721,7 +721,7 @@ const CareElementsPU = ({
                   ) : (
                     <div>
                       <span className="care-elements__value">
-                        {formDatas.bodySurfaceArea?.BSA}
+                        {formDatas.bodySurfaceArea?.BSA || ""}
                       </span>
                       <span className="care-elements__history">
                         <i
@@ -740,7 +740,9 @@ const CareElementsPU = ({
                     <input
                       type="text"
                       name="WaistCircumference"
-                      value={formDatas.WaistCircumference?.WaistCircumference}
+                      value={
+                        formDatas.WaistCircumference?.WaistCircumference || ""
+                      }
                       onChange={handleChange}
                       autoComplete="off"
                     />
@@ -768,7 +770,7 @@ const CareElementsPU = ({
                       type="text"
                       name="SystolicBP"
                       autoComplete="off"
-                      value={formDatas.BloodPressure?.SystolicBP}
+                      value={formDatas.BloodPressure?.SystolicBP || ""}
                       onChange={handleChange}
                     />
                   ) : (
@@ -794,7 +796,7 @@ const CareElementsPU = ({
                     <input
                       type="text"
                       name="DiastolicBP"
-                      value={formDatas.BloodPressure?.DiastolicBP}
+                      value={formDatas.BloodPressure?.DiastolicBP || ""}
                       autoComplete="off"
                       onChange={handleChange}
                     />

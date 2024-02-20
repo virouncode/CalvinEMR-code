@@ -2,12 +2,25 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { personalHistorySchema } from "../../../../../validation/personalHistoryValidation";
 
 const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
-  const { user, auth, socket } = useAuthContext();
-  const [formDatas, setFormDatas] = useState({});
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const [formDatas, setFormDatas] = useState({
+    occupations: "",
+    income: "",
+    religion: "",
+    sexual_orientation: "",
+    special_diet: "",
+    smoking: "",
+    alcohol: "",
+    recreational_drugs: "",
+  });
   const [errMsgPost, setErrMsgPost] = useState("");
 
   const handleChange = (e) => {
@@ -22,65 +35,66 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDatasForValidation = { ...formDatas };
     //Validation
-    if (
-      !Object.values(formDatasForValidation).some((v) => v) ||
-      !formDatasForValidation
-    ) {
+    if (!Object.values(formDatas).some((v) => v) || !formDatas) {
       setErrMsgPost("Please fill at least one field");
       return;
     }
     try {
-      await personalHistorySchema.validate(formDatasForValidation);
+      await personalHistorySchema.validate(formDatas);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
     }
+    //Formatting
     const datasToPost = {
       patient_id: patientId,
       ResidualInfo: {
         DataElement: [
-          {
+          formDatas.occupations && {
             Name: "Occupations",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Occupations),
+            Content: firstLetterOfFirstWordUpper(formDatas.occupations),
           },
-          { Name: "Income", DataType: "text", Content: formDatas.Income },
-          {
+          formDatas.income && {
+            Name: "Income",
+            DataType: "text",
+            Content: formDatas.income,
+          },
+          formDatas.religion && {
             Name: "Religion",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Religion),
+            Content: firstLetterOfFirstWordUpper(formDatas.religion),
           },
-          {
+          formDatas.sexual_orientation && {
             Name: "SexualOrientation",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.SexualOrientation),
+            Content: firstLetterOfFirstWordUpper(formDatas.sexual_orientation),
           },
-          {
+          formDatas.special_diet && {
             Name: "SpecialDiet",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.SpecialDiet),
+            Content: firstLetterOfFirstWordUpper(formDatas.special_diet),
           },
-          {
+          formDatas.smoking && {
             Name: "Smoking",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Smoking),
+            Content: firstLetterOfFirstWordUpper(formDatas.smoking),
           },
-          {
+          formDatas.alcohol && {
             Name: "Alcohol",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Alcohol),
+            Content: firstLetterOfFirstWordUpper(formDatas.alcohol),
           },
-          {
+          formDatas.recreational_drugs && {
             Name: "RecreationalDrugs",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.RecreationalDrugs),
+            Content: firstLetterOfFirstWordUpper(formDatas.recreational_drugs),
           },
-        ],
+        ].filter((element) => element),
       },
     };
-
+    //Submission
     try {
       await postPatientRecord(
         "/personal_history",
@@ -90,14 +104,14 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         socket,
         "PERSONAL HISTORY"
       );
-
       toast.success("Saved successfully", { containerId: "A" });
+      // setPopUpVisible(false);
     } catch (err) {
       toast.error(`Error unable to save social history: ${err.message}`, {
         containerId: "B",
       });
+      return;
     }
-    setPopUpVisible(false);
   };
   return (
     <form className="personalhistory-form">
@@ -108,8 +122,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Occupations: </label>
         <input
           type="text"
-          value={formDatas.Occupations}
-          name="Occupations"
+          value={formDatas.occupations}
+          name="occupations"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -118,8 +132,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Income: </label>
         <input
           type="text"
-          value={formDatas.Income}
-          name="Income"
+          value={formDatas.income}
+          name="income"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -129,8 +143,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Religion: </label>
         <input
           type="text"
-          value={formDatas.Religion}
-          name="Religion"
+          value={formDatas.religion}
+          name="religion"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -139,8 +153,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Sexual orientation: </label>
         <input
           type="text"
-          value={formDatas.SexualOrientation}
-          name="SexualOrientation"
+          value={formDatas.sexual_orientation}
+          name="sexual_orientation"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -149,8 +163,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Special diet: </label>
         <input
           type="text"
-          value={formDatas.SpecialDiet}
-          name="SpecialDiet"
+          value={formDatas.special_diet}
+          name="special_diet"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -159,8 +173,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Smoking: </label>
         <input
           type="text"
-          value={formDatas.Smoking}
-          name="Smoking"
+          value={formDatas.smoking}
+          name="smoking"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -169,8 +183,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Alcohol: </label>
         <input
           type="text"
-          value={formDatas.Alcohol}
-          name="Alcohol"
+          value={formDatas.alcohol}
+          name="alcohol"
           onChange={handleChange}
           autoComplete="off"
         />
@@ -179,8 +193,8 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         <label>Recreational drugs: </label>
         <input
           type="text"
-          value={formDatas.RecreationalDrugs}
-          name="RecreationalDrugs"
+          value={formDatas.recreational_drugs}
+          name="recreational_drugs"
           onChange={handleChange}
           autoComplete="off"
         />

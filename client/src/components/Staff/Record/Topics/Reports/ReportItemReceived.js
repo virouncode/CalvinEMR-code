@@ -94,7 +94,6 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
 
   return (
     <tr className="reports__item" ref={lastItemReceivedRef}>
-      {console.log("item", item)}
       <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>

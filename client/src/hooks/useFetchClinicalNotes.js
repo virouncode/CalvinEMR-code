@@ -13,16 +13,13 @@ const useFetchClinicalNotes = (paging, patientId) => {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    console.log("useEffect because of order");
     setClinicalNotes([]);
   }, [order]);
 
   useEffect(() => {
-    console.log("useEffect because of the rest");
     const abortController = new AbortController();
     const fetchClinicalNotes = async () => {
       try {
-        console.log("order", order);
         setLoading(true);
         setErrMsg("");
         const response = await axiosXanoStaff.get(

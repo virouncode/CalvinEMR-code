@@ -31,7 +31,22 @@ const FamilyDoctorListItem = ({
   const [postalOrZip, setPostalOrZip] = useState("postal");
 
   useEffect(() => {
-    setItemInfos(item);
+    setItemInfos({
+      firstName: item.FirstName || "",
+      lastName: item.LastName || "",
+      line1: item.Address?.Structured?.Line1 || "",
+      city: item.Address?.Structured?.City || "",
+      province: item.Address?.Structured?.CountrySubDivisionCode || "",
+      postalCode: item.Address?.Structured?.PostalZipCode?.PostalCode || "",
+      zipCode: item.Address?.Structured?.PostalZipCode?.ZipCode || "",
+      phone: item.PhoneNumber?.[0]?.phoneNumber || "",
+      fax: item.FaxNumber?.phoneNumber || "",
+      email: item.EmailAddress || "",
+      speciality: item.speciality || "",
+      licence_nbr: item.licence_nbr,
+      ohip_billing_nbr: item.ohip_billing_nbr,
+      patients: item.patients,
+    });
   }, [item]);
 
   //HANDLERS
@@ -39,82 +54,16 @@ const FamilyDoctorListItem = ({
     setErrMsgPost("");
     const name = e.target.name;
     const value = e.target.value;
-    switch (name) {
-      case "Address":
-        setItemInfos({
-          ...itemInfos,
-          Address: {
-            ...itemInfos.Address,
-            Structured: { ...itemInfos.Address.Structured, Line1: value },
-          },
-        });
-        break;
-      case "City":
-        setItemInfos({
-          ...itemInfos,
-          Address: {
-            ...itemInfos.Address,
-            Structured: {
-              ...itemInfos.Address.Structured,
-              City: value,
-            },
-          },
-        });
-        break;
-      case "Province":
-        setItemInfos({
-          ...itemInfos,
-          Address: {
-            ...itemInfos.Address,
-            Structured: {
-              ...itemInfos.Address.Structured,
-              CountrySubDivisionCode: value,
-            },
-          },
-        });
-        break;
-      case "PostalCode":
-        setItemInfos({
-          ...itemInfos,
-          Address: {
-            ...itemInfos.Address,
-            Structured: {
-              ...itemInfos.Address?.Structured,
-              PostalZipCode:
-                postalOrZip === "postal"
-                  ? { PostalCode: value, ZipCode: "" }
-                  : { PostalCode: "", ZipCode: value },
-            },
-          },
-        });
-        break;
-      case "PhoneNumber":
-        setItemInfos({
-          ...itemInfos,
-          PhoneNumber: itemInfos.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "W"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "FaxNumber":
-        setItemInfos({
-          ...itemInfos,
-          FaxNumber: {
-            ...itemInfos.FaxNumber,
-            phoneNumber: value,
-          },
-        });
-        break;
-
-      default:
-        setItemInfos({ ...itemInfos, [name]: value });
-        break;
+    if (name === "postalZipCode") {
+      if (postalOrZip === "postal") {
+        setItemInfos({ ...itemInfos, postalCode: value, zipCode: "" });
+        return;
+      } else {
+        setItemInfos({ ...itemInfos, postalCode: "", zipCode: value });
+        return;
+      }
     }
+    setItemInfos({ ...itemInfos, [name]: value });
   };
 
   const handleChangePostalOrZip = (e) => {
@@ -122,48 +71,59 @@ const FamilyDoctorListItem = ({
     setPostalOrZip(e.target.value);
     setItemInfos({
       ...itemInfos,
-      Address: {
-        ...itemInfos.Address,
-        Structured: {
-          ...itemInfos.Address.Structured,
-          PostalZipCode: {
-            PostalCode: "",
-            ZipCode: "",
-          },
-        },
-      },
+      postalCode: "",
+      zipCode: "",
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //Formatting
-    const datasToPut = {
-      ...itemInfos,
-    };
-
-    datasToPut.FirstName = firstLetterUpper(datasToPut.FirstName);
-    datasToPut.LastName = firstLetterUpper(datasToPut.LastName);
-    datasToPut.Address.Structured.Line1 = firstLetterUpper(
-      datasToPut.Address.Structured.Line1
-    );
-    datasToPut.Address.Structured.City = firstLetterUpper(
-      datasToPut.Address.Structured.City
-    );
-    datasToPut.EmailAddress = datasToPut.EmailAddress.toLowerCase();
-    datasToPut.speciality = firstLetterUpper(datasToPut.speciality);
 
     //Validation
     try {
-      await doctorSchema.validate(datasToPut);
+      await doctorSchema.validate(itemInfos);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
     }
 
+    //Formatting
+    const datasToPut = {
+      ...item,
+      FirstName: firstLetterUpper(itemInfos.firstName),
+      lastName: firstLetterUpper(itemInfos.lastName),
+      Address: {
+        _addressType: "M",
+        Structured: {
+          Line1: firstLetterUpper(itemInfos.line1),
+          City: firstLetterUpper(itemInfos.city),
+          CountrySubDivisionCode: itemInfos.province,
+          PostalZipCode: {
+            PostalCode: itemInfos.postalCode,
+            ZipCode: itemInfos.zipCode,
+          },
+        },
+      },
+      PhoneNumber: [
+        {
+          _phoneNumberType: "W",
+          phoneNumber: itemInfos.phone,
+        },
+      ],
+      FaxNumber: {
+        _phoneNumberType: "W",
+        phoneNumber: itemInfos.fax,
+      },
+      EmailAddress: itemInfos.email.toLowerCase(),
+      speciality: firstLetterUpper(itemInfos.speciality),
+      licence_nbr: itemInfos.licence_nbr,
+      ohip_billing_nbr: itemInfos.ohip_billing_nbr,
+      patients: [],
+    };
+
     if (
       await confirmAlert({
-        content: `You're about to update Dr. ${itemInfos.FirstName} ${itemInfos.LastName} infos, proceed ?`,
+        content: `You're about to update Dr. ${itemInfos.firstName} ${itemInfos.lastName} infos, proceed ?`,
       })
     ) {
       try {
@@ -243,7 +203,22 @@ const FamilyDoctorListItem = ({
     editCounter.current -= 1;
     setErrMsgPost("");
     setEditVisible(false);
-    setItemInfos(item);
+    setItemInfos({
+      firstName: item.FirstName || "",
+      lastName: item.LastName || "",
+      line1: item.Address?.Structured?.Line1 || "",
+      city: item.Address?.Structured?.City || "",
+      province: item.Address?.Structured?.CountrySubDivisionCode || "",
+      postalCode: item.Address?.Structured?.PostalZipCode?.PostalCode || "",
+      zipCode: item.Address?.Structured?.PostalZipCode?.ZipCode || "",
+      phone: item.PhoneNumber?.[0]?.phoneNumber || "",
+      fax: item.FaxNumber?.phoneNumber || "",
+      email: item.EmailAddress || "",
+      speciality: item.speciality || "",
+      licence_nbr: item.licence_nbr,
+      ohip_billing_nbr: item.ohip_billing_nbr,
+      patients: item.patients,
+    });
   };
 
   return (
@@ -256,27 +231,27 @@ const FamilyDoctorListItem = ({
         <td>
           {editVisible ? (
             <input
-              name="LastName"
+              name="lastName"
               type="text"
-              value={itemInfos.LastName}
+              value={itemInfos.lastName}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.LastName
+            itemInfos.lastName
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              name="FirstName"
+              name="firstName"
               type="text"
-              value={itemInfos.FirstName}
+              value={itemInfos.firstName}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.FirstName
+            itemInfos.firstName
           )}
         </td>
         <td>
@@ -289,7 +264,7 @@ const FamilyDoctorListItem = ({
               autoComplete="off"
             />
           ) : (
-            item.speciality
+            itemInfos.speciality
           )}
         </td>
         <td>
@@ -302,7 +277,7 @@ const FamilyDoctorListItem = ({
               autoComplete="off"
             />
           ) : (
-            item.licence_nbr
+            itemInfos.licence_nbr
           )}
         </td>
         <td>
@@ -321,43 +296,40 @@ const FamilyDoctorListItem = ({
         <td>
           {editVisible ? (
             <input
-              name="Address"
+              name="line1"
               type="text"
-              value={itemInfos.Address.Structured.Line1}
+              value={itemInfos.line1}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.Address.Structured.Line1
+            itemInfos.line1
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              name="City"
+              name="city"
               type="text"
-              value={itemInfos.Address.Structured.City}
+              value={itemInfos.city}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.Address.Structured.City
+            itemInfos.city
           )}
         </td>
         <td>
           {editVisible ? (
             <GenericList
               list={provinceStateTerritoryCT}
-              value={itemInfos.Address.Structured.CountrySubDivisionCode}
-              name="Province"
+              value={itemInfos.province}
+              name="province"
               handleChange={handleChange}
               noneOption={false}
             />
           ) : (
-            toCodeTableName(
-              provinceStateTerritoryCT,
-              item.Address.Structured.CountrySubDivisionCode
-            )
+            toCodeTableName(provinceStateTerritoryCT, itemInfos.province)
           )}
         </td>
         <td className="td--postal">
@@ -374,59 +346,60 @@ const FamilyDoctorListItem = ({
                 <option value="zip">Zip</option>
               </select>
               <input
-                name="PostalCode"
+                name="postalZipCode"
                 type="text"
                 value={
                   postalOrZip === "postal"
-                    ? itemInfos.Address.Structured.PostalZipCode.PostalCode
-                    : itemInfos.Address.Structured.PostalZipCode.ZipCode
+                    ? itemInfos.postalCode
+                    : itemInfos.zipCode
                 }
                 onChange={handleChange}
                 autoComplete="off"
               />
             </>
+          ) : postalOrZip === "postal" ? (
+            itemInfos.postalCode
           ) : (
-            item.Address.Structured.PostalZipCode.PostalCode ||
-            item.Address.Structured.PostalZipCode.ZipCode
+            itemInfos.zipCode
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              name="PhoneNumber"
+              name="phone"
               type="text"
-              value={itemInfos.PhoneNumber[0].phoneNumber}
+              value={itemInfos.phone}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.PhoneNumber[0].phoneNumber
+            itemInfos.phone
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              name="FaxNumber"
+              name="fax"
               type="text"
-              value={itemInfos.FaxNumber.phoneNumber}
+              value={itemInfos.fax}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.FaxNumber.phoneNumber
+            itemInfos.fax
           )}
         </td>
         <td>
           {editVisible ? (
             <input
-              name="EmailAddress"
+              name="email"
               type="email"
-              value={itemInfos.EmailAddress}
+              value={itemInfos.email}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            item.EmailAddress
+            itemInfos.email
           )}
         </td>
         <SignCell item={item} />

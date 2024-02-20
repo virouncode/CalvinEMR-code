@@ -24,159 +24,119 @@ const FamilyDoctorForm = ({
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
+  // const [formDatas, setFormDatas] = useState({
+  //   FirstName: "",
+  //   LastName: "",
+  //   Address: {
+  //     Structured: {
+  //       Line1: "",
+  //       City: "",
+  //       CountrySubDivisionCode: "",
+  //       PostalZipCode: { PostalCode: "", ZipCode: "" },
+  //     },
+  //     _addressType: "M",
+  //   },
+  //   PhoneNumber: [
+  //     {
+  //       _phoneNumberType: "W",
+  //       phoneNumber: "",
+  //     },
+  //   ],
+  //   FaxNumber: {
+  //     _phoneNumberType: "W",
+  //     phoneNumber: "",
+  //   },
+  //   EmailAddress: "",
+  //   speciality: "",
+  //   licence_nbr: "",
+  //   ohip_billing_nbr: "",
+  //   patients: [],
+  // });
+
+  //HANDLERS
+
   const [formDatas, setFormDatas] = useState({
-    FirstName: "",
-    LastName: "",
-    Address: {
-      Structured: {
-        Line1: "",
-        City: "",
-        CountrySubDivisionCode: "",
-        PostalZipCode: { PostalCode: "", ZipCode: "" },
-      },
-      _addressType: "M",
-    },
-    PhoneNumber: [
-      {
-        _phoneNumberType: "W",
-        phoneNumber: "",
-      },
-    ],
-    FaxNumber: {
-      _phoneNumberType: "W",
-      phoneNumber: "",
-    },
-    EmailAddress: "",
+    firstName: "",
+    lastName: "",
+    line1: "",
+    city: "",
+    province: "",
+    postalCode: "",
+    zipCode: "",
+    phone: "",
+    fax: "",
+    email: "",
     speciality: "",
     licence_nbr: "",
     ohip_billing_nbr: "",
     patients: [],
   });
-
-  //HANDLERS
   const handleChange = (e) => {
     setErrMsgPost("");
     const name = e.target.name;
     const value = e.target.value;
-    switch (name) {
-      case "Address":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: { ...formDatas.Address.Structured, Line1: value },
-          },
-        });
-        break;
-      case "City":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address.Structured,
-              City: value,
-            },
-          },
-        });
-        break;
-      case "Province":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address.Structured,
-              CountrySubDivisionCode: value,
-            },
-          },
-        });
-        break;
-      case "PostalCode":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address?.Structured,
-              PostalZipCode:
-                postalOrZip === "postal"
-                  ? { PostalCode: value, ZipCode: "" }
-                  : { PostalCode: "", ZipCode: value },
-            },
-          },
-        });
-        break;
-      case "PhoneNumber":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "W"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "FaxNumber":
-        setFormDatas({
-          ...formDatas,
-          FaxNumber: {
-            ...formDatas.FaxNumber,
-            phoneNumber: value,
-          },
-        });
-        break;
-      default:
-        setFormDatas({ ...formDatas, [name]: value });
-        break;
+    if (name === "postalZipCode") {
+      if (postalOrZip === "postal") {
+        setFormDatas({ ...formDatas, postalCode: value, zipCode: "" });
+        return;
+      } else {
+        setFormDatas({ ...formDatas, postalCode: "", zipCode: value });
+        return;
+      }
     }
+    setFormDatas({ ...formDatas, [name]: value });
   };
   const handleChangePostalOrZip = (e) => {
     setErrMsgPost("");
     setPostalOrZip(e.target.value);
     setFormDatas({
       ...formDatas,
-      Address: {
-        ...formDatas.Address,
-        Structured: {
-          ...formDatas.Address.Structured,
-          PostalZipCode: {
-            PostalCode: "",
-            ZipCode: "",
-          },
-        },
-      },
+      postalCode: "",
+      zipCode: "",
     });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //Formatting
-    const datasToPost = {
-      ...formDatas,
-    };
-
-    datasToPost.FirstName = firstLetterUpper(datasToPost.FirstName);
-    datasToPost.LastName = firstLetterUpper(datasToPost.LastName);
-    datasToPost.Address.Structured.Line1 = firstLetterUpper(
-      datasToPost.Address.Structured.Line1
-    );
-    datasToPost.Address.Structured.City = firstLetterUpper(
-      datasToPost.Address.Structured.City
-    );
-    datasToPost.EmailAddress = datasToPost.EmailAddress.toLowerCase();
-    datasToPost.speciality = firstLetterUpper(datasToPost.speciality);
 
     //Validation
     try {
-      await doctorSchema.validate(datasToPost);
+      await doctorSchema.validate(formDatas);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
     }
-
+    //Formatting
+    const datasToPost = {
+      FirstName: firstLetterUpper(formDatas.firstName),
+      LastName: firstLetterUpper(formDatas.lastName),
+      Address: {
+        _addressType: "M",
+        Structured: {
+          Line1: firstLetterUpper(formDatas.line1),
+          City: firstLetterUpper(formDatas.city),
+          CountrySubDivisionCode: formDatas.province,
+          PostalZipCode: {
+            PostalCode: formDatas.postalCode,
+            ZipCode: formDatas.zipCode,
+          },
+        },
+      },
+      PhoneNumber: [
+        {
+          _phoneNumberType: "W",
+          phoneNumber: formDatas.phone,
+        },
+      ],
+      FaxNumber: {
+        _phoneNumberType: "W",
+        phoneNumber: formDatas.fax,
+      },
+      EmailAddress: formDatas.email.toLowerCase(),
+      speciality: firstLetterUpper(formDatas.speciality),
+      licence_nbr: formDatas.licence_nbr,
+      ohip_billing_nbr: formDatas.ohip_billing_nbr,
+      patients: [],
+    };
     //Submission
     try {
       await postPatientRecord(
@@ -211,18 +171,18 @@ const FamilyDoctorForm = ({
     >
       <td>
         <input
-          name="LastName"
+          name="lastName"
           type="text"
-          value={formDatas.LastName}
+          value={formDatas.lastName}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="FirstName"
+          name="firstName"
           type="text"
-          value={formDatas.FirstName}
+          value={formDatas.firstName}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -256,18 +216,18 @@ const FamilyDoctorForm = ({
       </td>
       <td>
         <input
-          name="Address"
+          name="line1"
           type="text"
-          value={formDatas.Address.Structured.Line1}
+          value={formDatas.line1}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="City"
+          name="city"
           type="text"
-          value={formDatas.Address.Structured.City}
+          value={formDatas.city}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -275,8 +235,8 @@ const FamilyDoctorForm = ({
       <td>
         <GenericList
           list={provinceStateTerritoryCT}
-          value={formDatas.Address.Structured.CountrySubDivisionCode}
-          name="Province"
+          value={formDatas.province}
+          name="province"
           handleChange={handleChange}
           noneOption={false}
         />
@@ -293,12 +253,10 @@ const FamilyDoctorForm = ({
           <option value="zip">Zip</option>
         </select>
         <input
-          name="PostalCode"
+          name="postalZipCode"
           type="text"
           value={
-            postalOrZip === "postal"
-              ? formDatas.Address.Structured.PostalZipCode.PostalCode
-              : formDatas.Address.Structured.PostalZipCode.ZipCode
+            postalOrZip === "postal" ? formDatas.postalCode : formDatas.zipCode
           }
           onChange={handleChange}
           autoComplete="off"
@@ -306,27 +264,27 @@ const FamilyDoctorForm = ({
       </td>
       <td>
         <input
-          name="PhoneNumber"
+          name="phone"
           type="text"
-          value={formDatas.PhoneNumber[0].phoneNumber}
+          value={formDatas.phone}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="FaxNumber"
+          name="fax"
           type="text"
-          value={formDatas.FaxNumber.phoneNumber}
+          value={formDatas.fax}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="EmailAddress"
+          name="email"
           type="text"
-          value={formDatas.EmailAddress}
+          value={formDatas.email}
           onChange={handleChange}
           autoComplete="off"
         />

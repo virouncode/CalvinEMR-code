@@ -26,6 +26,13 @@ const ProblemListForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
+    ProblemDiagnosisDescription: "",
+    ProblemDescription: "",
+    ProblemStatus: "",
+    OnsetDate: "",
+    LifeStage: "",
+    ResolutionDate: "",
+    Notes: "",
   });
 
   //HANDLERS

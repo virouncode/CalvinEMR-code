@@ -473,9 +473,14 @@ const AppointmentItem = ({
   };
 
   const handleDeleteClick = async (e) => {
+    //if many patients_guests_ids or staff_guests_ids, ask if remove for everyone or only the patient
     if (
       await confirmAlert({
-        content: "Do you really want to delete this item ?",
+        content: `Do you really want to delete this item ?${
+          item.patients_guests_ids?.length || item.staff_guests_ids?.length
+            ? " There are other guests scheduled for this appointment, this action will also delete their appointment"
+            : ""
+        }`,
       })
     ) {
       try {

@@ -56,7 +56,7 @@ const RecImmunizationsTable = ({
       <tbody>
         <tr>
           <th>
-            <strong>DTaP-IPV-Hib</strong>
+            x<strong>DTaP-IPV-Hib</strong>
             <br />
             <span className="description">
               Diphteria, Tetanus, Acellular Pertussis, Inactivated Polio,

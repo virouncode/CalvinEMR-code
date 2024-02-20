@@ -1,9 +1,13 @@
 .care-elements {
   &__title {
-    font-size: 1.2rem;
     margin-top: 60px;
     margin-bottom:30px;
     text-align: center;
+  }
+  &_btn-container {
+    button {
+      margin-left: 5px;
+    }
   }
   &__err {
     padding : 10px 20px;
@@ -22,7 +26,6 @@
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
   }
-  
   &__card-title {
     border-radius: 6px 6px 0 0;
     padding:10px 20px;
@@ -31,7 +34,7 @@
     align-items: center;
     justify-content: space-between;
     span {
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-weight: bold;
     }
   }
@@ -84,7 +87,7 @@
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
       border-radius:4px;
       p {
-        font-size: 1rem;
+        font-size: 0.85rem;
       }
     }
   }
@@ -93,7 +96,7 @@
     display:inline-block;
   }
   &__sign {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     text-align: end;
     margin-top: 20px;
   }

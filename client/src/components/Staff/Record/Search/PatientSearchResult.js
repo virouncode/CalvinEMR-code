@@ -4,7 +4,6 @@ import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import PatientResultItem from "./PatientResultItem";
 
 const PatientSearchResult = ({
-  search,
   patientsDemographics,
   loading,
   hasMore,
@@ -14,7 +13,7 @@ const PatientSearchResult = ({
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   return (
-    <div className="patient-result" ref={rootRef}>
+    <div className="patient-result__table-container" ref={rootRef}>
       <table className="patient-result__table">
         <thead>
           <tr>

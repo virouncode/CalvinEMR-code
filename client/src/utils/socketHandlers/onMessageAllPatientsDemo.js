@@ -4,7 +4,6 @@ export const onMessageAllPatientsDemo = (
   setPatientsDemographics
 ) => {
   if (message.route !== "DEMOGRAPHICS") return;
-  console.log("hello from onMessageAllPatientsDemo ");
   switch (message.action) {
     case "create":
       setPatientsDemographics([message.content.data, ...patientsDemographics]);

@@ -83,7 +83,6 @@ const PregnancyForm = ({
         socket,
         "PREGNANCIES"
       );
-
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });

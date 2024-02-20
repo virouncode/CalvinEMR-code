@@ -31,7 +31,15 @@ const AllergyForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
+    OffendingAgentDescription: "",
+    PropertyOfOffendingAgent: "",
+    ReactionType: "",
+    StartDate: "",
+    LifeStage: "",
+    Severity: "",
+    Reaction: "",
     RecordedDate: Date.now(),
+    Notes: "",
   });
 
   //HANDLERS

@@ -25,27 +25,15 @@ const PharmacyForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
   const [formDatas, setFormDatas] = useState({
-    Name: "",
-    Address: {
-      Structured: {
-        Line1: "",
-        City: "",
-        CountrySubDivisionCode: "",
-        PostalZipCode: { PostalCode: "", ZipCode: "" },
-      },
-      _addressType: "M",
-    },
-    PhoneNumber: [
-      {
-        phoneNumber: "",
-        _phoneNumberType: "W",
-      },
-    ],
-    FaxNumber: {
-      _phoneNumberType: "W",
-      phoneNumber: "",
-    },
-    EmailAddress: "",
+    name: "",
+    line1: "",
+    city: "",
+    province: "",
+    postalCode: "",
+    zipCode: "",
+    phone: "",
+    fax: "",
+    email: "",
   });
 
   //HANDLERS
@@ -53,124 +41,64 @@ const PharmacyForm = ({
     setErrMsgPost("");
     const name = e.target.name;
     const value = e.target.value;
-    switch (name) {
-      case "Address":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address?.Structured,
-              Line1: value,
-            },
-          },
-        });
-        break;
-      case "City":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address?.Structured,
-              City: value,
-            },
-          },
-        });
-        break;
-      case "Province":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address?.Structured,
-              CountrySubDivisionCode: value,
-            },
-          },
-        });
-        break;
-      case "PostalCode":
-        setFormDatas({
-          ...formDatas,
-          Address: {
-            ...formDatas.Address,
-            Structured: {
-              ...formDatas.Address?.Structured,
-              PostalZipCode:
-                postalOrZip === "postal"
-                  ? { PostalCode: value, ZipCode: "" }
-                  : { PostalCode: "", ZipCode: value },
-            },
-          },
-        });
-        break;
-      case "PhoneNumber":
-        setFormDatas({
-          ...formDatas,
-          PhoneNumber: formDatas.PhoneNumber.map((item) => {
-            return item._phoneNumberType === "W"
-              ? {
-                  ...item,
-                  phoneNumber: value,
-                }
-              : item;
-          }),
-        });
-        break;
-      case "FaxNumber":
-        setFormDatas({
-          ...formDatas,
-          FaxNumber: {
-            ...formDatas.FaxNumber,
-            phoneNumber: value,
-          },
-        });
-        break;
-      default:
-        setFormDatas({ ...formDatas, [name]: value });
-        break;
+    if (name === "postalZipCode") {
+      if (postalOrZip === "postal") {
+        setFormDatas({ ...formDatas, postalCode: value, zipCode: "" });
+        return;
+      } else {
+        setFormDatas({ ...formDatas, postalCode: "", zipCode: value });
+        return;
+      }
     }
+    setFormDatas({ ...formDatas, [name]: value });
   };
   const handleChangePostalOrZip = (e) => {
     setErrMsgPost("");
     setPostalOrZip(e.target.value);
     setFormDatas({
       ...formDatas,
-      Address: {
-        ...formDatas.Address,
-        Structured: {
-          ...formDatas.Address.Structured,
-          PostalZipCode: {
-            PostalCode: "",
-            ZipCode: "",
-          },
-        },
-      },
+      postalCode: "",
+      zipCode: "",
     });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //Formatting
-    const datasToPost = {
-      ...formDatas,
-    };
-    datasToPost.Name = firstLetterUpper(datasToPost.Name);
-    datasToPost.Address.Structured.Line1 = firstLetterUpper(
-      datasToPost.Address.Structured.Line1
-    );
-    datasToPost.Address.Structured.City = firstLetterUpper(
-      datasToPost.Address.Structured.City
-    );
-    datasToPost.EmailAddress = datasToPost.EmailAddress.toLowerCase();
-
     //Validation
     try {
-      await pharmacySchema.validate(datasToPost);
+      await pharmacySchema.validate(formDatas);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
     }
+
+    //Formatting
+    const datasToPost = {
+      Name: firstLetterUpper(formDatas.name),
+      Address: {
+        Structured: {
+          Line1: firstLetterUpper(formDatas.line1),
+          City: firstLetterUpper(formDatas.city),
+          CountrySubDivisionCode: formDatas.province,
+          PostalZipCode: {
+            PostalCode: formDatas.postalCode,
+            ZipCode: formDatas.zipCode,
+          },
+        },
+        _addressType: "M",
+      },
+      PhoneNumber: [
+        {
+          phoneNumber: formDatas.phone,
+          _phoneNumberType: "W",
+        },
+      ],
+      FaxNumber: {
+        _phoneNumberType: "W",
+        phoneNumber: formDatas.fax,
+      },
+      EmailAddress: formDatas.email.toLowerCase(),
+    };
+
     //Submission
     try {
       await postPatientRecord(
@@ -205,27 +133,27 @@ const PharmacyForm = ({
     >
       <td>
         <input
-          name="Name"
+          name="name"
           type="text"
-          value={formDatas.Name}
+          value={formDatas.name}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="Address"
+          name="line1"
           type="text"
-          value={formDatas.Address.Structured.Line1}
+          value={formDatas.line1}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="City"
+          name="city"
           type="text"
-          value={formDatas.Address.Structured.City}
+          value={formDatas.city}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -233,8 +161,8 @@ const PharmacyForm = ({
       <td>
         <GenericList
           list={provinceStateTerritoryCT}
-          value={formDatas.Address.Structured.CountrySubDivisionCode}
-          name="Province"
+          value={formDatas.province}
+          name="province"
           handleChange={handleChange}
           noneOption={false}
         />
@@ -251,12 +179,10 @@ const PharmacyForm = ({
           <option value="zip">Zip</option>
         </select>
         <input
-          name="PostalCode"
+          name="postalZipCode"
           type="text"
           value={
-            postalOrZip === "postal"
-              ? formDatas.Address.Structured.PostalZipCode.PostalCode
-              : formDatas.Address.Structured.PostalZipCode.ZipCode
+            postalOrZip === "postal" ? formDatas.postalCode : formDatas.zipCode
           }
           onChange={handleChange}
           autoComplete="off"
@@ -264,27 +190,27 @@ const PharmacyForm = ({
       </td>
       <td>
         <input
-          name="PhoneNumber"
+          name="phone"
           type="text"
-          value={formDatas.PhoneNumber[0].phoneNumber}
+          value={formDatas.phone}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="FaxNumber"
+          name="fax"
           type="text"
-          value={formDatas.FaxNumber.phoneNumber}
+          value={formDatas.fax}
           onChange={handleChange}
           autoComplete="off"
         />
       </td>
       <td>
         <input
-          name="EmailAddress"
+          name="email"
           type="text"
-          value={formDatas.EmailAddress}
+          value={formDatas.email}
           onChange={handleChange}
           autoComplete="off"
         />

@@ -22,6 +22,7 @@ import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../utils/formatDates";
 import { generatePassword } from "../../../utils/generatePassword";
 import { toInverseRelation } from "../../../utils/toInverseRelation";
+import { toPatientName } from "../../../utils/toPatientName";
 import { patientSchema } from "../../../validation/patientValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import StaffList from "../../All/UI/Lists/StaffList";
@@ -213,6 +214,9 @@ const SignupPatientForm = () => {
         toCodeTableName(genderCT, formDatas.gender),
         patientId
       ),
+      PersonStatusCode: {
+        PersonStatusAsEnum: "A",
+      },
       patient_id: patientId,
       Email: formDatas.email.toLowerCase(),
       Names: {
@@ -366,15 +370,7 @@ const SignupPatientForm = () => {
 
     //Mailing the patient
     try {
-      const fullName =
-        (formDatas.prefix ? `${formDatas.prefix} ` : "") +
-        firstLetterUpper(formDatas.firstName) +
-        (formDatas.middleName
-          ? ` ${firstLetterUpper(formDatas.middleName)}`
-          : "") +
-        firstLetterUpper(formDatas.fullName) +
-        (formDatas.suffix ? ` ${formDatas.suffix} ` : "");
-
+      const fullName = toPatientName(demographicsToPost);
       await sendEmail(
         "virounk@gmail.com", //to change to demographicsDatasToPost.Email
         fullName,
@@ -525,9 +521,9 @@ const SignupPatientForm = () => {
             <label>Health Card#: </label>
             <input
               type="text"
-              value={formDatas.healthNumber}
+              value={formDatas.healthNbr}
               onChange={handleChange}
-              name="healthNumber"
+              name="healthNbr"
               autoComplete="off"
             />
           </div>

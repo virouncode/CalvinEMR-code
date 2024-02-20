@@ -3,6 +3,7 @@ import {
   recommendedImmunizationsList,
 } from "../../../../../utils/recommendedImmunizations";
 import RecImmunizationCell from "./RecImmunizationCell";
+import RecImmunizationEmptyCell from "./RecImmunizationEmptyCell";
 
 const RecImmunizationRow = ({
   type,
@@ -32,7 +33,7 @@ const RecImmunizationRow = ({
   return allImmunizationsAgesToDisplay.map((immunizationAge, index) =>
     immunizationAges.includes(immunizationAge) ? (
       <RecImmunizationCell
-        key={`${immunizationAge}${type}${index}`}
+        key={index}
         age={immunizationAge}
         type={immunizationType}
         route={immunizationRoute}
@@ -47,7 +48,7 @@ const RecImmunizationRow = ({
         errPatient={errPatient}
       />
     ) : (
-      <td style={{ backgroundColor: "grey" }}></td>
+      <RecImmunizationEmptyCell key={index} />
     )
   );
 };

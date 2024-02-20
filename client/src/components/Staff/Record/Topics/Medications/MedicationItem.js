@@ -18,8 +18,8 @@ import MedicationDetails from "./MedicationDetails";
 
 const MedicationItem = ({ item, lastItemRef = null }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
+  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [detailVisible, setDetailVisible] = useState(false);
 
@@ -87,7 +87,9 @@ const MedicationItem = ({ item, lastItemRef = null }) => {
           <td>
             <div className="medications__item-btn-container">
               <button onClick={handleDetailClick}>See details</button>
-              <button onClick={handleDeleteClick}>Delete</button>
+              {user.title === "Doctor" && (
+                <button onClick={handleDeleteClick}>Delete</button>
+              )}
             </div>
           </td>
         </tr>

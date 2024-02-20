@@ -40,6 +40,7 @@ const SearchPatient = () => {
       <PatientSearchResult
         search={search}
         patientsDemographics={patientsDemographics}
+        err={err}
         loading={loading}
         hasMore={hasMore}
         setPaging={setPaging}

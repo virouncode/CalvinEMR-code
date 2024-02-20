@@ -40,14 +40,14 @@ const PersonalHistoryPU = ({
   useEffect(() => {
     if (topicDatas && topicDatas.length > 0) {
       setFormDatas({
-        Occupations: getResidualInfo("Occupations", topicDatas[0]),
-        Income: getResidualInfo("Income", topicDatas[0]),
-        Religion: getResidualInfo("Religion", topicDatas[0]),
-        SexualOrientation: getResidualInfo("SexualOrientation", topicDatas[0]),
-        SpecialDiet: getResidualInfo("SpecialDiet", topicDatas[0]),
-        Smoking: getResidualInfo("Smoking", topicDatas[0]),
-        Alcohol: getResidualInfo("Alcohol", topicDatas[0]),
-        RecreationalDrugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
+        occupations: getResidualInfo("Occupations", topicDatas[0]),
+        income: getResidualInfo("Income", topicDatas[0]),
+        religion: getResidualInfo("Religion", topicDatas[0]),
+        sexual_orientation: getResidualInfo("SexualOrientation", topicDatas[0]),
+        special_diet: getResidualInfo("SpecialDiet", topicDatas[0]),
+        smoking: getResidualInfo("Smoking", topicDatas[0]),
+        alcohol: getResidualInfo("Alcohol", topicDatas[0]),
+        recreational_drugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
       });
     }
   }, [topicDatas]);
@@ -78,14 +78,14 @@ const PersonalHistoryPU = ({
     e.preventDefault();
     setErrMsgPost("");
     setFormDatas({
-      Occupations: getResidualInfo("Occupations", topicDatas[0]),
-      Income: getResidualInfo("Income", topicDatas[0]),
-      Religion: getResidualInfo("Religion", topicDatas[0]),
-      SexualOrientation: getResidualInfo("SexualOrientation", topicDatas[0]),
-      SpecialDiet: getResidualInfo("SpecialDiet", topicDatas[0]),
-      Smoking: getResidualInfo("Smoking", topicDatas[0]),
-      Alcohol: getResidualInfo("Alcohol", topicDatas[0]),
-      RecreationalDrugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
+      occupations: getResidualInfo("Occupations", topicDatas[0]),
+      income: getResidualInfo("Income", topicDatas[0]),
+      religion: getResidualInfo("Religion", topicDatas[0]),
+      sexual_orientation: getResidualInfo("SexualOrientation", topicDatas[0]),
+      special_diet: getResidualInfo("SpecialDiet", topicDatas[0]),
+      smoking: getResidualInfo("Smoking", topicDatas[0]),
+      alcohol: getResidualInfo("Alcohol", topicDatas[0]),
+      recreational_drugs: getResidualInfo("RecreationalDrugs", topicDatas[0]),
     });
     setEditVisible(false);
   };
@@ -110,43 +110,47 @@ const PersonalHistoryPU = ({
       updates: topicDatas[0].updates,
       ResidualInfo: {
         DataElement: [
-          {
+          formDatas.occupations && {
             Name: "Occupations",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Occupations),
+            Content: firstLetterOfFirstWordUpper(formDatas.occupations),
           },
-          { Name: "Income", DataType: "text", Content: formDatas.Income },
-          {
+          formDatas.income && {
+            Name: "Income",
+            DataType: "text",
+            Content: formDatas.income,
+          },
+          formDatas.religion && {
             Name: "Religion",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Religion),
+            Content: firstLetterOfFirstWordUpper(formDatas.religion),
           },
-          {
+          formDatas.sexual_orientation && {
             Name: "SexualOrientation",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.SexualOrientation),
+            Content: firstLetterOfFirstWordUpper(formDatas.sexual_orientation),
           },
-          {
+          formDatas.special_diet && {
             Name: "SpecialDiet",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.SpecialDiet),
+            Content: firstLetterOfFirstWordUpper(formDatas.special_diet),
           },
-          {
+          formDatas.smoking && {
             Name: "Smoking",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Smoking),
+            Content: firstLetterOfFirstWordUpper(formDatas.smoking),
           },
-          {
+          formDatas.alcohol && {
             Name: "Alcohol",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.Alcohol),
+            Content: firstLetterOfFirstWordUpper(formDatas.alcohol),
           },
-          {
+          formDatas.recreational_drugs && {
             Name: "RecreationalDrugs",
             DataType: "text",
-            Content: firstLetterOfFirstWordUpper(formDatas.RecreationalDrugs),
+            Content: firstLetterOfFirstWordUpper(formDatas.recreational_drugs),
           },
-        ],
+        ].filter((element) => element),
       },
     };
     try {
@@ -195,13 +199,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.Occupations}
-                    name="Occupations"
+                    value={formDatas.occupations}
+                    name="occupations"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.Occupations
+                  formDatas.occupations
                 )}
               </p>
               <p>
@@ -209,13 +213,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.Income}
-                    name="Income"
+                    value={formDatas.income}
+                    name="income"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.Income
+                  formDatas.income
                 )}
               </p>
               <p>
@@ -223,13 +227,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.Religion}
-                    name="Religion"
+                    value={formDatas.religion}
+                    name="religion"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.Religion
+                  formDatas.religion
                 )}
               </p>
               <p>
@@ -237,13 +241,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.SexualOrientation}
-                    name="SexualOrientation"
+                    value={formDatas.sexual_orientation}
+                    name="sexual_orientation"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.SexualOrientation
+                  formDatas.sexual_orientation
                 )}
               </p>
               <p>
@@ -251,13 +255,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.SpecialDiet}
-                    name="SpecialDiet"
+                    value={formDatas.special_diet}
+                    name="special_diet"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.SpecialDiet
+                  formDatas.special_diet
                 )}
               </p>
               <p>
@@ -265,13 +269,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.Smoking}
-                    name="Smoking"
+                    value={formDatas.smoking}
+                    name="smoking"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.Smoking
+                  formDatas.smoking
                 )}
               </p>
               <p>
@@ -279,13 +283,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.Alcohol}
-                    name="Alcohol"
+                    value={formDatas.alcohol}
+                    name="alcohol"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.Alcohol
+                  formDatas.alcohol
                 )}
               </p>
               <p>
@@ -293,13 +297,13 @@ const PersonalHistoryPU = ({
                 {editVisible ? (
                   <input
                     type="text"
-                    value={formDatas.RecreationalDrugs}
-                    name="RecreationalDrugs"
+                    value={formDatas.recreational_drugs}
+                    name="recreational_drugs"
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 ) : (
-                  formDatas.RecreationalDrugs
+                  formDatas.recreational_drugs
                 )}
               </p>
               <div className="personalhistory-card__btns">

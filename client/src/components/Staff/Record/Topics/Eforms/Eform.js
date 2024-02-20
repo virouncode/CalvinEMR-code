@@ -8,17 +8,15 @@ import EformsList from "../../../../All/UI/Lists/EformsList";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const Eform = ({
-  patientId,
   setAddVisible,
   handleAddToRecord,
   isLoadingFile,
   setIsLoadingFile,
   demographicsInfos,
 }) => {
-  console.log("demographics", demographicsInfos);
   const { auth } = useAuthContext();
   const { user } = useUserContext();
-  const [eFormsBlank, setEformsBlank] = useFetchDatas(
+  const [eFormsBlank] = useFetchDatas(
     "/eforms_blank",
     axiosXanoStaff,
     auth.authToken
