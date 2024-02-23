@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { linkSchema } from "../../../validation/linkValidation";
+import useSocketContext from "../../../hooks/useSocketContext";
+import xanoPut from "../../../api/xanoPut";
 
-const LinkEdit = ({ link, myLinks, setEditVisible }) => {
+const LinkEdit = ({ link, setEditVisible }) => {
   const [errMsg, setErrMsg] = useState("");
   const [editedLink, setEditedLink] = useState(link);
-  const { auth, socket, user, clinic } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,38 +22,24 @@ const LinkEdit = ({ link, myLinks, setEditVisible }) => {
       setErrMsg(err.message);
       return;
     }
-    if (
-      myLinks.find(({ name }) => name === editedLink.name && name !== link.name)
-    ) {
-      setErrMsg("You already have a link with this name");
-      return;
-    }
     let urlFormatted = editedLink.url;
     if (!editedLink.url.includes("http") || !editedLink.url.includes("https")) {
       urlFormatted = ["https://", editedLink.url].join("");
     }
     try {
-      const userInfos = clinic.staffInfos.find(({ id }) => id === user.id);
-      const datasToPut = {
-        ...userInfos,
-        links: myLinks.map((item) =>
-          item.name === link.name
-            ? { name: editedLink.name, url: urlFormatted }
-            : item
-        ),
-      };
-      await axiosXanoStaff.put(`/staff/${user.id}`, datasToPut, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
+      const response = await xanoPut(
+        "/links",
+        axiosXanoStaff,
+        auth.authToken,
+        { ...editedLink, url: urlFormatted },
+        link.id
+      );
+      socket.emit("message", {
+        route: "LINKS",
+        action: "update",
+        content: { id: link.id, data: response.data },
       });
       setEditVisible(false);
-      socket.emit("message", {
-        route: "STAFF",
-        action: "update",
-        content: { id: user.id, data: datasToPut },
-      });
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Unable to save link:${err.message}`);

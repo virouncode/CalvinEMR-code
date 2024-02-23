@@ -1,20 +1,20 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
-import DocMailboxPracticiansListItemForward from "./DocMailboxPracticiansListItemForward";
+import useUserContext from "../../../hooks/useUserContext";
+import ReportsInboxPracticiansListItemForward from "./ReportsInboxPracticiansListItemForward";
 
-const DocMailboxPracticiansListForward = ({
+const ReportsInboxPracticiansListForward = ({
   categoryInfos,
   handleCheckPractician,
   isPracticianChecked,
   categoryName,
 }) => {
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
   return (
     <ul className="practicians-forward__category-list">
       {categoryInfos
         .filter(({ id }) => id !== user.id)
         .map((info) => (
-          <DocMailboxPracticiansListItemForward
+          <ReportsInboxPracticiansListItemForward
             info={info}
             key={info.id}
             handleCheckPractician={handleCheckPractician}
@@ -26,4 +26,4 @@ const DocMailboxPracticiansListForward = ({
   );
 };
 
-export default DocMailboxPracticiansListForward;
+export default ReportsInboxPracticiansListForward;

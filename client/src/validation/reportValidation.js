@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const reportSchema = yup.object({
-  name: yup.string().required("Name field is required"),
+  name: yup.string().required("Report name field is required"),
   Format: yup.string().required("Format field is required"),
   Class: yup.string().required("Class field is required"),
   SourceAuthorPhysician: yup.object({
@@ -41,6 +41,7 @@ export const reportSchema = yup.object({
   //       ),
   //   })
   // ),
+  patient_id: yup.number().required("Please choose a related patient"),
   RecipientName: yup.object({
     FirstName: yup.string().matches(/^([^0-9]*)$/, {
       message: "Invalid Author First Name",

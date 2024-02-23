@@ -1,7 +1,7 @@
 import React from "react";
-import DocMailboxPracticianCategory from "./DocMailboxPracticianCategory";
+import ReportsInboxPracticianCategory from "./ReportsInboxPracticianCategory";
 
-const DocMailboxAssignedPractician = ({
+const ReportsInboxAssignedPractician = ({
   staffInfos,
   isPracticianChecked,
   handleCheckPractician,
@@ -66,7 +66,7 @@ const DocMailboxAssignedPractician = ({
         {allInfos
           .filter((category) => category.infos.length !== 0)
           .map((category) => (
-            <DocMailboxPracticianCategory
+            <ReportsInboxPracticianCategory
               categoryInfos={category.infos}
               categoryName={category.name}
               handleCheckPractician={handleCheckPractician}
@@ -79,4 +79,4 @@ const DocMailboxAssignedPractician = ({
   );
 };
 
-export default DocMailboxAssignedPractician;
+export default ReportsInboxAssignedPractician;

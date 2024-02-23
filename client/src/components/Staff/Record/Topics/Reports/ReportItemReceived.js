@@ -39,7 +39,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
           "REPORTS RECEIVED"
         );
         socket.emit("message", {
-          route: "DOCMAILBOX",
+          route: "REPORTS INBOX",
           action: "delete",
           content: { id: item.id },
         });
@@ -78,7 +78,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       );
 
       socket.emit("message", {
-        route: "DOCMAILBOX",
+        route: "REPORTS INBOX",
         action: "update",
         content: { id: item.id, data: datasToPut },
       });

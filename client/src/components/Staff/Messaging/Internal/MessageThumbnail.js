@@ -3,10 +3,13 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdListToTitleAndName } from "../../../../utils/staffIdListToTitleAndName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessageThumbnail = ({
@@ -15,11 +18,12 @@ const MessageThumbnail = ({
   setMsgsSelectedIds,
   msgsSelectedIds,
   section,
+  lastItemRef = null,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
-  const patient = clinic.demographicsInfos.find(
-    ({ patient_id }) => patient_id === message.related_patient_id
-  );
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
 
   const handleMsgClick = async (e) => {
     if (!message.read_by_staff_ids.includes(user.id)) {
@@ -134,6 +138,7 @@ const MessageThumbnail = ({
           ? "message-thumbnail message-thumbnail--unread"
           : "message-thumbnail"
       }
+      ref={lastItemRef}
     >
       <input
         className="message-thumbnail__checkbox"
@@ -145,11 +150,8 @@ const MessageThumbnail = ({
       <div onClick={handleMsgClick} className="message-thumbnail__link">
         <div className="message-thumbnail__author">
           {section !== "Sent messages"
-            ? staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)
-            : staffIdListToTitleAndName(
-                clinic.staffInfos,
-                message.to_staff_ids
-              )}
+            ? staffIdToTitleAndName(staffInfos, message.from_id, true)
+            : staffIdListToTitleAndName(staffInfos, message.to_staff_ids)}
         </div>
         <div className="message-thumbnail__sample">
           <span>{message.subject}</span> - {message.body}{" "}
@@ -162,13 +164,13 @@ const MessageThumbnail = ({
         </div>
       </div>
       <div className="message-thumbnail__patient">
-        {patient && (
+        {message.related_patient_id && (
           <NavLink
-            to={`/staff/patient-record/${patient.patient_id}`}
+            to={`/staff/patient-record/${message.related_patient_id}`}
             className="message-thumbnail__patient-link"
             target="_blank"
           >
-            {patientIdToName(clinic.demographicsInfos, patient.patient_id)}
+            {toPatientName(message.patient_infos)}
           </NavLink>
         )}
       </div>

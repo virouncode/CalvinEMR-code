@@ -2,7 +2,7 @@ import React from "react";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
-const DocMailboxPracticiansListItem = ({
+const ReportsInboxPracticiansListItem = ({
   info,
   handleCheckPractician,
   isPracticianChecked,
@@ -25,4 +25,4 @@ const DocMailboxPracticiansListItem = ({
   );
 };
 
-export default DocMailboxPracticiansListItem;
+export default ReportsInboxPracticiansListItem;

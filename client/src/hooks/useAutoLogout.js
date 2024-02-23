@@ -1,10 +1,27 @@
 import { useEffect, useRef } from "react";
+import useAuthContext from "./useAuthContext";
+import useStaffInfosContext from "./useStaffInfosContext";
+import useUserContext from "./useUserContext";
 
-const useAutoLogout = (logoutFunction, timeMin) => {
+const useAutoLogout = (timeMin) => {
+  const { setAuth } = useAuthContext();
+  const { setUser } = useUserContext();
+  const { setStaffInfos } = useStaffInfosContext();
+  const logout = () => {
+    setAuth({});
+    setUser({});
+    setStaffInfos([]);
+    localStorage.removeItem("auth");
+    localStorage.removeItem("user");
+    localStorage.removeItem("tabCounter");
+    localStorage.removeItem("lastAction");
+    localStorage.setItem("message", "logout");
+    localStorage.removeItem("message");
+  };
   let timerID = useRef(null);
 
   const startTimer = () => {
-    timerID.current = window.setTimeout(logoutFunction, timeMin * 60 * 1000);
+    timerID.current = window.setTimeout(logout, timeMin * 60 * 1000);
   };
   const stopTimer = () => {
     window.clearTimeout(timerID.current);
@@ -35,7 +52,6 @@ const useAutoLogout = (logoutFunction, timeMin) => {
     resetTimeout();
     startTimer();
     localStorage.setItem("lastAction", Date.now());
-
     window.addEventListener("storage", handleStorageEvent);
     return () => {
       stopTimer();

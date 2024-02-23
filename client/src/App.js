@@ -1,13 +1,16 @@
 //Librairies
-import React, { useEffect } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import socketIOClient from "socket.io-client";
 import AdminLayout from "./components/All/UI/Layouts/AdminLayout";
 import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
 import RequireAuth from "./context/RequireAuth";
-import useSocketContext from "./hooks/useSocketContext";
+import useAutoLogout from "./hooks/useAutoLogout";
+import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
+import useLogoutForAll from "./hooks/useLogoutForAll";
+import useMessagesUnreadSocket from "./hooks/useMessagesUnreadSocket";
+import useSocketConfig from "./hooks/useSocketConfig";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
@@ -29,75 +32,20 @@ import BillingPage from "./pages/Staff/BillingPage";
 import CalendarPage from "./pages/Staff/CalendarPage";
 import CalvinAIPage from "./pages/Staff/CalvinAIPage";
 import CredentialsPage from "./pages/Staff/CredentialsPage";
-import DocMailboxPage from "./pages/Staff/DocMailboxPage";
 import MessagesPage from "./pages/Staff/MessagesPage";
 import MyAccountPage from "./pages/Staff/MyAccountPage";
 import PatientRecordPage from "./pages/Staff/PatientRecordPage";
 import ReferencePage from "./pages/Staff/ReferencePage";
+import ReportsInboxPage from "./pages/Staff/ReportsInboxPage";
 import SearchPatientPage from "./pages/Staff/SearchPatientPage";
 import SignupPatientPage from "./pages/Staff/SignupPatientPage";
 
 const App = () => {
-  const { setSocket } = useSocketContext();
-  // useLocalStorageTracker();
-  // const navigate = useNavigate();
-  // const { user, setUser, setClinic, setAuth, setSocket, socket, clinic } =
-  //   useAuthContext();
-
-  // const logout = () => {
-  //   setAuth({});
-  //   setUser({});
-  //   setClinic({});
-  //   localStorage.removeItem("auth");
-  //   localStorage.removeItem("user");
-  //   localStorage.removeItem("clinic");
-  //   localStorage.removeItem("tabCounter");
-  //   localStorage.removeItem("lastAction");
-  //   localStorage.setItem("message", "logout");
-  //   localStorage.removeItem("message");
-  // };
-  // useAutoLogout(logout, 120);
-
-  // useEffect(() => {
-  //   const storageListener = (e) => {
-  //     if (e.key !== "message") return;
-  //     const message = e.newValue;
-  //     if (!message) return;
-  //     if (message === "logout") {
-  //       setUser({});
-  //       setClinic({});
-  //       setAuth({});
-  //       navigate("/");
-  //     }
-  //   };
-  //   window.addEventListener("storage", storageListener);
-  //   return () => {
-  //     window.removeEventListener("storage", storageListener);
-  //   };
-  // }, [navigate, setAuth, setClinic, setSocket, setUser]);
-
-  useEffect(() => {
-    // const socket = socketIOClient("http://localhost:3000");
-
-    const socket = socketIOClient(
-      "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/"
-    );
-    setSocket(socket);
-    return () => socket.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   if (!socket) return;
-  //   const onMessage = (message) => onMessageClinic(message, clinic, setClinic);
-  //   const onMessage2 = (message) => onMessageUnread(message, user, setUser);
-  //   socket.on("message", onMessage);
-  //   socket.on("message", onMessage2);
-  //   return () => {
-  //     socket.off("message", onMessage);
-  //     socket.off("message", onMessage2);
-  //   };
-  // }, [clinic, setClinic, setUser, socket, user]);
+  useLocalStorageTracker();
+  useAutoLogout(120);
+  useLogoutForAll(); //log every tabs out if logout on one tab
+  useSocketConfig(false); //true for dev, false for prod
+  useMessagesUnreadSocket();
 
   return (
     <Routes>
@@ -117,7 +65,7 @@ const App = () => {
           <Route path="search-patient" element={<SearchPatientPage />} />
           <Route path="patient-record/:id" element={<PatientRecordPage />} />
           <Route path="signup-patient" element={<SignupPatientPage />} />
-          <Route path="doc-inbox" element={<DocMailboxPage />} />
+          <Route path="reports-inbox" element={<ReportsInboxPage />} />
           <Route path="messages" element={<MessagesPage />} />
           <Route
             path="messages/:messageId/:sectionName/:msgType"

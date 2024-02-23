@@ -1,57 +1,45 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
-import { toLocalDate } from "../../../utils/formatDates";
-import { patientIdToName } from "../../../utils/patientIdToName";
+import useIntersection from "../../../hooks/useIntersection";
+import { toPatientName } from "../../../utils/toPatientName";
+import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import PatientsListItem from "./PatientsListItem";
 
-const PatientsList = ({ isPatientChecked, handleCheckPatient, search }) => {
-  const { clinic } = useAuthContext();
+const PatientsList = ({
+  isPatientChecked,
+  handleCheckPatient,
+  patientsDemographics,
+  loading,
+  hasMore,
+  setPaging,
+}) => {
+  //INTERSECTION OBSERVER
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
+
   return (
-    <ul>
-      {clinic.demographicsInfos
-        .filter(
-          (patient) =>
-            patient.Email.toLowerCase().includes(search.toLowerCase()) ||
-            patient.ChartNumber.includes(search) ||
-            patientIdToName(clinic.demographicsInfos, patient.patient_id)
-              .toLowerCase()
-              .includes(search.toLowerCase()) ||
-            toLocalDate(patient.DateOfBirth).includes(search) ||
-            patient.Address[0].Structured.Line1.toLowerCase().includes(
-              search.toLowerCase()
-            ) ||
-            patient.Address[0].Structured.PostalZipCode.PostalCode?.toLowerCase().includes(
-              search.toLowerCase()
-            ) ||
-            patient.Address[0].Structured.PostalZipCode.ZipCode?.toLowerCase().includes(
-              search.toLowerCase()
-            ) ||
-            patient.Address[0].Structured.City.toLowerCase().includes(
-              search.toLowerCase()
-            ) ||
-            patient.PhoneNumber.find(
-              ({ _phoneNumberType }) => _phoneNumberType === "C"
-            )?.phoneNumber.includes(search) ||
-            patient.PhoneNumber.find(
-              ({ _phoneNumberType }) => _phoneNumberType === "W"
-            )?.phoneNumber.includes(search) ||
-            patient.PhoneNumber.find(
-              ({ _phoneNumberType }) => _phoneNumberType === "R"
-            )?.phoneNumber.includes(search) ||
-            patient.HealthCard?.Number.includes(search)
-        )
-        .map((info) => (
-          <PatientsListItem
-            info={info}
-            key={info.id}
-            handleCheckPatient={handleCheckPatient}
-            isPatientChecked={isPatientChecked}
-            patientName={patientIdToName(
-              clinic.demographicsInfos,
-              info.patient_id
-            )}
-          />
-        ))}
+    <ul className="patients-list" ref={rootRef}>
+      {patientsDemographics && patientsDemographics.length > 0
+        ? patientsDemographics.map((info, index) =>
+            index === patientsDemographics.length - 1 ? (
+              <PatientsListItem
+                info={info}
+                key={info.id}
+                handleCheckPatient={handleCheckPatient}
+                isPatientChecked={isPatientChecked}
+                patientName={toPatientName(info)}
+                lastItemRef={lastItemRef}
+              />
+            ) : (
+              <PatientsListItem
+                info={info}
+                key={info.id}
+                handleCheckPatient={handleCheckPatient}
+                isPatientChecked={isPatientChecked}
+                patientName={toPatientName(info)}
+              />
+            )
+          )
+        : !loading && <li>No Patients</li>}
+      {loading && <LoadingLi />}
     </ul>
   );
 };

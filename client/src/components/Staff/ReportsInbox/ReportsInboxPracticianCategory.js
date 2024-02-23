@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import DocMailboxPracticiansListForward from "./DocMailboxPracticiansListForward";
+import ReportsInboxPracticiansList from "./ReportsInboxPracticiansList";
 
-const DocMailboxPracticianCategoryForward = ({
+const ReportsInboxPracticianCategory = ({
   categoryInfos,
   categoryName,
   isPracticianChecked,
@@ -14,7 +14,7 @@ const DocMailboxPracticianCategoryForward = ({
 
   return (
     <>
-      <div className="practicians-forward__category-overview">
+      <div className="practicians__category-overview">
         {!listVisible ? (
           <i
             onClick={handleClick}
@@ -29,7 +29,7 @@ const DocMailboxPracticianCategoryForward = ({
         <label>{categoryName}</label>
       </div>
       {listVisible && (
-        <DocMailboxPracticiansListForward
+        <ReportsInboxPracticiansList
           categoryInfos={categoryInfos}
           isPracticianChecked={isPracticianChecked}
           handleCheckPractician={handleCheckPractician}
@@ -40,4 +40,4 @@ const DocMailboxPracticianCategoryForward = ({
   );
 };
 
-export default DocMailboxPracticianCategoryForward;
+export default ReportsInboxPracticianCategory;

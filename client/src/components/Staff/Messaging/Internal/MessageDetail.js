@@ -26,9 +26,12 @@ import ReplyMessage from "./ReplyMessage";
 const MessageDetail = ({
   setCurrentMsgId,
   message,
+  loading,
+  errMsg,
   section,
   popUpVisible,
   setPopUpVisible,
+  lastItemRef,
 }) => {
   const messageContentRef = useRef(null);
   const [replyVisible, setReplyVisible] = useState(false);
@@ -298,7 +301,7 @@ const MessageDetail = ({
           "DOCUMENTS"
         );
         socket.emit("message", {
-          route: "DOCMAILBOX",
+          route: "REPORTS INBOX",
           action: "create",
           content: { data: response.data },
         });

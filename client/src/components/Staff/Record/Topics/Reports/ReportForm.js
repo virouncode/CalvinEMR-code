@@ -15,7 +15,7 @@ import { getExtension } from "../../../../../utils/getExtension";
 import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
 import { reportSchema } from "../../../../../validation/reportValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -156,7 +156,7 @@ const ReportForm = ({
         sentOrReceived === "Sent" ? "REPORTS SENT" : "REPORTS RECEIVED"
       );
       socket.emit("message", {
-        route: "DOCMAILBOX",
+        route: "REPORTS INBOX",
         action: "create",
         content: { data: response.data },
       });
@@ -440,11 +440,9 @@ const ReportForm = ({
             </div>
           </div>
         )}
-        <div className="reports__row">
-          {isLoadingFile && <CircularProgressMedium />}
-        </div>
       </form>
       <div className="reports__preview">
+        {isLoadingFile && <LoadingParagraph />}
         {formDatas.File && formDatas.File.mime?.includes("image") ? (
           <img src={`${BASE_URL}${formDatas.File.path}`} alt="" width="100%" />
         ) : formDatas.File && formDatas.File.mime?.includes("video") ? (

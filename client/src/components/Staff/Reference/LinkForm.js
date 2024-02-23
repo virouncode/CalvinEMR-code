@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPost from "../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { linkSchema } from "../../../validation/linkValidation";
 
-const LinkForm = ({ myLinks, setAddVisible }) => {
-  const { user, auth, clinic, socket } = useAuthContext();
-  const [newLink, setNewLink] = useState({ name: "", url: "" });
+const LinkForm = ({ links, setAddVisible }) => {
+  const { user } = useUserContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
+
+  const [newLink, setNewLink] = useState({
+    name: "",
+    url: "",
+    staff_id: user.id,
+  });
   const [errMsg, setErrMsg] = useState("");
   const handleChange = (e) => {
     const id = e.target.id;
@@ -22,7 +32,7 @@ const LinkForm = ({ myLinks, setAddVisible }) => {
       setErrMsg(err.message);
       return;
     }
-    if (myLinks.find(({ name }) => name === newLink.name)) {
+    if (links.find(({ name }) => name === newLink.name)) {
       setErrMsg("You already have a link with this name");
       return;
     }
@@ -31,23 +41,22 @@ const LinkForm = ({ myLinks, setAddVisible }) => {
       urlFormatted = ["https://", newLink.url].join("");
     }
     try {
-      const userInfos = clinic.staffInfos.find(({ id }) => id === user.id);
-      const datasToPut = {
-        ...userInfos,
-        links: [...userInfos.links, { name: newLink.name, url: urlFormatted }],
-      };
-      await axiosXanoStaff.put(`/staff/${user.id}`, datasToPut, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
+      const response = await xanoPost(
+        "/links",
+        axiosXanoStaff,
+        auth.authToken,
+        {
+          ...newLink,
+          url: urlFormatted,
+          date_created: Date.now(),
+        }
+      );
+      socket.emit("message", {
+        route: "LINKS",
+        action: "create",
+        content: { data: response.data },
       });
       setAddVisible(false);
-      socket.emit("message", {
-        route: "STAFF",
-        action: "update",
-        content: { id: user.id, data: datasToPut },
-      });
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Unable to save link:${err.message}`);

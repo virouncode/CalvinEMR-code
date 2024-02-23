@@ -1,7 +1,7 @@
 import React from "react";
-import DocMailboxPracticiansListItem from "./DocMailboxPracticiansListItem";
+import ReportsInboxPracticiansListItem from "./ReportsInboxPracticiansListItem";
 
-const DocMailboxPracticiansList = ({
+const ReportsInboxPracticiansList = ({
   categoryInfos,
   handleCheckPractician,
   isPracticianChecked,
@@ -10,7 +10,7 @@ const DocMailboxPracticiansList = ({
   return (
     <ul className="practicians__category-list">
       {categoryInfos.map((info) => (
-        <DocMailboxPracticiansListItem
+        <ReportsInboxPracticiansListItem
           info={info}
           key={info.id}
           handleCheckPractician={handleCheckPractician}
@@ -22,4 +22,4 @@ const DocMailboxPracticiansList = ({
   );
 };
 
-export default DocMailboxPracticiansList;
+export default ReportsInboxPracticiansList;

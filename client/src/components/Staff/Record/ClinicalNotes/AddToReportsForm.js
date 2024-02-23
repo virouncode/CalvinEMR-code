@@ -116,7 +116,7 @@ const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {
         "REPORTS"
       );
       socket.emit("message", {
-        route: "DOCMAILBOX",
+        route: "REPORTS INBOX",
         action: "create",
         content: { data: response.data },
       });

@@ -51,7 +51,7 @@ const AttachmentCard = ({
   //       "REPORTS"
   //     );
   //     socket.emit("message", {
-  //       route: "DOCMAILBOX",
+  //       route: "REPORTS INBOX",
   //       action: "create",
   //       content: { data: response.data },
   //     });

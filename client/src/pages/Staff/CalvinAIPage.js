@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import CalvinAIChat from "../../components/Staff/CalvinAIChat/CalvinAIChat";
 import StaffAIChatAgreement from "../../components/Staff/CalvinAIChat/StaffAIChatAgreement";
-import useAuthContext from "../../hooks/useAuthContext";
+import useUserContext from "../../hooks/useUserContext";
 
 const CalvinAIPage = () => {
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
   const [start, setStart] = useState(user.ai_consent);
   return (
     <>

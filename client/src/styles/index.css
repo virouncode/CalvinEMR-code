@@ -392,11 +392,12 @@ select:focus {
   margin-bottom: 10px;
 }
 
-.docmailbox-section {
+.reportsinbox-section {
   width: 100%;
   min-height: 80vh;
+  padding: 0 20px;
 }
-.docmailbox-section__title {
+.reportsinbox-section__title {
   font-size: 1.2rem;
   text-align: center;
   margin-bottom: 30px;
@@ -10898,7 +10899,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 auto 40px;
+  margin: 0 auto 20px;
 }
 .login-form__row-radio-item {
   display: flex;
@@ -10918,6 +10919,15 @@ readers do not read off random characters that represent icons */
 }
 .login-form__btn-container button {
   width: 100%;
+}
+
+.login__err {
+  font-size: 0.8rem;
+  color: red;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 0;
 }
 
 .login-forgot {
@@ -11587,14 +11597,14 @@ readers do not read off random characters that represent icons */
   padding: 2px 5px;
 }
 
-.patient-result {
+.patient-result__table-container {
   overflow-y: scroll;
   position: relative;
   height: 500px;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
-.patient-result table {
+.patient-result__table {
   table-layout: fixed;
   margin: 0 auto;
   background-color: #FEFEFE;
@@ -11602,47 +11612,47 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   white-space: nowrap;
 }
-.patient-result table thead {
+.patient-result__table thead {
   position: sticky;
   top: 0;
   background-color: #93b5e9;
   border-radius: 6px;
 }
-.patient-result table thead th {
+.patient-result__table thead th {
   padding: 10px;
   cursor: pointer;
   font-size: 0.8rem;
   min-width: 150px;
 }
-.patient-result table thead th:nth-child(1), .patient-result table thead th:nth-child(2), .patient-result table thead th:nth-child(3) {
+.patient-result__table thead th:nth-child(1), .patient-result__table thead th:nth-child(2), .patient-result__table thead th:nth-child(3) {
   min-width: 100px;
 }
-.patient-result table thead th:nth-child(4) {
+.patient-result__table thead th:nth-child(4) {
   min-width: 50px;
 }
-.patient-result table thead th:nth-child(5) {
+.patient-result__table thead th:nth-child(5) {
   min-width: 10px;
 }
-.patient-result table thead th:nth-child(13), .patient-result table thead th:nth-child(14), .patient-result table thead th:nth-child(15) {
+.patient-result__table thead th:nth-child(13), .patient-result__table thead th:nth-child(14), .patient-result__table thead th:nth-child(15) {
   min-width: 130px;
 }
-.patient-result table tbody tr {
+.patient-result__table tbody tr {
   border-bottom: solid 1px #cecdcd;
 }
-.patient-result table tbody tr .record-link {
+.patient-result__table tbody tr .record-link {
   text-decoration: underline;
   font-weight: bold;
 }
-.patient-result table tbody tr .record-link:hover {
+.patient-result__table tbody tr .record-link:hover {
   color: #93b5e9;
 }
-.patient-result table tbody tr td {
+.patient-result__table tbody tr td {
   font-size: 0.8rem;
   padding: 10px;
   overflow: hidden;
   text-align: center;
 }
-.patient-result table tbody tr td:nth-child(1), .patient-result table tbody tr td:nth-child(2), .patient-result table tbody tr td:nth-child(3) {
+.patient-result__table tbody tr td:nth-child(1), .patient-result__table tbody tr td:nth-child(2), .patient-result__table tbody tr td:nth-child(3) {
   text-align: left;
 }
 
@@ -12888,10 +12898,12 @@ readers do not read off random characters that represent icons */
 }
 
 .care-elements__title {
-  font-size: 1.2rem;
   margin-top: 60px;
   margin-bottom: 30px;
   text-align: center;
+}
+.care-elements_btn-container button {
+  margin-left: 5px;
 }
 .care-elements__err {
   padding: 10px 20px;
@@ -12918,7 +12930,7 @@ readers do not read off random characters that represent icons */
   justify-content: space-between;
 }
 .care-elements__card-title span {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: bold;
 }
 .care-elements__card-content {
@@ -12970,14 +12982,14 @@ readers do not read off random characters that represent icons */
   border-radius: 4px;
 }
 .care-elements__history-container p {
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 .care-elements__value {
   width: 80px;
   display: inline-block;
 }
 .care-elements__sign {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   text-align: end;
   margin-top: 20px;
 }
@@ -15515,16 +15527,16 @@ readers do not read off random characters that represent icons */
   margin-bottom: 20px;
 }
 
-.docmailbox__subtitle {
+.reportsinbox__subtitle {
   font-size: 1rem;
   text-align: center;
   margin-bottom: 20px;
 }
-.docmailbox__noinbox {
+.reportsinbox__noinbox {
   font-weight: bold;
   text-align: center;
 }
-.docmailbox__err {
+.reportsinbox__err {
   padding: 10px 20px;
   font-size: 0.9rem;
   width: 50%;
@@ -15534,45 +15546,51 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
-.docmailbox__instructions {
+.reportsinbox__instructions {
   width: 95%;
   margin: 20px auto;
   font-weight: bold;
   font-size: 1rem;
   padding: 0;
 }
-.docmailbox__table {
-  background-color: #FEFEFE;
+.reportsinbox__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.reportsinbox__table {
   table-layout: fixed;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.8rem;
-  margin: 0 auto;
 }
-.docmailbox__table thead {
-  background-color: #93b5e9;
-  border: solid 1px #3D375A;
+.reportsinbox__table thead {
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
-.docmailbox__table th {
-  min-width: 100px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+.reportsinbox__table th {
+  min-width: 120px;
+  padding: 10px;
   cursor: pointer;
 }
-.docmailbox__table-nofilter {
+.reportsinbox__table-nofilter {
   text-decoration: none;
   cursor: default;
 }
-.docmailbox__btn-container {
+.reportsinbox__btn-container {
   display: flex;
   justify-content: center;
   width: 25%;
   margin: 20px auto 0;
 }
-.docmailbox__form {
+.reportsinbox__form {
   background-color: #FEFEFE;
   border: solid 1px #cecdcd;
   border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   font-size: 0.8rem;
   padding: 20px;
   display: flex;
@@ -15580,72 +15598,98 @@ readers do not read off random characters that represent icons */
   width: 95%;
   margin: 20px auto;
 }
-.docmailbox__form button {
+.reportsinbox__form button {
   margin-left: 5px;
 }
-.docmailbox__form-preview, .docmailbox__form-content {
+.reportsinbox__form .patient-search {
+  font-size: 0.8rem;
+}
+.reportsinbox__form .patient-search__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto 40px;
+}
+.reportsinbox__form .patient-search__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+  margin-bottom: 5px;
+}
+.reportsinbox__form .patient-search__item label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.reportsinbox__form .patient-search__item input {
+  padding: 2px 5px;
+}
+.reportsinbox__form-preview, .reportsinbox__form-content {
   width: 45%;
 }
-.docmailbox__form-row {
+.reportsinbox__form-row {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
-.docmailbox__form-row label {
+.reportsinbox__form-row label {
   width: 120px;
   font-weight: bold;
 }
-.docmailbox__form-row input, .docmailbox__form-row input[type=date], .docmailbox__form-row select {
-  width: 200px;
+.reportsinbox__form-row input, .reportsinbox__form-row input[type=date], .reportsinbox__form-row select {
+  width: 150px;
 }
-.docmailbox__form-row input[type=submit] {
+.reportsinbox__form-row input[type=submit] {
   width: auto;
 }
-.docmailbox__form-row--patients {
+.reportsinbox__form-row--patients {
   align-items: flex-start;
 }
-.docmailbox__form-row--text {
+.reportsinbox__form-row--text {
   align-items: flex-start;
 }
-.docmailbox__form-row--text textarea {
+.reportsinbox__form-row--text textarea {
   width: 400px;
   height: 200px;
 }
-.docmailbox__patients {
+.reportsinbox__patients {
   width: 70%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-.docmailbox__patients-list {
-  margin-top: 10px;
-  height: 200px;
+.reportsinbox__patients-list {
+  height: 300px;
   overflow: scroll;
   border: 1px solid #cecdcd;
   border-radius: 4px;
   padding: 10px;
-  width: 400px;
+  width: 50%;
 }
-.docmailbox__patients-list label {
+.reportsinbox__patients-list label {
   width: 100%;
   font-weight: normal;
 }
-.docmailbox__patients-list input {
+.reportsinbox__patients-list input {
   width: 100%;
 }
-.docmailbox__patients-list-item {
+.reportsinbox__patients-list-item {
   display: flex;
   align-items: center;
 }
-.docmailbox__patients-list-item input[type=checkbox] {
+.reportsinbox__patients-list-item input[type=checkbox] {
   margin-right: 5px;
   width: auto;
 }
-.docmailbox__patient-item td {
+.reportsinbox__patient-item td {
   text-align: center;
   border: solid 1px #3D375A;
   padding: 2px 5px;
   word-wrap: break-word;
   max-width: 370px;
 }
-.docmailbox__patient-item-link {
+.reportsinbox__patient-item-link {
   cursor: pointer;
   color: #327AE6;
   text-decoration: underline;

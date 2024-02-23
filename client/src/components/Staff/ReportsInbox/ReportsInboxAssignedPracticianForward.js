@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
 import useAuthContext from "../../../hooks/useAuthContext";
-import DocMailboxPracticianCategoryForward from "./DocMailboxPracticianCategoryForward";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
+import ReportsInboxPracticianCategoryForward from "./ReportsInboxPracticianCategoryForward";
 
-const DocMailboxAssignedPracticianForward = ({
-  staffInfos,
-  isPracticianChecked,
-  handleCheckPractician,
-  assignedId,
+const ReportsInboxAssignedPracticianForward = ({
   setForwardVisible,
-  setAssignedId,
+  reportToForward,
 }) => {
+  const { staffInfos } = useStaffInfosContext();
   const doctorsInfos = {
     name: "Doctors",
     infos: staffInfos.filter(({ title }) => title === "Doctor"),
@@ -64,28 +64,44 @@ const DocMailboxAssignedPracticianForward = ({
     psychosInfos,
     othersInfos,
   ];
-  const { user, auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const [assignedId, setAssignedId] = useState(0);
+
+  const handleCheckPractician = (e) => {
+    const checked = e.target.checked;
+    if (checked) {
+      setAssignedId(parseInt(e.target.id));
+    } else {
+      setAssignedId(0);
+    }
+  };
+
+  const isPracticianChecked = (id) => {
+    return assignedId === parseInt(id);
+  };
+
   const handleCancelForward = () => {
     setForwardVisible(false);
   };
   const handleForwardDocument = async () => {
     try {
-      const doc = { ...user.docToForward };
-      doc.assigned_staff_id = assignedId;
+      reportToForward.assigned_staff_id = assignedId;
       await putPatientRecord(
         "/reports",
-        doc.id,
+        reportToForward.id,
         user.id,
         auth.authToken,
-        doc,
+        reportToForward,
         socket,
         "REPORTS"
       );
 
       socket.emit("message", {
-        route: "DOCMAILBOX",
+        route: "REPORTS INBOX",
         action: "update",
-        content: { id: doc.id, data: doc },
+        content: { id: reportToForward.id, data: reportToForward },
       });
       setForwardVisible(false);
       setAssignedId(0);
@@ -108,7 +124,7 @@ const DocMailboxAssignedPracticianForward = ({
         {allInfos
           .filter((category) => category.infos.length !== 0)
           .map((category) => (
-            <DocMailboxPracticianCategoryForward
+            <ReportsInboxPracticianCategoryForward
               categoryInfos={category.infos}
               categoryName={category.name}
               handleCheckPractician={handleCheckPractician}
@@ -127,4 +143,4 @@ const DocMailboxAssignedPracticianForward = ({
   );
 };
 
-export default DocMailboxAssignedPracticianForward;
+export default ReportsInboxAssignedPracticianForward;

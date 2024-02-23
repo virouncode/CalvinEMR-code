@@ -5,10 +5,6 @@ import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import {
-  getUnreadMessagesExternalNbr,
-  getUnreadMessagesNbr,
-} from "../../../utils/getUnreadMessagesNbr";
 import { userSchema } from "../../../validation/userValidation";
 import CircularProgressSmallWhite from "../UI/Progress/CircularProgressSmallWhite";
 const LOGIN_URL = "/auth/login";
@@ -111,30 +107,25 @@ const LoginNewCard = () => {
         );
         const settings = response3?.data;
 
-        //================ USER UNREAD MESSAGES =============//
-        const response4 = await xanoGet(
-          `/messages_for_staff`,
-          axiosXanoStaff,
-          authToken,
-          "staff_id",
-          user.id
-        );
-        const unreadMessagesNbr = getUnreadMessagesNbr(response4.data, user.id);
-
-        // Get user unread external messages
-        const response5 = await xanoGet(
-          `/messages_external_for_staff`,
-          axiosXanoStaff,
-          authToken,
-          "staff_id",
-          user.id
-        );
-
-        const unreadMessagesExternalNbr = getUnreadMessagesExternalNbr(
-          response5.data,
-          "staff",
-          user.id
-        );
+        // //================ USER UNREAD MESSAGES =============//
+        const unreadMessagesNbr = (
+          await xanoGet(
+            `/unread_messages_for_staff`,
+            axiosXanoStaff,
+            authToken,
+            "staff_id",
+            user.id
+          )
+        ).data;
+        const unreadMessagesExternalNbr = (
+          await xanoGet(
+            `/unread_messages_external_for_staff`,
+            axiosXanoStaff,
+            authToken,
+            "staff_id",
+            user.id
+          )
+        ).data;
         const unreadNbr = unreadMessagesExternalNbr + unreadMessagesNbr;
 
         setUser({
@@ -448,7 +439,13 @@ const LoginNewCard = () => {
             <label htmlFor="admin">Admin</label>
           </div>
         </div>
-        {err && <p className={"login-errmsg"}>{err}</p>}
+        {err ? (
+          <p className={"login__err"}>{err}</p>
+        ) : (
+          <p className={"login__err"} style={{ visibility: "hidden" }}>
+            Placeholder
+          </p>
+        )}
         <div className="login-form__row">
           <label htmlFor="email">Email</label>
           <input

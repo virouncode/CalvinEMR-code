@@ -6,13 +6,14 @@ const PatientsListItem = ({
   isPatientChecked,
   patientName,
   isLoading,
+  lastItemRef = null,
 }) => {
   return (
-    <li className="patients__list-item">
+    <li className="patients__list-item" ref={lastItemRef}>
       <input
         id={info.patient_id}
         type="checkbox"
-        onChange={handleCheckPatient}
+        onChange={(e) => handleCheckPatient(e, info.assigned_staff_id)}
         checked={isPatientChecked(info.patient_id)}
         name={patientName}
         disabled={isLoading}

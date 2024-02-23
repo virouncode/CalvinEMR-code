@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const MessagesLeftBar = ({
   msgType,
@@ -21,7 +21,7 @@ const MessagesLeftBar = ({
       ? "messages-content__category messages-content__category--active"
       : "messages-content__category";
 
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
 
   return (
     <div className="messages-content__leftbar">

@@ -4,18 +4,22 @@ import { postPatientRecord } from "../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import { reportClassCT, reportFormatCT } from "../../../datas/codesTables";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { getExtension } from "../../../utils/getExtension";
 import { reportSchema } from "../../../validation/reportValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
-import DocMailboxPatients from "./DocMailboxPatients";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import ReportsInboxPatients from "./ReportsInboxPatients";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
+const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
   //HOOKS
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
     Format: "Binary",
   });
@@ -48,9 +52,14 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
     return formDatas.patient_id === parseInt(id);
   };
 
-  const handleCheckPatient = (e) => {
+  const handleCheckPatient = (e, assignedStaffId) => {
     setErrMsg("");
-    setFormDatas({ ...formDatas, patient_id: parseInt(e.target.id) });
+    console.log("assigned staff id", assignedStaffId);
+    setFormDatas({
+      ...formDatas,
+      patient_id: parseInt(e.target.id),
+      assigned_staff_id: assignedStaffId,
+    });
   };
 
   const handleContentChange = (e) => {
@@ -62,9 +71,6 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
     setErrMsg("");
     const datasToPost = {
       ...formDatas,
-      assigned_staff_id: clinic.demographicsInfos.find(
-        ({ patient_id }) => patient_id === formDatas.patient_id
-      )?.assigned_staff_id,
       SourceAuthorPhysician: { AuthorFreeText: formDatas.AuthorFreeText },
     };
     //Validation
@@ -85,7 +91,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
         "REPORTS"
       );
       socket.emit("message", {
-        route: "DOCMAILBOX",
+        route: "REPORTS INBOX",
         action: "create",
         content: { data: response.data },
       });
@@ -165,11 +171,14 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
 
   return (
     <div
-      className="docmailbox__form"
+      className="reportsinbox__form"
       style={{ border: errMsg && "solid 1.5px red" }}
     >
-      <form className="docmailbox__form-content" onSubmit={handleSubmit}>
-        <div className="docmailbox__form-row">
+      <form className="reportsinbox__form-content" onSubmit={handleSubmit}>
+        <div className="reportsinbox__form-row">
+          <input type="submit" value="Post" disabled={isLoadingFile} />
+        </div>
+        <div className="reportsinbox__form-row">
           <label>Report Name</label>
           <input
             name="name"
@@ -179,15 +188,15 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row docmailbox__form-row--patients">
+        <div className="reportsinbox__form-row reportsinbox__form-row--patients">
           <label>Related patient</label>
-          <DocMailboxPatients
+          <ReportsInboxPatients
             isPatientChecked={isPatientChecked}
             handleCheckPatient={handleCheckPatient}
             label={false}
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Format</label>
           <GenericList
             name="Format"
@@ -196,12 +205,12 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             list={reportFormatCT}
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>File extension</label>
           <p>{formDatas.FileExtensionAndVersion || ""}</p>
         </div>
         {formDatas.Format === "Binary" ? (
-          <div className="docmailbox__form-row">
+          <div className="reportsinbox__form-row">
             <label>Content</label>
             <input
               name="Content"
@@ -213,7 +222,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             />
           </div>
         ) : (
-          <div className="docmailbox__form-row docmailbox__form-row--text">
+          <div className="reportsinbox__form-row reportsinbox__form-row--text">
             <label>Content</label>
             <textarea
               name="Content"
@@ -222,7 +231,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             />
           </div>
         )}
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Class</label>
           <GenericList
             name="Class"
@@ -231,7 +240,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             list={reportClassCT}
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Sub class</label>
           <input
             type="text"
@@ -241,7 +250,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Date of document</label>
           <input
             type="date"
@@ -251,7 +260,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Date received</label>
           <input
             type="date"
@@ -261,7 +270,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row">
+        <div className="reportsinbox__form-row">
           <label>Author</label>
           <input
             type="text"
@@ -271,7 +280,7 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row docmailbox__form-row--text">
+        <div className="reportsinbox__form-row reportsinbox__form-row--text">
           <label>Notes</label>
           <textarea
             name="Notes"
@@ -280,14 +289,9 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
             autoComplete="off"
           />
         </div>
-        <div className="docmailbox__form-row">
-          {isLoadingFile && <CircularProgressMedium />}
-        </div>
-        <div className="docmailbox__form-row">
-          <input type="submit" value="Post" disabled={isLoadingFile} />
-        </div>
       </form>
-      <div className="docmailbox__form-preview">
+      <div className="reportsinbox__form-preview">
+        {isLoadingFile && <LoadingParagraph />}
         {formDatas.File && formDatas.File.mime?.includes("image") ? (
           <img src={`${BASE_URL}${formDatas.File.path}`} alt="" width="100%" />
         ) : formDatas.File && formDatas.File.mime?.includes("video") ? (
@@ -325,4 +329,4 @@ const DocMailboxFormSecretary = ({ errMsg, setErrMsg }) => {
   );
 };
 
-export default DocMailboxFormSecretary;
+export default ReportsInboxFormSecretary;

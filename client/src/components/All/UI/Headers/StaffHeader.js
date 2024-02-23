@@ -67,7 +67,7 @@ const StaffHeader = () => {
           </li>
           <li>
             <NavLink
-              to="/staff/doc-inbox"
+              to="/staff/reports-inbox"
               className={(nav) =>
                 nav.isActive
                   ? "header__link header__link--active"

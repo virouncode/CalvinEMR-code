@@ -1,7 +1,7 @@
 import React from "react";
 import formatName from "../../../utils/formatName";
 
-const DocMailboxPracticiansListItemForward = ({
+const ReportsInboxPracticiansListItemForward = ({
   info,
   handleCheckPractician,
   isPracticianChecked,
@@ -21,4 +21,4 @@ const DocMailboxPracticiansListItemForward = ({
   );
 };
 
-export default DocMailboxPracticiansListItemForward;
+export default ReportsInboxPracticiansListItemForward;

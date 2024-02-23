@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from "react";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import { toLocalDate } from "../../../utils/formatDates";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import GuestPatientResultItem from "./GuestPatientResultItem";
 import GuestStaffResultItem from "./GuestStaffResultItem";
 
@@ -75,7 +75,7 @@ const GuestsSearchResults = ({
               />
             )
           )}
-        {loading && <CircularProgressMedium />}
+        {loading && <LoadingLi />}
       </div>
       <div className="results__staff">
         <div className="results__title">Staff</div>
