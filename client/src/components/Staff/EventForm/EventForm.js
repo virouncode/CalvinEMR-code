@@ -7,7 +7,7 @@ import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailableRooms from "../../../hooks/useAvailableRooms";
 import { useEventForm } from "../../../hooks/useEventForm";
-import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
+import usePatientsGuestsList from "../../../hooks/usePatientsGuestsList";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -69,10 +69,13 @@ const EventForm = ({
     chart: "",
     health: "",
   });
-  const { loading, err, patientsDemographics, hasMore } =
-    usePatientsDemographics(search, paging);
   const [{ formDatas, tempFormDatas }, , setTempFormDatas] = useEventForm(
     currentEvent.current.id
+  );
+  const { loading, err, patientsDemographics, hasMore } = usePatientsGuestsList(
+    search,
+    paging,
+    tempFormDatas?.patients_guests_ids
   );
   const [availableRooms, setAvailableRooms] = useAvailableRooms(
     parseInt(currentEvent.current.id),
@@ -680,7 +683,6 @@ const EventForm = ({
               value={tempFormDatas.site_id}
             />
           </div>
-
           <RoomsRadio
             handleRoomChange={handleRoomChange}
             roomSelectedId={tempFormDatas.room_id}

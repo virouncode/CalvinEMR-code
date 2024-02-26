@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { sendEmail } from "../../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
+import { toPatientName } from "../../../../utils/toPatientName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import MessageExternal from "./MessageExternal";
 
@@ -15,7 +19,10 @@ const ReplyMessageExternal = ({
   previousMsgs,
   setCurrentMsgId,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -34,10 +41,8 @@ const ReplyMessageExternal = ({
       attach_ids = [...message.attachments_ids, ...attach_ids];
 
       const replyMessage = {
-        from_id: user.id,
-        from_user_type: "staff",
-        to_id: message.from_id,
-        to_user_type: "patient",
+        from_staff_id: user.id,
+        to_patient_id: message.from_patient_id,
         subject: previousMsgs.length
           ? `Re ${previousMsgs.length + 1}: ${message.subject.slice(
               message.subject.indexOf(":") + 1
@@ -68,12 +73,17 @@ const ReplyMessageExternal = ({
         action: "create",
         content: { data: response.data },
       });
+      socket.emit("message", {
+        route: "MESSAGES WITH PATIENT",
+        action: "create",
+        content: { data: response.data },
+      });
       setReplyVisible(false);
       setCurrentMsgId(0);
       //send an email and an SMS to patient
       await sendEmail(
         "virounk@gmail.com", //to be changed to patient email
-        patientIdToName(clinic.demographicsInfos, message.from_id),
+        toPatientName(message.from_patient_infos),
         "Calvin EMR New message",
         "",
         "",
@@ -90,7 +100,7 @@ const ReplyMessageExternal = ({
           // from: "New Life",
           to: "+33683267962", //to be changed to patient cell_phone
           body: `
-Hello ${patientIdToName(clinic.demographicsInfos, message.from_id)},
+Hello ${toPatientName(message.from_patient_infos)},
           
 You have a new message, please login to your patient portal
           
@@ -192,7 +202,7 @@ Powered by Calvin EMR`,
       <div className="reply-message__title">
         <p>
           <strong>To: </strong>
-          {patientIdToName(clinic.demographicsInfos, message.from_id)}
+          {toPatientName(message.from_patient_infos)}
         </p>
       </div>
       <div className="reply-message__subject">
@@ -239,21 +249,7 @@ Powered by Calvin EMR`,
         <button onClick={handleCancel}>Cancel</button>
         {isLoadingFile && <CircularProgressMedium />}
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useCallback, useRef } from "react";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import { toLocalDate } from "../../../utils/formatDates";
 import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import GuestPatientResultItem from "./GuestPatientResultItem";
 import GuestStaffResultItem from "./GuestStaffResultItem";
@@ -13,6 +12,7 @@ const GuestsSearchResults = ({
   hasMore,
   setPaging,
   loading,
+  staff_guests_ids,
 }) => {
   const { staffInfos } = useStaffInfosContext();
   const lastPatientRef = useCallback(
@@ -48,33 +48,22 @@ const GuestsSearchResults = ({
     <ul className="results" ref={rootRef}>
       <div className="results__patients">
         <div className="results__title">Patients</div>
-        {patientsDemographics
-          .filter(
-            (patient) =>
-              patient.PhoneNumber.find(({ phoneNumber }) =>
-                phoneNumber.includes(search.phone)
-              ) && toLocalDate(patient.DateOfBirth).includes(search.birth)
-            // &&
-            // !patientsGuestsInfos
-            //   .map(({ patient_id }) => patient_id)
-            //   .includes(patient.patient_id)
+        {patientsDemographics.map((guest, index) =>
+          index === patientsDemographics.length - 1 ? (
+            <GuestPatientResultItem
+              key={guest.id}
+              guest={guest}
+              handleAddGuest={handleAddGuest}
+              lastPatientRef={lastPatientRef}
+            />
+          ) : (
+            <GuestPatientResultItem
+              key={guest.id}
+              guest={guest}
+              handleAddGuest={handleAddGuest}
+            />
           )
-          .map((guest, index) =>
-            index === patientsDemographics.length - 1 ? (
-              <GuestPatientResultItem
-                key={guest.id}
-                guest={guest}
-                handleAddGuest={handleAddGuest}
-                lastPatientRef={lastPatientRef}
-              />
-            ) : (
-              <GuestPatientResultItem
-                key={guest.id}
-                guest={guest}
-                handleAddGuest={handleAddGuest}
-              />
-            )
-          )}
+        )}
         {loading && <LoadingLi />}
       </div>
       <div className="results__staff">
@@ -93,9 +82,10 @@ const GuestsSearchResults = ({
                   .includes(search.email.toLowerCase()) &&
                 (staff.cell_phone.includes(search.phone) ||
                   staff.backup_phone.includes(search.phone)) &&
-                staff.id !== hostId
-              //   &&
-              // !staffGuestsInfos.map(({ id }) => id).includes(staff.id)
+                staff.id !== hostId &&
+                !staff_guests_ids
+                  .map(({ staff_infos }) => staff_infos.id)
+                  .includes(staff.id)
             )
             .map((guest) => (
               <GuestStaffResultItem

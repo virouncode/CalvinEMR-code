@@ -1,18 +1,24 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { sendEmail } from "../../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessageExternal = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
-  const [recipientId, setRecipientId] = useState(0);
+  const [recipient, setRecipient] = useState({ id: 0, name: "" });
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -25,15 +31,16 @@ const NewMessageExternal = ({ setNewVisible }) => {
     setSubject(e.target.value);
   };
 
-  const isPatientChecked = (id) => recipientId === id;
+  const isPatientChecked = (id) => recipient.id === id;
 
   const handleCheckPatient = (e) => {
     const id = parseInt(e.target.id);
     const checked = e.target.checked;
+    const name = e.target.name;
     if (checked) {
-      setRecipientId(id);
+      setRecipient({ id, name });
     } else {
-      setRecipientId(0);
+      setRecipient({ id: 0, name: "" });
     }
   };
 
@@ -50,7 +57,7 @@ const NewMessageExternal = ({ setNewVisible }) => {
   };
 
   const handleSend = async (e) => {
-    if (recipientId === 0) {
+    if (recipient.id === 0) {
       toast.error("Please choose a recipient", { containerId: "B" });
       return;
     }
@@ -63,14 +70,12 @@ const NewMessageExternal = ({ setNewVisible }) => {
 
       //create the message
       const message = {
-        from_id: user.id,
-        from_user_type: "staff",
-        to_id: recipientId,
-        to_user_type: "patient",
+        from_staff_id: user.id,
+        to_patient_id: recipient.id,
+        read_by_staff_id: user.id,
         subject: subject,
         body: body,
         attachments_ids: attach_ids,
-        read_by_staff_id: user.id,
         date_created: Date.now(),
       };
 
@@ -89,12 +94,17 @@ const NewMessageExternal = ({ setNewVisible }) => {
         action: "create",
         content: { data: response.data },
       });
+      socket.emit("message", {
+        route: "MESSAGES WITH PATIENT",
+        action: "create",
+        content: { data: response.data },
+      });
       setNewVisible(false);
 
       //send an email and an SMS to patient
       await sendEmail(
         "virounk@gmail.com", //to be changed to patient email
-        patientIdToName(clinic.demographicsInfos, recipientId),
+        recipient.name,
         "Calvin EMR New message",
         "",
         "",
@@ -111,7 +121,7 @@ const NewMessageExternal = ({ setNewVisible }) => {
           // from: "New Life",
           to: "+33683267962", //to be changed to patient cell_phone
           body: `
-Hello ${patientIdToName(clinic.demographicsInfos, recipientId)},
+Hello ${recipient.name},
           
 You have a new message, please login to your patient portal
           
@@ -207,11 +217,7 @@ Powered by Calvin EMR`,
           <input
             type="text"
             placeholder="Patient"
-            value={
-              recipientId
-                ? patientIdToName(clinic.demographicsInfos, recipientId)
-                : ""
-            }
+            value={recipient.name}
             readOnly
           />
         </div>
@@ -254,23 +260,10 @@ Powered by Calvin EMR`,
         <Patients
           handleCheckPatient={handleCheckPatient}
           isPatientChecked={isPatientChecked}
+          msgType="External"
         />
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

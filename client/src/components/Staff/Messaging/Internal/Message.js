@@ -1,11 +1,11 @@
 import React from "react";
-import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 
 const Message = ({ message, index }) => {
-  const { clinic } = useAuthContext();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <div
       className="message"
@@ -13,8 +13,7 @@ const Message = ({ message, index }) => {
     >
       <div className="message__title">
         <div className="message__author">
-          From:{" "}
-          {staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)}
+          From: {staffIdToTitleAndName(staffInfos, message.from_id, true)}
         </div>
         <div className="message__date">
           <div>{toLocalDateAndTime(message.date_created)}</div>
@@ -25,12 +24,12 @@ const Message = ({ message, index }) => {
         {message.type === "Internal"
           ? message.to_staff_ids
               .map((staff_id) =>
-                staffIdToTitleAndName(clinic.staffInfos, staff_id, true)
+                staffIdToTitleAndName(staffInfos, staff_id, true)
               )
               .join(", ")
           : message.to_staff_id
-          ? staffIdToTitleAndName(clinic.staffInfos, message.to_staff_id, true)
-          : patientIdToName(clinic.demographicsInfos, message.to_patient_id)}
+          ? staffIdToTitleAndName(staffInfos, message.to_staff_id, true)
+          : toPatientName(message.to_patient_infos)}
       </div>
       <div className="message__body">{message.body}</div>
     </div>

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../../utils/categoryToTitle";
 import formatName from "../../../../utils/formatName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Contacts from "../Contacts";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
@@ -15,9 +19,12 @@ const ForwardMessage = ({
   setForwardVisible,
   message,
   previousMsgs,
-  patient,
+  patientName,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientsIds, setRecipientsIds] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -35,7 +42,7 @@ const ForwardMessage = ({
     const id = parseInt(e.target.id);
     const checked = e.target.checked;
     const category = e.target.name;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -66,7 +73,7 @@ const ForwardMessage = ({
   const handleCheckCategory = (e) => {
     const category = e.target.id;
     const checked = e.target.checked;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -142,6 +149,11 @@ const ForwardMessage = ({
       });
       socket.emit("message", {
         route: "MESSAGES INBOX",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES ABOUT PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -225,7 +237,7 @@ const ForwardMessage = ({
     <div className="forward-message">
       <div className="forward-message__contacts">
         <Contacts
-          staffInfos={clinic.staffInfos}
+          staffInfos={staffInfos}
           handleCheckContact={handleCheckContact}
           isContactChecked={isContactChecked}
           handleCheckCategory={handleCheckCategory}
@@ -238,7 +250,7 @@ const ForwardMessage = ({
           <input
             type="text"
             placeholder="Recipients"
-            value={clinic.staffInfos
+            value={staffInfos
               .filter(({ id }) => recipientsIds.includes(id))
               .map(
                 (staff) =>
@@ -257,9 +269,9 @@ const ForwardMessage = ({
               )}`
             : `\u00A0Fwd: ${message.subject}`}
         </div>
-        {patient?.full_name && (
+        {patientName && (
           <div className="forward-message__patient">
-            <strong>About patient: {"\u00A0"}</strong> {patient.full_name}
+            <strong>About patient: {"\u00A0"}</strong> {patientName}
           </div>
         )}
         <div className="forward-message__attach">
@@ -303,21 +315,7 @@ const ForwardMessage = ({
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

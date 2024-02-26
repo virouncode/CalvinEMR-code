@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../../utils/categoryToTitle";
 import formatName from "../../../../utils/formatName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Contacts from "../Contacts";
 import MessagesAttachments from "../MessagesAttachments";
 import MessageExternal from "./MessageExternal";
@@ -14,9 +18,12 @@ const ForwardMessageExternal = ({
   setForwardVisible,
   message,
   previousMsgs,
-  patient,
+  patientName,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientsIds, setRecipientsIds] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -34,7 +41,7 @@ const ForwardMessageExternal = ({
     const id = parseInt(e.target.id);
     const checked = e.target.checked;
     const category = e.target.name;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -65,7 +72,7 @@ const ForwardMessageExternal = ({
   const handleCheckCategory = (e) => {
     const category = e.target.id;
     const checked = e.target.checked;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -122,10 +129,7 @@ const ForwardMessageExternal = ({
           : `Fwd: ${message.subject}`,
         body: body,
         attachments_ids: attach_ids,
-        related_patient_id:
-          message.from_user_type === "patient"
-            ? message.from_id
-            : message.to_id,
+        related_patient_id: message.from_patient_id || message.to_patient_id,
         read_by_staff_ids: [user.id],
         previous_messages: [
           ...message.previous_messages_ids.map((id) => {
@@ -146,6 +150,11 @@ const ForwardMessageExternal = ({
 
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES ABOUT PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -229,7 +238,7 @@ const ForwardMessageExternal = ({
     <div className="forward-message">
       <div className="forward-message__contacts">
         <Contacts
-          staffInfos={clinic.staffInfos}
+          staffInfos={staffInfos}
           handleCheckContact={handleCheckContact}
           isContactChecked={isContactChecked}
           handleCheckCategory={handleCheckCategory}
@@ -242,7 +251,7 @@ const ForwardMessageExternal = ({
           <input
             type="text"
             placeholder="Recipients"
-            value={clinic.staffInfos
+            value={staffInfos
               .filter(({ id }) => recipientsIds.includes(id))
               .map(
                 (staff) =>
@@ -261,9 +270,9 @@ const ForwardMessageExternal = ({
               )}`
             : `\u00A0Fwd: ${message.subject}`}
         </div>
-        {patient?.full_name && (
+        {patientName && (
           <div className="forward-message__patient">
-            <strong>About patient: {"\u00A0"}</strong> {patient.full_name}
+            <strong>About patient: {"\u00A0"}</strong> {patientName}
           </div>
         )}
         <div className="forward-message__attach">
@@ -303,21 +312,7 @@ const ForwardMessageExternal = ({
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
 import MessageExternal from "../../Staff/Messaging/External/MessageExternal";
 import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
 
@@ -44,10 +45,8 @@ const ReplyMessagePatient = ({
       attach_ids = [...message.attachments_ids, ...attach_ids];
 
       const replyMessage = {
-        from_id: user.id,
-        from_user_type: "patient",
-        to_id: message.from_id,
-        to_user_type: "staff",
+        from_patient_id: user.id,
+        to_staff_id: message.from_staff_id,
         subject: previousMsgs.length
           ? `Re ${previousMsgs.length + 1}: ${message.subject.slice(
               message.subject.indexOf(":") + 1
@@ -75,6 +74,11 @@ const ReplyMessagePatient = ({
       );
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES WITH PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -210,21 +214,7 @@ const ReplyMessagePatient = ({
         <button onClick={handleCancel}>Cancel</button>
         {isLoadingFile && <CircularProgressMedium />}
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

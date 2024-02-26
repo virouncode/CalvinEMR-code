@@ -41,7 +41,7 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
                   <div className="topic-content__overview">
                     <NavLink
                       className="topic-content__link"
-                      to={`/messages/${message.id}/${getSection(
+                      to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/Internal`}
                       target="_blank"
@@ -52,7 +52,7 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
                   <div className="topic-content__date">
                     <NavLink
                       className="topic-content__link"
-                      to={`/messages/${message.id}/${getSection(
+                      to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/Internal`}
                       target="_blank"

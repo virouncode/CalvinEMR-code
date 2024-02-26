@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchMessages from "../../../../hooks/useFetchMessages";
 import useMessagesSocket from "../../../../hooks/useMessagesSocket";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesBox from "./MessagesBox";
@@ -12,10 +9,7 @@ import MessagesToolBar from "./MessagesToolBar";
 
 const Messages = () => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
-  const { socket } = useSocketContext();
-  const { staffInfos } = useStaffInfosContext();
   const { messageId, sectionName } = useParams();
   const [search, setSearch] = useState("");
   const [section, setSection] = useState(sectionName || "Inbox");
@@ -49,6 +43,7 @@ const Messages = () => {
 
   return (
     <div className="messages-container">
+      {console.log("currentMsgId", currentMsgId)}
       <MessagesToolBar
         search={search}
         setSearch={setSearch}
@@ -63,6 +58,8 @@ const Messages = () => {
         setPopUpVisible={setPopUpVisible}
         selectAllVisible={selectAllVisible}
         setSelectAllVisible={setSelectAllVisible}
+        paging={paging}
+        setPaging={setPaging}
       />
       <div className="messages-content">
         <MessagesLeftBar
@@ -72,6 +69,9 @@ const Messages = () => {
           setCurrentMsgId={setCurrentMsgId}
           setMsgsSelectedIds={setMsgsSelectedIds}
           setSelectAllVisible={setSelectAllVisible}
+          paging={paging}
+          setPaging={setPaging}
+          setMessages={setMessages}
         />
         <MessagesBox
           section={section}

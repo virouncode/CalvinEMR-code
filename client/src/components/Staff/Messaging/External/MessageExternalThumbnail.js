@@ -2,9 +2,12 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessageExternalThumbnail = ({
@@ -13,8 +16,12 @@ const MessageExternalThumbnail = ({
   setMsgsSelectedIds,
   msgsSelectedIds,
   section,
+  lastItemRef = null,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
+  const { socket } = useSocketContext();
 
   const handleMsgClick = async (e) => {
     if (!message.read_by_staff_id) {
@@ -39,6 +46,11 @@ const MessageExternalThumbnail = ({
           action: "update",
           content: { id: message.id, data: newMessage },
         });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
           containerId: "A",
@@ -48,17 +60,10 @@ const MessageExternalThumbnail = ({
     //Remove one from the unread messages nbr counter
     if (user.unreadMessagesExternalNbr !== 0) {
       const newUnreadMessagesExternalNbr = user.unreadMessagesExternalNbr - 1;
-      socket.emit("message", {
-        route: "UNREAD",
-        userType: "staff",
-        userId: user.id,
-        type: "external",
-        content: {
-          data: {
-            unreadMessagesExternalNbr: newUnreadMessagesExternalNbr,
-            unreadNbr: user.unreadMessagesNbr + newUnreadMessagesExternalNbr,
-          },
-        },
+      setUser({
+        ...user,
+        unreadMessagesExternalNbr: newUnreadMessagesExternalNbr,
+        unreadNbr: newUnreadMessagesExternalNbr + user.unreadMessagesNbr,
       });
     }
     setCurrentMsgId(message.id);
@@ -115,6 +120,17 @@ const MessageExternalThumbnail = ({
             },
           },
         });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
+          action: "update",
+          content: {
+            id: message.id,
+            data: {
+              ...message,
+              deleted_by_staff_id: user.id,
+            },
+          },
+        });
         toast.success("Message deleted successfully", { containerId: "A" });
         setMsgsSelectedIds([]);
       } catch (err) {
@@ -128,12 +144,13 @@ const MessageExternalThumbnail = ({
   return (
     <div
       className={
-        message.to_id === user.id &&
-        message.to_user_type === "staff" &&
+        message.to_staff_id &&
+        message.to_staff_id === user.id &&
         !message.read_by_staff_id
           ? "message-thumbnail message-thumbnail--unread"
           : "message-thumbnail"
       }
+      ref={lastItemRef}
     >
       <input
         className="message-thumbnail__checkbox"
@@ -148,11 +165,11 @@ const MessageExternalThumbnail = ({
       >
         <div className="message-thumbnail__author">
           {section !== "Sent messages" //messages reçus ou effacés
-            ? message.from_user_type === "patient" //le "From" est un patient ou un staff
-              ? patientIdToName(clinic.demographicsInfos, message.from_id)
-              : staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)
+            ? message.from_patient_id //le "From" est un patient
+              ? toPatientName(message.from_patient_infos)
+              : staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
             : /*messages envoyés, le "To" est forcément un patient*/
-              patientIdToName(clinic.demographicsInfos, message.to_id)}
+              toPatientName(message.to_patient_infos)}
         </div>
         <div className="message-thumbnail__sample">
           <span>{message.subject}</span> - {message.body}{" "}

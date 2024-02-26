@@ -11891,9 +11891,12 @@ readers do not read off random characters that represent icons */
 .clinical-notes__card-body {
   padding: 20px;
   text-align: justify;
+  overflow-wrap: break-word;
+  width: 100%;
 }
 .clinical-notes__card-body p {
-  white-space: pre;
+  width: 100%;
+  overflow-wrap: break-word;
 }
 .clinical-notes__card-body textarea {
   padding: 10px;
@@ -11905,10 +11908,12 @@ readers do not read off random characters that represent icons */
 .clinical-notes__card-body-container {
   max-height: 0;
   transition: 0.3s;
-  overflow: scroll;
+  overflow-y: scroll;
+  white-space: pre-wrap;
 }
 .clinical-notes__card-body-container--active {
   max-height: 1000px;
+  white-space: pre-wrap;
 }
 .clinical-notes__card-sign {
   text-align: end;
@@ -13845,7 +13850,7 @@ readers do not read off random characters that represent icons */
 .prescription__item-textarea {
   width: 100%;
   height: auto;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .prescription__page {
   width: 21cm;
@@ -13915,7 +13920,7 @@ readers do not read off random characters that represent icons */
   margin-top: 40px;
   padding: 0 20px;
   font-size: 0.8rem;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .prescription__body-content-textarea {
   width: 100%;
@@ -13930,7 +13935,7 @@ readers do not read off random characters that represent icons */
 .prescription__body-content-final {
   width: 100%;
   font-size: 0.85rem;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .prescription__footer {
   height: 2%;
@@ -14600,7 +14605,7 @@ readers do not read off random characters that represent icons */
 .message__body {
   padding: 20px 20px 0;
   font-size: 0.8rem;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .message-attachments {
@@ -16908,12 +16913,12 @@ readers do not read off random characters that represent icons */
 .med-templates__form-notes {
   width: 100%;
   height: 50px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .med-templates__form-instructions {
   width: 100%;
   height: 100px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .med-templates__form-btn-container {
   text-align: center;

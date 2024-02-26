@@ -49,10 +49,9 @@ const NextAppointments = ({ nextAppointments }) => {
 
         for (const secretaryId of secretariesIds) {
           const message = {
-            from_id: user.id,
-            from_user_type: "patient",
-            to_id: secretaryId,
-            to_user_type: "staff",
+            from_patient_id: user.id,
+            to_staff_id: secretaryId,
+            read_by_patient_id: user.id,
             subject: "Appointment cancelation",
             body: `Hello ${staffIdToName(clinic.staffInfos, secretaryId)},
 
@@ -88,6 +87,11 @@ Cellphone: ${user.demographics.cell_phone}`,
           );
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",
+            action: "create",
+            content: { data: response.data },
+          });
+          socket.emit("message", {
+            route: "MESSAGES WITH PATIENT",
             action: "create",
             content: { data: response.data },
           });

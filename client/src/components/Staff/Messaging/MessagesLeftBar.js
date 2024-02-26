@@ -8,6 +8,9 @@ const MessagesLeftBar = ({
   setCurrentMsgId,
   setMsgsSelectedIds,
   setSelectAllVisible,
+  paging,
+  setPaging,
+  setMessages,
 }) => {
   const handleClickSection = (e) => {
     const name = e.target.id;
@@ -15,6 +18,8 @@ const MessagesLeftBar = ({
     setCurrentMsgId(0);
     setMsgsSelectedIds([]);
     setSelectAllVisible(true);
+    setMessages([]);
+    setPaging({ ...paging, page: 1 });
   };
   const isActive = (id) =>
     section === id

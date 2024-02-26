@@ -8,6 +8,8 @@ const MessagesAttachments = ({
   cardWidth,
   handleRemoveAttachment = null,
   patientId = null,
+  patientName,
+  message,
 }) => {
   return (
     attachments && (
@@ -21,6 +23,8 @@ const MessagesAttachments = ({
             deletable={deletable}
             cardWidth={cardWidth}
             addable={addable}
+            patientName={patientName}
+            message={message}
           />
         ))}
       </div>

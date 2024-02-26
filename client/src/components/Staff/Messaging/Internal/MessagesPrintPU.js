@@ -1,10 +1,8 @@
-import useAuthContext from "../../../../hooks/useAuthContext";
-import { patientIdToName } from "../../../../utils/patientIdToName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";
 
 const MessagesPrintPU = ({ message, previousMsgs, attachments }) => {
-  const { clinic } = useAuthContext();
   const handleClickPrint = (e) => {
     e.nativeEvent.view.print();
   };
@@ -16,15 +14,12 @@ const MessagesPrintPU = ({ message, previousMsgs, attachments }) => {
             <strong>Subject:{"\u00A0"}</strong>
             {message.subject}
           </p>
-          {message.related_patient_id && (
+          {message.related_patient_id ? (
             <p className="messages-print__patient">
               <strong>Patient:{"\u00A0"}</strong>
-              {patientIdToName(
-                clinic.demographicsInfos,
-                message.related_patient_id
-              )}
+              {toPatientName(message.patient_infos)}
             </p>
-          )}
+          ) : null}
         </div>
         <div className="messages-print__content">
           <Message message={message} key={message.id} index={0} />

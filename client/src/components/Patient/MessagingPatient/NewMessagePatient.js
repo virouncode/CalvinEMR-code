@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
 import ContactsForPatient from "./ContactsForPatient";
 
@@ -73,10 +74,8 @@ const NewMessagePatient = ({ setNewVisible }) => {
 
       //create the message
       const message = {
-        from_id: user.id,
-        from_user_type: "patient",
-        to_id: recipientId,
-        to_user_type: "staff",
+        from_patient_id: user.id,
+        to_staff_id: recipientId,
         subject: subject,
         body: body,
         attachments_ids: attach_ids,
@@ -96,6 +95,11 @@ const NewMessagePatient = ({ setNewVisible }) => {
       );
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES WITH PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -224,21 +228,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

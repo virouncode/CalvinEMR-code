@@ -39,6 +39,11 @@ const MessagePatientThumbnail = ({
           action: "update",
           content: { id: message.id, data: newMessage },
         });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
           containerId: "A",
@@ -124,6 +129,17 @@ const MessagePatientThumbnail = ({
             },
           },
         });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
+          action: "update",
+          content: {
+            id: message.id,
+            data: {
+              ...message,
+              deleted_by_staff_id: user.id,
+            },
+          },
+        });
         toast.success("Message deleted successfully", { containerId: "A" });
         setMsgsSelectedIds([]);
       } catch (err) {
@@ -137,8 +153,8 @@ const MessagePatientThumbnail = ({
   return (
     <div
       className={
-        message.to_id === user.id &&
-        message.to_user_type === "patient" &&
+        message.to_patient_id &&
+        message.to_patient_id === user.id &&
         !message.read_by_patient_id
           ? "message-thumbnail message-thumbnail--unread"
           : "message-thumbnail"
@@ -157,7 +173,7 @@ const MessagePatientThumbnail = ({
       >
         <div className="message-thumbnail__author">
           {section !== "Sent messages" //messages reçus ou effacés
-            ? message.from_user_type === "patient" //le from est un patient ou un staff
+            ? message.from_patient_id //le from est un patient ou un staff
               ? patientIdToName(clinic.demographicsInfos, message.from_id)
               : staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)
             : /*messages envoyés, le "To" est un staff*/

@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";
 
@@ -13,10 +17,13 @@ const ReplyMessage = ({
   allPersons,
   message,
   previousMsgs,
-  patient,
+  patientName,
   setCurrentMsgId,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -65,6 +72,11 @@ const ReplyMessage = ({
       });
       socket.emit("message", {
         route: "MESSAGES INBOX",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES ABOUT PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -157,10 +169,10 @@ const ReplyMessage = ({
             ? [...new Set([...message.to_staff_ids, message.from_id])]
                 .filter((staffId) => staffId !== user.id)
                 .map((staffId) =>
-                  staffIdToTitleAndName(clinic.staffInfos, staffId, true)
+                  staffIdToTitleAndName(staffInfos, staffId, true)
                 )
                 .join(", ")
-            : staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)}
+            : staffIdToTitleAndName(staffInfos, message.from_id, true)}
         </p>
       </div>
       <div className="reply-message__subject">
@@ -172,9 +184,9 @@ const ReplyMessage = ({
           : `\u00A0Re: ${message.subject}`}
       </div>
 
-      {patient?.full_name && (
+      {patientName && (
         <div className="reply-message__patient">
-          <strong>About patient:</strong> {"\u00A0" + patient.full_name}
+          <strong>About patient:</strong> {"\u00A0" + patientName}
         </div>
       )}
       <div className="reply-message__attach">
@@ -217,21 +229,7 @@ const ReplyMessage = ({
         <button onClick={handleCancel}>Cancel</button>
         {isLoadingFile && <CircularProgressMedium />}
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

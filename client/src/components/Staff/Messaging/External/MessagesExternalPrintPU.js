@@ -2,13 +2,7 @@ import React from "react";
 import MessagesAttachments from "../MessagesAttachments";
 import MessageExternal from "./MessageExternal";
 
-const MessagesExternalPrintPU = ({
-  message,
-  previousMsgs,
-  author,
-  authorTitle,
-  attachments,
-}) => {
+const MessagesExternalPrintPU = ({ message, previousMsgs, attachments }) => {
   const handleClickPrint = (e) => {
     e.nativeEvent.view.print();
   };
@@ -22,13 +16,7 @@ const MessagesExternalPrintPU = ({
           </p>
         </div>
         <div className="messages-print__content">
-          <MessageExternal
-            message={message}
-            author={author}
-            authorTitle={authorTitle}
-            key={message.id}
-            index={0}
-          />
+          <MessageExternal message={message} key={message.id} index={0} />
           {previousMsgs &&
             previousMsgs.map((message, index) => (
               <MessageExternal

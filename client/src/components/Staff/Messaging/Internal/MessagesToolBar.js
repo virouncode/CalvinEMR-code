@@ -2,6 +2,8 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessagesToolBar = ({
@@ -18,10 +20,16 @@ const MessagesToolBar = ({
   setPopUpVisible,
   selectAllVisible,
   setSelectAllVisible,
+  paging,
+  setPaging,
 }) => {
-  const { auth, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+
   const handleChange = (e) => {
     setSearch(e.target.value);
+    setPaging({ ...paging, page: 1 });
   };
   const handleClickNew = (e) => {
     if (newVisible) {
@@ -77,6 +85,11 @@ const MessagesToolBar = ({
             action: "update",
             content: { id: messageId, data: newMessage },
           });
+          socket.emit("message", {
+            route: "MESSAGES ABOUT PATIENT",
+            action: "update",
+            content: { id: messageId, data: newMessage },
+          });
         }
         setNewVisible(false);
         toast.success("Message(s) deleted successfully", { containerId: "A" });
@@ -120,6 +133,11 @@ const MessagesToolBar = ({
         });
         socket.emit("message", {
           route: "MESSAGES INBOX",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
+        socket.emit("message", {
+          route: "MESSAGES ABOUT PATIENT",
           action: "update",
           content: { id: message.id, data: newMessage },
         });

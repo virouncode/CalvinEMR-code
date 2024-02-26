@@ -23,9 +23,10 @@ const ReportForm = ({
   demographicsInfos,
   patientId,
   setAddVisible,
-  editCounter,
+  editCounter = null,
   setErrMsgPost,
   errMsgPost,
+  attachment = null,
 }) => {
   //HOOKS
   const { auth } = useAuthContext();
@@ -36,6 +37,10 @@ const ReportForm = ({
     patient_id: patientId,
     Format: "Binary",
     assigned_staff_id: demographicsInfos.assigned_staff_id,
+    File: attachment ? attachment.file : null,
+    FileExtensionAndVersion: attachment
+      ? getExtension(attachment.file.path)
+      : "",
   });
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [sentOrReceived, setSentOrReceived] = useState("Received");
@@ -160,8 +165,9 @@ const ReportForm = ({
         action: "create",
         content: { data: response.data },
       });
-
-      editCounter.current -= 1;
+      if (editCounter) {
+        editCounter.current -= 1;
+      }
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
     } catch (err) {
@@ -262,19 +268,20 @@ const ReportForm = ({
         </div>
         <div className="reports__row">
           <label>File extension</label>
-          <p>{formDatas.FileExtensionAndVersion || ""}</p>
+          <span>{formDatas.FileExtensionAndVersion || ""}</span>
         </div>
         {formDatas.Format === "Binary" ? (
-          <div className="reports__row">
-            <label>Content</label>
-            <input
-              name="Content"
-              required
-              type="file"
-              onChange={handleUpload}
-              accept=".jpeg, .jpg, .png, .gif, .tif, .pdf, .svg, .mp3, .aac, .aiff, .flac, .ogg, .wma, .wav, .mov, .mp4, .avi, .wmf, .flv, .doc, .docm, .docx, .txt, .csv, .xls, .xlsx, .ppt, .pptx"
-            />
-          </div>
+          !attachment && (
+            <div className="reports__row">
+              <label>Content</label>
+              <input
+                name="Content"
+                type="file"
+                onChange={handleUpload}
+                accept=".jpeg, .jpg, .png, .gif, .tif, .pdf, .svg, .mp3, .aac, .aiff, .flac, .ogg, .wma, .wav, .mov, .mp4, .avi, .wmf, .flv, .doc, .docm, .docx, .txt, .csv, .xls, .xlsx, .ppt, .pptx"
+              />
+            </div>
+          )
         ) : (
           <div className="reports__row reports__row--text">
             <label>Content</label>

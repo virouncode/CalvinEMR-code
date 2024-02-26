@@ -20,7 +20,7 @@ export const getUnreadMessagesExternalNbr = (messages, userType, userId) => {
 
   if (userType === "staff") {
     messagesForUser = messages.filter(
-      (message) => message.to_user_type === "staff" && message.to_id === userId
+      (message) => message.to_staff_id && message.to_staff_id === userId
     );
     if (messagesForUser.length) {
       unreadMessagesExternalNbr = messagesForUser.reduce(
@@ -36,8 +36,7 @@ export const getUnreadMessagesExternalNbr = (messages, userType, userId) => {
     }
   } else {
     messagesForUser = messages.filter(
-      (message) =>
-        message.to_user_type === "patient" && message.to_id === userId
+      (message) => message.to_patient_id && message.to_patient_id === userId
     );
     if (messagesForUser.length) {
       unreadMessagesExternalNbr = messagesForUser.reduce(

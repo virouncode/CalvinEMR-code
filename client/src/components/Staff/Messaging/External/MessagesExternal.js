@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
-import { filterAndSortExternalMessages } from "../../../../utils/filterAndSortExternalMessages";
-import { searchMessagesExternal } from "../../../../utils/searchMessagesExternal";
-import { onMessagesInboxExternal } from "../../../../utils/socketHandlers/onMessagesInboxExternal";
+import useFetchMessagesExternal from "../../../../hooks/useFetchMessagesExternal";
+import useMessagesExternalSocket from "../../../../hooks/useMessagesExternalSocket";
+import useUserContext from "../../../../hooks/useUserContext";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesExternalBox from "./MessagesExternalBox";
 import MessagesExternalToolBar from "./MessagesExternalToolbar";
 
 const MessagesExternal = () => {
-  //HOOKSs
+  //HOOKS
+  const { user } = useUserContext();
   const { messageId, sectionName } = useParams();
+  console.log(messageId, sectionName);
   const [search, setSearch] = useState("");
   const [section, setSection] = useState(sectionName || "Inbox");
   const [newVisible, setNewVisible] = useState(false);
   const [msgsSelectedIds, setMsgsSelectedIds] = useState([]);
   const [currentMsgId, setCurrentMsgId] = useState(0);
-  const [messages, setMessages] = useState(null);
-  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
+
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const { messages, setMessages, loading, errMsg, hasMore } =
+    useFetchMessagesExternal(
+      paging,
+      search,
+      sectionName,
+      section,
+      user.id,
+      "staff"
+    );
   const navigate = useNavigate();
+  useMessagesExternalSocket(messages, setMessages, section, "staff");
 
   useEffect(() => {
     if (messageId) {
@@ -30,64 +43,6 @@ const MessagesExternal = () => {
       navigate("/staff/messages");
     }
   }, [messageId, navigate, setCurrentMsgId]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchMessages = async () => {
-      try {
-        const response = await axiosXanoStaff.get(
-          `/messages_external_for_staff?staff_id=${user.id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
-
-        if (abortController.signal.aborted) return;
-
-        //En fonction de la section on filtre les messages
-        let newMessages = filterAndSortExternalMessages(
-          sectionName || section,
-          response.data,
-          "staff",
-          user.id
-        );
-
-        //Search
-        setMessages(searchMessagesExternal(newMessages, search, clinic));
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to get messages: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchMessages();
-    return () => {
-      abortController.abort();
-      setMessages(null);
-    };
-  }, [auth.authToken, clinic, search, section, sectionName, user.id]);
-
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessagesInboxExternal(
-        message,
-        messages,
-        setMessages,
-        section,
-        user.id,
-        "staff"
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [messages, section, socket, user.id]);
 
   return (
     <div className="messages-container">
@@ -105,6 +60,8 @@ const MessagesExternal = () => {
         setPopUpVisible={setPopUpVisible}
         selectAllVisible={selectAllVisible}
         setSelectAllVisible={setSelectAllVisible}
+        paging={paging}
+        setPaging={setPaging}
       />
       <div className="messages-content">
         <MessagesLeftBar
@@ -114,6 +71,9 @@ const MessagesExternal = () => {
           setCurrentMsgId={setCurrentMsgId}
           setMsgsSelectedIds={setMsgsSelectedIds}
           setSelectAllVisible={setSelectAllVisible}
+          paging={paging}
+          setPaging={setPaging}
+          setMessages={setMessages}
         />
         <MessagesExternalBox
           section={section}
@@ -124,6 +84,10 @@ const MessagesExternal = () => {
           currentMsgId={currentMsgId}
           setCurrentMsgId={setCurrentMsgId}
           messages={messages}
+          loading={loading}
+          errMsg={errMsg}
+          hasMore={hasMore}
+          setPaging={setPaging}
           popUpVisible={popUpVisible}
           setPopUpVisible={setPopUpVisible}
         />

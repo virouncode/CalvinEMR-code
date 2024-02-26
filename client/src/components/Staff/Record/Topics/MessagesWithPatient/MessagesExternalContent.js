@@ -1,19 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import useAuthContext from "../../../../../hooks/useAuthContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
 
   const getSection = (message) => {
     if (message.deleted_by_staff_id === user.id) {
       return "Deleted messages";
-    } else if (
-      message.from_user_type === "staff" &&
-      message.from_id === user.id
-    ) {
+    } else if (message.from_staff_id && message.from_staff_id === user.id) {
       return "Sent messages";
     } else {
       return "Inbox";
@@ -27,18 +24,16 @@ const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
         {topicDatas &&
         topicDatas.filter(
           (message) =>
-            (message.from_id === user.id &&
-              message.from_user_type === "staff") ||
-            (message.to_id === user.id && message.to_user_type === "staff")
+            (message.from_staff_id && message.from_staff_id === user.id) ||
+            (message.to_staff_id && message.to_staff_id === user.id)
         ).length > 0 ? (
           <ul className="topic-content__list">
             {topicDatas
               .filter(
                 (message) =>
-                  (message.from_id === user.id &&
-                    message.from_user_type === "staff") ||
-                  (message.to_id === user.id &&
-                    message.to_user_type === "staff")
+                  (message.from_staff_id &&
+                    message.from_staff_id === user.id) ||
+                  (message.to_staff_id && message.to_staff_id === user.id)
               )
               .slice(0, 4)
               .map((message) => (
@@ -46,7 +41,7 @@ const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
                   <div className="topic-content__overview">
                     <NavLink
                       className="topic-content__link"
-                      to={`/messages/${message.id}/${getSection(
+                      to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/External`}
                       target="_blank"
@@ -57,7 +52,7 @@ const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
                   <div className="topic-content__date">
                     <NavLink
                       className="topic-content__link"
-                      to={`/messages/${message.id}/${getSection(
+                      to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/External`}
                       target="_blank"

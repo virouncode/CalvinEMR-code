@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { filterAndSortExternalMessages } from "../../../utils/filterAndSortExternalMessages";
-import { searchMessagesExternal } from "../../../utils/searchMessagesExternal";
 import { onMessagesInboxExternal } from "../../../utils/socketHandlers/onMessagesInboxExternal";
 import MessagesPatientBox from "./MessagesPatientBox";
 import MessagesPatientLeftBar from "./MessagesPatientLeftBar";
@@ -43,7 +42,7 @@ const MessagesPatient = () => {
           "patient",
           user.id
         );
-        setMessages(searchMessagesExternal(newMessages, search, clinic));
+        setMessages(newMessages);
       } catch (err) {
         if (err.name !== "CanceledError")
           toast.error(`Error: unable to get messages: ${err.message}`, {

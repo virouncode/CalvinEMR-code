@@ -9,7 +9,6 @@ import RequireAuth from "./context/RequireAuth";
 import useAutoLogout from "./hooks/useAutoLogout";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
 import useLogoutForAll from "./hooks/useLogoutForAll";
-import useMessagesUnreadSocket from "./hooks/useMessagesUnreadSocket";
 import useSocketConfig from "./hooks/useSocketConfig";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
@@ -45,7 +44,6 @@ const App = () => {
   useAutoLogout(120);
   useLogoutForAll(); //log every tabs out if logout on one tab
   useSocketConfig(false); //true for dev, false for prod
-  useMessagesUnreadSocket();
 
   return (
     <Routes>

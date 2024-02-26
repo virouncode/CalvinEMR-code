@@ -1,11 +1,11 @@
 import React from "react";
-import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 
 const MessageExternal = ({ message, index }) => {
-  const { clinic } = useAuthContext();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <div
       className="message"
@@ -14,9 +14,9 @@ const MessageExternal = ({ message, index }) => {
       <div className="message__title">
         <div className="message__author">
           From:{" "}
-          {message.from_user_type === "staff"
-            ? staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)
-            : patientIdToName(clinic.demographicsInfos, message.from_id)}
+          {message.from_staff_id
+            ? staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+            : toPatientName(message.from_patient_infos)}
         </div>
         <div className="message__date">
           <div>{toLocalDateAndTime(message.date_created)}</div>
@@ -24,9 +24,9 @@ const MessageExternal = ({ message, index }) => {
       </div>
       <div className="message__subtitle">
         to:{" "}
-        {message.to_user_type === "staff"
-          ? staffIdToTitleAndName(clinic.staffInfos, message.to_id, true)
-          : patientIdToName(clinic.demographicsInfos, message.to_id)}
+        {message.to_staff_id
+          ? staffIdToTitleAndName(staffInfos, message.to_staff_id, true)
+          : toPatientName(message.to_patient_infos)}
       </div>
       <div className="message__body">{message.body}</div>
     </div>

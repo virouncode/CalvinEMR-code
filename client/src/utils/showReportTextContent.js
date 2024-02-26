@@ -13,7 +13,7 @@ export const showReportTextContent = (report) => {
         }
         body {
           font-family: Arial, sans-serif;
-          white-space: pre;
+          white-space: pre-wrap;
           padding:0 20px;
         }
       </style>

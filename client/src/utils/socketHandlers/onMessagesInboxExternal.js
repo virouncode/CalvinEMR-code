@@ -12,20 +12,20 @@ export const onMessagesInboxExternal = (
   //Je suis un staff, suis-je concerné
   if (userType === "staff") {
     if (
-      (message.content.data.from_user_type === "staff" &&
-        message.content.data.from_id !== userId) ||
-      (message.content.data.to_user_type === "staff" &&
-        message.content.data.to_id !== userId)
+      (message.content.data.from_staff_id &&
+        message.content.data.from_staff_id !== userId) ||
+      (message.content.data.to_staff_id &&
+        message.content.data.to_staff_id !== userId)
     )
       return;
   }
   //Je suis un patient, suis-concerné
   else if (userType === "patient") {
     if (
-      (message.content.data.from_user_type === "patient" &&
-        message.content.data.from_id !== userId) ||
-      (message.content.data.to_user_type === "patient" &&
-        message.content.data.to_id !== userId)
+      (message.content.data.from_patient_id &&
+        message.content.data.from_patient_id !== userId) ||
+      (message.content.data.to_patient_id &&
+        message.content.data.to_patient_id !== userId)
     )
       return;
   }
@@ -34,7 +34,7 @@ export const onMessagesInboxExternal = (
       setMessages(
         filterAndSortExternalMessages(
           section,
-          [...messages, message.content.data],
+          [message.content.data, ...messages],
           userType,
           userId
         )

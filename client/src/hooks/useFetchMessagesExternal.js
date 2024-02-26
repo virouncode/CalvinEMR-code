@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { axiosXanoStaff } from "../api/xanoStaff";
-import { filterAndSortMessages } from "../utils/filterAndSortMessages";
+import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
 import useAuthContext from "./useAuthContext";
 
-const useFetchMessages = (paging, search, sectionName, section, staffId) => {
+const useFetchMessagesExternal = (
+  paging,
+  search,
+  sectionName,
+  section,
+  staffId,
+  userType
+) => {
   const { auth } = useAuthContext();
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -17,29 +24,32 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
   useEffect(() => {
     const abortController = new AbortController();
     const fetchMessages = async () => {
-      console.log("fetchMessages");
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get("/messages_for_staff", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
-            staff_id: staffId,
-            search,
-            paging,
-          },
-          signal: abortController.signal,
-        });
+        const response = await axiosXanoStaff.get(
+          "/messages_external_for_staff",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+            params: {
+              staff_id: staffId,
+              search,
+              paging,
+            },
+            signal: abortController.signal,
+          }
+        );
         if (abortController.signal.aborted) return;
         setMessages((prevDatas) => {
           console.log("prevDatas", prevDatas);
           console.log("response", response.data.items);
-          return filterAndSortMessages(
+          return filterAndSortExternalMessages(
             sectionName || section,
             [...prevDatas, ...response.data.items],
+            userType,
             staffId
           );
         });
@@ -57,7 +67,7 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
     return () => {
       abortController.abort();
     };
-  }, [auth.authToken, paging, search, section, sectionName, staffId]);
+  }, [auth.authToken, paging, search, section, sectionName, staffId, userType]);
 
   return {
     messages,
@@ -68,4 +78,4 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
   };
 };
 
-export default useFetchMessages;
+export default useFetchMessagesExternal;

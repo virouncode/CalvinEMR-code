@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -7,6 +7,7 @@ import useUserContext from "../../../../hooks/useUserContext";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import EditTemplatesList from "./EditTemplatesList";
 
 const EditTemplate = ({
@@ -144,21 +145,7 @@ const EditTemplate = ({
         <button onClick={handleCancel}>Cancel</button>
       </div>
       <ConfirmGlobal isPopUp={true} />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

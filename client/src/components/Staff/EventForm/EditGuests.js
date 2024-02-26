@@ -28,12 +28,6 @@ const EditGuests = ({
     setPaging({ ...paging, page: 1 });
   };
 
-  // useEffect(() => {
-  //   setStaffGuestsInfos(
-  //     staffInfos.filter(({ id }) => tempFormDatas.staff_guests_ids.includes(id))
-  //   );
-  // }, [setStaffGuestsInfos, staffInfos, tempFormDatas.staff_guests_ids]);
-
   // //========================== EVENTS HANDLERS =======================//
 
   const handleAddGuest = (guest, e) => {
@@ -49,6 +43,7 @@ const EditGuests = ({
           staff_infos: {
             id: guestId,
             full_name: staffInfos.find(({ id }) => id === guestId).full_name,
+            title: staffInfos.find(({ id }) => id === guestId).title,
           },
         },
       ];
@@ -61,6 +56,7 @@ const EditGuests = ({
         staffGuestsIdsUpdated
       );
     } else {
+      setPaging({ ...paging, page: 1 });
       patientsGuestsIdsUpdated = [
         ...patientsGuestsIdsUpdated,
         {
@@ -104,6 +100,7 @@ const EditGuests = ({
         staffGuestsIdsUpdated
       );
     } else {
+      setPaging({ ...paging, page: 1 });
       patientsGuestsIdsUpdated = patientsGuestsIdsUpdated.filter(
         ({ patient_infos }) => patient_infos.patient_id !== parentKey
       );
@@ -123,7 +120,6 @@ const EditGuests = ({
       <div className="event-form__item event-form__item--guestlist">
         <label>Patients/Guests: </label>
         <GuestsList
-          patientsDemographics={patientsDemographics}
           tempFormDatas={tempFormDatas}
           handleRemoveGuest={handleRemoveGuest}
         />
@@ -139,6 +135,7 @@ const EditGuests = ({
             hasMore={hasMore}
             setPaging={setPaging}
             loading={loading}
+            staff_guests_ids={tempFormDatas.staff_guests_ids}
           />
         </div>
       )}

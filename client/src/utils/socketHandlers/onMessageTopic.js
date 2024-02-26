@@ -6,8 +6,9 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
     topic === "DEMOGRAPHICS" //because there is already a socket on the patientRecord component
     // topic === "MESSAGES ABOUT PATIENT" ||
     // topic === "MESSAGES WITH PATIENT"
-  )
+  ) {
     return;
+  }
   if (topic === "PATIENT DOCTORS") {
     if (message.patientId !== patientId) return;
     switch (message.action) {
@@ -119,6 +120,54 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
       default:
         break;
     }
+  } else if (message.route === "MESSAGES ABOUT PATIENT") {
+    switch (message.action) {
+      case "create":
+        if (message.content.data.related_patient_id === patientId) {
+          setDatas([message.content.data, ...datas]);
+        }
+        break;
+      case "update":
+        if (message.content.data.related_patient_id === patientId) {
+          setDatas(
+            datas.map((item) =>
+              item.id === message.content.id ? message.content.data : item
+            )
+          );
+        }
+        break;
+      default:
+        break;
+    }
+  } else if (message.route === "MESSAGES WITH PATIENT") {
+    switch (message.action) {
+      case "create":
+        if (
+          (message.content.data.from_patient_id &&
+            message.content.data.from_patient_id === patientId) ||
+          (message.content.data.to_patient_id &&
+            message.content.data.to_patient_id === patientId)
+        ) {
+          setDatas([message.content.data, ...datas]);
+        }
+        break;
+      case "update":
+        if (
+          (message.content.data.from_patient_id &&
+            message.content.data.from_patient_id === patientId) ||
+          (message.content.data.to_patient_id &&
+            message.content.data.to_patient_id === patientId)
+        ) {
+          setDatas(
+            datas.map((item) =>
+              item.id === message.content.id ? message.content.data : item
+            )
+          );
+        }
+        break;
+      default:
+        break;
+    }
   } else {
     switch (message.action) {
       case "create":
@@ -141,56 +190,3 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
     }
   }
 };
-
-// //(message.route !== topic) POURQUOI JE L'AI MIS APRES
-// // if (
-// //   message.route === "MESSAGES INBOX" &&
-// //   topic === "MESSAGES ABOUT PATIENT"
-// // ) {
-// //   switch (message.action) {
-// //     case "create":
-// //       if (message.content.data.related_patient_id !== patientId) return;
-// //       setDatas([message.content.data, ...datas]);
-// //       break;
-// //     case "update":
-// //       if (message.content.data.related_patient_id !== patientId) return;
-// //       setDatas(
-// //         datas.map((item) =>
-// //           item.id === message.content.id ? message.content.data : item
-// //         )
-// //       );
-// //       break;
-// //     case "delete":
-// //       setDatas(datas.filter((item) => item.id !== message.content.id));
-// //       break;
-// //     default:
-// //       break;
-// //   }
-// // } else if (
-// //   message.route === "MESSAGES INBOX EXTERNAL" &&
-// //   topic === "MESSAGES WITH PATIENT"
-// // ) {
-// //   switch (message.action) {
-// //     case "create":
-// //       if (
-// //         (message.content.data.from_user_type === "patient" &&
-// //           message.content.data.from_id !== patientId) ||
-// //         (message.content.data.to_user_type === "patient" &&
-// //           message.content.data.to_id !== patientId)
-// //       )
-// //         return;
-// //       setDatas([message.content.data, ...datas]);
-// //       break;
-// //     case "update":
-// //       setDatas(
-// //         datas.map((item) =>
-// //           item.id === message.content.id ? message.content.data : item
-// //         )
-// //       );
-// //       break;
-// //     case "delete":
-// //       setDatas(datas.filter((item) => item.id !== message.content.id));
-// //       break;
-// //     default:
-// //       break;
-// //   }

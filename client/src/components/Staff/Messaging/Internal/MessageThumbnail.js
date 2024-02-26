@@ -21,7 +21,7 @@ const MessageThumbnail = ({
   lastItemRef = null,
 }) => {
   const { auth } = useAuthContext();
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
 
@@ -44,6 +44,11 @@ const MessageThumbnail = ({
           action: "update",
           content: { id: message.id, data: newMessage },
         });
+        socket.emit("message", {
+          route: "MESSAGES ABOUT PATIENT",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
           containerId: "A",
@@ -53,17 +58,10 @@ const MessageThumbnail = ({
     //Remove one from the unread messages nbr counter
     if (user.unreadMessagesNbr !== 0) {
       const newUnreadMessagesNbr = user.unreadMessagesNbr - 1;
-      socket.emit("message", {
-        route: "UNREAD",
-        userType: "staff",
-        userId: user.id,
-        type: "internal",
-        content: {
-          data: {
-            unreadMessagesNbr: newUnreadMessagesNbr,
-            unreadNbr: newUnreadMessagesNbr + user.unreadMessagesExternalNbr,
-          },
-        },
+      setUser({
+        ...user,
+        unreadMessagesNbr: newUnreadMessagesNbr,
+        unreadNbr: newUnreadMessagesNbr + user.unreadMessagesExternalNbr,
       });
     }
     setCurrentMsgId(message.id);
@@ -120,6 +118,17 @@ const MessageThumbnail = ({
             },
           },
         });
+        socket.emit("message", {
+          route: "MESSAGES ABOUT PATIENT",
+          action: "update",
+          content: {
+            id: message.id,
+            data: {
+              ...message,
+              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+            },
+          },
+        });
         toast.success("Message deleted successfully", { containerId: "A" });
         setMsgsSelectedIds([]);
       } catch (err) {
@@ -164,7 +173,7 @@ const MessageThumbnail = ({
         </div>
       </div>
       <div className="message-thumbnail__patient">
-        {message.related_patient_id && (
+        {message.related_patient_id ? (
           <NavLink
             to={`/staff/patient-record/${message.related_patient_id}`}
             className="message-thumbnail__patient-link"
@@ -172,7 +181,7 @@ const MessageThumbnail = ({
           >
             {toPatientName(message.patient_infos)}
           </NavLink>
-        )}
+        ) : null}
       </div>
       <div className="message-thumbnail__date">
         {toLocalDateAndTime(message.date_created)}

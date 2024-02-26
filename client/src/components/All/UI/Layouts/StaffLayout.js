@@ -1,9 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import ConfirmGlobal from "../../Confirm/ConfirmGlobal";
 import Welcome from "../../Welcome/Welcome";
 import StaffHeader from "../Headers/StaffHeader";
+import ToastCalvin from "../Toast/ToastCalvin";
 
 const StaffLayout = () => {
   return (
@@ -15,21 +15,7 @@ const StaffLayout = () => {
         <Outlet />
         {/********************************************/}
         <ConfirmGlobal /> {/******* custom confirm modal ********/}
-        <ToastContainer
-          enableMultiContainer
-          containerId={"A"}
-          position="bottom-right"
-          autoClose={1000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          limit={1}
-        />{" "}
+        <ToastCalvin id="A" />
         {/******* toast system *****************/}
       </main>
       {/* <Footer /> */}

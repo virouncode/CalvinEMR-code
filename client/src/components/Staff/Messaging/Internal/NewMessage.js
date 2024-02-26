@@ -1,24 +1,30 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../../utils/categoryToTitle";
 import formatName from "../../../../utils/formatName";
-import { patientIdToName } from "../../../../utils/patientIdToName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Contacts from "../Contacts";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessage = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientsIds, setRecipientsIds] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-  const [patientId, setPatientId] = useState(0);
+  const [patient, setPatient] = useState({ id: 0, name: "" });
   const [isLoadingFile, setIsLoadingFile] = useState(false);
 
   const handleChange = (e) => {
@@ -31,15 +37,16 @@ const NewMessage = ({ setNewVisible }) => {
 
   const isContactChecked = (id) => recipientsIds.includes(id);
   const isCategoryChecked = (category) => categories.includes(category);
-  const isPatientChecked = (id) => patientId === id;
+  const isPatientChecked = (id) => patient.id === id;
 
   const handleCheckPatient = (e) => {
     const id = parseInt(e.target.id);
     const checked = e.target.checked;
+    const name = e.target.name;
     if (checked) {
-      setPatientId(id);
+      setPatient({ id, name });
     } else {
-      setPatientId(0);
+      setPatient({ id: 0, name: "" });
     }
   };
 
@@ -47,7 +54,7 @@ const NewMessage = ({ setNewVisible }) => {
     const id = parseInt(e.target.id);
     const checked = e.target.checked;
     const category = e.target.name;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -78,7 +85,7 @@ const NewMessage = ({ setNewVisible }) => {
   const handleCheckCategory = (e) => {
     const category = e.target.id;
     const checked = e.target.checked;
-    const categoryContactsIds = clinic.staffInfos
+    const categoryContactsIds = staffInfos
       .filter(({ title }) => title === categoryToTitle(category))
       .map(({ id }) => id);
 
@@ -137,7 +144,7 @@ const NewMessage = ({ setNewVisible }) => {
         subject: subject,
         body: body,
         attachments_ids: attach_ids,
-        related_patient_id: patientId,
+        related_patient_id: patient.id,
         read_by_staff_ids: [user.id],
         date_created: Date.now(),
       };
@@ -150,6 +157,11 @@ const NewMessage = ({ setNewVisible }) => {
       });
       socket.emit("message", {
         route: "MESSAGES INBOX",
+        action: "create",
+        content: { data: response.data },
+      });
+      socket.emit("message", {
+        route: "MESSAGES ABOUT PATIENT",
         action: "create",
         content: { data: response.data },
       });
@@ -224,7 +236,7 @@ const NewMessage = ({ setNewVisible }) => {
     <div className="new-message">
       <div className="new-message__contacts">
         <Contacts
-          staffInfos={clinic.staffInfos}
+          staffInfos={staffInfos}
           handleCheckContact={handleCheckContact}
           isContactChecked={isContactChecked}
           handleCheckCategory={handleCheckCategory}
@@ -237,7 +249,7 @@ const NewMessage = ({ setNewVisible }) => {
           <input
             type="text"
             placeholder="Recipients"
-            value={clinic.staffInfos
+            value={staffInfos
               .filter(({ id }) => recipientsIds.includes(id))
               .map(
                 (staff) =>
@@ -262,11 +274,7 @@ const NewMessage = ({ setNewVisible }) => {
           <input
             type="text"
             placeholder="Patient"
-            value={
-              patientId
-                ? patientIdToName(clinic.demographicsInfos, patientId)
-                : ""
-            }
+            value={patient.name}
             readOnly
           />
         </div>
@@ -300,23 +308,10 @@ const NewMessage = ({ setNewVisible }) => {
         <Patients
           handleCheckPatient={handleCheckPatient}
           isPatientChecked={isPatientChecked}
+          msgType="Internal"
         />
       </div>
-      <ToastContainer
-        enableMultiContainer
-        containerId={"B"}
-        position="bottom-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        limit={1}
-      />
+      <ToastCalvin id="B" />
     </div>
   );
 };

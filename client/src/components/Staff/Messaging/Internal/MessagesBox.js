@@ -43,12 +43,9 @@ const MessagesBox = ({
           <MessageDetail
             setCurrentMsgId={setCurrentMsgId}
             message={messages.find(({ id }) => id === currentMsgId)}
-            loading={loading}
-            errMsg={errMsg}
             section={section}
             popUpVisible={popUpVisible}
             setPopUpVisible={setPopUpVisible}
-            lastItemRef={lastItemRef}
           />
         )}
       </div>

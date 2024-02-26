@@ -81,6 +81,11 @@ const MessagesPatientToolBar = ({
             action: "update",
             content: { id: messageId, data: newMessage },
           });
+          socket.emit("message", {
+            route: "MESSAGES WITH PATIENT",
+            action: "update",
+            content: { id: messageId, data: newMessage },
+          });
         }
         setNewVisible(false);
         toast.success("Message(s) deleted successfully", { containerId: "A" });
@@ -125,6 +130,11 @@ const MessagesPatientToolBar = ({
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
           action: "update",
           content: { id: message.id, data: newMessage },
         });

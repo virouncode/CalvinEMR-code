@@ -35,6 +35,7 @@ export const filterAndSortMessages = (section, datas, userId) => {
     default:
       break;
   }
-  // newMessages.sort((a, b) => b.date_created - a.date_created);
+  console.log("datas", datas);
+  console.log("newMessages", newMessages);
   return newMessages;
 };

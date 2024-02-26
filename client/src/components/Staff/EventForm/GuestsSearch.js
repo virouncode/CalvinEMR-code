@@ -11,6 +11,7 @@ const GuestsSearch = ({
   hasMore,
   setPaging,
   loading,
+  staff_guests_ids,
 }) => {
   return (
     <>
@@ -23,6 +24,7 @@ const GuestsSearch = ({
         hasMore={hasMore}
         setPaging={setPaging}
         loading={loading}
+        staff_guests_ids={staff_guests_ids}
       />
     </>
   );

@@ -1,20 +1,44 @@
 import React, { useState } from "react";
+import usePatientsList from "../../../hooks/usePatientsList";
 import PatientsList from "./PatientsList";
 
-const Patients = ({ isPatientChecked, handleCheckPatient, label = true }) => {
+const Patients = ({
+  isPatientChecked,
+  handleCheckPatient,
+  label = true,
+  msgType,
+}) => {
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 15,
+    offset: 0,
+  });
   const [search, setSearch] = useState("");
+  const {
+    loading,
+    err,
+    patientsDemographics,
+    setPatientsDemographics,
+    hasMore,
+  } = usePatientsList(search, paging);
+
   const handleChange = (e) => {
     const value = e.target.value;
+    setPaging({ ...paging, page: 1 });
     setSearch(value);
   };
   return (
     <div className="patients">
-      {label && <div className="patients__title">Related patient</div>}
+      {label && (
+        <div className="patients__title">
+          {msgType === "Internal" ? "Related patient" : "Recipient"}
+        </div>
+      )}
       <div className="patients__search-input">
         <input
           type="text"
           value={search}
-          placeholder="Search patient"
+          placeholder="Name, Email, Chart#, Health Card#,..."
           onChange={handleChange}
         />
       </div>
@@ -22,7 +46,10 @@ const Patients = ({ isPatientChecked, handleCheckPatient, label = true }) => {
         <PatientsList
           isPatientChecked={isPatientChecked}
           handleCheckPatient={handleCheckPatient}
-          search={search}
+          patientsDemographics={patientsDemographics}
+          loading={loading}
+          hasMore={hasMore}
+          setPaging={setPaging}
         />
       </div>
     </div>

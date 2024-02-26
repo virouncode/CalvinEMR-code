@@ -176,8 +176,12 @@
     &__card-body {
         padding : 20px;
         text-align: justify;
+        overflow-wrap: break-word;
+        width:100%;
         p {
-            white-space: pre;
+            width:100%;
+            overflow-wrap: break-word;
+
         }
         textarea {
             padding : 10px;
@@ -190,9 +194,11 @@
     &__card-body-container {
         max-height: 0; 
         transition: 0.3s;
-        overflow: scroll;
+        overflow-y: scroll;
+        white-space: pre-wrap;
         &--active {
             max-height: 1000px;
+            white-space: pre-wrap;
         }
     }
     &__card-sign {

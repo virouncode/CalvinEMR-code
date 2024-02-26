@@ -2,6 +2,8 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessagesExternalToolBar = ({
@@ -18,14 +20,20 @@ const MessagesExternalToolBar = ({
   setPopUpVisible,
   setSelectAllVisible,
   selectAllVisible,
+  paging,
+  setPaging,
 }) => {
-  const { auth, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+
   const handleChange = (e) => {
     setSearch(e.target.value);
+    setPaging({ ...paging, page: 1 });
   };
   const handleClickNew = (e) => {
     if (newVisible) {
-      toast.error(
+      alert(
         "You already opened a New Message window, please send your message or close the window",
         { containerId: "A" }
       );
@@ -81,6 +89,11 @@ const MessagesExternalToolBar = ({
             action: "update",
             content: { id: messageId, data: newMessage },
           });
+          socket.emit("message", {
+            route: "MESSAGES WITH PATIENT",
+            action: "update",
+            content: { id: messageId, data: newMessage },
+          });
         }
         setNewVisible(false);
         toast.success("Message(s) deleted successfully", { containerId: "A" });
@@ -125,6 +138,11 @@ const MessagesExternalToolBar = ({
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
+          action: "update",
+          content: { id: message.id, data: newMessage },
+        });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
           action: "update",
           content: { id: message.id, data: newMessage },
         });

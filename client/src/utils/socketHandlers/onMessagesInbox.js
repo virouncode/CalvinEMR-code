@@ -18,7 +18,7 @@ export const onMessagesInbox = (
       setMessages(
         filterAndSortMessages(
           section,
-          [...messages, message.content.data],
+          [message.content.data, ...messages],
           userId
         )
       );

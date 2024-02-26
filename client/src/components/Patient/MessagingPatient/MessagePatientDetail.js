@@ -119,6 +119,17 @@ const MessagePatientDetail = ({
             },
           },
         });
+        socket.emit("message", {
+          route: "MESSAGES WITH PATIENT",
+          action: "update",
+          content: {
+            id: message.id,
+            data: {
+              ...message,
+              deleted_by_staff_id: user.id,
+            },
+          },
+        });
         setCurrentMsgId(0);
         toast.success("Message deleted successfully", { containerId: "A" });
       } catch (err) {

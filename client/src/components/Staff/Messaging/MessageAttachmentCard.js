@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import NewWindow from "react-new-window";
-import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../api/fetchRecords";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
+import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
+import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import ReportForm from "../Record/Topics/Reports/ReportForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -13,40 +16,22 @@ const MessageAttachmentCard = ({
   deletable,
   cardWidth = "30%",
   addable = true,
+  patientName,
+  message,
 }) => {
-  const { user, auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
+  const [addVisible, setAddVisible] = useState(false);
+  const [errMsgPost, setErrMsgPost] = useState("");
+
   const handleImgClick = () => {
     setPopUpVisible(true);
   };
 
-  const handleAddToReports = async () => {
-    try {
-      const response = await postPatientRecord(
-        "/documents",
-        user.id,
-        auth.authToken,
-        {
-          patient_id: patientId,
-          assigned_id: user.id,
-          description: attachment.alias,
-          file: attachment.file,
-        },
-        socket,
-        "DOCUMENTS"
-      );
-      socket.emit("message", {
-        route: "REPORTS INBOX",
-        action: "create",
-        content: { data: response.data },
-      });
-
-      toast.success("Saved successfully", { containerId: "A" });
-    } catch (err) {
-      toast.error(`Error unable to save document: ${err.message}`, {
-        containerId: "A",
-      });
-    }
+  const handleAddToReports = () => {
+    setAddVisible(true);
   };
 
   return (
@@ -184,6 +169,38 @@ const MessageAttachmentCard = ({
           )}
         </NewWindow>
       )}
+      {addVisible && (
+        <FakeWindow
+          title={`ADD TO ${patientName} REPORTS`}
+          width={1000}
+          height={550}
+          x={(window.innerWidth - 1000) / 2}
+          y={(window.innerHeight - 550) / 2}
+          color="#94bae8"
+          setPopUpVisible={setAddVisible}
+        >
+          {errMsgPost && <span>{errMsgPost}</span>}
+          <ReportForm
+            demographicsInfos={
+              message.type === "Internal"
+                ? message.patient_infos
+                : message.from_patient_id
+                ? message.from_patient_infos
+                : message.to_patient_infos
+            }
+            patientId={
+              message.type === "Internal"
+                ? message.related_patient_id
+                : message.from_patient_id || message.to_patient_id
+            }
+            setAddVisible={setAddVisible}
+            attachment={attachment}
+            errMsgPost={errMsgPost}
+            setErrMsgPost={setErrMsgPost}
+          />
+        </FakeWindow>
+      )}
+      <ToastCalvin id="B" />
     </>
   );
 };
