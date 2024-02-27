@@ -1,12 +1,33 @@
+.diagnosis {
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 100%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 6px;
+    text-align: center;
+  }
+  &__container {
+    margin-top: 50px;
+    height:500px;
+    overflow-y: scroll;
+    position: relative;
+  }
+}
 .diagnosis-search {
-  margin-top: 50px;
-  padding: 0 10px;
+  position: sticky;
+  top: 0;
+  padding: 10px 20px 20px;
+  background: $white;
   label {
     font-weight: bold;
     margin-right: 10px;
   }
 }
 .diagnosis-results {
+  padding:0 20px 20px;
   &__item {
     cursor:pointer;
     display: flex;
@@ -15,7 +36,6 @@
       text-decoration: underline;
     }
   }
-  padding:20px;
   &__code {
     font-weight: bold;
     display: inline-block;

@@ -15,9 +15,7 @@ export const onMessageBilling = (
   switch (message.action) {
     case "create":
       setBillings(
-        [...billings, message.content.data].sort(
-          (a, b) => b.date_created - a.date_created
-        )
+        [...billings, message.content.data].sort((a, b) => b.date - a.date)
       );
       break;
     case "update":
@@ -26,14 +24,14 @@ export const onMessageBilling = (
           .map((billing) =>
             billing.id === message.content.id ? message.content.data : billing
           )
-          .sort((a, b) => b.date_created - a.date_created)
+          .sort((a, b) => b.date - a.date)
       );
       break;
     case "delete":
       setBillings(
         billings
           .filter(({ id }) => id !== message.content.id)
-          .sort((a, b) => b.date_created - a.date_created)
+          .sort((a, b) => b.date - a.date)
       );
       break;
     default:

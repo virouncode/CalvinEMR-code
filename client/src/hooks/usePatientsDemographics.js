@@ -9,7 +9,7 @@ const usePatientsDemographics = (search, paging) => {
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState("");
 
   useEffect(() => {
     setPatientsDemographics([]);

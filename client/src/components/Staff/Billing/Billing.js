@@ -1,109 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
-import { toLocalDate } from "../../../utils/formatDates";
-import { onMessageBilling } from "../../../utils/socketHandlers/onMessageBilling";
+import { useNavigate, useParams } from "react-router-dom";
+import useBillingSocket from "../../../hooks/useBillingSocket";
+import useFetchBillings from "../../../hooks/useFetchBillings";
+import useUserContext from "../../../hooks/useUserContext";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import BillingFilter from "./BillingFilter";
 import BillingForm from "./BillingForm";
 import BillingTable from "./BillingTable";
 
 const Billing = () => {
-  const { pid, date } = useParams();
-  const { user, auth, socket } = useAuthContext();
+  const { pid } = useParams();
+  const navigate = useNavigate();
+  const { user } = useUserContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
-  const [billings, setBillings] = useState(null);
-  const [errMsg, setErrMsg] = useState("");
-  const [rangeStart, setRangeStart] = useState(
-    toLocalDate(
-      Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
-    )
-  ); //start of the month
-  const [rangeEnd, setRangeEnd] = useState(
-    toLocalDate(
-      Date.parse(
-        new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-      )
-    )
-  ); //end of the month
+  const [errMsgPost, setErrMsgPost] = useState("");
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const {
+    billings,
+    setBillings,
+    rangeStart,
+    setRangeStart,
+    rangeEnd,
+    setRangeEnd,
+    hasMore,
+    loading,
+    errMsg,
+  } = useFetchBillings(paging);
+
+  useBillingSocket(billings, setBillings);
 
   useEffect(() => {
-    if (pid && date) {
+    if (pid) {
       setAddVisible(true);
     }
-  }, [pid, date]);
+  }, [pid]);
 
   const handleAdd = () => {
     setAddVisible(true);
   };
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchBillings = async () => {
-      try {
-        let response;
-        if (user.title !== "Secretary") {
-          //billings concerning the user in range
-          response = await axiosXanoStaff.post(
-            `/billings_for_staff_in_range`,
-            { range_start: rangeStart, range_end: rangeEnd, staff_id: user.id },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          );
-        } else {
-          //all billings
-          response = await axiosXanoStaff.post(
-            `/billings_in_range`,
-            { range_start: rangeStart, range_end: rangeEnd },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          );
-        }
-        if (abortController.signal.aborted) return;
-        setBillings(response.data.sort((a, b) => b.date - a.date));
-      } catch (err) {
-        if (err.name !== "CanceledError") {
-          toast.error(`Unable to fetch billings: ${err.message}`, {
-            containerId: "A",
-          });
-        }
-      }
-    };
-    fetchBillings();
-    return () => abortController.abort();
-  }, [auth.authToken, rangeEnd, rangeStart, user.id, user.title]);
-
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessageBilling(
-        message,
-        billings,
-        setBillings,
-        user.id,
-        user.title === "Secretary"
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [socket, user.id, user.title, billings]);
-
   return (
     <div className="billing">
-      {errMsg && <p className="billing__err">{errMsg}</p>}
+      {errMsgPost && <p className="billing__err">{errMsgPost}</p>}
       <div className="billing__btn-container">
         {user.title !== "Secretary" && (
           <button onClick={handleAdd} disabled={addVisible}>
@@ -112,7 +54,10 @@ const Billing = () => {
         )}
       </div>
       {addVisible && (
-        <BillingForm setAddVisible={setAddVisible} setErrMsg={setErrMsg} />
+        <BillingForm
+          setAddVisible={setAddVisible}
+          setErrMsgPost={setErrMsgPost}
+        />
       )}
       {billings ? (
         <>
@@ -122,11 +67,17 @@ const Billing = () => {
             rangeEnd={rangeEnd}
             setRangeStart={setRangeStart}
             setRangeEnd={setRangeEnd}
+            paging={paging}
+            setPaging={setPaging}
           />
           <BillingTable
             billings={billings}
+            errMsgPost={errMsgPost}
+            setErrMsgPost={setErrMsgPost}
+            setPaging={setPaging}
+            hasMore={hasMore}
+            loading={loading}
             errMsg={errMsg}
-            setErrMsg={setErrMsg}
           />
         </>
       ) : (

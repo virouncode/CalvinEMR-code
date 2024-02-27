@@ -6,6 +6,7 @@ import {
   isUpdated,
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
 
 const ClinicalNotesCardHeader = ({
@@ -89,7 +90,9 @@ const ClinicalNotesCardHeader = ({
                 </button>
                 <button disabled={versionsLoading}>
                   <a
-                    href={`/staff/billing/${demographicsInfos.patient_id}/${
+                    href={`/staff/billing/${
+                      demographicsInfos.patient_id
+                    }/${toPatientName(demographicsInfos)}/${
                       demographicsInfos.HealthCard?.Number
                     }/${
                       isUpdated(clinicalNote)

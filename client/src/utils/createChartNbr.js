@@ -13,5 +13,5 @@ export const createChartNbr = (dob, gender, id) => {
   } else if (idString.length === 4) {
     idString = "0" + idString;
   }
-  return dobString + genderCode + idString;
+  return dobString + "-" + genderCode + "-" + idString;
 };

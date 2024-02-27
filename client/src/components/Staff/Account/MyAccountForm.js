@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const MyAccountForm = () => {
   //HOOKS
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
+  const { staffInfos, setStaffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);
-  const { auth, user, socket, clinic } = useAuthContext();
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
 
   useEffect(() => {
-    setFormDatas(clinic.staffInfos.find(({ id }) => id === user.id));
-    setTempFormDatas(clinic.staffInfos.find(({ id }) => id === user.id));
-  }, [clinic.staffInfos, user.id]);
+    setFormDatas(staffInfos.find(({ id }) => id === user.id));
+    setTempFormDatas(staffInfos.find(({ id }) => id === user.id));
+  }, [staffInfos, user.id]);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -36,96 +38,94 @@ const MyAccountForm = () => {
     navigate("/staff/credentials");
   };
 
-  const handleSignChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setErrMsg("");
-    if (file.size > 25000000) {
-      setErrMsg("File is over 25Mb, please choose another file");
-      return;
-    }
-    // setting up the reader
-    setIsLoadingFile(true);
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    // here we tell the reader what to do when it's done reading...
-    reader.onload = async (e) => {
-      let content = e.target.result; // this is the content!
-      try {
-        let fileToUpload = await axiosXanoStaff.post(
-          "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        );
-        setTempFormDatas({ ...tempFormDatas, sign: fileToUpload.data });
-        setIsLoadingFile(false);
-      } catch (err) {
-        toast.error(`Error: unable to load file: ${err.message}`, {
-          containerId: "A",
-        });
-      }
-    };
-  };
+  // const handleSignChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+  //   setErrMsg("");
+  //   if (file.size > 25000000) {
+  //     setErrMsg("File is over 25Mb, please choose another file");
+  //     return;
+  //   }
+  //   // setting up the reader
+  //   setIsLoadingFile(true);
+  //   let reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   // here we tell the reader what to do when it's done reading...
+  //   reader.onload = async (e) => {
+  //     let content = e.target.result; // this is the content!
+  //     try {
+  //       let fileToUpload = await axiosXanoStaff.post(
+  //         "/upload/attachment",
+  //         {
+  //           content: content,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${auth.authToken}`,
+  //           },
+  //         }
+  //       );
+  //       setTempFormDatas({ ...tempFormDatas, sign: fileToUpload.data });
+  //       setIsLoadingFile(false);
+  //     } catch (err) {
+  //       toast.error(`Error: unable to load file: ${err.message}`, {
+  //         containerId: "A",
+  //       });
+  //     }
+  //   };
+  // };
   const handleEdit = (e) => {
     setEditVisible(true);
   };
 
   const handleSave = async (e) => {
+    //Validation
     try {
-      const full_name =
-        tempFormDatas.first_name +
-        " " +
-        (tempFormDatas.middle_name ? tempFormDatas.middle_name + " " : "") +
-        tempFormDatas.last_name;
-
-      const datasToPut = { ...tempFormDatas };
-
-      //Formatting
-      datasToPut.first_name = firstLetterUpper(datasToPut.first_name);
-      datasToPut.middle_name = firstLetterUpper(datasToPut.middle_name);
-      datasToPut.last_name = firstLetterUpper(datasToPut.last_name);
-      datasToPut.full_name = firstLetterUpper(full_name);
-      datasToPut.speciality = firstLetterUpper(datasToPut.speciality);
-      datasToPut.subspeciality = firstLetterUpper(datasToPut.subspeciality);
-      datasToPut.date_created = Date.now();
-
-      // if (
-      //   tempFormDatas.ohip_billing_nbr.toString().length !== 6 &&
-      //   tempFormDatas.title === "Doctor"
-      // ) {
-      //   setErrMsg("OHIP billing number should be 6-digits");
-      //   return;
-      // }
-      datasToPut.ohip_billing_nbr = parseInt(datasToPut.ohip_billing_nbr);
-      //Validation
-      try {
-        await myAccountSchema.validate(datasToPut);
-      } catch (err) {
-        setErrMsg(err.message);
-        return;
-      }
-
+      await myAccountSchema.validate(tempFormDatas);
+    } catch (err) {
+      setErrMsg(err.message);
+      return;
+    }
+    try {
       //Submission
-      await axiosXanoStaff.put(`/staff/${user.id}`, datasToPut, {
+      await axiosXanoStaff.put(`/staff/${user.id}`, tempFormDatas, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${auth.authToken}`,
         },
       });
       setSuccessMsg("Infos changed successfully");
-      //update clinic context staffInfos
-      socket.emit("message", {
-        route: "STAFF",
-        action: "update",
-        content: { id: user.id, data: datasToPut },
+      //update staffInfos context and local storage
+      setStaffInfos(
+        staffInfos.map((item) =>
+          item.id === tempFormDatas.id ? tempFormDatas : item
+        )
+      );
+      localStorage.setItem(
+        "staffInfos",
+        JSON.stringify(
+          staffInfos.map((item) =>
+            item.id === tempFormDatas.id ? tempFormDatas : item
+          )
+        )
+      );
+      //update user context and local storage
+      setUser({
+        ...user,
+        cell_phone: tempFormDatas.cell_phone,
+        backup_phone: tempFormDatas.backup_phone,
+        video_link: tempFormDatas.video_link,
       });
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...user,
+          cell_phone: tempFormDatas.cell_phone,
+          backup_phone: tempFormDatas.backup_phone,
+          video_link: tempFormDatas.video_link,
+        })
+      );
       setEditVisible(false);
       setTimeout(() => setSuccessMsg(""), 2000);
     } catch (err) {

@@ -43,7 +43,7 @@ const App = () => {
   useLocalStorageTracker();
   useAutoLogout(120);
   useLogoutForAll(); //log every tabs out if logout on one tab
-  useSocketConfig(false); //true for dev, false for prod
+  useSocketConfig(true); //true for dev, false for prod
 
   return (
     <Routes>
@@ -72,7 +72,10 @@ const App = () => {
           <Route path="reference" element={<ReferencePage />} />
           <Route path="calvinai" element={<CalvinAIPage />} />
           <Route path="billing" element={<BillingPage />} />
-          <Route path="billing/:pid/:hcn/:date" element={<BillingPage />} />
+          <Route
+            path="billing/:pid/:pName/:hcn/:date"
+            element={<BillingPage />}
+          />
           <Route path="my-account" element={<MyAccountPage />} />
           <Route path="credentials" element={<CredentialsPage />} />
           <Route path="export" element={<ExportPage />} />

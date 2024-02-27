@@ -1,10 +1,10 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import Billing from "../../components/Staff/Billing/Billing";
-import useAuthContext from "../../hooks/useAuthContext";
+import useUserContext from "../../hooks/useUserContext";
 
 const BillingPage = () => {
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
   return (
     <>
       <Helmet>

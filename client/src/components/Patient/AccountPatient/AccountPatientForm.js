@@ -12,7 +12,7 @@ import { emergencyContactCaption } from "../../../utils/emergencyContactCaption"
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../utils/formatDates";
 import { getAge } from "../../../utils/getAge";
-import { onMessageUser } from "../../../utils/socketHandlers/onMessageUser";
+// import { onMessageUser } from "../../../utils/socketHandlers/onMessageUser";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { demographicsSchema } from "../../../validation/demographicsValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
@@ -44,14 +44,14 @@ const AccountPatientForm = () => {
     setTempFormDatas(user.demographics);
   }, [user.demographics]);
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) => onMessageUser(message, user, setUser);
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [setUser, socket, user]);
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   const onMessage = (message) => onMessageUser(message, user, setUser);
+  //   socket.on("message", onMessage);
+  //   return () => {
+  //     socket.off("message", onMessage);
+  //   };
+  // }, [setUser, socket, user]);
 
   //HANDLERS
   const handleChangePostalOrZip = (e) => {

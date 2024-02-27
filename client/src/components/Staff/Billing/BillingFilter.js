@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
-import useAuthContext from "../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { toExportCSVName } from "../../../utils/toExportCSVName";
 
@@ -10,25 +11,14 @@ const BillingFilter = ({
   rangeEnd,
   setRangeStart,
   setRangeEnd,
+  paging,
+  setPaging,
 }) => {
-  const { user, clinic } = useAuthContext();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
   const initialRangeStart = useRef(rangeStart);
   const initialRangeEnd = useRef(rangeEnd);
   const [all, setAll] = useState(false);
-  const csvDatas = billings.map((billing) => {
-    return {
-      ...billing,
-      date: toLocalDate(billing.date),
-      billing_code: {
-        ...billing.billing_code,
-        provider_fee: billing.billing_code.provider_fee / 10000,
-        specialist_fee: billing.billing_code.specialist_fee / 10000,
-        assistant_fee: billing.billing_code.assistant_fee / 10000,
-        anaesthetist_fee: billing.billing_code.anaesthetist_fee / 10000,
-        non_anaesthetist_fee: billing.billing_code.non_anaesthetist_fee / 10000,
-      },
-    };
-  });
   const headers = [
     { label: "Date", key: "date" },
     {
@@ -36,16 +26,16 @@ const BillingFilter = ({
       key: "provider_ohip_billing_nbr.ohip_billing_nbr",
     },
     { label: "Referring MD OHIP#", key: "referrer_ohip_billing_nbr" },
-    { label: "Patient Health Card#", key: "patient_hcn" },
+    { label: "Patient Health Card#", key: "patient_infos.HealthCard.Number" },
     { label: "Diagnosis code", key: "diagnosis_code.code" },
-    { label: "Billing code", key: "billing_code.billing_code" },
-    { label: "Provider fee ($)", key: "billing_code.provider_fee" },
-    { label: "Specialist fee ($)", key: "billing_code.specialist_fee" },
-    { label: "Assistant fee ($)", key: "billing_code.assistant_fee" },
-    { label: "Anaesthetist fee ($)", key: "billing_code.anaesthetist_fee" },
+    { label: "Billing code", key: "billing_infos.billing_code" },
+    { label: "Provider fee ($)", key: "billing_infos.provider_fee" },
+    { label: "Specialist fee ($)", key: "billing_infos.specialist_fee" },
+    { label: "Assistant fee ($)", key: "billing_infos.assistant_fee" },
+    { label: "Anaesthetist fee ($)", key: "billing_infos.anaesthetist_fee" },
     {
       label: "Non anaesthetist fee ($)",
-      key: "billing_code.non_anaesthetist_fee",
+      key: "billing_infos.non_anaesthetist_fee",
     },
   ];
 
@@ -54,16 +44,19 @@ const BillingFilter = ({
       setAll(true);
       setRangeStart(Date.parse(new Date("1970-01-01")));
       setRangeEnd(Date.parse(new Date("3000-01-01")));
+      setPaging({ ...paging, page: 1 });
     } else {
       setAll(false);
       setRangeStart(initialRangeStart.current);
       setRangeEnd(initialRangeEnd.current);
+      setPaging({ ...paging, page: 1 });
     }
   };
 
   const handleDateChange = (e) => {
     let value = e.target.value;
     const name = e.target.name;
+    setPaging({ ...paging, page: 1 });
     if (name === "date_start") {
       if (value === "") {
         value = "1970-01-01";
@@ -116,14 +109,14 @@ const BillingFilter = ({
         <div className="billing-filter__btn-container">
           <button>
             <CSVLink
-              data={csvDatas}
+              data={billings}
               filename={toExportCSVName(
                 user.access_level,
                 user.title || "",
                 rangeStart,
                 rangeEnd,
                 all,
-                clinic.staffInfos,
+                staffInfos,
                 user.id
               )}
               target="_blank"

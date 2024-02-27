@@ -1,71 +1,79 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
+import React, { useState } from "react";
+import useFetchDoctorsList from "../../../hooks/useFetchDoctorsList";
+import useIntersection from "../../../hooks/useIntersection";
+import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 
 const ReferringOHIPSearch = ({ handleClickRefOHIP }) => {
-  const [userInput, setUserInput] = useState("");
-  const [results, setResults] = useState([]);
-  const { auth } = useAuthContext();
+  const [search, setSearch] = useState("");
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 15,
+    offset: 0,
+  });
+  const { loading, err, doctors, setDoctors, hasMore } = useFetchDoctorsList(
+    search,
+    paging
+  );
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchDoctors = async () => {
-      try {
-        const response = await axiosXanoStaff.get(
-          `/doctors_for_text?name=${userInput}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
-        if (abortController.signal.aborted) return;
-        setResults(response.data);
-      } catch (err) {
-        if (err.name !== "CanceledError") {
-          toast.error(`Unable to fetch referring MDs: ${err.message}`, {
-            containerId: "A",
-          });
-        }
-      }
-    };
-    fetchDoctors();
-    return () => abortController.abort();
-  }, [auth.authToken, userInput]);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setPaging({ ...paging, page: 1 });
+  };
 
   return (
-    <>
+    <div className="refohip__container" ref={rootRef}>
       <div className="refohip-search">
-        <label htmlFor="">Enter a doctor name</label>
+        <label htmlFor="">Search</label>
         <input
           type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
+          value={search}
+          onChange={handleSearch}
+          placeholder="OHIP#, Name"
         />
       </div>
-      {results.length > 0 ? (
+      {err && <p className="refohip__err">Unable to fetch doctors datas</p>}
+      {!err && doctors && doctors.length > 0 ? (
         <ul className="refohip-results">
-          {results.map((result) => (
-            <li
-              className="refohip-results__item"
-              key={result.id}
-              onClick={(e) => handleClickRefOHIP(e, result.ohip_billing_nbr)}
-            >
-              <span className="refohip-results__code">
-                {result.ohip_billing_nbr}
-              </span>{" "}
-              <span className="refohip-results__name">
-                Dr. {result.FirstName} {result.LastName} ({result.speciality},{" "}
-                {result.Address.Structured.City})
-              </span>
-            </li>
-          ))}
+          {doctors.map((item, index) =>
+            index === doctors.length - 1 ? (
+              <li
+                className="refohip-results__item"
+                key={item.id}
+                onClick={(e) => handleClickRefOHIP(e, item.ohip_billing_nbr)}
+                ref={lastItemRef}
+              >
+                <span className="refohip-results__code">
+                  {item.ohip_billing_nbr}
+                </span>{" "}
+                <span className="refohip-results__name">
+                  Dr. {item.FirstName} {item.LastName} ({item.speciality || ""},{" "}
+                  {item.Address?.Structured?.City || ""})
+                </span>
+              </li>
+            ) : (
+              <li
+                className="refohip-results__item"
+                key={item.id}
+                onClick={(e) => handleClickRefOHIP(e, item.ohip_billing_nbr)}
+              >
+                <span className="refohip-results__code">
+                  {item.ohip_billing_nbr}
+                </span>{" "}
+                <span className="refohip-results__name">
+                  Dr. {item.FirstName} {item.LastName} ({item.speciality || ""},{" "}
+                  {item.Address?.Structured?.City || ""})
+                </span>
+              </li>
+            )
+          )}
         </ul>
-      ) : null}
-    </>
+      ) : (
+        !loading && <EmptyParagraph text="No corresponding doctors" />
+      )}
+      {loading && <LoadingParagraph />}
+    </div>
   );
 };
 

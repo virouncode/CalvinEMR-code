@@ -14,6 +14,7 @@ import {
   staffIdToOHIP,
 } from "../../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/toPatientName";
 import { clinicalSchema } from "../../../../validation/clinicalValidation";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
@@ -149,7 +150,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
       });
     }
     window.open(
-      `/staff/billing/${patientId}/${
+      `/staff/billing/${patientId}/${toPatientName(demographicsInfos)}/${
         demographicsInfos.HealthCard?.Number
       }/${Date.now()}`,
       "_blank"

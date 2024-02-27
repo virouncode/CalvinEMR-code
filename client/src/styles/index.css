@@ -14133,7 +14133,7 @@ readers do not read off random characters that represent icons */
 
 .myaccount-section__container {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: solid 2px #93b5e9;
+  border: solid 1px #cecdcd;
   border-radius: 6px;
   background: #FEFEFE;
   padding: 20px;
@@ -14754,6 +14754,7 @@ readers do not read off random characters that represent icons */
 .new-message__patients {
   width: 24%;
   border: solid 0.3px #cecdcd;
+  height: 500px;
   border-radius: 6px;
   margin: 20px auto;
   font-size: 0.8rem;
@@ -14933,6 +14934,7 @@ readers do not read off random characters that represent icons */
 }
 
 .contacts__title {
+  font-weight: bold;
   margin-bottom: 10px;
 }
 .contacts__category-overview {
@@ -14959,10 +14961,14 @@ readers do not read off random characters that represent icons */
 }
 
 .patients__title {
+  font-weight: bold;
   margin-bottom: 10px;
 }
 .patients__search-input {
   margin-bottom: 20px;
+}
+.patients__search-input input {
+  width: 100%;
 }
 .patients__list-item {
   display: flex;
@@ -16420,29 +16426,43 @@ readers do not read off random characters that represent icons */
   text-align: end;
 }
 
+.billing-table__container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
 .billing-table {
-  background-color: #FEFEFE;
   table-layout: fixed;
-  min-width: 80%;
+  min-width: 100%;
   margin: 0 auto;
   border-collapse: collapse;
   font-size: 0.8rem;
 }
 .billing-table thead {
+  position: sticky;
+  top: 0;
   background: #93b5e9;
-  border: solid 1px #3D375A;
+  border-radius: 6px;
 }
 .billing-table th {
-  min-width: 90px;
-  padding: 2px 5px;
-  border: solid 1px #3D375A;
-  text-decoration: underline;
+  min-width: 120px;
+  padding: 10px;
   cursor: pointer;
+}
+.billing-table th:nth-child(3), .billing-table th:nth-child(4), .billing-table th:nth-child(5) {
+  min-width: 170px;
+}
+.billing-table th:nth-child(6) {
+  min-width: 200px;
+}
+.billing-table__item {
+  border-bottom: solid 1px #cecdcd;
 }
 .billing-table__item td {
   text-align: center;
-  border: solid 1px #3D375A;
-  padding: 2px 5px;
+  padding: 10px;
   word-break: break-word;
 }
 .billing-table__item input {
@@ -16462,9 +16482,28 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 
-.diagnosis-search {
+.diagnosis__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.diagnosis__container {
   margin-top: 50px;
-  padding: 0 10px;
+  height: 500px;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.diagnosis-search {
+  position: sticky;
+  top: 0;
+  padding: 10px 20px 20px;
+  background: #FEFEFE;
 }
 .diagnosis-search label {
   font-weight: bold;
@@ -16472,7 +16511,7 @@ readers do not read off random characters that represent icons */
 }
 
 .diagnosis-results {
-  padding: 20px;
+  padding: 0 20px 20px;
 }
 .diagnosis-results__item {
   cursor: pointer;
@@ -16491,9 +16530,28 @@ readers do not read off random characters that represent icons */
   width: 94%;
 }
 
-.hcn-search {
+.hcn__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.hcn__container {
   margin-top: 50px;
-  padding: 0 10px;
+  height: 500px;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.hcn-search {
+  position: sticky;
+  top: 0;
+  padding: 10px 20px 20px;
+  background: #FEFEFE;
 }
 .hcn-search label {
   font-weight: bold;
@@ -16501,7 +16559,7 @@ readers do not read off random characters that represent icons */
 }
 
 .hcn-results {
-  padding: 20px;
+  padding: 0 20px 20px;
 }
 .hcn-results__item {
   cursor: pointer;
@@ -16514,10 +16572,11 @@ readers do not read off random characters that represent icons */
 .hcn-results__code {
   font-weight: bold;
   display: inline-block;
-  width: 20%;
+  width: 30%;
+  margin-right: 50px;
 }
 .hcn-results__name {
-  width: 80%;
+  width: 40%;
 }
 
 .reference {
@@ -16673,9 +16732,28 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 
-.refohip-search {
+.refohip__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.refohip__container {
   margin-top: 50px;
-  padding: 0 10px;
+  height: 500px;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.refohip-search {
+  position: sticky;
+  top: 0;
+  padding: 10px 20px 20px;
+  background: #FEFEFE;
 }
 .refohip-search label {
   font-weight: bold;
@@ -16683,7 +16761,7 @@ readers do not read off random characters that represent icons */
 }
 
 .refohip-results {
-  padding: 20px;
+  padding: 0 20px 20px;
 }
 .refohip-results__item {
   cursor: pointer;
