@@ -13,10 +13,7 @@ import useSocketConfig from "./hooks/useSocketConfig";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
-import {
-  default as ExportPage,
-  default as MigrationPage,
-} from "./pages/Admin/MigrationPage";
+import MigrationPage from "./pages/Admin/MigrationPage";
 import StaffAccountsPage from "./pages/Admin/StaffAccountsPage";
 import LoginPage from "./pages/All/LoginPage";
 import MissingPage from "./pages/All/MissingPage";
@@ -43,7 +40,7 @@ const App = () => {
   useLocalStorageTracker();
   useAutoLogout(120);
   useLogoutForAll(); //log every tabs out if logout on one tab
-  useSocketConfig(true); //true for dev, false for prod
+  useSocketConfig(false); //true for dev, false for prod
 
   return (
     <Routes>
@@ -78,7 +75,7 @@ const App = () => {
           />
           <Route path="my-account" element={<MyAccountPage />} />
           <Route path="credentials" element={<CredentialsPage />} />
-          <Route path="export" element={<ExportPage />} />
+          <Route path="export" element={<MigrationPage />} />
         </Route>
       </Route>
       <Route path="admin" element={<AdminLayout />}>
