@@ -11378,7 +11378,7 @@ readers do not read off random characters that represent icons */
 .invitation__row {
   border: solid 1px #cecdcd;
   width: 100%;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
   display: flex;
@@ -12125,7 +12125,7 @@ readers do not read off random characters that represent icons */
 }
 .demographics-card__content fieldset {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 5px;
   margin-top: 10px;
 }
@@ -12468,7 +12468,7 @@ readers do not read off random characters that represent icons */
 
 .medications-form {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px 20px;
   margin-top: 20px;
 }
@@ -12581,7 +12581,7 @@ readers do not read off random characters that represent icons */
   padding: 30px 40px;
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 .medications-detail__container form {
   width: 100%;
@@ -12755,7 +12755,7 @@ readers do not read off random characters that represent icons */
 .pharmacies__card {
   width: 30%;
   margin: 0 auto;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -12984,7 +12984,7 @@ readers do not read off random characters that represent icons */
   justify-content: center;
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 .care-elements__history-container p {
   font-size: 0.85rem;
@@ -13864,7 +13864,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
   height: 100%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
 }
@@ -14313,10 +14313,10 @@ readers do not read off random characters that represent icons */
 
 .messages-container {
   height: 80vh;
-  border: solid 0.5px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 98%;
   margin: 0 auto;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .messages-toggle {
@@ -14374,6 +14374,16 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   height: 93%;
 }
+.messages-content__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
 .messages-content__leftbar {
   width: 10%;
   height: 100%;
@@ -14389,11 +14399,11 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
 }
 .messages-content__category:hover {
-  background: #E6AA32;
+  background: #5EBAC7;
 }
 .messages-content__category--active {
   font-weight: bold;
-  background: #E6AA32;
+  background: #5EBAC7;
 }
 .messages-content__box {
   background-color: #FEFEFE;
@@ -15470,7 +15480,7 @@ readers do not read off random characters that represent icons */
   background-color: #FEFEFE;
   width: 100%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   font-size: 0.85rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -15674,7 +15684,7 @@ readers do not read off random characters that represent icons */
   height: 300px;
   overflow: scroll;
   border: 1px solid #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   width: 50%;
 }
@@ -15709,7 +15719,7 @@ readers do not read off random characters that represent icons */
 .practicians-forward {
   background: #FEFEFE;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 70%;
   margin: 30px auto 0;
   padding: 10px;
@@ -15769,7 +15779,7 @@ readers do not read off random characters that represent icons */
 }
 .practicians__list {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 70%;
   padding: 5px 10px;
   font-size: 0.85rem;
@@ -16387,7 +16397,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   margin: 20px auto;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 20px;
 }
 .billing-filter__title {
@@ -16614,7 +16624,7 @@ readers do not read off random characters that represent icons */
 }
 .reference__form {
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -16682,7 +16692,7 @@ readers do not read off random characters that represent icons */
   background-color: #FEFEFE;
   width: 100%;
   border: solid 1px #cecdcd;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   font-size: 0.85rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;

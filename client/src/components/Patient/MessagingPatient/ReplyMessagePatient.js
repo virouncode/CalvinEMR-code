@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
@@ -14,7 +17,10 @@ const ReplyMessagePatient = ({
   previousMsgs,
   setCurrentMsgId,
 }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -167,7 +173,7 @@ const ReplyMessagePatient = ({
       <div className="reply-message__title">
         <p>
           <strong>To: </strong>
-          {staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)}
+          {staffIdToTitleAndName(staffInfos, message.from_staff_id, true)}
         </p>
       </div>
       <div className="reply-message__subject">

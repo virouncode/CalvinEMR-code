@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToName } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 
-const NextAppointments = ({ nextAppointments }) => {
-  const { user, auth, clinic, socket } = useAuthContext();
+const NextAppointments = ({ nextAppointments, loading, err }) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [appointmentSelectedId, setAppointmentSelectedId] = useState(null);
 
   const optionsDate = {
@@ -38,7 +45,7 @@ const NextAppointments = ({ nextAppointments }) => {
     ) {
       try {
         //get all secretaries id
-        const secretariesIds = clinic.staffInfos
+        const secretariesIds = staffInfos
           .filter(({ title }) => title === "Secretary")
           .map(({ id }) => id);
         //create the message
@@ -51,26 +58,34 @@ const NextAppointments = ({ nextAppointments }) => {
           const message = {
             from_patient_id: user.id,
             to_staff_id: secretaryId,
-            read_by_patient_id: user.id,
             subject: "Appointment cancelation",
-            body: `Hello ${staffIdToName(clinic.staffInfos, secretaryId)},
+            body: `Hello ${staffIdToName(staffInfos, secretaryId)},
 
 I would like to cancel my appointment with ${staffIdToTitleAndName(
-              clinic.staffInfos,
+              staffInfos,
               appointment.host_id
             )} on:
 
-${new Date(appointment.start).toLocaleString("en-CA", optionsDate)} ${new Date(
-              appointment.start
-            ).toLocaleTimeString("en-CA", optionsTime)} - ${new Date(
-              appointment.end
-            ).toLocaleTimeString("en-CA", optionsTime)}
+${new Date(appointment.start).toLocaleString(
+  "en-CA",
+  optionsDate
+)} from ${new Date(appointment.start).toLocaleTimeString(
+              "en-CA",
+              optionsTime
+            )} to ${new Date(appointment.end).toLocaleTimeString(
+              "en-CA",
+              optionsTime
+            )}
 
 Please contact me to confirm cancelation
 
-Patient: ${user.demographics.full_name}
-Chart Nbr: ${user.demographics.chart_nbr}
-Cellphone: ${user.demographics.cell_phone}`,
+Patient: ${user.full_name}
+Chart Nbr: ${user.demographics.ChartNumber}
+Cellphone: ${
+              user.demographics.PhoneNumber.find(
+                ({ _phoneNumberType }) => _phoneNumberType === "C"
+              )?.phoneNumber
+            }`,
             read_by_patient_id: user.id,
             date_created: Date.now(),
             type: "External",
@@ -117,9 +132,13 @@ Cellphone: ${user.demographics.cell_phone}`,
     <div className="appointments-patient">
       <div className="appointments-patient__title">Next Appointments</div>
       <div className="appointments-patient__content">
-        {nextAppointments ? (
-          nextAppointments.length ? (
-            nextAppointments.map((appointment) => (
+        {err && (
+          <p className="appointments-patient__err">
+            Unable to fetch next appointments
+          </p>
+        )}
+        {!err && nextAppointments && nextAppointments.length > 0
+          ? nextAppointments.map((appointment) => (
               <div key={appointment.id} className="appointments-patient__item">
                 <input
                   type="checkbox"
@@ -158,20 +177,12 @@ Cellphone: ${user.demographics.cell_phone}`,
                 )}
                 <p>Reason : {appointment.reason}</p>
                 <p>
-                  {staffIdToTitleAndName(
-                    clinic.staffInfos,
-                    appointment.host_id,
-                    true
-                  )}
+                  {staffIdToTitleAndName(staffInfos, appointment.host_id, true)}
                 </p>
               </div>
             ))
-          ) : (
-            <div>No next appointments</div>
-          )
-        ) : (
-          <CircularProgressMedium />
-        )}
+          : !loading && <EmptyParagraph text="No next appointments" />}
+        {loading && <LoadingParagraph />}
       </div>
       <div className="appointments-patient__btn">
         <button

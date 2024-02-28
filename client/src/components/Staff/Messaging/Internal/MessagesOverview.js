@@ -13,15 +13,22 @@ const MessagesOverview = ({
   setMsgsSelectedIds,
   section,
   lastItemRef,
+  search,
 }) => {
   const emptySectionMessages = (sectionName) => {
     switch (sectionName) {
       case "Inbox":
-        return `No inbox internal messages`;
+        return search
+          ? `No results in inbox internal messages`
+          : `No inbox internal messages`;
       case "Sent messages":
-        return `No sent internal messages`;
+        return search
+          ? `No results in sent internal messages`
+          : `No sent internal messages`;
       case "Deleted messages":
-        return `No deleted internal messages`;
+        return search
+          ? `No results in deleted internal messages`
+          : `No deleted internal messages`;
       default:
         break;
     }

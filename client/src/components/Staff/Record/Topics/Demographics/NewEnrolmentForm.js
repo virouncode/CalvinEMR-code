@@ -6,13 +6,17 @@ import {
   terminationReasonCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { enrolmentSchema } from "../../../../../validation/enrolmentValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
 const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
-  const { user, socket, auth } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [newEnrolment, setNewEnrolment] = useState({
     EnrollmentStatus: "",
     EnrollmentDate: null,

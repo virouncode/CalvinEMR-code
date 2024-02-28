@@ -46,7 +46,7 @@ const MessageDetail = ({
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
   const { previousMsgs, loadingPrevious } = useFetchPreviousMessages(message);
-  const { attachments } = useFetchMessageAttachments(message);
+  const { attachments } = useFetchMessageAttachments(message, "staff");
   const [posting, setPosting] = useState(false);
 
   const handleClickBack = (e) => {

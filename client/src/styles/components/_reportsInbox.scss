@@ -136,7 +136,7 @@
         height: 300px;
         overflow: scroll;
         border : 1px solid $grey;
-        border-radius : 4px;
+        border-radius : 6px;
         padding: 10px;
         width:50%;
         label {
@@ -174,7 +174,7 @@
 .practicians-forward {
     background:$white;
     border : solid 1px $grey;
-    border-radius:4px;
+    border-radius: 6px;
     width: 70%;
     margin: 30px auto 0;
     padding: 10px;
@@ -232,7 +232,7 @@
     }
     &__list {
         border : solid 1px $grey;
-        border-radius:4px;
+        border-radius: 6px;
         width: 70%;
         padding: 5px 10px;
         font-size: 0.85rem;

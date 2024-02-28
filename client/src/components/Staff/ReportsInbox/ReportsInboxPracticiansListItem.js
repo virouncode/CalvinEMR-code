@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
 const ReportsInboxPracticiansListItem = ({
@@ -8,7 +8,7 @@ const ReportsInboxPracticiansListItem = ({
   isPracticianChecked,
   categoryName,
 }) => {
-  const { clinic } = useAuthContext();
+  const { staffInfos } = useStaffInfosContext();
   return (
     <li className="practicians__list-item">
       <input
@@ -19,7 +19,7 @@ const ReportsInboxPracticiansListItem = ({
         name={categoryName}
       />
       <label htmlFor={info.id}>
-        {staffIdToTitleAndName(clinic.staffInfos, info.id, true)}
+        {staffIdToTitleAndName(staffInfos, info.id, true)}
       </label>
     </li>
   );

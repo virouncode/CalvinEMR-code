@@ -16,7 +16,7 @@ const AssignedPracticiansList = ({
         value={practicianSelectedId}
       >
         <option value="" disabled>
-          Choose a practician...
+          Choose a practitioner...
         </option> */}
       {staffIdToTitleAndName(staffInfos, assignedStaffId, true)}
       {/* {assignedStaff.map((staff) => (

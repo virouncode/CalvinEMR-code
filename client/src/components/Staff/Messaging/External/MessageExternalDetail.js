@@ -44,9 +44,11 @@ const MessageExternalDetail = ({
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
   const messageContentRef = useRef(null);
-  const { previousMsgs, loadingPrevious } =
-    useFetchPreviousMessagesExternal(message);
-  const { attachments } = useFetchMessageAttachments(message);
+  const { previousMsgs, loadingPrevious } = useFetchPreviousMessagesExternal(
+    message,
+    "staff"
+  );
+  const { attachments } = useFetchMessageAttachments(message, "staff");
   const [posting, setPosting] = useState(false);
 
   const handleClickBack = (e) => {

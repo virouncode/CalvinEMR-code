@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useBillingSocket from "../../../hooks/useBillingSocket";
 import useFetchBillings from "../../../hooks/useFetchBillings";
 import useUserContext from "../../../hooks/useUserContext";
@@ -10,7 +10,6 @@ import BillingTable from "./BillingTable";
 
 const Billing = () => {
   const { pid } = useParams();
-  const navigate = useNavigate();
   const { user } = useUserContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [errMsgPost, setErrMsgPost] = useState("");

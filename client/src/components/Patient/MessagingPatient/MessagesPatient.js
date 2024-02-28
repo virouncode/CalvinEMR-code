@@ -1,78 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
-import { filterAndSortExternalMessages } from "../../../utils/filterAndSortExternalMessages";
-import { onMessagesInboxExternal } from "../../../utils/socketHandlers/onMessagesInboxExternal";
+import React, { useState } from "react";
+import useFetchMessagesPatient from "../../../hooks/useFetchMessagesPatient";
+import useMessagesExternalSocket from "../../../hooks/useMessagesExternalSocket";
+import useUserContext from "../../../hooks/useUserContext";
 import MessagesPatientBox from "./MessagesPatientBox";
 import MessagesPatientLeftBar from "./MessagesPatientLeftBar";
 import MessagesPatientToolBar from "./MessagesPatientToolbar";
 
 const MessagesPatient = () => {
-  //HOOKSs
+  //HOOKS
+  const { user } = useUserContext();
   const [search, setSearch] = useState("");
   const [section, setSection] = useState("Inbox");
   const [newVisible, setNewVisible] = useState(false);
   const [msgsSelectedIds, setMsgsSelectedIds] = useState([]);
   const [currentMsgId, setCurrentMsgId] = useState(0);
-  const [messages, setMessages] = useState(null);
-  const { auth, user, clinic, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchMessages = async () => {
-      try {
-        const response = await axiosXanoPatient.get(
-          `/messages_external_for_patient?patient_id=${user.id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
-        );
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+  const { messages, setMessages, loading, errMsg, hasMore } =
+    useFetchMessagesPatient(paging, search, section, user.id, "patient");
 
-        if (abortController.signal.aborted) return;
-        const newMessages = filterAndSortExternalMessages(
-          section,
-          response.data,
-          "patient",
-          user.id
-        );
-        setMessages(newMessages);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to get messages: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchMessages();
-    return () => {
-      abortController.abort();
-      setMessages(null);
-    };
-  }, [auth.authToken, clinic, search, section, user.id]);
-
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) =>
-      onMessagesInboxExternal(
-        message,
-        messages,
-        setMessages,
-        section,
-        user.id,
-        "patient"
-      );
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [messages, section, socket, user.id]);
+  useMessagesExternalSocket(messages, setMessages, section, "patient");
 
   return (
     <div className="messages-container">
@@ -90,6 +43,8 @@ const MessagesPatient = () => {
         setPopUpVisible={setPopUpVisible}
         selectAllVisible={selectAllVisible}
         setSelectAllVisible={setSelectAllVisible}
+        paging={paging}
+        setPaging={setPaging}
       />
       <div className="messages-content">
         <MessagesPatientLeftBar
@@ -98,6 +53,9 @@ const MessagesPatient = () => {
           setCurrentMsgId={setCurrentMsgId}
           setMsgsSelectedIds={setMsgsSelectedIds}
           setSelectAllVisible={setSelectAllVisible}
+          paging={paging}
+          setPaging={setPaging}
+          setMessages={setMessages}
         />
         <MessagesPatientBox
           section={section}
@@ -108,8 +66,13 @@ const MessagesPatient = () => {
           currentMsgId={currentMsgId}
           setCurrentMsgId={setCurrentMsgId}
           messages={messages}
+          loading={loading}
+          errMsg={errMsg}
+          hasMore={hasMore}
+          setPaging={setPaging}
           popUpVisible={popUpVisible}
           setPopUpVisible={setPopUpVisible}
+          search={search}
         />
       </div>
     </div>

@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoPatient } from "../api/xanoPatient";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
-const useFetchPreviousMessagesExternal = (message) => {
+const useFetchPreviousMessagesExternal = (message, userType) => {
+  const axiosXanoInstance =
+    userType === "staff" ? axiosXanoStaff : axiosXanoPatient;
   const { auth } = useAuthContext();
   const [previousMsgs, setPreviousMsgs] = useState([]);
   const [loadingPrevious, setLoadingPrevious] = useState(false);
@@ -13,7 +16,7 @@ const useFetchPreviousMessagesExternal = (message) => {
     const fetchPreviousMsgs = async () => {
       try {
         setLoadingPrevious(true);
-        const response = await axiosXanoStaff.post(
+        const response = await axiosXanoInstance.post(
           "/messages_external_selected",
           { messages_ids: message.previous_messages_ids },
           {

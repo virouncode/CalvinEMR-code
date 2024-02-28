@@ -2,9 +2,12 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { toLocalDateAndTime } from "../../../utils/formatDates";
-import { patientIdToName } from "../../../utils/patientIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../utils/toPatientName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 
 const MessagePatientThumbnail = ({
@@ -13,8 +16,12 @@ const MessagePatientThumbnail = ({
   setMsgsSelectedIds,
   msgsSelectedIds,
   section,
+  lastItemRef = null,
 }) => {
-  const { auth, user, setUser, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
+  const { socket } = useSocketContext();
 
   const handleMsgClick = async (e) => {
     if (message.read_by_patient_id !== user.id) {
@@ -53,16 +60,6 @@ const MessagePatientThumbnail = ({
     //Remove one from the unread messages nbr counter
     if (user.unreadNbr !== 0) {
       const newUnreadNbr = user.unreadNbr - 1;
-      socket.emit("message", {
-        route: "UNREAD",
-        userType: "patient",
-        userId: user.id,
-        content: {
-          data: {
-            unreadNbr: newUnreadNbr,
-          },
-        },
-      });
       setUser({
         ...user,
         unreadNbr: newUnreadNbr,
@@ -125,7 +122,7 @@ const MessagePatientThumbnail = ({
             id: message.id,
             data: {
               ...message,
-              deleted_by_staff_id: user.id,
+              deleted_by_patient_id: user.id,
             },
           },
         });
@@ -136,7 +133,7 @@ const MessagePatientThumbnail = ({
             id: message.id,
             data: {
               ...message,
-              deleted_by_staff_id: user.id,
+              deleted_by_patient_id: user.id,
             },
           },
         });
@@ -159,6 +156,7 @@ const MessagePatientThumbnail = ({
           ? "message-thumbnail message-thumbnail--unread"
           : "message-thumbnail"
       }
+      ref={lastItemRef}
     >
       <input
         className="message-thumbnail__checkbox"
@@ -174,10 +172,10 @@ const MessagePatientThumbnail = ({
         <div className="message-thumbnail__author">
           {section !== "Sent messages" //messages reçus ou effacés
             ? message.from_patient_id //le from est un patient ou un staff
-              ? patientIdToName(clinic.demographicsInfos, message.from_id)
-              : staffIdToTitleAndName(clinic.staffInfos, message.from_id, true)
+              ? toPatientName(message.from_patient_infos)
+              : staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
             : /*messages envoyés, le "To" est un staff*/
-              staffIdToTitleAndName(clinic.staffInfos, message.to_id, true)}
+              staffIdToTitleAndName(staffInfos, message.to_staff_id, true)}
         </div>
         <div className="message-thumbnail__sample">
           <span>{message.subject}</span> - {message.body}{" "}

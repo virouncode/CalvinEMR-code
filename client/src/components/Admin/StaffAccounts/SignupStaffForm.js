@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { generatePassword } from "../../../utils/generatePassword";
 import { staffSchema } from "../../../validation/staffValidation";
@@ -11,7 +13,9 @@ import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupStaffForm = ({ setAddVisible }) => {
-  const { auth, socket, user } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [formDatas, setFormDatas] = useState({

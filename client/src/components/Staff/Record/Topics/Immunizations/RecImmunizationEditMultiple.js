@@ -10,6 +10,8 @@ import {
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
@@ -25,7 +27,9 @@ const RecImmunizationEditMultiple = ({
   setEditVisible,
 }) => {
   //HOOKS
-  const { auth, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState(immunizationInfos);
 
   //HANDLERS

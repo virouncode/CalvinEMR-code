@@ -13,15 +13,22 @@ const MessagesExternalOverview = ({
   setMsgsSelectedIds,
   section,
   lastItemRef,
+  search,
 }) => {
   const emptySectionMessages = (sectionName) => {
     switch (sectionName) {
       case "Inbox":
-        return `No inbox external messages`;
+        return search
+          ? `No results in inbox external messages`
+          : `No inbox external messages`;
       case "Sent messages":
-        return `No sent external messages`;
+        return search
+          ? `No sesults in sent external messages`
+          : `No sent external messages`;
       case "Deleted messages":
-        return `No deleted external messages`;
+        return search
+          ? `No results in deleted external messages`
+          : `No deleted external messages`;
       default:
         break;
     }

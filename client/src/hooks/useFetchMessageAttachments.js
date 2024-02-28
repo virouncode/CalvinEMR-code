@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoPatient } from "../api/xanoPatient";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
-const useFetchMessageAttachments = (message) => {
+const useFetchMessageAttachments = (message, userType) => {
+  const axiosXanoInstance =
+    userType === "staff" ? axiosXanoStaff : axiosXanoPatient;
   const [attachments, setAttachments] = useState([]);
   const { auth } = useAuthContext();
   useEffect(() => {
@@ -11,7 +14,7 @@ const useFetchMessageAttachments = (message) => {
     const fetchAttachments = async () => {
       try {
         const response = (
-          await axiosXanoStaff.post(
+          await axiosXanoInstance.post(
             "/attachments_for_message",
             { attachments_ids: message?.attachments_ids },
             {

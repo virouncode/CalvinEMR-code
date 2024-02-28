@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import LoginNewCard from "../../components/All/Login/LoginNewCard";
+import LoginForm from "../../components/All/Login/LoginForm";
 
 const LoginPage = () => {
   return (
@@ -10,7 +10,7 @@ const LoginPage = () => {
       </Helmet>
       <section className="login-section">
         {/* <LoginCard /> */}
-        <LoginNewCard />
+        <LoginForm />
       </section>
     </>
   );

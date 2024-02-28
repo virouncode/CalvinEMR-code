@@ -33,7 +33,7 @@ export const patientSchema = yup.object({
     ),
   assignedMd: yup
     .string()
-    .required("Assigned clinic practician field is required"),
+    .required("Assigned clinic practitioner field is required"),
   gender: yup.string().required("Gender field is required"),
   cellphone: yup
     .string()

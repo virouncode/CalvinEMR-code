@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import { provinceStateTerritoryCT } from "../../../datas/codesTables";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { siteSchema } from "../../../validation/siteValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
@@ -12,7 +14,9 @@ import RoomsForm from "./RoomsForm";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SiteEdit = ({ infos, setEditVisible }) => {
-  const { auth, socket, user } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [err, setErr] = useState(false);
   const [formDatas, setFormDatas] = useState(infos);

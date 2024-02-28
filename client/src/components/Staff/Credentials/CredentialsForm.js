@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import xanoGet from "../../../api/xanoGet";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const CredentialsForm = () => {
   const navigate = useNavigate();
-  const { auth, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [credentials, setCredentials] = useState({
     email: auth.email,
     password: "",
@@ -73,29 +78,24 @@ const CredentialsForm = () => {
       setErrMsg("Invalid Password");
       return;
     }
-    try {
-      const staff = await axiosXanoStaff.get("/staff", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
-      if (
-        staff.data
-          .filter(({ id }) => id !== user.id)
-          .find(
-            ({ email }) =>
-              email.toLowerCase() === credentials.email.toLowerCase()
-          )
-      ) {
-        setErrMsg(
-          "There is already an account with this email, please choose another one"
+
+    if (credentials.email.toLowerCase() !== auth.email.toLowerCase()) {
+      try {
+        const response = await xanoGet(
+          `/staff_with_email`,
+          axiosXanoStaff,
+          auth.authToken,
+          "email",
+          credentials.email.toLowerCase()
         );
+        if (response.data) {
+          setErrMsg("There is already an account with this email");
+          return;
+        }
+      } catch (err) {
+        setErrMsg(`Error: unable to change credentials: ${err.message}`);
         return;
       }
-    } catch (err) {
-      setErrMsg(`Error: unable to change credentials: ${err.message}`);
-      return;
     }
 
     try {

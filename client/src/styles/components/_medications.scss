@@ -74,7 +74,7 @@
 }
 .medications-form {
     border: solid 1px $grey;
-    border-radius : 4px;
+    border-radius : 6px;
     padding: 10px 20px;
     margin-top: 20px;
     &__btn-container {
@@ -188,7 +188,7 @@
         padding: 30px 40px;
         border: solid 1px $grey;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border-radius:4px;
+        border-radius: 6px;
         form {
             width: 100%;
         }

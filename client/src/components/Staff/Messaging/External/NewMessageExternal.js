@@ -5,7 +5,6 @@ import { sendEmail } from "../../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
@@ -16,7 +15,6 @@ const NewMessageExternal = ({ setNewVisible }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
-  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
   const [recipient, setRecipient] = useState({ id: 0, name: "" });
   const [subject, setSubject] = useState("");

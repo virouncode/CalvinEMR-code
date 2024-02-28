@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
@@ -15,7 +16,8 @@ const MedTemplateItem = ({
   setFinalInstructions,
   body,
 }) => {
-  const { auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
 
   const handleClickMed = (e) => {

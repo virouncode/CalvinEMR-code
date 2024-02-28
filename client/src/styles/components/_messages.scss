@@ -1,9 +1,9 @@
 .messages-container {
     height:80vh;
-    border:solid 0.5px $grey;
-    border-radius:4px;
+    border-radius: 6px;
     width:98%;
     margin: 0 auto;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .messages-toggle {
     padding: 5px 10px;
@@ -57,6 +57,16 @@
     align-items: flex-start;
     margin: 0 auto;
     height:93%;
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin:10px auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 6px;
+        text-align: center; 
+    }
     &__leftbar {
         width : 10%;
         height: 100%; 
@@ -71,11 +81,11 @@
         width: 100%;
         cursor: pointer;
         &:hover {
-            background: $orange;
+            background: $green;
         }
         &--active {
             font-weight: bold;
-            background: $orange;
+            background: $green;
         }
     }
     &__box {

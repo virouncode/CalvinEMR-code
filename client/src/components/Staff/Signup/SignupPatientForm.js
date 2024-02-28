@@ -568,7 +568,7 @@ const SignupPatientForm = () => {
             />
           </div>
           <div className="signup-patient__row">
-            <label>Assigned practician*: </label>
+            <label>Assigned practitioner*: </label>
             <StaffList
               value={formDatas.assignedMd}
               name="assignedMd"

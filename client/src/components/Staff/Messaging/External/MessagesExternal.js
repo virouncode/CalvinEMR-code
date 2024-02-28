@@ -11,7 +11,6 @@ const MessagesExternal = () => {
   //HOOKS
   const { user } = useUserContext();
   const { messageId, sectionName } = useParams();
-  console.log(messageId, sectionName);
   const [search, setSearch] = useState("");
   const [section, setSection] = useState(sectionName || "Inbox");
   const [newVisible, setNewVisible] = useState(false);
@@ -90,6 +89,7 @@ const MessagesExternal = () => {
           setPaging={setPaging}
           popUpVisible={popUpVisible}
           setPopUpVisible={setPopUpVisible}
+          search={search}
         />
       </div>
     </div>

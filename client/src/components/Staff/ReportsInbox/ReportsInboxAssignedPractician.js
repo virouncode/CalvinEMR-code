@@ -61,7 +61,7 @@ const ReportsInboxAssignedPractician = ({
 
   return (
     <div className="practicians">
-      <label className="practicians__title">Assigned Practician</label>
+      <label className="practicians__title">Assigned Practitioner</label>
       <div className="practicians__list">
         {allInfos
           .filter((category) => category.infos.length !== 0)

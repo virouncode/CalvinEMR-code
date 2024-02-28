@@ -2,6 +2,8 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 
 const MessagesPatientToolBar = ({
@@ -18,14 +20,20 @@ const MessagesPatientToolBar = ({
   setPopUpVisible,
   selectAllVisible,
   setSelectAllVisible,
+  paging,
+  setPaging,
 }) => {
-  const { auth, user, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+
   const handleChange = (e) => {
     setSearch(e.target.value);
+    setPaging({ ...paging, page: 1 });
   };
   const handleClickNew = (e) => {
     if (newVisible) {
-      toast.error(
+      alert(
         "You already opened a New Message window, please send your message or close the window",
         { containerId: "A" }
       );

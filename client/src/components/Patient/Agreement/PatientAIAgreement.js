@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
-  const { user, auth, socket } = useAuthContext();
+  const { user } = useUserContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
   const [agreed, setAgreed] = useState(true);
   const handleChange = (e) => {
     const id = e.target.id;
@@ -32,7 +36,7 @@ const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
         content: { id: user.demographics.id, data: datasToPut },
       });
       socket.emit("message", {
-        route: "USER",
+        route: "PATIENT USER DEMOGRAPHICS",
         action: "update",
         content: { id: user.id, data: datasToPut },
       });

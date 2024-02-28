@@ -5,13 +5,17 @@ import useAuthContext from "../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../utils/formatDates";
 import { onMessageBilling } from "../../../utils/socketHandlers/onMessageBilling";
 
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import BillingFilter from "../../Staff/Billing/BillingFilter";
 import BillingForm from "../../Staff/Billing/BillingForm";
 import BillingTable from "../../Staff/Billing/BillingTable";
 
 const BillingAdmin = () => {
-  const { user, auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [billings, setBillings] = useState(null);
   const [errMsg, setErrMsg] = useState("");

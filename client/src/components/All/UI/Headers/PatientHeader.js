@@ -2,14 +2,18 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 
 const PatientHeader = () => {
-  const { user, setUser, setAuth, setClinic } = useAuthContext();
+  const { user, setUser } = useUserContext();
+  const { setAuth } = useAuthContext();
+  const { setStaffInfos } = useStaffInfosContext();
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth({});
     setUser({});
-    setClinic({});
+    setStaffInfos({});
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
     localStorage.removeItem("clinic");

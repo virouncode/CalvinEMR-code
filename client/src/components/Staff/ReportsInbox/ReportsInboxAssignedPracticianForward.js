@@ -118,7 +118,7 @@ const ReportsInboxAssignedPracticianForward = ({
   return (
     <div className="practicians-forward">
       <label className="practicians-forward__title">
-        Forward document to practician
+        Forward document to practitioner
       </label>
       <div className="practicians-forward__list">
         {allInfos

@@ -1,7 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import NewWindow from "react-new-window";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import AddToReportsForm from "./AddToReportsForm";
 
@@ -16,7 +15,6 @@ const AttachmentCard = ({
   addable = true,
   date,
 }) => {
-  const { user, auth, socket } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const handleImgClick = () => {
     setPopUpVisible(true);

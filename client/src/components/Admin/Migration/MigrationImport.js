@@ -1,10 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
 import { toJsDemographics } from "../../../utils/imports/jsTemplates";
 
 const MigrationImport = () => {
-  const { user, auth } = useAuthContext();
   const [xmlContent, setXmlContent] = useState(null);
   const [jsContent, setJsContent] = useState(null);
 

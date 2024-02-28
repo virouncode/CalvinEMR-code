@@ -13,6 +13,9 @@ import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../utils/formatDates";
 import { getAge } from "../../../utils/getAge";
 // import { onMessageUser } from "../../../utils/socketHandlers/onMessageUser";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { demographicsSchema } from "../../../validation/demographicsValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
@@ -20,7 +23,10 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const AccountPatientForm = () => {
   //HOOKS
-  const { auth, user, clinic, setUser, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user, setUser } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);
@@ -919,9 +925,9 @@ const AccountPatientForm = () => {
                 )}
               </div>
               <div className="patient-account__form-content-row">
-                <label>Assigned Clinic Practician*: </label>
+                <label>Assigned Clinic Practitioner*: </label>
                 {staffIdToTitleAndName(
-                  clinic.staffInfos,
+                  staffInfos,
                   formDatas.assigned_staff_id,
                   true
                 )}
@@ -1024,14 +1030,12 @@ const AccountPatientForm = () => {
                 </div>
               )}
 
-              {editVisible && (
-                <div className="patient-account__form-content-sign">
-                  <em>
-                    If you want to change further informations please ask a
-                    staff member
-                  </em>
-                </div>
-              )}
+              <div className="patient-account__form-content-sign">
+                <em>
+                  If you wish to update your personal information, please ask a
+                  staff member for assistance.
+                </em>
+              </div>
             </div>
           </div>
         </form>

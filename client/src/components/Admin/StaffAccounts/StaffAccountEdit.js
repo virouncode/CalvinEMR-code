@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
@@ -11,7 +12,8 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 const StaffAccountEdit = ({ infos, setEditVisible }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
-  const { auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
 

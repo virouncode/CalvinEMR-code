@@ -20,6 +20,7 @@ const MessagesExternalBox = ({
   setPaging,
   popUpVisible,
   setPopUpVisible,
+  search,
 }) => {
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
@@ -36,6 +37,7 @@ const MessagesExternalBox = ({
             setMsgsSelectedIds={setMsgsSelectedIds}
             section={section}
             lastItemRef={lastItemRef}
+            search={search}
           />
         ) : (
           <MessageExternalDetail

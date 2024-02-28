@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
@@ -9,7 +12,10 @@ import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
 import ContactsForPatient from "./ContactsForPatient";
 
 const NewMessagePatient = ({ setNewVisible }) => {
-  const { auth, user, clinic, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+  const { staffInfos } = useStaffInfosContext();
   const [attachments, setAttachments] = useState([]);
   const [recipientId, setRecipientId] = useState(0);
   const [subject, setSubject] = useState("");
@@ -174,7 +180,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
     <div className="new-message new-message--patient">
       <div className="new-message__contacts new-message__contacts--patient">
         <ContactsForPatient
-          staffInfos={clinic.staffInfos}
+          staffInfos={staffInfos}
           isContactChecked={isContactChecked}
           handleCheckContact={handleCheckContact}
         />
@@ -187,7 +193,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
             placeholder="Staff member"
             value={
               recipientId
-                ? staffIdToTitleAndName(clinic.staffInfos, recipientId, true)
+                ? staffIdToTitleAndName(staffInfos, recipientId, true)
                 : ""
             }
             readOnly

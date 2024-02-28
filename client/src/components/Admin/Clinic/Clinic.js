@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
 import { onMessageSites } from "../../../utils/socketHandlers/onMessageSites";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
@@ -10,7 +11,8 @@ import SiteForm from "./SiteForm";
 import SitesTable from "./SitesTable";
 
 const Clinic = () => {
-  const { auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { socket } = useSocketContext();
   const [sites, setSites] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [addVisible, setAddVisible] = useState(false);

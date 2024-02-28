@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
+import useUserContext from "../../../hooks/useUserContext";
 
 const MessagesPatientLeftBar = ({
   section,
@@ -7,6 +7,9 @@ const MessagesPatientLeftBar = ({
   setCurrentMsgId,
   setMsgsSelectedIds,
   setSelectAllVisible,
+  paging,
+  setPaging,
+  setMessages,
 }) => {
   const handleClickSection = (e) => {
     const name = e.target.id;
@@ -14,13 +17,15 @@ const MessagesPatientLeftBar = ({
     setCurrentMsgId(0);
     setMsgsSelectedIds([]);
     setSelectAllVisible(true);
+    setMessages([]);
+    setPaging({ ...paging, page: 1 });
   };
   const isActive = (id) =>
     section === id
       ? "messages-content__category messages-content__category--active"
       : "messages-content__category";
 
-  const { user } = useAuthContext();
+  const { user } = useUserContext();
 
   return (
     <div className="messages-content__leftbar">

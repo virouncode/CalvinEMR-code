@@ -89,6 +89,7 @@ const Messages = () => {
           setPaging={setPaging}
           popUpVisible={popUpVisible}
           setPopUpVisible={setPopUpVisible}
+          search={search}
         />
       </div>
     </div>

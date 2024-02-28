@@ -21,6 +21,7 @@ const MessagesBox = ({
   setPaging,
   popUpVisible,
   setPopUpVisible,
+  search,
 }) => {
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
@@ -38,6 +39,7 @@ const MessagesBox = ({
             setMsgsSelectedIds={setMsgsSelectedIds}
             section={section}
             lastItemRef={lastItemRef}
+            search={search}
           />
         ) : (
           <MessageDetail

@@ -1,5 +1,5 @@
 import React from "react";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import useIntersection from "../../../hooks/useIntersection";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import MessagePatientDetail from "./MessagePatientDetail";
 import MessagesPatientOverview from "./MessagesPatientOverview";
@@ -14,49 +14,39 @@ const MessagesPatientBox = ({
   currentMsgId,
   setCurrentMsgId,
   messages,
+  loading,
+  errMsg,
+  hasMore,
+  setPaging,
   popUpVisible,
   setPopUpVisible,
+  search,
 }) => {
-  const emptySectionMessages = (sectionName) => {
-    switch (sectionName) {
-      case "Inbox":
-        return `No inbox messages`;
-      case "Sent messages":
-        return `No sent messages`;
-      case "Deleted messages":
-        return `No deleted messages`;
-      default:
-        break;
-    }
-  };
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   return (
     <>
-      <div className="messages-content__box">
-        {messages ? (
-          messages?.length !== 0 ? (
-            currentMsgId === 0 ? (
-              <MessagesPatientOverview
-                messages={messages}
-                setCurrentMsgId={setCurrentMsgId}
-                msgsSelectedIds={msgsSelectedIds}
-                setMsgsSelectedIds={setMsgsSelectedIds}
-                section={section}
-              />
-            ) : (
-              <MessagePatientDetail
-                setCurrentMsgId={setCurrentMsgId}
-                message={messages.find(({ id }) => id === currentMsgId)}
-                section={section}
-                popUpVisible={popUpVisible}
-                setPopUpVisible={setPopUpVisible}
-              />
-            )
-          ) : (
-            <p>{emptySectionMessages(section)}</p>
-          )
+      <div className="messages-content__box" ref={rootRef}>
+        {currentMsgId === 0 ? (
+          <MessagesPatientOverview
+            messages={messages}
+            loading={loading}
+            errMsg={errMsg}
+            setCurrentMsgId={setCurrentMsgId}
+            msgsSelectedIds={msgsSelectedIds}
+            setMsgsSelectedIds={setMsgsSelectedIds}
+            section={section}
+            lastItemRef={lastItemRef}
+            search={search}
+          />
         ) : (
-          <CircularProgressMedium />
+          <MessagePatientDetail
+            setCurrentMsgId={setCurrentMsgId}
+            message={messages.find(({ id }) => id === currentMsgId)}
+            section={section}
+            popUpVisible={popUpVisible}
+            setPopUpVisible={setPopUpVisible}
+          />
         )}
       </div>
       {newVisible && (

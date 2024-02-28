@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useFetchMessageAttachments from "../../../hooks/useFetchMessageAttachments";
+import useFetchPreviousMessagesExternal from "../../../hooks/useFetchPreviousMessagesExternal";
+import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
+import { toPatientName } from "../../../utils/toPatientName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import MessageExternal from "../../Staff/Messaging/External/MessageExternal";
 import MessagesExternalPrintPU from "../../Staff/Messaging/External/MessagesExternalPrintPU";
 import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
@@ -16,73 +22,15 @@ const MessagePatientDetail = ({
   popUpVisible,
   setPopUpVisible,
 }) => {
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [replyVisible, setReplyVisible] = useState(false);
-  const { auth, user, socket } = useAuthContext();
-  const [previousMsgs, setPreviousMsgs] = useState(null);
-  const [attachments, setAttachments] = useState([]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchPreviousMsgs = async () => {
-      try {
-        const response = await axiosXanoPatient.post(
-          "/messages_external_selected",
-          { messages_ids: message.previous_messages_ids },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.authToken}`,
-              "Content-Type": "application/json",
-            },
-            signal: abortController.signal,
-          }
-        );
-        if (abortController.signal.aborted) return;
-        setPreviousMsgs(
-          response.data.sort((a, b) => b.date_created - a.date_created)
-        );
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(
-            `Error: unable to fetch previous messages: ${err.message}`,
-            { containerId: "A" }
-          );
-      }
-    };
-    fetchPreviousMsgs();
-    return () => abortController.abort();
-  }, [auth.authToken, user.id, message.previous_messages_ids]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAttachments = async () => {
-      try {
-        const response = (
-          await axiosXanoPatient.post(
-            "/attachments_for_message",
-            { attachments_ids: message.attachments_ids },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              signal: abortController.signal,
-            }
-          )
-        ).data;
-        if (abortController.signal.aborted) return;
-        setAttachments(response);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to fetch attachments: ${err.message}`, {
-            containerId: "A",
-          });
-      }
-    };
-    fetchAttachments();
-    return () => {
-      abortController.abort();
-    };
-  }, [auth.authToken, message.attachments_ids]);
+  const { previousMsgs, loadingPrevious } = useFetchPreviousMessagesExternal(
+    message,
+    "patient"
+  );
+  const { attachments } = useFetchMessageAttachments(message, "patient");
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -115,7 +63,7 @@ const MessagePatientDetail = ({
             id: message.id,
             data: {
               ...message,
-              deleted_by_staff_id: user.id,
+              deleted_by_patient_id: user.id,
             },
           },
         });
@@ -126,7 +74,7 @@ const MessagePatientDetail = ({
             id: message.id,
             data: {
               ...message,
-              deleted_by_staff_id: user.id,
+              deleted_by_patient_id: user.id,
             },
           },
         });
@@ -145,77 +93,89 @@ const MessagePatientDetail = ({
   };
 
   return (
-    <>
-      {popUpVisible && (
-        <NewWindow
-          title={`Message(s) / Subject: ${message.subject}`}
-          features={{
-            toolbar: "no",
-            scrollbars: "no",
-            menubar: "no",
-            status: "no",
-            directories: "no",
-            width: 793.7,
-            height: 1122.5,
-            left: 320,
-            top: 200,
-          }}
-          onUnload={() => setPopUpVisible(false)}
-        >
-          <MessagesExternalPrintPU
-            message={message}
-            previousMsgs={previousMsgs}
-            attachments={attachments}
-          />
-        </NewWindow>
-      )}
-      <div className="message-detail__toolbar">
-        <i
-          className="fa-solid fa-arrow-left message-detail__arrow"
-          style={{ cursor: "pointer" }}
-          onClick={handleClickBack}
-        ></i>
-        <div className="message-detail__subject">{message.subject}</div>
-        {section !== "Deleted messages" && (
-          <i
-            className="fa-solid fa-trash  message-detail__trash"
-            onClick={handleDeleteMsg}
-          ></i>
-        )}
-      </div>
-      <div className="message-detail__content">
-        <MessageExternal message={message} key={message.id} index={0} />
-        {previousMsgs &&
-          previousMsgs.map((message, index) => (
-            <MessageExternal
+    message && (
+      <>
+        {popUpVisible && (
+          <NewWindow
+            title={`Message(s) / Subject: ${message.subject}`}
+            features={{
+              toolbar: "no",
+              scrollbars: "no",
+              menubar: "no",
+              status: "no",
+              directories: "no",
+              width: 793.7,
+              height: 1122.5,
+              left: 320,
+              top: 200,
+            }}
+            onUnload={() => setPopUpVisible(false)}
+          >
+            <MessagesExternalPrintPU
               message={message}
-              key={message.id}
-              index={index + 1}
+              previousMsgs={previousMsgs}
+              attachments={attachments}
             />
-          ))}
-        <MessagesAttachments
-          attachments={attachments}
-          deletable={false}
-          cardWidth="15%"
-          addable={false}
-        />
-      </div>
-      {replyVisible && (
-        <ReplyMessagePatient
-          setReplyVisible={setReplyVisible}
-          message={message}
-          previousMsgs={previousMsgs}
-          setCurrentMsgId={setCurrentMsgId}
-        />
-      )}
-      {section !== "Deleted messages" && !replyVisible && (
-        <div className="message-detail__btns">
-          {section !== "Sent messages" && (
-            <button onClick={handleClickReply}>Reply</button>
+          </NewWindow>
+        )}
+        <div className="message-detail__toolbar">
+          <i
+            className="fa-solid fa-arrow-left message-detail__arrow"
+            style={{ cursor: "pointer" }}
+            onClick={handleClickBack}
+          ></i>
+          <div className="message-detail__subject">{message.subject}</div>
+          {section !== "Deleted messages" && (
+            <i
+              className="fa-solid fa-trash  message-detail__trash"
+              onClick={handleDeleteMsg}
+            ></i>
           )}
         </div>
-      )}
-    </>
+        <div className="message-detail__content">
+          <MessageExternal message={message} key={message.id} index={0} />
+          {loadingPrevious && <LoadingParagraph />}
+          {!loadingPrevious &&
+            previousMsgs &&
+            previousMsgs.length > 0 &&
+            previousMsgs.map((message, index) => (
+              <MessageExternal
+                message={message}
+                key={message.id}
+                index={index + 1}
+              />
+            ))}
+          <MessagesAttachments
+            attachments={attachments}
+            deletable={false}
+            cardWidth="15%"
+            addable={false}
+            patientId={message.from_patient_id || message.to_patient_id}
+            patientName={
+              message.from_patient_id
+                ? toPatientName(message.from_patient_infos)
+                : toPatientName(message.to_patient_infos)
+            }
+            message={message}
+          />
+        </div>
+        {replyVisible && (
+          <ReplyMessagePatient
+            setReplyVisible={setReplyVisible}
+            message={message}
+            previousMsgs={previousMsgs}
+            setCurrentMsgId={setCurrentMsgId}
+          />
+        )}
+        {section !== "Deleted messages" && !replyVisible && (
+          <div className="message-detail__btns">
+            {section !== "Sent messages" && (
+              <button onClick={handleClickReply}>Reply</button>
+            )}
+          </div>
+        )}
+      </>
+    )
   );
 };
 

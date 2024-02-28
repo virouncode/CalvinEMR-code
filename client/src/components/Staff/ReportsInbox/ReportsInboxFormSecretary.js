@@ -114,7 +114,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
       });
 
       toast.success(
-        "Report posted successfully to patient's assigned practician",
+        "Report posted successfully to patient's assigned practitioner",
         { containerId: "A" }
       );
     } catch (err) {

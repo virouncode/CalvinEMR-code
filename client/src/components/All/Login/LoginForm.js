@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import xanoGet from "../../../api/xanoGet";
+import { axiosXanoPatient } from "../../../api/xanoPatient";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
+import { toPatientName } from "../../../utils/toPatientName";
 import { userSchema } from "../../../validation/userValidation";
 import CircularProgressSmallWhite from "../UI/Progress/CircularProgressSmallWhite";
 const LOGIN_URL = "/auth/login";
 const USERINFO_URL = "/auth/me";
 
-const LoginNewCard = () => {
+const LoginForm = () => {
   //HOOKS
   const { setAuth } = useAuthContext();
   const { setUser } = useUserContext();
@@ -68,7 +70,7 @@ const LoginNewCard = () => {
     const password = formDatasToPost.password;
     //Submission
 
-    //************************************* STAFF USER *************************************//
+    //************************************* STAFF *************************************//
     if (formDatasToPost.type === "staff") {
       try {
         setLoading(true);
@@ -107,7 +109,7 @@ const LoginNewCard = () => {
         );
         const settings = response3?.data;
 
-        // //================ USER UNREAD MESSAGES =============//
+        //================ USER UNREAD MESSAGES =============//
         const unreadMessagesNbr = (
           await xanoGet(
             `/unread_messages_for_staff`,
@@ -151,6 +153,92 @@ const LoginNewCard = () => {
         const staffInfos = response6.data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
+
+        setLoading(false);
+        navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
+      } catch (err) {
+        setLoading(false);
+        if (!err?.response) {
+          setErr("No server response");
+        } else if (err.response?.response?.status === 400) {
+          setErr("Missing email or password");
+        } else if (err.response?.response?.status === 401) {
+          setErr("Unhauthorized");
+        } else {
+          setErr("Login failed, please try again");
+        }
+      }
+      //************************************* PATIENT *************************************//
+    } else if (formDatasToPost.type === "patient") {
+      try {
+        setLoading(true);
+        //=============== AUTH =================//
+        const response = await axiosXanoPatient.post(
+          LOGIN_URL,
+          { email, password },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const authToken = response?.data?.authToken;
+        setAuth({ email, authToken });
+        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
+
+        //================ USER INFOS ===================//
+
+        const response2 = await xanoGet(
+          USERINFO_URL,
+          axiosXanoPatient,
+          authToken
+        );
+        if (response2.data.account_status === "Suspended") {
+          navigate("/suspended");
+          return;
+        }
+        const user = response2.data;
+
+        //================ USER DEMOGRAPHICS =============//
+        const response3 = await xanoGet(
+          `/demographics_for_patient`,
+          axiosXanoPatient,
+          authToken,
+          "patient_id",
+          user.id
+        );
+        const demographics = response3?.data[0];
+
+        //================ USER UNREAD MESSAGES =============//
+        const unreadNbr = (
+          await xanoGet(
+            `/unread_messages_for_patient`,
+            axiosXanoPatient,
+            authToken,
+            "patient_id",
+            user.id
+          )
+        ).data;
+
+        setUser({
+          ...user,
+          full_name: toPatientName(demographics),
+          demographics,
+          unreadNbr,
+        });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...user,
+            demographics,
+            unreadNbr,
+          })
+        );
+
+        //================== STAFF INFOS ====================//
+        const response6 = await xanoGet("/staff", axiosXanoPatient, authToken);
+        const staffInfos = response6.data;
+        setStaffInfos(staffInfos);
+        localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
+
         setLoading(false);
         navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
       } catch (err) {
@@ -167,128 +255,7 @@ const LoginNewCard = () => {
       }
     }
   };
-  // } else if (formDatasToPost.type === "patient") {
-  //   //PATIENT
-  //   try {
-  //     //=============== AUTH =================//
-  //     const response = await axiosXanoPatient.post(
-  //       LOGIN_URL,
-  //       { email, password },
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-  //     const authToken = response?.data?.authToken;
-  //     setAuth({ email, authToken });
-  //     localStorage.setItem("auth", JSON.stringify({ email, authToken }));
 
-  //     //================ USER ===================//
-  //     const response2 = await axiosXanoPatient.get(USERINFO_URL, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //     });
-  //     if (response2.data.account_status === "Suspended") {
-  //       navigate("/suspended");
-  //       return;
-  //     }
-  //     const id = response2?.data?.id;
-  //     const access_level = response2?.data?.access_level;
-
-  //     const response3 = await axiosXanoPatient.get(
-  //       `/demographics_for_patient?patient_id=${id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${authToken}`,
-  //         },
-  //       }
-  //     );
-  //     const demographics = response3?.data[0];
-
-  //     // Get user unread messages
-  //     const response4 = await axiosXanoPatient.get(
-  //       `/messages_external_for_patient?patient_id=${id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${authToken}`,
-  //         },
-  //       }
-  //     );
-  //     const unreadMessagesExternalNbr = getUnreadMessagesExternalNbr(
-  //       response4.data,
-  //       "patient",
-  //       id
-  //     );
-  //     const unreadNbr = unreadMessagesExternalNbr;
-
-  //     setUser({
-  //       id,
-  //       access_level,
-  //       demographics,
-  //       unreadNbr,
-  //     });
-  //     localStorage.setItem(
-  //       "user",
-  //       JSON.stringify({
-  //         id,
-  //         access_level,
-  //         demographics,
-  //         unreadNbr,
-  //       })
-  //     );
-
-  //     //================== CLINIC ===================//
-  //     const response5 = await axiosXanoPatient.get("/staff", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const staffInfos = response5.data.sort((a, b) =>
-  //       a.last_name.localeCompare(b.last_name)
-  //     );
-
-  //     const response6 = await axiosXanoPatient.get("/demographics", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const demographicsInfos = response6.data.sort((a, b) =>
-  //       a.Names.LegalName.LastName.Part.localeCompare(
-  //         b.Names.LegalName.LastName.Part
-  //       )
-  //     );
-
-  //     const response7 = await axiosXanoPatient.get("/patients", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const patientsInfos = response7.data;
-
-  //     setClinic({ staffInfos, demographicsInfos, patientsInfos });
-  //     localStorage.setItem(
-  //       "clinic",
-  //       JSON.stringify({ staffInfos, demographicsInfos, patientsInfos })
-  //     );
-  //     navigate(from, { replace: true });
-  //   } catch (err) {
-  //     if (!err?.response) {
-  //       setErr("No server response");
-  //     } else if (err.response?.response?.status === 400) {
-  //       setErr("Missing email or password");
-  //     } else if (err.response?.response?.status === 401) {
-  //       setErr("Unhauthorized");
-  //     } else {
-  //       setErr("Login failed, please try again");
-  //     }
-  //   }
-  // } else {
   //   //ADMIN
   //   try {
   //     //=============== AUTH =================//
@@ -487,4 +454,4 @@ const LoginNewCard = () => {
   );
 };
 
-export default LoginNewCard;
+export default LoginForm;

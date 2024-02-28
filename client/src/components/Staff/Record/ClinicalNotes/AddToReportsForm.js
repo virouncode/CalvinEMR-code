@@ -3,13 +3,17 @@ import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { reportClassCT } from "../../../../datas/codesTables";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../utils/formatDates";
 import { getExtension } from "../../../../utils/getExtension";
 import GenericList from "../../../All/UI/Lists/GenericList";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {
-  const { user, auth, socket } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [errMsgPost, setErrMsgPost] = useState("");
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
