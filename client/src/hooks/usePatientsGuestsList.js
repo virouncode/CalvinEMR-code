@@ -16,9 +16,6 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
   }, [search, patients_guests_ids]);
 
   useEffect(() => {
-    console.log("patients_guests_ids", patients_guests_ids);
-    console.log("search", search);
-    console.log("paging", paging);
     const abortController = new AbortController();
     const fetchPatientsDemographics = async () => {
       const patientsGuestsIds = patients_guests_ids
@@ -46,7 +43,6 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
           }
         );
         //Because we can't filter those things in Xano
-        console.log("response", response.data.items);
         const filteredDatas = response.data.items.filter(
           (item) =>
             toLocalDate(item.DateOfBirth).includes(search.birth) &&
@@ -62,7 +58,6 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
             !patientsGuestsIds.includes(item.patient_id)
         );
         if (abortController.signal.aborted) return;
-        console.log("filteredDatas", filteredDatas);
         setPatientsDemographics((prevDatas) => [
           ...prevDatas,
           ...filteredDatas,

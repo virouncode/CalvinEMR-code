@@ -3,7 +3,6 @@ import React from "react";
 const GuestStaffItem = ({ guest, handleRemoveGuest }) => {
   return (
     <span key={guest.id} data-key={guest.id} data-type="staff">
-      {console.log("guest", guest)}
       <span>
         {guest.full_name} ({guest.title}){" "}
       </span>

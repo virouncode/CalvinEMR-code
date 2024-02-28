@@ -44,8 +44,6 @@ const useFetchMessagesExternal = (
         );
         if (abortController.signal.aborted) return;
         setMessages((prevDatas) => {
-          console.log("prevDatas", prevDatas);
-          console.log("response", response.data.items);
           return filterAndSortExternalMessages(
             sectionName || section,
             [...prevDatas, ...response.data.items],

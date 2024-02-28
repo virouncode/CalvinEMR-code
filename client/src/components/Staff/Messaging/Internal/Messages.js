@@ -43,7 +43,6 @@ const Messages = () => {
 
   return (
     <div className="messages-container">
-      {console.log("currentMsgId", currentMsgId)}
       <MessagesToolBar
         search={search}
         setSearch={setSearch}

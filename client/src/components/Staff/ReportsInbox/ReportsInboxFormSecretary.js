@@ -54,7 +54,6 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
 
   const handleCheckPatient = (e, assignedStaffId) => {
     setErrMsg("");
-    console.log("assigned staff id", assignedStaffId);
     setFormDatas({
       ...formDatas,
       patient_id: parseInt(e.target.id),

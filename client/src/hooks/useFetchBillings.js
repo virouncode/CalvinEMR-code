@@ -24,16 +24,11 @@ const useFetchBillings = (paging) => {
   useEffect(() => {
     const abortController = new AbortController();
     const fetchBillings = async () => {
-      console.log("fetchBillings");
       try {
         setLoading(true);
         let response;
         if (user.title !== "Secretary") {
           //billings concerning the user in range
-          console.log("rangeStart", rangeStart);
-          console.log("rangeEnd", rangeEnd);
-          console.log("staffId", user.id);
-
           response = await axiosXanoStaff.get(`/billings_for_staff_in_range`, {
             headers: {
               "Content-Type": "application/json",
@@ -63,7 +58,6 @@ const useFetchBillings = (paging) => {
           });
         }
         if (abortController.signal.aborted) return;
-        console.log("response", response.data.items);
         setBillings((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);
         setLoading(false);

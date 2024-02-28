@@ -17,7 +17,6 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
   useEffect(() => {
     const abortController = new AbortController();
     const fetchMessages = async () => {
-      console.log("fetchMessages");
       try {
         setLoading(true);
         setErrMsg("");
@@ -35,8 +34,6 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
         });
         if (abortController.signal.aborted) return;
         setMessages((prevDatas) => {
-          console.log("prevDatas", prevDatas);
-          console.log("response", response.data.items);
           return filterAndSortMessages(
             sectionName || section,
             [...prevDatas, ...response.data.items],

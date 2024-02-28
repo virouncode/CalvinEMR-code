@@ -20,7 +20,6 @@ const usePatientsList = (search, paging) => {
       try {
         setLoading(true);
         setErr(false);
-        console.log("search", search);
         const response = await axiosXanoStaff.get(
           "/demographics_simple_search",
           {
@@ -37,7 +36,6 @@ const usePatientsList = (search, paging) => {
         );
         //Because we can't filter those things in Xano
         if (abortController.signal.aborted) return;
-        console.log("patients list", response.data.items);
         setPatientsDemographics((prevDatas) => [
           ...prevDatas,
           ...response.data.items,

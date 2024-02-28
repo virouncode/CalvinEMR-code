@@ -35,7 +35,5 @@ export const filterAndSortMessages = (section, datas, userId) => {
     default:
       break;
   }
-  console.log("datas", datas);
-  console.log("newMessages", newMessages);
   return newMessages;
 };

@@ -15,6 +15,7 @@ export const getAvailableAppointments = (
     "friday",
     "saturday",
   ];
+  console.log("availability", availability);
 
   const defaulDurationMs =
     availability.default_duration_hours * 3600000 +
@@ -28,7 +29,7 @@ export const getAvailableAppointments = (
 
   while (counter < 7) {
     //On boucle sur une semaine
-    while (availability.unavailability[days[newDay]] === true) {
+    while (availability?.unavailability?.[days[newDay]] === true) {
       //on incrémente newDay jusqu'à ce que le practicien soit dispo
       newDay = (newDay + 1) % 7;
       counter++;

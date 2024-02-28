@@ -40,7 +40,7 @@ const App = () => {
   useLocalStorageTracker();
   useAutoLogout(120); //autologout in min
   useLogoutForAll(); //log every tabs out if logout on one tab
-  useSocketConfig(false); //true for dev, false for prod
+  useSocketConfig(true); //true for dev, false for prod
 
   return (
     <Routes>

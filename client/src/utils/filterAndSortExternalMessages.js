@@ -63,7 +63,6 @@ export const filterAndSortExternalMessages = (
   userId
 ) => {
   let newMessages = [];
-  console.log("userType", userType);
   switch (section) {
     case "Inbox":
       newMessages = getInboxMessagesExternal(datas, userType, userId);

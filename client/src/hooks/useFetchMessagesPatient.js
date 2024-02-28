@@ -43,8 +43,6 @@ const useFetchMessagesPatient = (
         );
         if (abortController.signal.aborted) return;
         setMessages((prevDatas) => {
-          console.log("prevDatas", prevDatas);
-          console.log("response", response.data.items);
           return filterAndSortExternalMessages(
             section,
             [...prevDatas, ...response.data.items],
