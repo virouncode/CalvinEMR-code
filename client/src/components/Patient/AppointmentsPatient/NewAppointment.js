@@ -12,6 +12,8 @@ import { staffIdToName } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
+import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import AppointmentsSlots from "./AppointmentsSlots";
 import WeekPicker from "./WeekPicker";
 var _ = require("lodash");
@@ -43,26 +45,24 @@ const NewAppointment = () => {
   const [appointmentSelected, setAppointmentSelected] = useState({});
   const [requestSent, setRequestSent] = useState(false);
   const [loadingAppointments, setLoadingAppointments] = useState(false);
+  const [errAppointments, setErrAppointments] = useState("");
 
   useEffect(() => {
     const abortController = new AbortController();
     const fetchAppointmentsInRange = async () => {
       try {
         setLoadingAppointments(true);
-        const response = await axiosXanoPatient.post(
-          "/appointments_for_staff",
-          {
+        const response = await axiosXanoPatient.get("/appointments_for_staff", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
             host_id: user.demographics.assigned_staff_id,
             range_start: rangeStart + 86400000, //+1 day
             range_end: rangeEnd + 86400000,
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        );
+        });
         if (abortController.signal.aborted) return;
         setAppointmentsInRange(
           response.data.filter(({ start }) => start > rangeStart + 86400000)
@@ -71,11 +71,8 @@ const NewAppointment = () => {
       } catch (err) {
         setLoadingAppointments(false);
         if (err.name !== "CanceledError") {
-          toast.error(
-            `Error : unable fetch your account infos: ${err.message}`,
-            {
-              containerId: "A",
-            }
+          setErrAppointments(
+            `Error : unable fetch your account infos: ${err.message}`
           );
         }
       }
@@ -95,7 +92,8 @@ const NewAppointment = () => {
       axiosXanoPatient,
       auth.authToken,
       "staff_id",
-      user.demographics.assigned_staff_id
+      user.demographics.assigned_staff_id,
+      true
     );
 
   useAvailabilitySocket(setAvailability);
@@ -225,7 +223,16 @@ Cellphone: ${
         of your practitioner. If you require different time options, please
         contact the clinic directly.
       </p>
-      {availability && appointmentsInRange && (
+      {errAvailability && (
+        <p className="new-appointments__err">{errAvailability}</p>
+      )}
+      {errAppointments && (
+        <p className="new-appointments__err">{errAppointments}</p>
+      )}
+      {!errAvailability &&
+      !errAppointments &&
+      appointmentsInRange &&
+      availability.id ? (
         <AppointmentsSlots
           availability={availability}
           appointmentsInRange={appointmentsInRange}
@@ -235,7 +242,13 @@ Cellphone: ${
           setAppointmentSelected={setAppointmentSelected}
           appointmentSelected={appointmentSelected}
         />
+      ) : (
+        !loadingAvailability &&
+        !loadingAppointments && (
+          <EmptyParagraph text="No time slots available" />
+        )
       )}
+      {(loadingAvailability || loadingAppointments) && <LoadingParagraph />}
       <>
         <WeekPicker
           handleClickNext={handleClickNext}

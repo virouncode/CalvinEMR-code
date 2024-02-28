@@ -13,6 +13,7 @@ const AppointmentsSlots = ({
   appointmentSelected,
 }) => {
   const [appointmentsOptions, setAppointmentsOptions] = useState([]);
+  console.log("render");
   useEffect(() => {
     setAppointmentsOptions(
       getAvailableAppointments(

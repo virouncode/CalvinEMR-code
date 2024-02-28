@@ -11,7 +11,7 @@ export const getAppointmentProposal = (
   id
 ) => {
   //Morning
-  const availabilityMorning = availability?.schedule_morning?.[day];
+  const availabilityMorning = availability.schedule_morning[day];
   const startMorning = new Date(rangeStart);
   startMorning.setDate(startMorning.getDate() + delta);
   startMorning.setHours(
@@ -37,7 +37,7 @@ export const getAppointmentProposal = (
   const endMorningMs = Date.parse(endMorning);
 
   //Afternoon
-  const availabilityAfternoon = availability?.schedule_afternoon?.[day];
+  const availabilityAfternoon = availability.schedule_afternoon[day];
   const startAfternoon = new Date(rangeStart);
   startAfternoon.setDate(startAfternoon.getDate() + delta);
   startAfternoon.setHours(

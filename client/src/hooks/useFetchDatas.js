@@ -29,6 +29,7 @@ const useFetchDatas = (
         if (abortController.signal.aborted) return;
         setLoading(false);
         setDatas(response.data);
+        console.log(response.data);
       } catch (err) {
         if (err.name !== "CanceledError") {
           setErr(`Error: unable to get datas: ${err.message}`);

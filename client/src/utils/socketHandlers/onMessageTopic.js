@@ -62,7 +62,6 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
     }
   } else if (message.route === "APPOINTMENTS") {
     //we talk about the patient's appointments, don't think about the calendar because it is connected to useEventsSocket
-    console.log(message);
     switch (message.action) {
       case "create":
         if (
