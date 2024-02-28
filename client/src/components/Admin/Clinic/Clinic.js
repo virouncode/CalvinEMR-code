@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
-import useSocketContext from "../../../hooks/useSocketContext";
-import { onMessageSites } from "../../../utils/socketHandlers/onMessageSites";
+import useFetchDatas from "../../../hooks/useFetchDatas";
+import useSitesSocket from "../../../hooks/useSitesSocket";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SiteEdit from "./SiteEdit";
@@ -12,47 +11,17 @@ import SitesTable from "./SitesTable";
 
 const Clinic = () => {
   const { auth } = useAuthContext();
-  const { socket } = useSocketContext();
-  const [sites, setSites] = useState(null);
+  const [sites, setSites] = useFetchDatas(
+    "/sites",
+    axiosXanoAdmin,
+    auth.authToken
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedSiteId, setSelectedSiteId] = useState();
 
-  useEffect(() => {
-    if (!socket) return;
-    const onMessage = (message) => onMessageSites(message, sites, setSites);
-    socket.on("message", onMessage);
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [sites, socket]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchSites = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosXanoAdmin.get("/sites", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        setIsLoading(false);
-        if (abortController.signal.aborted) return;
-        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
-      } catch (err) {
-        setIsLoading(false);
-        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
-          containerId: "A",
-        });
-      }
-    };
-    fetchSites();
-    return () => abortController.abort();
-  }, [auth.authToken]);
+  useSitesSocket(sites, setSites);
 
   const handleAddNew = (e) => {
     setAddVisible(true);

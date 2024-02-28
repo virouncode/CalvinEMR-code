@@ -85,6 +85,14 @@ const ReminderForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
+        <div className="reminders__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </td>
+      <td>
         <input
           type="text"
           value={formDatas.reminder}
@@ -98,14 +106,6 @@ const ReminderForm = ({
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>
-      </td>
-      <td>
-        <div className="reminders__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
       </td>
     </tr>
   );

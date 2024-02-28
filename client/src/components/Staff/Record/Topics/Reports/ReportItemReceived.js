@@ -94,6 +94,21 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
 
   return (
     <tr className="reports__item" ref={lastItemReceivedRef}>
+      <td>
+        <div className="reports__item-btn-container">
+          {" "}
+          {!item.acknowledged && item.assigned_staff_id === user.id && (
+            <button onClick={handleAcknowledge}>Acknowledge</button>
+          )}
+          <button>Fax</button>
+          <button
+            onClick={handleDeleteClick}
+            disabled={user.id !== item.assigned_staff_id}
+          >
+            Delete
+          </button>
+        </div>
+      </td>
       <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>
@@ -152,21 +167,6 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       </td>
       <td>{toLocalDate(item.DateTimeSent)}</td> */}
       <SignCell item={item} />
-      <td>
-        <div className="reports__item-btn-container">
-          {" "}
-          {!item.acknowledged && item.assigned_staff_id === user.id && (
-            <button onClick={handleAcknowledge}>Acknowledge</button>
-          )}
-          <button>Fax</button>
-          <button
-            onClick={handleDeleteClick}
-            disabled={user.id !== item.assigned_staff_id}
-          >
-            Delete
-          </button>
-        </div>
-      </td>
     </tr>
   );
 };

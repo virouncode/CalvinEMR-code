@@ -1,5 +1,6 @@
 import React from "react";
 import useIntersection from "../../../hooks/useIntersection";
+import useUserContext from "../../../hooks/useUserContext";
 import EmptyRow from "../../All/UI/Tables/EmptyRow";
 import LoadingRow from "../../All/UI/Tables/LoadingRow";
 import BillingTableItem from "./BillingTableItem";
@@ -16,6 +17,8 @@ const BillingTable = ({
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
+  const { user } = useUserContext();
+
   return (
     <>
       {errMsg && <div className="billing__err">{errMsg}</div>}
@@ -24,6 +27,7 @@ const BillingTable = ({
           <table className="billing-table">
             <thead>
               <tr>
+                {user.title !== "Secretary" && <th>Action</th>}
                 <th>Date</th>
                 <th>Site</th>
                 <th>Provider OHIP#</th>
@@ -37,7 +41,6 @@ const BillingTable = ({
                 <th>Specialist fee</th>
                 <th>Anaesthetist fee</th>
                 <th>Non-anaesthetist fee</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>

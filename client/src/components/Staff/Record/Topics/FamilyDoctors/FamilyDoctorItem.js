@@ -46,6 +46,9 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
 
   return (
     <tr className="doctors__item" ref={lastItemRef}>
+      <td>
+        <button onClick={handleRemoveFromPatient}>Remove from patient</button>
+      </td>
       <td>{item.LastName}</td>
       <td>{item.FirstName}</td>
       <td>{item.speciality}</td>
@@ -66,9 +69,6 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
       <td>{item.PhoneNumber[0].phoneNumber}</td>
       <td>{item.FaxNumber.phoneNumber}</td>
       <td>{item.EmailAddress}</td>
-      <td>
-        <button onClick={handleRemoveFromPatient}>Remove from patient</button>
-      </td>
     </tr>
   );
 };

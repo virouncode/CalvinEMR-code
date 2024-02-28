@@ -105,6 +105,14 @@ const AllergyForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
+        <div className="allergies__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </td>
+      <td>
         <input
           name="OffendingAgentDescription"
           type="text"
@@ -178,14 +186,6 @@ const AllergyForm = ({
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>
-      </td>
-      <td>
-        <div className="allergies__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
       </td>
     </tr>
   );

@@ -117,7 +117,7 @@ const CredentialsForm = () => {
         },
       });
       socket.emit("message", {
-        route: "STAFF",
+        route: "STAFF INFOS",
         action: "update",
         content: { id: user.id, data: me },
       });

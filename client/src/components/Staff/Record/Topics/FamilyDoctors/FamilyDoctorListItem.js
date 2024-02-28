@@ -229,6 +229,28 @@ const FamilyDoctorListItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="doctors__item-btn-container">
+            {!editVisible ? (
+              <>
+                <button
+                  onClick={handleAddToPatient}
+                  disabled={item.patients.includes(patientId)}
+                >
+                  Add to patient
+                </button>
+                <button onClick={handleEditClick}>Edit</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <input
               name="lastName"
@@ -403,28 +425,6 @@ const FamilyDoctorListItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="doctors__item-btn-container">
-            {!editVisible ? (
-              <>
-                <button
-                  onClick={handleAddToPatient}
-                  disabled={item.patients.includes(patientId)}
-                >
-                  Add to patient
-                </button>
-                <button onClick={handleEditClick}>Edit</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

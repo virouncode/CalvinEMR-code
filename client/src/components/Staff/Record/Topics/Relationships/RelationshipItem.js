@@ -220,6 +220,23 @@ const RelationshipItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="relationships-item__btn-container">
+            {!editVisible ? (
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           <div className="relationships-item__relationship">
             {editVisible ? (
               <RelationshipList
@@ -249,23 +266,6 @@ const RelationshipItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="relationships-item__btn-container">
-            {!editVisible ? (
-              <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

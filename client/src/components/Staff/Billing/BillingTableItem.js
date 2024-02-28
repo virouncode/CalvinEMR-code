@@ -289,6 +289,34 @@ const BillingTableItem = ({
           style={{ border: errMsgPost && "solid 1.5px red" }}
           ref={lastItemRef}
         >
+          {user.title !== "Secretary" && (
+            <td>
+              <div className="billing-table__item-btn-container">
+                {!editVisible ? (
+                  <>
+                    <button onClick={handleEditClick}>Edit</button>
+                    <button onClick={handleDeleteClick}>Delete</button>
+                    <button onClick={handleDuplicateClick}>Duplicate</button>
+                  </>
+                ) : (
+                  <>
+                    {progress ? (
+                      <CircularProgressMedium />
+                    ) : (
+                      <input
+                        type="submit"
+                        value="Save"
+                        onClick={handleSubmit}
+                      />
+                    )}
+                    <button onClick={handleCancel} disabled={progress}>
+                      Cancel
+                    </button>
+                  </>
+                )}
+              </div>
+            </td>
+          )}
           <td>
             {editVisible ? (
               <input
@@ -439,34 +467,6 @@ const BillingTableItem = ({
           <td>{itemInfos.specialist_fee / 10000} $</td>
           <td>{itemInfos.anaesthetist_fee / 10000} $</td>
           <td>{itemInfos.non_anaesthetist_fee / 10000} $</td>
-          {user.title !== "Secretary" && (
-            <td>
-              <div className="billing-table__item-btn-container">
-                {!editVisible ? (
-                  <>
-                    <button onClick={handleEditClick}>Edit</button>
-                    <button onClick={handleDeleteClick}>Delete</button>
-                    <button onClick={handleDuplicateClick}>Duplicate</button>
-                  </>
-                ) : (
-                  <>
-                    {progress ? (
-                      <CircularProgressMedium />
-                    ) : (
-                      <input
-                        type="submit"
-                        value="Save"
-                        onClick={handleSubmit}
-                      />
-                    )}
-                    <button onClick={handleCancel} disabled={progress}>
-                      Cancel
-                    </button>
-                  </>
-                )}
-              </div>
-            </td>
-          )}
         </tr>
         {diagnosisSearchVisible && (
           <FakeWindow

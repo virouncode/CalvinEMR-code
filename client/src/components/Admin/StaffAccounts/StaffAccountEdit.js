@@ -3,16 +3,19 @@ import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import SelectSite from "../../Staff/EventForm/SelectSite";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const StaffAccountEdit = ({ infos, setEditVisible }) => {
+const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
   const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -27,6 +30,12 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
     const value = e.target.value;
     const name = e.target.name;
     setFormDatas({ ...formDatas, [name]: value });
+  };
+
+  const handleSiteChange = (e) => {
+    setErrMsg("");
+    const value = e.target.value;
+    setFormDatas({ ...formDatas, site_id: parseInt(value) });
   };
 
   const handleCancel = () => {
@@ -88,16 +97,23 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
       datasToPut.full_name = firstLetterUpper(full_name);
       datasToPut.speciality = firstLetterUpper(datasToPut.speciality);
       datasToPut.subspeciality = firstLetterUpper(datasToPut.subspeciality);
-      datasToPut.date_created = Date.now();
+      datasToPut.updates = [
+        ...formDatas.updates,
+        {
+          date_updated: Date.now(),
+          updated_by_id: user.id,
+          updated_by_user_type: "admin",
+        },
+      ];
+      let urlFormatted;
+      if (
+        !datasToPut.video_link.includes("http") ||
+        !datasToPut.video_link.includes("https")
+      ) {
+        urlFormatted = ["https://", datasToPut.video_link].join("");
+        datasToPut.video_link = urlFormatted;
+      }
 
-      // if (
-      //   formDatas.ohip_billing_nbr.toString().length !== 6 &&
-      //   formDatas.title === "Doctor"
-      // ) {
-      //   setErrMsg("OHIP billing number should be 6-digits");
-      //   return;
-      // }
-      datasToPut.ohip_billing_nbr = parseInt(datasToPut.ohip_billing_nbr);
       //Validation
       try {
         await myAccountSchema.validate(datasToPut);
@@ -107,17 +123,24 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
       }
 
       //Submission
-      await axiosXanoAdmin.put(`/staff/${infos.id}`, datasToPut, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      const response = await axiosXanoAdmin.put(
+        `/staff/${infos.id}`,
+        datasToPut,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
 
       socket.emit("message", {
-        route: "STAFF",
+        route: "STAFF INFOS",
         action: "update",
-        content: { id: infos.id, data: datasToPut },
+        content: {
+          id: infos.id,
+          data: response.data,
+        },
       });
 
       setEditVisible(false);
@@ -170,6 +193,15 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
                 onChange={handleChange}
                 name="last_name"
                 autoComplete="off"
+              />
+            </div>
+            <div className="staff-account__row">
+              <label htmlFor="">Site*: </label>
+              <SelectSite
+                handleSiteChange={handleSiteChange}
+                sites={sites}
+                value={formDatas.site_id}
+                label={false}
               />
             </div>
             <div className="staff-account__row">
@@ -243,7 +275,7 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
               />
             </div>
             <div className="staff-account__row">
-              <label>Licence nbr: </label>
+              <label>Licence#: </label>
               <input
                 type="text"
                 value={formDatas.licence_nbr}
@@ -254,7 +286,7 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
               />
             </div>
             <div className="staff-account__row">
-              <label>OHIP billing nbr: </label>
+              <label>OHIP#: </label>
               <input
                 type="text"
                 value={formDatas.ohip_billing_nbr}
@@ -294,6 +326,17 @@ const StaffAccountEdit = ({ infos, setEditVisible }) => {
                 value={formDatas.video_link}
                 onChange={handleChange}
               />
+            </div>
+            <div className="myaccount-section__row">
+              <label>AI consent: </label>
+              <select
+                value={formDatas.ai_consent}
+                onChange={handleChange}
+                name="ai_consent"
+              >
+                <option value={true}>Yes</option>
+                <option value={false}>No</option>
+              </select>
             </div>
             <div className="staff-account__row">
               <label>E-sign: </label>

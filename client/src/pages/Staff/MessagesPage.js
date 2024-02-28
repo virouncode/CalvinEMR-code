@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import MessagesExternal from "../../components/Staff/Messaging/External/MessagesExternal";
 import Messages from "../../components/Staff/Messaging/Internal/Messages";
 import MessagingToggle from "../../components/Staff/Messaging/MessagingToggle";
+import useTitle from "../../hooks/useTitle";
 
 const MessagesPage = () => {
   const { msgType } = useParams();
@@ -15,13 +16,13 @@ const MessagesPage = () => {
     const name = e.target.name;
     setMsgsType(name);
   };
+  useTitle("Messages");
   return (
     <>
       <Helmet>
         <title>Messages</title>
       </Helmet>
       <section className="messages-section">
-        <h2 className="messages-section__title">Messages</h2>
         <MessagingToggle
           isTypeChecked={isTypeChecked}
           handleMsgsTypeChanged={handleMsgsTypeChanged}

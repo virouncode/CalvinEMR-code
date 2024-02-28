@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoGet";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
+import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -16,6 +18,7 @@ const LoginForm = () => {
   //HOOKS
   const { setAuth } = useAuthContext();
   const { setUser } = useUserContext();
+  const { setAdminsInfos } = useAdminsInfosContext();
   const { setStaffInfos } = useStaffInfosContext();
   const navigate = useNavigate();
   const location = useLocation();
@@ -254,115 +257,60 @@ const LoginForm = () => {
         }
       }
     }
+    //************************************* ADMIN *************************************//
+    else if (formDatasToPost.type === "admin") {
+      try {
+        setLoading(true);
+        //=============== AUTH =================//
+        const response = await axiosXanoAdmin.post(
+          LOGIN_URL,
+          { email, password },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const authToken = response?.data?.authToken;
+        setAuth({ email, authToken });
+        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
+
+        //=============== AUTH =================//
+        const response2 = await xanoGet(
+          USERINFO_URL,
+          axiosXanoAdmin,
+          authToken
+        );
+        const user = response2?.data;
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        //=============== STAFF INFOS =================//
+        const response3 = await xanoGet("/staff", axiosXanoAdmin, authToken);
+        const staffInfos = response3.data;
+        setStaffInfos(staffInfos);
+        localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
+
+        //=============== ADMIN INFOS =================//
+        const response4 = await xanoGet("/admins", axiosXanoAdmin, authToken);
+        const adminsInfos = response4.data;
+        setAdminsInfos(adminsInfos);
+        localStorage.setItem("adminsInfos", JSON.stringify(adminsInfos));
+
+        setLoading(false);
+        navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
+      } catch (err) {
+        setLoading(false);
+        if (!err?.response) {
+          setErr("No server response");
+        } else if (err.response?.response?.status === 400) {
+          setErr("Missing email or password");
+        } else if (err.response?.response?.status === 401) {
+          setErr("Unhauthorized");
+        } else {
+          setErr("Login failed, please try again");
+        }
+      }
+    }
   };
-
-  //   //ADMIN
-  //   try {
-  //     //=============== AUTH =================//
-  //     const response = await axiosXanoAdmin.post(
-  //       LOGIN_URL,
-  //       JSON.stringify({ email, password }),
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-  //     const authToken = response?.data?.authToken;
-  //     setAuth({ email, authToken });
-  //     localStorage.setItem("auth", JSON.stringify({ email, authToken }));
-  //     //================ USER ===================//
-  //     const response2 = await axiosXanoAdmin.get(USERINFO_URL, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //     });
-  //     const id = response2?.data?.id;
-  //     const name = response2?.data?.full_name;
-  //     const access_level = response2?.data?.access_level;
-
-  //     setUser({
-  //       id,
-  //       name,
-  //       access_level,
-  //     });
-  //     localStorage.setItem(
-  //       "user",
-  //       JSON.stringify({
-  //         id,
-  //         name,
-  //         access_level,
-  //       })
-  //     );
-
-  //     //================== CLINIC ===================//
-  //     const response4 = await axiosXanoAdmin.get("/staff", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const staffInfos = response4.data.sort((a, b) =>
-  //       a.last_name.localeCompare(b.last_name)
-  //     );
-
-  //     const response5 = await axiosXanoAdmin.get("/demographics", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const demographicsInfos = response5.data.sort((a, b) =>
-  //       a.Names.LegalName.LastName.Part.localeCompare(
-  //         b.Names.LegalName.LastName.Part
-  //       )
-  //     );
-
-  //     const response6 = await axiosXanoAdmin.get("/patients", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const patientsInfos = response6.data;
-
-  //     const response7 = await axiosXanoAdmin.get("/admin", {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const adminsInfos = response7.data;
-
-  //     setClinic({
-  //       staffInfos,
-  //       demographicsInfos,
-  //       patientsInfos,
-  //       adminsInfos,
-  //     });
-
-  //     localStorage.setItem(
-  //       "clinic",
-  //       JSON.stringify({
-  //         staffInfos,
-  //         demographicsInfos,
-  //         patientsInfos,
-  //         adminsInfos,
-  //       })
-  //     );
-  //     navigate(from, { replace: true });
-  //   } catch (err) {
-  //     if (!err?.response) {
-  //       setErr("No server response");
-  //     } else if (err.response?.response?.status === 400) {
-  //       setErr("Missing email or password");
-  //     } else if (err.response?.response?.status === 401) {
-  //       setErr("Unhauthorized");
-  //     } else {
-  //       setErr("Login failed, please try again");
-  //     }
-  //   }
-  // }
-  // };
 
   const handleClickForgot = () => {
     navigate("/reset-password");

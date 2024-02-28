@@ -99,6 +99,14 @@ const PregnancyForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
+        <div className="pregnancies-form__btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </td>
+      <td>
         <PregnanciesList
           value={formDatas.description}
           name="description"
@@ -158,14 +166,6 @@ const PregnancyForm = ({
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>
-      </td>
-      <td>
-        <div className="pregnancies-form__btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
       </td>
     </tr>
   );

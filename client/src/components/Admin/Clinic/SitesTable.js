@@ -7,6 +7,7 @@ const SitesTable = ({ sites, handleEditClick }) => {
       <table>
         <thead>
           <tr>
+            <th>Action</th>
             <th>Site name</th>
             <th>Address</th>
             <th>Postal code</th>
@@ -18,7 +19,6 @@ const SitesTable = ({ sites, handleEditClick }) => {
             <th>Rooms list</th>
             <th>Updated by</th>
             <th>Updated on</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>

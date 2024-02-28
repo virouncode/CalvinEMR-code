@@ -4,6 +4,7 @@ import FakeWindow from "../../components/All/UI/Windows/FakeWindow";
 import PatientAIAgreement from "../../components/Patient/Agreement/PatientAIAgreement";
 import MessagesPatient from "../../components/Patient/MessagingPatient/MessagesPatient";
 import usePatientUserDemographicsSocket from "../../hooks/usePatientUserDemographicsSocket";
+import useTitle from "../../hooks/useTitle";
 import useUserContext from "../../hooks/useUserContext";
 
 const PatientMessagesPage = () => {
@@ -12,6 +13,7 @@ const PatientMessagesPage = () => {
     !user.demographics.ai_consent_read
   );
   usePatientUserDemographicsSocket(user.id);
+  useTitle("Messages");
 
   return (
     <>
@@ -19,7 +21,6 @@ const PatientMessagesPage = () => {
         <title>Messages</title>
       </Helmet>
       <section className="patient-messages-section">
-        <h2 className="patient-messages-section__title">Messages</h2>
         <MessagesPatient />
         {popUpVisible && (
           <FakeWindow

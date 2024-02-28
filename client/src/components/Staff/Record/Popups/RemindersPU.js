@@ -58,10 +58,10 @@ const RemindersPU = ({
             <table className="reminders__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Reminder</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

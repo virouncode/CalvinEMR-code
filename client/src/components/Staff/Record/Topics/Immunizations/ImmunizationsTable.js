@@ -22,6 +22,7 @@ const ImmunizationsTable = ({
         <table className="immunizations__table">
           <thead>
             <tr>
+              <th>Action</th>
               <th>Immunization type</th>
               <th>Immunization brand name</th>
               <th>Manufacturer</th>
@@ -35,7 +36,6 @@ const ImmunizationsTable = ({
               <th>Notes</th>
               <th>Updated by</th>
               <th>Updated on</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>

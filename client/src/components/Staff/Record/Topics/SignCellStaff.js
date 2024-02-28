@@ -1,4 +1,6 @@
 import React from "react";
+import useAdminsInfosContext from "../../../../hooks/useAdminsInfosContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { adminIdToName } from "../../../../utils/adminIdToName";
 import { toLocalDate } from "../../../../utils/formatDates";
 import {
@@ -7,7 +9,9 @@ import {
 } from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 
-const SignCellStaff = ({ item, staffInfos, adminsInfos }) => {
+const SignCellStaff = ({ item }) => {
+  const { staffInfos } = useStaffInfosContext();
+  const { adminsInfos } = useAdminsInfosContext();
   return (
     <>
       <td>

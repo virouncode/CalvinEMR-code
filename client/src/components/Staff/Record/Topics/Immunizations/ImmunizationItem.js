@@ -135,6 +135,23 @@ const ImmunizationItem = ({
     itemInfos && (
       <tr className="immunizations__item">
         <td>
+          <div className="immunizations__item-btn-container">
+            {!editVisible ? (
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <ImmunizationsList
               name="ImmunizationType"
@@ -275,23 +292,6 @@ const ImmunizationItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="immunizations__item-btn-container">
-            {!editVisible ? (
-              <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

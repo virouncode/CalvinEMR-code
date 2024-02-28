@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import useAdminsInfosContext from "./useAdminsInfosContext";
 import useAuthContext from "./useAuthContext";
 import useStaffInfosContext from "./useStaffInfosContext";
 import useUserContext from "./useUserContext";
@@ -7,12 +8,16 @@ const useAutoLogout = (timeMin) => {
   const { setAuth } = useAuthContext();
   const { setUser } = useUserContext();
   const { setStaffInfos } = useStaffInfosContext();
+  const { setAdminsInfos } = useAdminsInfosContext();
   const logout = () => {
     setAuth({});
     setUser({});
     setStaffInfos([]);
+    setAdminsInfos([]);
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
+    localStorage.removeItem("staffInfos");
+    localStorage.removeItem("adminsInfos");
     localStorage.removeItem("tabCounter");
     localStorage.removeItem("lastAction");
     localStorage.setItem("message", "logout");

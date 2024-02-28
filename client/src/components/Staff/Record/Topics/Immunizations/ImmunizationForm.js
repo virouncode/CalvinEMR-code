@@ -101,6 +101,12 @@ const ImmunizationForm = ({
 
   return (
     <tr className="immunizations__form">
+      <td style={{ textAlign: "center" }}>
+        <div className="immunizations__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button onClick={handleCancel}>Cancel</button>
+        </div>
+      </td>
       <td>
         <ImmunizationsList
           name="ImmunizationType"
@@ -196,12 +202,6 @@ const ImmunizationForm = ({
       </td>
       <td>{staffIdToTitleAndName(staffInfos, user.id, true)}</td>
       <td>{toLocalDate(Date.now())}</td>
-      <td style={{ textAlign: "center" }}>
-        <div className="immunizations__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button onClick={handleCancel}>Cancel</button>
-        </div>
-      </td>
     </tr>
   );
 };

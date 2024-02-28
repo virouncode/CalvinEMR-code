@@ -43,6 +43,7 @@ const PharmaciesList = ({
           <table className="pharmacies-list__table">
             <thead>
               <tr>
+                <th>Action</th>
                 <th>Name</th>
                 <th>Address</th>
                 <th>City</th>
@@ -53,7 +54,6 @@ const PharmaciesList = ({
                 <th>Email</th>
                 <th>Updated By</th>
                 <th>Updated On</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>

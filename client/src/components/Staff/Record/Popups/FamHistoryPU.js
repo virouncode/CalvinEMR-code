@@ -58,6 +58,7 @@ const FamHistoryPU = ({
             <table className="famhistory__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Description</th>
                   <th>Relative affected</th>
                   <th>Start date</th>
@@ -67,7 +68,6 @@ const FamHistoryPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

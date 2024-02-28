@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import xanoGet from "../../../api/xanoGet";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -9,10 +10,11 @@ import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import { generatePassword } from "../../../utils/generatePassword";
 import { staffSchema } from "../../../validation/staffValidation";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import SelectSite from "../../Staff/EventForm/SelectSite";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const SignupStaffForm = ({ setAddVisible }) => {
+const SignupStaffForm = ({ setAddVisible, sites }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -20,10 +22,10 @@ const SignupStaffForm = ({ setAddVisible }) => {
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [formDatas, setFormDatas] = useState({
     email: "",
-    password: "",
     first_name: "",
     middle_name: "",
     last_name: "",
+    site_id: 1,
     gender: "Male",
     title: "Doctor",
     access_level: "User",
@@ -35,36 +37,14 @@ const SignupStaffForm = ({ setAddVisible }) => {
     cell_phone: "",
     backup_phone: "",
     video_link: "",
+    ai_consent: false,
     sign: null,
   });
-  const [siteId, setSiteId] = useState("");
-  const [sites, setSites] = useState([]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchSites = async () => {
-      try {
-        const response = await axiosXanoAdmin.get("/sites", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
-        if (abortController.signal.aborted) return;
-        setSites(response.data.sort((a, b) => a.name.localeCompare(b.name)));
-      } catch (err) {
-        toast.error(`Error: unable to get clinic sites: ${err.message}`, {
-          containerId: "A",
-        });
-      }
-    };
-    fetchSites();
-    return () => abortController.abort();
-  }, [auth.authToken]);
 
   const handleSiteChange = (e) => {
-    setSiteId(parseInt(e.target.value));
+    setErrMsg("");
+    const value = e.target.value;
+    setFormDatas({ ...formDatas, site_id: parseInt(value) });
   };
 
   const handleCancel = () => {
@@ -121,17 +101,15 @@ const SignupStaffForm = ({ setAddVisible }) => {
     e.preventDefault();
     //Validation
     try {
-      const staff = await axiosXanoAdmin.get("/staff", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
-      if (
-        staff.data.find(
-          ({ email }) => email.toLowerCase() === formDatas.email.toLowerCase()
-        )
-      ) {
+      const response = await xanoGet(
+        "/staff_with_email",
+        axiosXanoAdmin,
+        auth.authToken,
+        "email",
+        formDatas.email.toLowerCase()
+      );
+
+      if (response.data) {
         setErrMsg(
           "There is already an account with this email, please choose another one"
         );
@@ -141,17 +119,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
       setErrMsg(`Error: unable to sign up staff: ${err.message}`);
       return;
     }
-    // if (
-    //   formDatas.ohip_billing_nbr.toString().length !== 6 &&
-    //   formDatas.title === "Doctor"
-    // ) {
-    //   setErrMsg("OHIP Billing number should be 6-digits");
-    //   return;
-    // }
-    if (!siteId) {
-      setErrMsg("Clinic site field is required");
-      return;
-    }
+
     try {
       const full_name =
         formDatas.first_name +
@@ -173,9 +141,14 @@ const SignupStaffForm = ({ setAddVisible }) => {
       datasToPost.full_name = firstLetterUpper(full_name);
       datasToPost.speciality = firstLetterUpper(datasToPost.speciality);
       datasToPost.subspeciality = firstLetterUpper(datasToPost.subspeciality);
-      datasToPost.date_created = Date.now();
-      datasToPost.ohip_billing_nbr = parseInt(datasToPost.ohip_billing_nbr);
-
+      let urlFormatted;
+      if (
+        !datasToPost.video_link.includes("http") ||
+        !datasToPost.video_link.includes("https")
+      ) {
+        urlFormatted = ["https://", datasToPost.video_link].join("");
+        datasToPost.video_link = urlFormatted;
+      }
       const newPassword = generatePassword();
       datasToPost.password = newPassword;
 
@@ -194,7 +167,7 @@ const SignupStaffForm = ({ setAddVisible }) => {
         },
       });
       socket.emit("message", {
-        route: "STAFF",
+        route: "STAFF INFOS",
         action: "create",
         content: { data: response.data },
       });
@@ -252,7 +225,6 @@ const SignupStaffForm = ({ setAddVisible }) => {
           ],
           date_created: Date.now(),
           progress_notes_order: "top",
-          site_id: siteId,
         },
         {
           headers: {
@@ -417,6 +389,15 @@ const SignupStaffForm = ({ setAddVisible }) => {
             />
           </div>
           <div className="signup-staff__row">
+            <label htmlFor="">Site*: </label>
+            <SelectSite
+              handleSiteChange={handleSiteChange}
+              sites={sites}
+              value={formDatas.site_id}
+              label={false}
+            />
+          </div>
+          <div className="signup-staff__row">
             <label>Gender*: </label>
             <select
               value={formDatas.gender}
@@ -448,26 +429,6 @@ const SignupStaffForm = ({ setAddVisible }) => {
               <option value="Physiotherapist">Physiotherapist</option>
               <option value="Psychologist">Psychologist</option>
               <option value="Other">Other</option>
-            </select>
-          </div>
-          <div className="signup-staff__row">
-            <label>Link for video calls: </label>
-            <input
-              name="video_link"
-              type="text"
-              autoComplete="off"
-              value={formDatas.video_link}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="signup-staff__row">
-            <label>Clinic site*: </label>
-            <select value={siteId} onChange={handleSiteChange}>
-              {sites.map((site) => (
-                <option value={site.id} name={site.id} key={site.id}>
-                  {site.name}
-                </option>
-              ))}
             </select>
           </div>
         </div>
@@ -533,6 +494,16 @@ const SignupStaffForm = ({ setAddVisible }) => {
               onChange={handleChange}
               name="backup_phone"
               autoComplete="off"
+            />
+          </div>
+          <div className="signup-staff__row">
+            <label>Link for video calls: </label>
+            <input
+              name="video_link"
+              type="text"
+              autoComplete="off"
+              value={formDatas.video_link}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-staff__row">

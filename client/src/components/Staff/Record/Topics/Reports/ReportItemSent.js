@@ -39,6 +39,17 @@ const ReportItemSent = ({ item, lastItemSentRef = null }) => {
 
   return (
     <tr className="reports__item" ref={lastItemSentRef}>
+      <td>
+        <div className="reports__item-btn-container">
+          <button>Fax</button>
+          <button
+            onClick={handleDeleteClick}
+            disabled={user.id !== item.assigned_staff_id}
+          >
+            Delete
+          </button>
+        </div>
+      </td>
       <td>{item.name}</td>
       <td>{item.Format}</td>
       <td>{item.FileExtensionAndVersion}</td>
@@ -72,17 +83,6 @@ const ReportItemSent = ({ item, lastItemSentRef = null }) => {
       </td>
       <td>{item.Notes}</td>
       <SignCell item={item} />
-      <td>
-        <div className="reports__item-btn-container">
-          <button>Fax</button>
-          <button
-            onClick={handleDeleteClick}
-            disabled={user.id !== item.assigned_staff_id}
-          >
-            Delete
-          </button>
-        </div>
-      </td>
     </tr>
   );
 };

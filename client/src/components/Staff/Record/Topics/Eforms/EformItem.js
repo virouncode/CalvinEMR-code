@@ -40,6 +40,12 @@ const EformItem = ({ item, lastItemRef = null }) => {
 
   return (
     <tr className="eforms__item" ref={lastItemRef}>
+      <td>
+        <div className="eforms__item-btn-container">
+          <button>Fax</button>
+          <button onClick={handleDeleteClick}>Delete</button>
+        </div>
+      </td>
       <td
         className="eforms__link"
         onClick={() => showDocument(item.file.url, item.file.mime)}
@@ -51,12 +57,6 @@ const EformItem = ({ item, lastItemRef = null }) => {
       </td>
       <td>
         <em>{toLocalDate(item.date_created)}</em>
-      </td>
-      <td>
-        <div className="eforms__item-btn-container">
-          <button>Fax</button>
-          <button onClick={handleDeleteClick}>Delete</button>
-        </div>
       </td>
     </tr>
   );

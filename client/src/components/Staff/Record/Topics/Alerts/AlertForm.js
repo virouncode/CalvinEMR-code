@@ -84,6 +84,14 @@ const AlertForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
+        <div className="alerts__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </td>
+      <td>
         <input
           name="AlertDescription"
           onChange={handleChange}
@@ -124,14 +132,6 @@ const AlertForm = ({
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>
-      </td>
-      <td>
-        <div className="alerts__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
       </td>
     </tr>
   );

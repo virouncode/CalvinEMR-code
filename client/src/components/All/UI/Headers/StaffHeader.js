@@ -49,7 +49,7 @@ const StaffHeader = () => {
               }
               target="_blank"
             >
-              Patient Search
+              Patients
             </NavLink>
           </li>
           <li>

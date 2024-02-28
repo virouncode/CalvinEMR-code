@@ -6,6 +6,7 @@ import PatientRecord from "../../components/Staff/Record/Sections/PatientRecord"
 import useAuthContext from "../../hooks/useAuthContext";
 import useFetchDatas from "../../hooks/useFetchDatas";
 import usePatientDemoSocket from "../../hooks/usePatientDemoSocket";
+import useTitle from "../../hooks/useTitle";
 import { toPatientName } from "../../utils/toPatientName";
 
 const PatientRecordPage = () => {
@@ -20,6 +21,7 @@ const PatientRecordPage = () => {
     true
   );
   usePatientDemoSocket(demographicsInfos, setDemographicsInfos);
+  useTitle("Patient Medical Record");
   return (
     demographicsInfos && (
       <>
@@ -27,9 +29,6 @@ const PatientRecordPage = () => {
           <title>{`EMR: ${toPatientName(demographicsInfos)}`}</title>
         </Helmet>
         <section className="patient-record-section">
-          <h2 className="patient-record-section__title">
-            Patient Medical Record
-          </h2>
           <PatientRecord
             demographicsInfos={demographicsInfos}
             setDemographicsInfos={setDemographicsInfos}

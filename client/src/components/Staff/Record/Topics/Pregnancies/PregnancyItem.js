@@ -133,6 +133,23 @@ const PregnancyItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="pregnancies-item__btn-container">
+            {!editVisible ? (
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <PregnanciesList
               value={itemInfos.description}
@@ -206,23 +223,6 @@ const PregnancyItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="pregnancies-item__btn-container">
-            {!editVisible ? (
-              <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

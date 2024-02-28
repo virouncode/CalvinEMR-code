@@ -1,15 +1,16 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import MyAccountForm from "../../components/Staff/Account/MyAccountForm";
+import useTitle from "../../hooks/useTitle";
 
 const MyAccountPage = () => {
+  useTitle("My personal informations");
   return (
     <>
       <Helmet>
         <title>My account</title>
       </Helmet>
       <section className="myaccount-section">
-        <h2 className="myaccount-section__title">My personal informations</h2>
         <MyAccountForm />
       </section>
     </>

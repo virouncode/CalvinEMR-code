@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
 const StaffAIAgreement = ({ setStart, setChatVisible }) => {
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
   const [agreed, setAgreed] = useState(false);
 
   const handleCheck = (e) => {
@@ -22,20 +24,35 @@ const StaffAIAgreement = ({ setStart, setChatVisible }) => {
       });
       const datasToPut = response.data;
       datasToPut.ai_consent = true;
-      await axiosXanoStaff.put(`/staff/${user.id}`, datasToPut, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
+      const response2 = await axiosXanoStaff.put(
+        `/staff/${user.id}`,
+        datasToPut,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            ai_consent: true,
+          },
         },
       });
-      setUser({ ...user, ai_consent: true });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          ai_consent: true,
-        })
-      );
+      socket.emit("message", {
+        route: "STAFF INFOS",
+        action: "update",
+        content: {
+          id: user.id,
+          data: response2.data,
+        },
+      });
       setStart(true);
     } else alert("Please agree to the terms and conditions");
   };

@@ -79,6 +79,7 @@ const ReportsPU = ({
           <table className="reports__table">
             <thead>
               <tr>
+                <th>Action</th>
                 <th>Name</th>
                 <th>Format</th>
                 <th>File extension and version</th>
@@ -93,7 +94,6 @@ const ReportsPU = ({
                 <th>Notes</th>
                 <th>Updated by</th>
                 <th>Updated on</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -125,6 +125,7 @@ const ReportsPU = ({
           <table className="reports__table">
             <thead>
               <tr>
+                <th>Action</th>
                 <th>Name</th>
                 <th>Format</th>
                 <th>File extension and version</th>
@@ -138,7 +139,6 @@ const ReportsPU = ({
                 <th>Notes</th>
                 <th>Updated by</th>
                 <th>Updated on</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>

@@ -1,5 +1,5 @@
 .billing {
-  padding : 20px;
+  padding : 0 20px;
   &__err {
     padding : 10px 20px;
     font-size: 0.9rem;
@@ -11,9 +11,7 @@
     text-align: center;
   }
   &__btn-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto 0;
+    text-align: center;
   }
 }
 .billing-form {
@@ -97,7 +95,7 @@
   }
 }
 .billing-table__container {
-  height:400px;
+  height:65vh;
   overflow:scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -118,10 +116,10 @@
     min-width: 120px;
     padding: 10px;
     cursor: pointer;
-    &:nth-child(3),&:nth-child(4),&:nth-child(5){
+    &:nth-child(4),&:nth-child(5),&:nth-child(6){
       min-width: 170px;
     }
-    &:nth-child(6){
+    &:nth-child(7){
       min-width: 200px;
     }
   }

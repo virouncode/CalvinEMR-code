@@ -69,6 +69,7 @@ const AppointmentsPU = ({
             <table className="appointments__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Host</th>
                   <th>Reason</th>
                   <th>From</th>
@@ -80,7 +81,6 @@ const AppointmentsPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

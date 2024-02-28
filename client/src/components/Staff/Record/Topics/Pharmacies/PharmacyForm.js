@@ -132,6 +132,14 @@ const PharmacyForm = ({
       style={{ border: errMsgPost && "solid 1.5px red" }}
     >
       <td>
+        <div className="pharmacies__form-btn-container">
+          <input type="submit" value="Save" onClick={handleSubmit} />
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </td>
+      <td>
         <input
           name="name"
           type="text"
@@ -220,14 +228,6 @@ const PharmacyForm = ({
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>
-      </td>
-      <td>
-        <div className="pharmacies__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
       </td>
     </tr>
   );

@@ -136,6 +136,23 @@ const PastHealthItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="pasthealth__item-btn-container">
+            {!editVisible ? (
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <input
               name="PastHealthProblemDescriptionOrProcedures"
@@ -226,23 +243,6 @@ const PastHealthItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="pasthealth__item-btn-container">
-            {!editVisible ? (
-              <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

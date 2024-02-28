@@ -6,14 +6,14 @@ import {
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { riskSchema } from "../../../../../validation/riskValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import SignCell from "../SignCell";
-import useUserContext from "../../../../../hooks/useUserContext";
-import useSocketContext from "../../../../../hooks/useSocketContext";
 
 const RiskItem = ({
   item,
@@ -127,6 +127,23 @@ const RiskItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="risk__item-btn-container">
+            {!editVisible ? (
+              <>
+                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleDeleteClick}>Delete</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <input
               type="text"
@@ -221,23 +238,6 @@ const RiskItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="risk__item-btn-container">
-            {!editVisible ? (
-              <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

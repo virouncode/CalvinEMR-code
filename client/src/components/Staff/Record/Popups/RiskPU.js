@@ -60,6 +60,7 @@ const RiskPU = ({
             <table className="risk__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Risk factor</th>
                   <th>Exposure details</th>
                   <th>Start date</th>
@@ -69,7 +70,6 @@ const RiskPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

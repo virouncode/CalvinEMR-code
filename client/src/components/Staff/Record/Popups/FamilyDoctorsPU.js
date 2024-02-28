@@ -54,6 +54,7 @@ const FamilyDoctorsPU = ({
             <table className="doctors__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Last name</th>
                   <th>First name</th>
                   <th>Speciality</th>
@@ -66,7 +67,6 @@ const FamilyDoctorsPU = ({
                   <th>Phone</th>
                   <th>Fax</th>
                   <th>Email</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

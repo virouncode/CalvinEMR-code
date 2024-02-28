@@ -59,13 +59,13 @@ const PregnanciesPU = ({
             <table className="pregnancies__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Description</th>
                   <th>Date Of Event</th>
                   <th>Premises</th>
                   <th>Term</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

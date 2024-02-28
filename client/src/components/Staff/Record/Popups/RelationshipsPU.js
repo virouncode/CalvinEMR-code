@@ -59,11 +59,11 @@ const RelationshipsPU = ({
             <table className="relationships__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Relation</th>
                   <th>With Patient</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

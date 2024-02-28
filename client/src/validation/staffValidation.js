@@ -23,7 +23,6 @@ export const staffSchema = yup.object({
       message: "Invalid Last Name",
       excludeEmptyString: true,
     }),
-  gender: yup.string().required("Gender field is required"),
   speciality: yup.string().matches(/^([^0-9]*)$/, {
     message: "Invalid Speciality field",
     excludeEmptyString: true,

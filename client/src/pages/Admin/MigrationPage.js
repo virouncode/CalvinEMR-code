@@ -1,15 +1,16 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import Migration from "../../components/Admin/Migration/Migration";
+import useTitle from "../../hooks/useTitle";
 
 const MigrationPage = () => {
+  useTitle("EMR Migration");
   return (
     <>
       <Helmet>
         <title>Migration</title>
       </Helmet>
       <section className="migration-section">
-        <h2 className="migration-section__title">EMR Migration</h2>
         <Migration />
       </section>
     </>

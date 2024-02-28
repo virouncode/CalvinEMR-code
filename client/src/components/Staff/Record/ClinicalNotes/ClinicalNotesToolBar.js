@@ -2,6 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 
 const ClinicalNotesToolBar = ({
@@ -27,7 +28,9 @@ const ClinicalNotesToolBar = ({
 }) => {
   //HOOKS
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
+
   //Events
   const handleClickSelectAll = (e) => {
     if (selectAll) {
@@ -77,17 +80,17 @@ const ClinicalNotesToolBar = ({
           },
         }
       );
-      setUser({
-        ...user,
-        settings: { ...user.settings, clinical_notes_order: value },
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            settings: { ...user.settings, clinical_notes_order: value },
+          },
+        },
       });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          settings: { ...user.settings, clinical_notes_order: value },
-        })
-      );
       toast.success("Saved preference", {
         containerId: "A",
       });

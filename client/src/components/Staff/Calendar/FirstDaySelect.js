@@ -3,11 +3,13 @@ import { toast } from "react-toastify";
 import xanoPut from "../../../api/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
 const FirstDaySelect = () => {
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
+  const { socket } = useSocketContext();
 
   const handleChange = async (e) => {
     const value = e.target.value;
@@ -20,17 +22,17 @@ const FirstDaySelect = () => {
         datasToPut,
         user.settings.id
       );
-      setUser({
-        ...user,
-        settings: { ...user.settings, first_day: value },
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            settings: { ...user.settings, first_day: value },
+          },
+        },
       });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          settings: { ...user.settings, first_day: value },
-        })
-      );
       toast.success("Saved preference", { containerId: "A" });
     } catch (err) {
       toast.success(`Error: unable to save preference: ${err.message}`, {

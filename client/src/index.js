@@ -3,9 +3,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
+import { AdminsInfosProvider } from "./context/AdminsInfosProvider";
 import { AuthProvider } from "./context/AuthProvider";
 import { SocketProvider } from "./context/SocketProvider";
 import { StaffInfosProvider } from "./context/StaffInfosProvider";
+import { TitleProvider } from "./context/TitleProvider";
 import { UserProvider } from "./context/UserProvider";
 import "./styles/index.scss";
 
@@ -18,9 +20,13 @@ root.render(
       <UserProvider>
         <SocketProvider>
           <StaffInfosProvider>
-            <Routes>
-              <Route path="/*" element={<App />} />
-            </Routes>
+            <AdminsInfosProvider>
+              <TitleProvider>
+                <Routes>
+                  <Route path="/*" element={<App />} />
+                </Routes>
+              </TitleProvider>
+            </AdminsInfosProvider>
           </StaffInfosProvider>
         </SocketProvider>
       </UserProvider>

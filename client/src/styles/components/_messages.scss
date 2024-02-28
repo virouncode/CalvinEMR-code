@@ -1,5 +1,5 @@
 .messages-container {
-    height:80vh;
+    height:100%;
     border-radius: 6px;
     width:98%;
     margin: 0 auto;
@@ -72,6 +72,7 @@
         height: 100%; 
         background: rgb(238, 238, 238);
         overflow:scroll;
+        border-radius: 0 0 0 6px;
         ul {
             font-size: 0.9rem;
         }
@@ -94,6 +95,7 @@
         height: 100%; 
         overflow:scroll;
         position:relative;
+        border-radius: 0 0 6px 0;
         p {
             margin-top: 20px;
             font-size: 0.9rem;

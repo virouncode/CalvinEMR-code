@@ -221,6 +221,28 @@ const PharmacyItem = ({
         ref={lastItemRef}
       >
         <td>
+          <div className="pharmacies__item-btn-container">
+            {!editVisible ? (
+              <>
+                <button
+                  onClick={handleAddItemClick}
+                  disabled={demographicsInfos.PreferredPharmacy === item.id}
+                >
+                  Prefer
+                </button>
+                <button onClick={handleEditClick}>Edit</button>
+              </>
+            ) : (
+              <>
+                <input type="submit" value="Save" onClick={handleSubmit} />
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+        <td>
           {editVisible ? (
             <input
               name="name"
@@ -343,28 +365,6 @@ const PharmacyItem = ({
           )}
         </td>
         <SignCell item={item} />
-        <td>
-          <div className="pharmacies__item-btn-container">
-            {!editVisible ? (
-              <>
-                <button
-                  onClick={handleAddItemClick}
-                  disabled={demographicsInfos.PreferredPharmacy === item.id}
-                >
-                  Prefer
-                </button>
-                <button onClick={handleEditClick}>Edit</button>
-              </>
-            ) : (
-              <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </td>
       </tr>
     )
   );

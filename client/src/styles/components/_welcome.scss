@@ -3,13 +3,24 @@
     width : 97%;
     display: flex;
     justify-content: space-between;
-    h2 {
+    align-items: center;
+    &__clinic {
         font-weight: normal;
         font-size : 0.8rem;
+        width:33%;
     }
-    div{
+    &__title {
+        font-size: 1.2rem;
+        text-align: center;
+        font-weight: bold;
+        width:33%;
+        text-align: center;
+    }
+    &__message{
         font-size : 0.8rem;
         font-style: italic;
         text-align: end;
+        padding:0;
+        width:33%;
     }
 }

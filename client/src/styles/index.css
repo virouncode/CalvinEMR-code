@@ -304,7 +304,6 @@ select:focus {
 }
 
 .myaccount-section {
-  background: url("../../assets/img/splash.jpg") center/cover;
   width: 100%;
   min-height: 100vh;
 }
@@ -364,7 +363,7 @@ select:focus {
 
 .calvinai-section {
   width: 100%;
-  height: 88vh;
+  height: 80vh;
 }
 .calvinai-section__title {
   font-size: 1.2rem;
@@ -424,7 +423,7 @@ select:focus {
 
 .patient-messages-section {
   width: 100%;
-  min-height: 75vh;
+  height: 85vh;
 }
 .patient-messages-section__title {
   font-size: 1.2rem;
@@ -11506,15 +11505,26 @@ readers do not read off random characters that represent icons */
   width: 97%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
-.welcome-section h2 {
+.welcome-section__clinic {
   font-weight: normal;
   font-size: 0.8rem;
+  width: 33%;
 }
-.welcome-section div {
+.welcome-section__title {
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: bold;
+  width: 33%;
+  text-align: center;
+}
+.welcome-section__message {
   font-size: 0.8rem;
   font-style: italic;
   text-align: end;
+  padding: 0;
+  width: 33%;
 }
 
 .calendar-section__toggle-view {
@@ -11578,23 +11588,24 @@ readers do not read off random characters that represent icons */
   width: 80px;
 }
 .staff-search__form {
-  display: flex;
-  justify-content: space-between;
   width: 80%;
   margin: 0 auto 40px;
+}
+.staff-search__row {
+  display: flex;
 }
 .staff-search__item {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: 14%;
+  width: 20%;
+  margin-bottom: 10px;
 }
 .staff-search__item label {
   font-weight: bold;
   margin-bottom: 5px;
 }
-.staff-search__item input {
-  padding: 2px 5px;
+.staff-search__item input, .staff-search__item select {
+  width: 150px;
 }
 
 .patient-result__table-container {
@@ -11657,39 +11668,41 @@ readers do not read off random characters that represent icons */
 }
 
 .staff-result {
+  height: 400px;
   overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: relative;
+  width: 98%;
   margin: 0 auto;
-  width: 95%;
-  max-height: 60vh;
 }
 .staff-result__btn-container {
   text-align: center;
 }
 .staff-result table {
-  margin: 0 auto;
   table-layout: fixed;
-  max-width: 100%;
-  background-color: #FEFEFE;
+  min-width: 100%;
   border-collapse: collapse;
-  border: solid 1px #3D375A;
-  white-space: nowrap;
+  font-size: 0.8rem;
 }
 .staff-result table thead {
-  background-color: #93b5e9;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .staff-result table thead th {
-  text-decoration: underline;
   cursor: pointer;
-  padding: 2px 5px;
-  font-size: 0.8rem;
-  min-width: 100px;
+  padding: 10px;
+  min-width: 120px;
+}
+.staff-result table tbody tr {
+  border-bottom: solid 1px #cecdcd;
 }
 .staff-result table tbody tr td {
-  border: solid 1px #3D375A;
-  font-size: 0.8rem;
-  padding: 2px 5px;
-  overflow: hidden;
   text-align: center;
+  padding: 10px;
+  word-break: break-word;
 }
 .staff-result__item-btn-container {
   text-align: center;
@@ -12206,6 +12219,7 @@ readers do not read off random characters that represent icons */
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: relative;
 }
 .pasthealth__table {
   table-layout: fixed;
@@ -12731,7 +12745,7 @@ readers do not read off random characters that represent icons */
   padding: 10px;
   cursor: pointer;
 }
-.pharmacies-list__table th:nth-child(5) {
+.pharmacies-list__table th:nth-child(6) {
   min-width: 160px;
 }
 .pharmacies-list__item {
@@ -12884,7 +12898,7 @@ readers do not read off random characters that represent icons */
   padding: 10px;
   cursor: pointer;
 }
-.doctors-list__table th:nth-child(9) {
+.doctors-list__table th:nth-child(10) {
   min-width: 160px;
 }
 .doctors-list__item, .doctors-list__form {
@@ -12907,7 +12921,7 @@ readers do not read off random characters that represent icons */
   margin-bottom: 30px;
   text-align: center;
 }
-.care-elements_btn-container button {
+.care-elements__btn-container button {
   margin-left: 5px;
 }
 .care-elements__err {
@@ -13978,7 +13992,7 @@ readers do not read off random characters that represent icons */
 .signup-patient__container {
   padding: 20px;
   width: 70%;
-  margin: 0 auto;
+  margin: 40px auto 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
@@ -14138,7 +14152,7 @@ readers do not read off random characters that represent icons */
   background: #FEFEFE;
   padding: 20px;
   width: 55%;
-  margin: 0 auto;
+  margin: 50px auto 0;
 }
 .myaccount-section__success {
   padding: 10px 20px;
@@ -14312,7 +14326,7 @@ readers do not read off random characters that represent icons */
 }
 
 .messages-container {
-  height: 80vh;
+  height: 100%;
   border-radius: 6px;
   width: 98%;
   margin: 0 auto;
@@ -14389,6 +14403,7 @@ readers do not read off random characters that represent icons */
   height: 100%;
   background: rgb(238, 238, 238);
   overflow: scroll;
+  border-radius: 0 0 0 6px;
 }
 .messages-content__leftbar ul {
   font-size: 0.9rem;
@@ -14411,6 +14426,7 @@ readers do not read off random characters that represent icons */
   height: 100%;
   overflow: scroll;
   position: relative;
+  border-radius: 0 0 6px 0;
 }
 .messages-content__box p {
   margin-top: 20px;
@@ -15308,7 +15324,7 @@ readers do not read off random characters that represent icons */
   background: #FEFEFE;
   padding: 20px;
   width: 75%;
-  margin: 0 auto;
+  margin: 30px auto 0;
 }
 .patient-account__confirm {
   padding: 10px 20px;
@@ -15575,7 +15591,7 @@ readers do not read off random characters that represent icons */
   padding: 0;
 }
 .reportsinbox__table-container {
-  height: 400px;
+  height: 75vh;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -16057,12 +16073,12 @@ readers do not read off random characters that represent icons */
 
 .calvinai-chat {
   width: 70%;
-  height: 92%;
+  height: 100%;
   margin: 15px auto 0;
   display: flex;
   flex-direction: column;
   background-color: #FEFEFE;
-  border: solid 2px #93b5e9;
+  border: solid 1px #cecdcd;
   border-radius: 6px;
   padding: 20px;
 }
@@ -16337,7 +16353,7 @@ readers do not read off random characters that represent icons */
 }
 
 .billing {
-  padding: 20px;
+  padding: 0 20px;
 }
 .billing__err {
   padding: 10px 20px;
@@ -16350,9 +16366,7 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 .billing__btn-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px auto 0;
+  text-align: center;
 }
 
 .billing-form {
@@ -16437,7 +16451,7 @@ readers do not read off random characters that represent icons */
 }
 
 .billing-table__container {
-  height: 400px;
+  height: 65vh;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -16461,10 +16475,10 @@ readers do not read off random characters that represent icons */
   padding: 10px;
   cursor: pointer;
 }
-.billing-table th:nth-child(3), .billing-table th:nth-child(4), .billing-table th:nth-child(5) {
+.billing-table th:nth-child(4), .billing-table th:nth-child(5), .billing-table th:nth-child(6) {
   min-width: 170px;
 }
-.billing-table th:nth-child(6) {
+.billing-table th:nth-child(7) {
   min-width: 200px;
 }
 .billing-table__item {
@@ -16590,13 +16604,14 @@ readers do not read off random characters that represent icons */
 }
 
 .reference {
-  border: solid 2px #93b5e9;
+  border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background: #FEFEFE;
   border-radius: 6px;
   padding: 20px;
   display: grid;
   grid-template-columns: 33% 33% 33%;
+  margin-top: 30px;
 }
 .reference h3 {
   margin-bottom: 10px;

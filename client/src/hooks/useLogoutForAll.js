@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAdminsInfosContext from "./useAdminsInfosContext";
 import useAuthContext from "./useAuthContext";
 import useStaffInfosContext from "./useStaffInfosContext";
 import useUserContext from "./useUserContext";
@@ -8,6 +9,7 @@ const useLogoutForAll = () => {
   const { setUser } = useUserContext();
   const { setStaffInfos } = useStaffInfosContext();
   const { setAuth } = useAuthContext();
+  const { setAdminsInfos } = useAdminsInfosContext();
   const navigate = useNavigate();
   useEffect(() => {
     const storageListener = (e) => {
@@ -18,6 +20,7 @@ const useLogoutForAll = () => {
         setUser({});
         setStaffInfos([]);
         setAuth({});
+        setAdminsInfos([]);
         navigate("/");
       }
     };
@@ -25,7 +28,7 @@ const useLogoutForAll = () => {
     return () => {
       window.removeEventListener("storage", storageListener);
     };
-  }, [navigate, setAuth, setStaffInfos, setUser]);
+  }, [navigate, setAuth, setStaffInfos, setAdminsInfos, setUser]);
 };
 
 export default useLogoutForAll;

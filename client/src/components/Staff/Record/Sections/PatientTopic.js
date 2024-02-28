@@ -332,7 +332,7 @@ const PatientTopic = ({
         )}
         {topic === "PHARMACIES" && popUpVisible && (
           <FakeWindow
-            title={`PHARMACIES of ${patientName}`}
+            title={`PREFERRED PHARMACY of ${patientName}`}
             width={1400}
             height={600}
             x={(window.innerWidth - 1400) / 2}

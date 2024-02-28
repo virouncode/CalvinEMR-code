@@ -62,6 +62,7 @@ const MedicationsPU = ({
             <table className="medications__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Status</th>
                   <th>Drug name</th>
                   <th>Strength</th>
@@ -70,9 +71,6 @@ const MedicationsPU = ({
                   <th>Duration</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th style={{ textDecoration: "none", cursor: "default" }}>
-                    Action
-                  </th>
                 </tr>
               </thead>
               <tbody>

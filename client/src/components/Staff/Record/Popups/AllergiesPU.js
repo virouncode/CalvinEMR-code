@@ -60,6 +60,7 @@ const AllergiesPU = ({
             <table className="allergies__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Offending agent</th>
                   <th>Type of agent</th>
                   <th>Reaction type</th>
@@ -71,7 +72,6 @@ const AllergiesPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

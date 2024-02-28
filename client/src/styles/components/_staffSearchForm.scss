@@ -1,5 +1,6 @@
 .staff-search {
   font-size: 0.8rem;
+  margin-top: 20px;
   &__title {
       font-size: 1rem;
       font-weight: bold;
@@ -8,22 +9,23 @@
 
   }
   &__form {
-      display : flex;
-      justify-content: space-between;
       width : 80%;
       margin : 0 auto 40px;
+  }
+  &__row {
+    display: flex;
   }
   &__item {
       display : flex;
       flex-direction: column;
-      justify-content: space-between;
-      width : 14%;
+      width : 20%;
+      margin-bottom: 10px;
       label {
           font-weight: bold;
           margin-bottom: 5px;
       }
-      input {
-          padding : 2px 5px;
+      input, select {
+          width: 150px;
       }
   }
 }

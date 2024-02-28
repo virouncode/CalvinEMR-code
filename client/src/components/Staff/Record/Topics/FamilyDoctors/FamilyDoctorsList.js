@@ -43,6 +43,7 @@ const FamilyDoctorsList = ({
           <table className="doctors-list__table">
             <thead>
               <tr>
+                <th>Action</th>
                 <th>Last name</th>
                 <th>First name</th>
                 <th>Speciality</th>
@@ -57,7 +58,6 @@ const FamilyDoctorsList = ({
                 <th>Email</th>
                 <th>Updated By</th>
                 <th>Updated On</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>

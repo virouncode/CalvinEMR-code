@@ -60,10 +60,17 @@ const MessageExternalThumbnail = ({
     //Remove one from the unread messages nbr counter
     if (user.unreadMessagesExternalNbr !== 0) {
       const newUnreadMessagesExternalNbr = user.unreadMessagesExternalNbr - 1;
-      setUser({
-        ...user,
-        unreadMessagesExternalNbr: newUnreadMessagesExternalNbr,
-        unreadNbr: newUnreadMessagesExternalNbr + user.unreadMessagesNbr,
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            unreadMessagesExternalNbr: newUnreadMessagesExternalNbr,
+            unreadNbr: newUnreadMessagesExternalNbr + user.unreadMessagesNbr,
+          },
+        },
       });
     }
     setCurrentMsgId(message.id);

@@ -10,6 +10,8 @@ import useAutoLogout from "./hooks/useAutoLogout";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
 import useLogoutForAll from "./hooks/useLogoutForAll";
 import useSocketConfig from "./hooks/useSocketConfig";
+import useStaffInfosSocket from "./hooks/useStaffInfosSocket";
+import useUserSocket from "./hooks/useUserSocket";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
@@ -41,6 +43,8 @@ const App = () => {
   useAutoLogout(120); //autologout in min
   useLogoutForAll(); //log every tabs out if logout on one tab
   useSocketConfig(false); //true for dev, false for prod
+  useStaffInfosSocket();
+  useUserSocket();
 
   return (
     <Routes>

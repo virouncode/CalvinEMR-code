@@ -146,6 +146,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               onChange={handleChange}
               name="name"
               value={formDatas.name}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
@@ -155,15 +156,17 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               onChange={handleChange}
               name="address"
               value={formDatas.address}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
-            <label>Postal code*:</label>
+            <label>Postal/zip code*:</label>
             <input
               type="text"
               onChange={handleChange}
               name="postal_code"
               value={formDatas.postal_code}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
@@ -173,6 +176,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               value={formDatas.province_state}
               handleChange={handleChange}
               name="province_state"
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
@@ -182,6 +186,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               onChange={handleChange}
               name="city"
               value={formDatas.city}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
@@ -191,6 +196,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               onChange={handleChange}
               name="phone"
               value={formDatas.phone}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row">
@@ -200,6 +206,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               onChange={handleChange}
               name="fax"
               value={formDatas.fax}
+              autoComplete="off"
             />
           </div>
           <div className="site-form__row site-form__row--special">

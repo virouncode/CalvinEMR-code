@@ -1,17 +1,25 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import useAdminsInfosContext from "../../../../hooks/useAdminsInfosContext";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 
 const AdminHeader = () => {
-  const { setUser, setAuth, setClinic } = useAuthContext();
+  const { setUser } = useUserContext();
+  const { setAuth } = useAuthContext();
+  const { setStaffInfos } = useStaffInfosContext();
+  const { setAdminsInfos } = useAdminsInfosContext();
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth({});
     setUser({});
-    setClinic({});
+    setStaffInfos({});
+    setAdminsInfos([]);
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
-    localStorage.removeItem("clinic");
+    localStorage.removeItem("staffInfos");
+    localStorage.removeItem("adminsInfos");
     localStorage.removeItem("tabCounter");
     localStorage.removeItem("lastAction");
     localStorage.setItem("message", "logout");

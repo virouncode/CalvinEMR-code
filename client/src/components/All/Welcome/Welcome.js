@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useUserContext from "../../../hooks/useUserContext";
 
-const Welcome = () => {
+const Welcome = ({ title }) => {
   //=================== STATES =======================//
   const [helloMessage, setHelloMessage] = useState("");
   const { user } = useUserContext();
@@ -29,12 +29,14 @@ const Welcome = () => {
   return (
     user.id && (
       <section className="welcome-section">
-        <h2>New Life Fertility Center</h2> {/* To customize for each clinic */}
-        <div>
+        <h2 className="welcome-section__clinic">New Life Fertility Center</h2>{" "}
+        {/* To customize for each clinic */}
+        <h2 className="welcome-section__title">{title}</h2>
+        <p className="welcome-section__message">
           {helloMessage}
           {", "}
           {user.full_name}
-        </div>
+        </p>
       </section>
     )
   );

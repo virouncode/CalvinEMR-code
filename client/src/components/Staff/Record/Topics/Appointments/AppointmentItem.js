@@ -514,6 +514,25 @@ const AppointmentItem = ({
         style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
         ref={lastItemRef}
       >
+        <td>
+          {(isSecretary() || user.id === itemInfos.host_id) && (
+            <div className="appointments__item-btn-container">
+              {!editVisible ? (
+                <>
+                  <button onClick={handleEditClick}>Edit</button>
+                  <button onClick={handleDeleteClick}>Delete</button>
+                </>
+              ) : (
+                <>
+                  <input type="submit" value="Save" onClick={handleSubmit} />
+                  <button type="button" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </td>
         <td style={{ minWidth: "170px" }}>
           {editVisible && isSecretary() ? (
             <HostsList
@@ -674,25 +693,6 @@ const AppointmentItem = ({
           )}
         </td>
         <SignCell item={item} staffInfos={staffInfos} />
-        <td>
-          {(isSecretary() || user.id === itemInfos.host_id) && (
-            <div className="appointments__item-btn-container">
-              {!editVisible ? (
-                <>
-                  <button onClick={handleEditClick}>Edit</button>
-                  <button onClick={handleDeleteClick}>Delete</button>
-                </>
-              ) : (
-                <>
-                  <input type="submit" value="Save" onClick={handleSubmit} />
-                  <button type="button" onClick={handleCancel}>
-                    Cancel
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-        </td>
       </tr>
     )
   );

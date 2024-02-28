@@ -1,14 +1,15 @@
 import { Helmet } from "react-helmet";
 import PatientAppointments from "../../components/Patient/AppointmentsPatient/PatientAppointments";
+import useTitle from "../../hooks/useTitle";
 
 const PatientAppointmentsPage = () => {
+  useTitle("Appointments");
   return (
     <>
       <Helmet>
         <title>Appointments</title>
       </Helmet>
       <section className="patient-appointments-section">
-        <h2 className="patient-appointments-section-title">Appointments</h2>
         <div className="patient-appointments-section-content">
           <PatientAppointments />
         </div>

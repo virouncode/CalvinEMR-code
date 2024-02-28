@@ -59,13 +59,13 @@ const AlertsPU = ({
             <table className="alerts__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Description</th>
                   <th>Start date</th>
                   <th>End date</th>
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

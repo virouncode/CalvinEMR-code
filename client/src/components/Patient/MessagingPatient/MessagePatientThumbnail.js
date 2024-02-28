@@ -19,7 +19,7 @@ const MessagePatientThumbnail = ({
   lastItemRef = null,
 }) => {
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
   const { staffInfos } = useStaffInfosContext();
   const { socket } = useSocketContext();
 
@@ -60,17 +60,17 @@ const MessagePatientThumbnail = ({
     //Remove one from the unread messages nbr counter
     if (user.unreadNbr !== 0) {
       const newUnreadNbr = user.unreadNbr - 1;
-      setUser({
-        ...user,
-        unreadNbr: newUnreadNbr,
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            unreadNbr: newUnreadNbr,
+          },
+        },
       });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          unreadNbr: newUnreadNbr,
-        })
-      );
     }
     setCurrentMsgId(message.id);
   };

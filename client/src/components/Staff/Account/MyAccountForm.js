@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
@@ -13,6 +14,7 @@ const MyAccountForm = () => {
   const { auth } = useAuthContext();
   const { user, setUser } = useUserContext();
   const { staffInfos, setStaffInfos } = useStaffInfosContext();
+  const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);
@@ -89,43 +91,40 @@ const MyAccountForm = () => {
     }
     try {
       //Submission
-      await axiosXanoStaff.put(`/staff/${user.id}`, tempFormDatas, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
+      const response = await axiosXanoStaff.put(
+        `/staff/${user.id}`,
+        tempFormDatas,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+        }
+      );
+      setSuccessMsg("Infos changed successfully");
+
+      socket.emit("message", {
+        route: "USER",
+        action: "update",
+        content: {
+          id: user.id,
+          data: {
+            ...user,
+            cell_phone: tempFormDatas.cell_phone,
+            backup_phone: tempFormDatas.backup_phone,
+            video_link: tempFormDatas.video_link,
+          },
         },
       });
-      setSuccessMsg("Infos changed successfully");
-      //update staffInfos context and local storage
-      setStaffInfos(
-        staffInfos.map((item) =>
-          item.id === tempFormDatas.id ? tempFormDatas : item
-        )
-      );
-      localStorage.setItem(
-        "staffInfos",
-        JSON.stringify(
-          staffInfos.map((item) =>
-            item.id === tempFormDatas.id ? tempFormDatas : item
-          )
-        )
-      );
-      //update user context and local storage
-      setUser({
-        ...user,
-        cell_phone: tempFormDatas.cell_phone,
-        backup_phone: tempFormDatas.backup_phone,
-        video_link: tempFormDatas.video_link,
+      socket.emit("message", {
+        route: "STAFF INFOS",
+        action: "update",
+        content: {
+          id: user.id,
+          data: response.data,
+        },
       });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          cell_phone: tempFormDatas.cell_phone,
-          backup_phone: tempFormDatas.backup_phone,
-          video_link: tempFormDatas.video_link,
-        })
-      );
+
       setEditVisible(false);
       setTimeout(() => setSuccessMsg(""), 2000);
     } catch (err) {
@@ -161,6 +160,10 @@ const MyAccountForm = () => {
             <div className="myaccount-section__row">
               <label>Last Name*: </label>
               <p>{tempFormDatas.last_name}</p>
+            </div>
+            <div className="myaccount-section__row">
+              <label>Site*: </label>
+              <p>{tempFormDatas.site_infos.name}</p>
             </div>
             <div className="myaccount-section__row">
               <label>Gender*: </label>
@@ -230,6 +233,10 @@ const MyAccountForm = () => {
               ) : (
                 <p>{tempFormDatas.video_link}</p>
               )}
+            </div>
+            <div className="myaccount-section__row">
+              <label>AI consent: </label>
+              <p>{tempFormDatas.ai_consent ? "Yes" : "No"}</p>
             </div>
             <div className="myaccount-section__row">
               <label>E-sign: </label>

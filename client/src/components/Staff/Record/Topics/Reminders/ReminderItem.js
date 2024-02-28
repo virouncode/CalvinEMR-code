@@ -123,20 +123,6 @@ const ReminderItem = ({
         ref={lastItemRef}
       >
         <td>
-          {editVisible ? (
-            <input
-              type="text"
-              value={itemInfos.reminder}
-              name="reminder"
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          ) : (
-            itemInfos.reminder
-          )}
-        </td>
-        <SignCell item={item} />
-        <td>
           <div className="reminders__item-btn-container">
             {!editVisible ? (
               <>
@@ -153,6 +139,20 @@ const ReminderItem = ({
             )}
           </div>
         </td>
+        <td>
+          {editVisible ? (
+            <input
+              type="text"
+              value={itemInfos.reminder}
+              name="reminder"
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          ) : (
+            itemInfos.reminder
+          )}
+        </td>
+        <SignCell item={item} />
       </tr>
     )
   );

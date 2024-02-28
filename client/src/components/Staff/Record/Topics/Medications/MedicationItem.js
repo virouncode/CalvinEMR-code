@@ -64,6 +64,14 @@ const MedicationItem = ({ item, lastItemRef = null }) => {
           ref={lastItemRef}
         >
           <td>
+            <div className="medications__item-btn-container">
+              <button onClick={handleDetailClick}>See details</button>
+              {user.title === "Doctor" && (
+                <button onClick={handleDeleteClick}>Delete</button>
+              )}
+            </div>
+          </td>
+          <td>
             {isMedicationActive(item.StartDate, item.duration)
               ? "Active"
               : "Inactive"}
@@ -84,14 +92,6 @@ const MedicationItem = ({ item, lastItemRef = null }) => {
           </td>
           <td>{item.Duration}</td>
           <SignCell item={item} />
-          <td>
-            <div className="medications__item-btn-container">
-              <button onClick={handleDetailClick}>See details</button>
-              {user.title === "Doctor" && (
-                <button onClick={handleDeleteClick}>Delete</button>
-              )}
-            </div>
-          </td>
         </tr>
         {detailVisible && (
           <tr>

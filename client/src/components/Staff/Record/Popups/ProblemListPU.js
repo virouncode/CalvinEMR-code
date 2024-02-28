@@ -61,6 +61,7 @@ const ProblemListPU = ({
             <table className="problemlist__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Diagnosis Description</th>
                   <th>Problem Description</th>
                   <th>Status</th>
@@ -70,7 +71,6 @@ const ProblemListPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

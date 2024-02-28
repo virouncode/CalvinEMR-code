@@ -58,6 +58,7 @@ const PastHealthPU = ({
             <table className="pasthealth__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Description/Procedure</th>
                   <th>Onset date</th>
                   <th>Life Stage</th>
@@ -67,7 +68,6 @@ const PastHealthPU = ({
                   <th>Notes</th>
                   <th>Updated By</th>
                   <th>Updated On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

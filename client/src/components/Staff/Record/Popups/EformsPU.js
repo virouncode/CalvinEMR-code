@@ -154,10 +154,10 @@ const EformsPU = ({
             <table className="eforms__table">
               <thead>
                 <tr>
+                  <th>Action</th>
                   <th>Name</th>
                   <th>Created By</th>
                   <th>Created On</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
