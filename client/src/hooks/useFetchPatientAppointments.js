@@ -17,7 +17,7 @@ const useFetchPatientAppointments = () => {
       try {
         setLoading(true);
         const response = await axiosXanoPatient.get(
-          `/appointments_for_patient`,
+          `/appointments_of_patient`,
           {
             headers: {
               "Content-Type": "application/json",

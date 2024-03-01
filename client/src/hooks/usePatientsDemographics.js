@@ -12,6 +12,7 @@ const usePatientsDemographics = (search, paging) => {
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [totalPatients, setTotalPatients] = useState(0);
   const [err, setErr] = useState("");
   const axiosXanoInstance =
     user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
@@ -55,6 +56,7 @@ const usePatientsDemographics = (search, paging) => {
               )?.phoenNumber.includes(search.phone))
         );
         if (abortController.signal.aborted) return;
+        setTotalPatients(response.data.itemsTotal);
         setPatientsDemographics((prevDatas) => [
           ...prevDatas,
           ...filteredDatas,
@@ -76,7 +78,7 @@ const usePatientsDemographics = (search, paging) => {
     };
     fetchPatientsDemographics();
     return () => abortController.abort();
-  }, [auth.authToken, paging, search]);
+  }, [auth.authToken, axiosXanoInstance, paging, search]);
 
   return {
     loading,
@@ -84,6 +86,7 @@ const usePatientsDemographics = (search, paging) => {
     patientsDemographics,
     setPatientsDemographics,
     hasMore,
+    totalPatients,
   };
 };
 

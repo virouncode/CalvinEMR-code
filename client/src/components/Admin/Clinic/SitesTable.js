@@ -15,9 +15,9 @@ const SitesTable = ({ sites, loading, errMsg, handleEditClick }) => {
                 <th>Action</th>
                 <th>Site name</th>
                 <th>Address</th>
-                <th>Postal/Zip code</th>
-                <th>Province/State</th>
                 <th>City</th>
+                <th>Province/State</th>
+                <th>Postal/Zip code</th>
                 <th>Phone</th>
                 <th>Fax</th>
                 <th>Logo</th>

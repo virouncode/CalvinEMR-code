@@ -78,7 +78,7 @@ const DemographicsPU = ({
   const [formDatas, setFormDatas] = useState({});
   const [loadingFile, setLoadingFile] = useState(false);
   const [postalOrZip, setPostalOrZip] = useState(
-    residencialAddress?.Structured?.PostalZipCode?.PostalCode ? "postal" : "zip"
+    residencialAddress?.PostalZipCode?.PostalCode ? "postal" : "zip"
   );
   const [newEnrolmentVisible, setNewEnrolmentVisible] = useState(false);
   const [enrolmentHistoryVisible, setEnrolmentHistoryVisible] = useState(false);
@@ -129,8 +129,8 @@ const DemographicsPU = ({
         )?.extension || "",
       line1: residencialAddress?.Line1 || "",
       province: residencialAddress?.CountrySubDivisionCode || "",
-      postalCode: residencialAddress?.PostalZipCode.PostalCode || "",
-      zipCode: residencialAddress?.PostalZipCode.ZipCode || "",
+      postalCode: residencialAddress?.PostalZipCode?.PostalCode || "",
+      zipCode: residencialAddress?.PostalZipCode?.ZipCode || "",
       city: residencialAddress?.City || "",
       preferredOff: demographicsInfos.PreferredOfficialLanguage || "",
       status:
@@ -636,7 +636,7 @@ const DemographicsPU = ({
               </p>
               <p>
                 <label>Chart#*: </label>
-                {formDatas.ChartNumber}
+                {formDatas.chart}
               </p>
               <p>
                 <label>Date of birth*: </label>
@@ -746,6 +746,80 @@ const DemographicsPU = ({
               <p>
                 <label>Email: </label>
                 {formDatas.email}
+              </p>
+              <p>
+                <label>Address*: </label>
+                {editVisible ? (
+                  <input
+                    type="text"
+                    value={formDatas.line1}
+                    onChange={handleChange}
+                    name="line1"
+                    autoComplete="off"
+                  />
+                ) : (
+                  formDatas.line1
+                )}
+              </p>
+              <p>
+                <label>City: </label>
+                {editVisible ? (
+                  <input
+                    type="text"
+                    value={formDatas.city}
+                    onChange={handleChange}
+                    name="city"
+                    autoComplete="off"
+                  />
+                ) : (
+                  formDatas.city
+                )}
+              </p>
+              <p>
+                <label>Province/State*: </label>
+                {editVisible ? (
+                  <GenericList
+                    list={provinceStateTerritoryCT}
+                    value={formDatas.province}
+                    name="province"
+                    handleChange={handleChange}
+                  />
+                ) : (
+                  toCodeTableName(provinceStateTerritoryCT, formDatas.province)
+                )}
+              </p>
+              <p>
+                <label>Postal/Zip Code*: </label>
+                {editVisible ? (
+                  <>
+                    <select
+                      style={{ width: "60px", marginRight: "10px" }}
+                      name="postalOrZip"
+                      id="postalOrZip"
+                      value={postalOrZip}
+                      onChange={handleChangePostalOrZip}
+                    >
+                      <option value="postal">Postal</option>
+                      <option value="zip">Zip</option>
+                    </select>
+                    <input
+                      style={{ width: "90px", marginRight: "10px" }}
+                      type="text"
+                      value={
+                        postalOrZip === "postal"
+                          ? formDatas.postalCode
+                          : formDatas.zipCode
+                      }
+                      onChange={handleChange}
+                      name="postalCode"
+                      autoComplete="off"
+                    />
+                  </>
+                ) : postalOrZip === "postal" ? (
+                  formDatas.postalCode
+                ) : (
+                  formDatas.zipCode
+                )}
               </p>
               <p>
                 <label>Cell Phone: </label>
@@ -895,80 +969,6 @@ const DemographicsPU = ({
                     )}
                     {formDatas.workphoneExt}
                   </>
-                )}
-              </p>
-              <p>
-                <label>Address*: </label>
-                {editVisible ? (
-                  <input
-                    type="text"
-                    value={formDatas.line1}
-                    onChange={handleChange}
-                    name="line1"
-                    autoComplete="off"
-                  />
-                ) : (
-                  formDatas.line1
-                )}
-              </p>
-              <p>
-                <label>Province/State*: </label>
-                {editVisible ? (
-                  <GenericList
-                    list={provinceStateTerritoryCT}
-                    value={formDatas.province}
-                    name="province"
-                    handleChange={handleChange}
-                  />
-                ) : (
-                  toCodeTableName(provinceStateTerritoryCT, formDatas.province)
-                )}
-              </p>
-              <p>
-                <label>Postal/Zip Code*: </label>
-                {editVisible ? (
-                  <>
-                    <select
-                      style={{ width: "60px", marginRight: "10px" }}
-                      name="postalOrZip"
-                      id="postalOrZip"
-                      value={postalOrZip}
-                      onChange={handleChangePostalOrZip}
-                    >
-                      <option value="postal">Postal</option>
-                      <option value="zip">Zip</option>
-                    </select>
-                    <input
-                      style={{ width: "90px", marginRight: "10px" }}
-                      type="text"
-                      value={
-                        postalOrZip === "postal"
-                          ? formDatas.postalCode
-                          : formDatas.zipCode
-                      }
-                      onChange={handleChange}
-                      name="postalCode"
-                      autoComplete="off"
-                    />
-                  </>
-                ) : postalOrZip === "postal" ? (
-                  formDatas.postalCode
-                ) : (
-                  formDatas.zipCode
-                )}
-              </p>
-              <p>
-                <label>City: </label>
-                {editVisible ? (
-                  <input
-                    type="text"
-                    value={formDatas.city}
-                    onChange={handleChange}
-                    name="city"
-                    autoComplete="off"
-                  />
-                ) : (
-                  formDatas.city
                 )}
               </p>
               <p>

@@ -25,7 +25,7 @@ const useEvents = (
     const fetchEvents = async () => {
       try {
         const response = await axiosXanoStaff.post(
-          "/appointments_for_staff_and_sites",
+          "/appointments_of_staff_and_sites",
           {
             hosts_ids: hostsIds,
             range_start: rangeStart,

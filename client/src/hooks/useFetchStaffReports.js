@@ -15,7 +15,7 @@ const useFetchStaffReports = (paging, staffId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get("/reports_for_staff", {
+        const response = await axiosXanoStaff.get("/reports_of_staff", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,

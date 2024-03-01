@@ -30,7 +30,7 @@ const AllergiesPU = ({
   const [errMsgPost, setErrMsgPost] = useState("");
 
   useFetchCategoryDatas(
-    "/allergies_for_patient",
+    "/allergies_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

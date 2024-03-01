@@ -11580,6 +11580,7 @@ readers do not read off random characters that represent icons */
 
 .staff-search {
   font-size: 0.8rem;
+  margin-top: 20px;
 }
 .staff-search__title {
   font-size: 1rem;
@@ -11608,10 +11609,16 @@ readers do not read off random characters that represent icons */
   width: 150px;
 }
 
+.patient-result__summary {
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
 .patient-result__table-container {
   overflow-y: scroll;
   position: relative;
-  height: 500px;
+  height: 550px;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -11668,7 +11675,7 @@ readers do not read off random characters that represent icons */
 }
 
 .staff-result {
-  height: 400px;
+  height: 450px;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -11737,8 +11744,12 @@ readers do not read off random characters that represent icons */
 .clinical-notes {
   background-color: #FEFEFE;
   font-size: 0.85rem;
-  border: solid 0.5px grey;
   border-radius: 2px;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-bottom: solid 0.5px grey;
+  border-right: solid 0.5px grey;
+  border-left: solid 0.5px grey;
 }
 .clinical-notes__err {
   background: rgba(255, 0, 0, 0.536);
@@ -11751,7 +11762,10 @@ readers do not read off random characters that represent icons */
   justify-content: space-between;
   align-items: center;
   background-color: #93b5e9;
-  border-bottom: solid 0.5px grey;
+}
+.clinical-notes__title span {
+  text-align: center;
+  width: 98%;
 }
 .clinical-notes__toolbar {
   padding: 5px;
@@ -11808,7 +11822,7 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 .clinical-notes__form-header {
-  background: #D7D7D7;
+  background: #5EBAC7;
   padding: 10px;
 }
 .clinical-notes__form-row {
@@ -11822,6 +11836,13 @@ readers do not read off random characters that represent icons */
 }
 .clinical-notes__form-row p {
   padding: 0;
+}
+.clinical-notes__form-subject {
+  display: flex;
+  align-items: center;
+}
+.clinical-notes__form-subject label {
+  margin-right: 5px;
 }
 .clinical-notes__form-body {
   margin: 20px 0;
@@ -11874,26 +11895,43 @@ readers do not read off random characters that represent icons */
   justify-content: space-between;
   align-items: center;
 }
+.clinical-notes__card-header--folded-title {
+  align-items: center;
+  display: flex;
+  width: 98%;
+}
+.clinical-notes__card-header--folded-title p {
+  padding: 0;
+}
+.clinical-notes__card-header--folded-triangle {
+  width: 2%;
+  text-align: end;
+}
 .clinical-notes__card-author {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 50%;
 }
 .clinical-notes__card-author input, .clinical-notes__card-author p {
   padding: 5px;
   margin: 0;
 }
-.clinical-notes__card-object input {
-  min-width: 500px;
-}
 .clinical-notes__card-version {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: end;
+  width: 48%;
 }
 .clinical-notes__card-version select {
   margin-left: 5px;
   width: 50px;
+}
+.clinical-notes__card-triangle {
+  width: 2%;
+  text-align: end;
+}
+.clinical-notes__card-subject input {
+  min-width: 500px;
 }
 .clinical-notes__card-btns button {
   margin-left: 5px;
@@ -13455,13 +13493,12 @@ readers do not read off random characters that represent icons */
   font-size: 1rem;
   margin-top: 10px;
   margin-bottom: 5px;
-  padding: 10px;
-  text-align: center;
+  text-align: left;
 }
 .immunizations__title {
   font-size: 1.2rem;
-  margin-top: 60px;
-  margin-bottom: 30px;
+  margin-top: 40px;
+  margin-bottom: 20px;
   text-align: center;
 }
 .immunizations__err {
@@ -16466,6 +16503,7 @@ readers do not read off random characters that represent icons */
 }
 .billing-table thead {
   position: sticky;
+  z-index: 10;
   top: 0;
   background: #93b5e9;
   border-radius: 6px;
@@ -16856,6 +16894,20 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   border-radius: 6px;
   overflow: scroll;
+  font-size: 0.8rem;
+}
+.migration-export__patients-list__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.migration-export__patients-list__item {
+  font-size: 0.7rem;
 }
 .migration-export__patient-search {
   font-size: 0.8rem;
@@ -17234,34 +17286,43 @@ readers do not read off random characters that represent icons */
 
 .sites__table-container {
   width: 98%;
+  height: 600px;
   margin: 0 auto;
   overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: relative;
 }
 .sites__table-container table {
-  margin: 0 auto;
   table-layout: fixed;
-  max-width: 100%;
-  background-color: #FEFEFE;
+  min-width: 100%;
   border-collapse: collapse;
-  border: solid 1px #3D375A;
-  white-space: nowrap;
+  font-size: 0.8rem;
 }
 .sites__table-container table thead {
-  background-color: #93b5e9;
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
 }
 .sites__table-container table thead th {
-  text-decoration: underline;
+  min-width: 120px;
+  padding: 10px;
   cursor: pointer;
-  padding: 2px 5px;
-  font-size: 0.8rem;
-  min-width: 100px;
+}
+.sites__table-container table thead th:nth-child(1) {
+  min-width: 80px;
+}
+.sites__table-container table thead th:nth-child(10) {
+  min-width: 220px;
+}
+.sites__table-container table tbody tr {
+  border-bottom: solid 1px #cecdcd;
 }
 .sites__table-container table tbody tr td {
-  border: solid 1px #3D375A;
-  font-size: 0.8rem;
-  padding: 2px 5px;
-  overflow: hidden;
   text-align: center;
+  padding: 10px;
+  word-break: break-word;
 }
 
 .site-item__btn-container {
@@ -17317,10 +17378,10 @@ readers do not read off random characters that represent icons */
   width: 45%;
 }
 .site-form__row input, .site-form__row select {
-  width: 150px;
+  width: 180px;
 }
 .site-form__row input[type=file] {
-  width: 150px;
+  width: 180px;
   padding: 0;
 }
 .site-form__row input[type=file]::-webkit-file-upload-button {

@@ -29,7 +29,7 @@ const AlertsPU = ({
   const [errMsgPost, setErrMsgPost] = useState("");
 
   useFetchCategoryDatas(
-    "/alerts_for_patient",
+    "/alerts_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

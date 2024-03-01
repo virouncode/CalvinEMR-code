@@ -27,7 +27,7 @@ const useFetchMessagesPatient = (
         setLoading(true);
         setErrMsg("");
         const response = await axiosXanoPatient.get(
-          "/messages_external_for_patient",
+          "/messages_external_of_patient",
           {
             headers: {
               "Content-Type": "application/json",

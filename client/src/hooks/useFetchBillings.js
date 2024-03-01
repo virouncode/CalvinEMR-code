@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { axiosXanoAdmin } from "../api/xanoAdmin";
-import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
-const useFetchBillings = (paging) => {
+const useFetchBillings = (paging, axiosXanoInstance) => {
   const { user } = useUserContext();
   const { auth } = useAuthContext();
   const [billings, setBillings] = useState([]);
@@ -17,8 +15,6 @@ const useFetchBillings = (paging) => {
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
   ); //end of the month
   const [hasMore, setHasMore] = useState(true);
-  const axiosXanoInstance =
-    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setBillings([]);
@@ -31,9 +27,10 @@ const useFetchBillings = (paging) => {
         setLoading(true);
         let response;
         if (user.title !== "Secretary" && user.access_level !== "Admin") {
+          console.log("staff");
           //billings concerning the user in range
           response = await axiosXanoInstance.get(
-            `/billings_for_staff_in_range`,
+            `/billings_of_staff_in_range`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -50,6 +47,7 @@ const useFetchBillings = (paging) => {
           );
         } else {
           //all billings
+          console.log("all", rangeStart, rangeEnd);
           response = await axiosXanoInstance.get(`/billings_in_range`, {
             headers: {
               "Content-Type": "application/json",
@@ -64,6 +62,7 @@ const useFetchBillings = (paging) => {
           });
         }
         if (abortController.signal.aborted) return;
+        console.log("billings", response.data.items);
         setBillings((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);
         setLoading(false);
@@ -78,6 +77,7 @@ const useFetchBillings = (paging) => {
     return () => abortController.abort();
   }, [
     auth.authToken,
+    axiosXanoInstance,
     paging,
     rangeEnd,
     rangeStart,

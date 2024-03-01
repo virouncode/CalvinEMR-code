@@ -99,7 +99,7 @@ export const exportEMRCategory = async (
     try {
       jsArrayToExport = (
         await axiosXanoAdmin.post(
-          `${categoryURL}_for_patients`,
+          `${categoryURL}_of_patients`,
           { patients: checkedPatients },
           {
             headers: {

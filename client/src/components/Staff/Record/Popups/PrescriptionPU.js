@@ -46,7 +46,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
   const [printVisible, setPrintVisible] = useState(false);
   const [finalInstructions, setFinalInstructions] = useState("");
   const [medsTemplates, setMedsTemplates] = useFetchDatas(
-    "/medications_templates_for_staff",
+    "/medications_templates_of_staff",
     axiosXanoStaff,
     auth.authToken,
     "staff_id",

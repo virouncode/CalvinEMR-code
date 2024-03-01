@@ -21,11 +21,11 @@ const SiteItem = ({ site, handleEditClick }) => {
         </td>
         <td>{site.name || ""}</td>
         <td>{site.address || ""}</td>
-        <td>{site.postal_code || site.zip_code || ""}</td>
+        <td>{site.city || ""}</td>
         <td>
           {toCodeTableName(provinceStateTerritoryCT, site.province_state) || ""}
         </td>
-        <td>{site.city || ""}</td>
+        <td>{site.postal_code || site.zip_code || ""}</td>
         <td>{site.phone || ""}</td>
         <td>{site.fax || ""}</td>
         <td

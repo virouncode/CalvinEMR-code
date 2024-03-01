@@ -291,7 +291,7 @@ const BillingTableItem = ({
           style={{ border: errMsgPost && "solid 1.5px red" }}
           ref={lastItemRef}
         >
-          {user.title !== "Secretary" && (
+          {user.title !== "Secretary" ? (
             <td>
               <div className="billing-table__item-btn-container">
                 {!editVisible ? (
@@ -318,6 +318,8 @@ const BillingTableItem = ({
                 )}
               </div>
             </td>
+          ) : (
+            <td></td>
           )}
           <td>
             {editVisible ? (

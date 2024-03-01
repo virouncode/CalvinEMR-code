@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import AccountPatientForm from "../../components/Patient/AccountPatient/AccountPatientForm";
+import MyAccountPatient from "../../components/Patient/AccountPatient/MyAccountPatient";
 import useTitle from "../../hooks/useTitle";
 
 const PatientAccountPage = () => {
@@ -10,7 +10,7 @@ const PatientAccountPage = () => {
         <title>My account</title>
       </Helmet>
       <section className="patient-account-section">
-        <AccountPatientForm />
+        <MyAccountPatient />
       </section>
     </>
   );

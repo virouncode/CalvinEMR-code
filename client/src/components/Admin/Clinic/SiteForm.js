@@ -190,6 +190,25 @@ const SiteForm = ({ setAddVisible }) => {
             />
           </div>
           <div className="site-form__row">
+            <label>City*:</label>
+            <input
+              type="text"
+              onChange={handleChange}
+              name="city"
+              value={formDatas.city}
+              autoComplete="off"
+            />
+          </div>
+          <div className="site-form__row">
+            <label>Province/State*:</label>
+            <GenericList
+              list={provinceStateTerritoryCT}
+              value={formDatas.province_state}
+              handleChange={handleChange}
+              name="province_state"
+            />
+          </div>
+          <div className="site-form__row">
             <label>Postal/zip code*:</label>
             <select
               style={{ width: "15%", marginRight: "10px" }}
@@ -213,25 +232,7 @@ const SiteForm = ({ setAddVisible }) => {
               autoComplete="off"
             />
           </div>
-          <div className="site-form__row">
-            <label>Province/State*:</label>
-            <GenericList
-              list={provinceStateTerritoryCT}
-              value={formDatas.province_state}
-              handleChange={handleChange}
-              name="province_state"
-            />
-          </div>
-          <div className="site-form__row">
-            <label>City*:</label>
-            <input
-              type="text"
-              onChange={handleChange}
-              name="city"
-              value={formDatas.city}
-              autoComplete="off"
-            />
-          </div>
+
           <div className="site-form__row">
             <label>Phone number*:</label>
             <input

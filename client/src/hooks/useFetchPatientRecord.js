@@ -303,7 +303,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/alerts_for_patient",
+        "/alerts_of_patient",
         setAlerts,
         pagingAlerts,
         setHasMoreAlerts,
@@ -366,7 +366,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/reminders_for_patient",
+        "/reminders_of_patient",
         setReminders,
         pagingReminders,
         setHasMoreReminders,
@@ -393,7 +393,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/problemlist_for_patient",
+        "/problemlist_of_patient",
         setProblemList,
         pagingProblemList,
         setHasMoreProblemList,
@@ -402,7 +402,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/pregnancies_for_patient",
+        "/pregnancies_of_patient",
         setPregnancies,
         pagingPregnancies,
         setHasMorePregnancies,
@@ -411,7 +411,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/allergies_for_patient",
+        "/allergies_of_patient",
         setAllergies,
         pagingAllergies,
         setHasMoreAllergies,
@@ -420,7 +420,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/laboratory_results_for_patient",
+        "/laboratory_results_of_patient",
         setLabResults,
         pagingLabResults,
         setHasMoreLabResults,
@@ -429,7 +429,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/reports_received_for_patient",
+        "/reports_received_of_patient",
         setReportsReceived,
         pagingReportsReceived,
         setHasMoreReportsReceived,
@@ -438,7 +438,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/reports_sent_for_patient",
+        "/reports_sent_of_patient",
         setReportsSent,
         pagingReportsSent,
         setHasMoreReportsSent,
@@ -456,7 +456,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/appointments_for_patient",
+        "/appointments_of_patient",
         setAppointments,
         pagingAppointments,
         setHasMoreAppointments,
@@ -474,7 +474,7 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
-        "/messages_external_for_patient",
+        "/messages_external_of_patient",
         setMessagesWith,
         pagingMessagesWith,
         setHasMoreMessagesWith,

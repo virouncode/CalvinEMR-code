@@ -24,6 +24,7 @@ const SearchPatient = () => {
     patientsDemographics,
     setPatientsDemographics,
     hasMore,
+    totalPatients,
   } = usePatientsDemographics(search, paging);
 
   useAllPatientsDemoSocket(patientsDemographics, setPatientsDemographics);
@@ -44,6 +45,7 @@ const SearchPatient = () => {
         loading={loading}
         hasMore={hasMore}
         setPaging={setPaging}
+        totalPatients={totalPatients}
       />
     </>
   );

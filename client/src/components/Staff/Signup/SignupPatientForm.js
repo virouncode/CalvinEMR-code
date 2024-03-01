@@ -428,16 +428,6 @@ const SignupPatientForm = () => {
       <form className="signup-patient__form">
         <div className="signup-patient__column">
           <div className="signup-patient__row">
-            <label>Email*: </label>
-            <input
-              type="email"
-              value={formDatas.email}
-              name="email"
-              autoComplete="off"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="signup-patient__row">
             <label>Name Prefix: </label>
             <GenericList
               name="prefix"
@@ -579,6 +569,59 @@ const SignupPatientForm = () => {
         </div>
         <div className="signup-patient__column">
           <div className="signup-patient__row">
+            <label>Address*: </label>
+            <input
+              type="text"
+              value={formDatas.line1}
+              onChange={handleChange}
+              name="line1"
+              autoComplete="off"
+            />
+          </div>
+          <div className="signup-patient__row">
+            <label>City*: </label>
+            <input
+              type="text"
+              value={formDatas.city}
+              onChange={handleChange}
+              name="city"
+              autoComplete="off"
+            />
+          </div>
+          <div className="signup-patient__row">
+            <label>Province/State: </label>
+            <GenericList
+              name="province"
+              list={provinceStateTerritoryCT}
+              value={formDatas.province}
+              handleChange={handleChange}
+              placeHolder="Choose a province/state..."
+            />
+          </div>
+          <div className="signup-patient__row">
+            <label>Postal/Zip Code*: </label>
+            <select
+              style={{ width: "20%", marginRight: "10px" }}
+              name="PostalOrZip"
+              value={postalOrZip}
+              onChange={handleChangePostalOrZip}
+            >
+              <option value="postal">Postal</option>
+              <option value="zip">Zip</option>
+            </select>
+            <input
+              type="text"
+              value={
+                postalOrZip === "postal"
+                  ? formDatas.postalCode
+                  : formDatas.zipCode
+              }
+              onChange={handleChange}
+              name="postalZipCode"
+              autoComplete="off"
+            />
+          </div>
+          <div className="signup-patient__row">
             <label>Cell Phone*: </label>
             <input
               type="tel"
@@ -636,56 +679,13 @@ const SignupPatientForm = () => {
             />
           </div>
           <div className="signup-patient__row">
-            <label>Address*: </label>
+            <label>Email*: </label>
             <input
-              type="text"
-              value={formDatas.line1}
-              onChange={handleChange}
-              name="line1"
+              type="email"
+              value={formDatas.email}
+              name="email"
               autoComplete="off"
-            />
-          </div>
-          <div className="signup-patient__row">
-            <label>Province/State: </label>
-            <GenericList
-              name="province"
-              list={provinceStateTerritoryCT}
-              value={formDatas.province}
-              handleChange={handleChange}
-              placeHolder="Choose a province/state..."
-            />
-          </div>
-          <div className="signup-patient__row">
-            <label>Postal/Zip Code*: </label>
-            <select
-              style={{ width: "20%", marginRight: "10px" }}
-              name="PostalOrZip"
-              value={postalOrZip}
-              onChange={handleChangePostalOrZip}
-            >
-              <option value="postal">Postal</option>
-              <option value="zip">Zip</option>
-            </select>
-            <input
-              type="text"
-              value={
-                postalOrZip === "postal"
-                  ? formDatas.postalCode
-                  : formDatas.zipCode
-              }
               onChange={handleChange}
-              name="postalZipCode"
-              autoComplete="off"
-            />
-          </div>
-          <div className="signup-patient__row">
-            <label>City*: </label>
-            <input
-              type="text"
-              value={formDatas.city}
-              onChange={handleChange}
-              name="city"
-              autoComplete="off"
             />
           </div>
           <div className="signup-patient__row">

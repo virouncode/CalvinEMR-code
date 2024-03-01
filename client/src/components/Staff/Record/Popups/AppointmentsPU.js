@@ -40,7 +40,7 @@ const AppointmentsPU = ({
   );
 
   useFetchCategoryDatas(
-    "/appointments_for_patient",
+    "/appointments_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

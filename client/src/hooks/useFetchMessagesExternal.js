@@ -28,7 +28,7 @@ const useFetchMessagesExternal = (
         setLoading(true);
         setErrMsg("");
         const response = await axiosXanoStaff.get(
-          "/messages_external_for_staff",
+          "/messages_external_of_staff",
           {
             headers: {
               "Content-Type": "application/json",

@@ -1,4 +1,10 @@
 .patient-result{
+    &__summary {
+        font-weight: bold;
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        text-align: center;
+    }
     &__table-container{
         overflow-y: scroll;
         position:relative;

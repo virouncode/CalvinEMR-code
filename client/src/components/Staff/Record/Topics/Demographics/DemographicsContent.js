@@ -110,6 +110,28 @@ const DemographicsContent = ({
                 {demographicsInfos.Email || ""}
               </p>
               <p>
+                <label>Address: </label>
+                {residencialAddress?.Line1 || ""}
+              </p>
+              <p>
+                <label>City: </label>
+                {residencialAddress?.City || ""}
+              </p>
+              <p>
+                <label>Province/State: </label>
+                {toCodeTableName(
+                  provinceStateTerritoryCT,
+                  residencialAddress?.CountrySubDivisionCode
+                ) || ""}
+              </p>
+              <p>
+                <label>Postal/Zip Code: </label>
+                {residencialAddress?.PostalZipCode?.PostalCode ||
+                  residencialAddress?.PostalZipCode?.ZipCode ||
+                  ""}
+              </p>
+
+              <p>
                 <label>Cell Phone: </label>
                 {`${
                   demographicsInfos.PhoneNumber?.find(
@@ -144,27 +166,6 @@ const DemographicsContent = ({
                     ({ _phoneNumberType }) => _phoneNumberType === "W"
                   )?.extension || ""
                 }`}
-              </p>
-              <p>
-                <label>Address: </label>
-                {residencialAddress?.Line1 || ""}
-              </p>
-              <p>
-                <label>Postal/Zip Code: </label>
-                {residencialAddress?.PostalZipCode?.PostalCode ||
-                  residencialAddress?.PostalZipCode?.ZipCode ||
-                  ""}
-              </p>
-              <p>
-                <label>Province/State: </label>
-                {toCodeTableName(
-                  provinceStateTerritoryCT,
-                  residencialAddress?.CountrySubDivisionCode
-                ) || ""}
-              </p>
-              <p>
-                <label>City: </label>
-                {residencialAddress?.City || ""}
               </p>
               <p>
                 <label>Preferred Official Language: </label>

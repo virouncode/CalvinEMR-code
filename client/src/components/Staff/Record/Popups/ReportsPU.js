@@ -42,7 +42,7 @@ const ReportsPU = ({
   const [errMsgPost, setErrMsgPost] = useState("");
 
   useFetchCategoryDatas(
-    "/reports_received_for_patient",
+    "/reports_received_of_patient",
     setReportsReceived,
     setLoadingReportsReceived,
     setErrMsgReportsReceived,
@@ -52,7 +52,7 @@ const ReportsPU = ({
   );
 
   useFetchCategoryDatas(
-    "/reports_sent_for_patient",
+    "/reports_sent_of_patient",
     setReportsSent,
     setLoadingReportsSent,
     setErrMsgReportsSent,

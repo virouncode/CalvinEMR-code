@@ -52,7 +52,7 @@ const NewAppointment = () => {
     const fetchAppointmentsInRange = async () => {
       try {
         setLoadingAppointments(true);
-        const response = await axiosXanoPatient.get("/appointments_for_staff", {
+        const response = await axiosXanoPatient.get("/appointments_of_staff", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
@@ -88,7 +88,7 @@ const NewAppointment = () => {
 
   const [availability, setAvailability, loadingAvailability, errAvailability] =
     useFetchDatas(
-      "/availability_for_staff",
+      "/availability_of_staff",
       axiosXanoPatient,
       auth.authToken,
       "staff_id",

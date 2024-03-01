@@ -33,7 +33,7 @@ const MedsTemplatesList = ({
     topicDatas: allergies,
     loading: loadingAllergies,
     errMsg: errAllergies,
-  } = useFetchTopicDatas("/allergies_for_patient", paging, patientId);
+  } = useFetchTopicDatas("/allergies_of_patient", paging, patientId);
 
   const [search, setSearch] = useState("");
   const [filteredMedsTemplates, setFilteredMedsTemplates] = useState(null);

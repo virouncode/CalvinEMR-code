@@ -104,7 +104,7 @@ const LoginForm = () => {
 
         //================ USER SETTINGS ===================//
         const response3 = await xanoGet(
-          `/settings_for_staff`,
+          `/settings_of_staff`,
           axiosXanoStaff,
           authToken,
           "staff_id",
@@ -115,7 +115,7 @@ const LoginForm = () => {
         //================ USER UNREAD MESSAGES =============//
         const unreadMessagesNbr = (
           await xanoGet(
-            `/unread_messages_for_staff`,
+            `/unread_messages_of_staff`,
             axiosXanoStaff,
             authToken,
             "staff_id",
@@ -124,7 +124,7 @@ const LoginForm = () => {
         ).data;
         const unreadMessagesExternalNbr = (
           await xanoGet(
-            `/unread_messages_external_for_staff`,
+            `/unread_messages_external_of_staff`,
             axiosXanoStaff,
             authToken,
             "staff_id",
@@ -202,7 +202,7 @@ const LoginForm = () => {
 
         //================ USER DEMOGRAPHICS =============//
         const response3 = await xanoGet(
-          `/demographics_for_patient`,
+          `/demographics_of_patient`,
           axiosXanoPatient,
           authToken,
           "patient_id",
@@ -213,7 +213,7 @@ const LoginForm = () => {
         //================ USER UNREAD MESSAGES =============//
         const unreadNbr = (
           await xanoGet(
-            `/unread_messages_for_patient`,
+            `/unread_messages_of_patient`,
             axiosXanoPatient,
             authToken,
             "patient_id",

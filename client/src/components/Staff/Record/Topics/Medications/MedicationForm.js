@@ -76,7 +76,7 @@ const MedicationForm = ({
     topicDatas: allergies,
     loading: loadingAllergies,
     errMsg: errAllergies,
-  } = useFetchTopicDatas("/allergies_for_patient", paging, patientId);
+  } = useFetchTopicDatas("/allergies_of_patient", paging, patientId);
 
   //HANDLERS
   const handleSubmit = async (e) => {

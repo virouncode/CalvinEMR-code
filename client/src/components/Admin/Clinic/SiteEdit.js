@@ -185,6 +185,26 @@ const SiteEdit = ({ infos, setEditVisible }) => {
             />
           </div>
           <div className="site-form__row">
+            <label>City*:</label>
+            <input
+              type="text"
+              onChange={handleChange}
+              name="city"
+              value={formDatas.city}
+              autoComplete="off"
+            />
+          </div>
+          <div className="site-form__row">
+            <label>Province/State*:</label>
+            <GenericList
+              list={provinceStateTerritoryCT}
+              value={formDatas.province_state}
+              handleChange={handleChange}
+              name="province_state"
+              autoComplete="off"
+            />
+          </div>
+          <div className="site-form__row">
             <label>Postal/zip code*:</label>
             <select
               style={{ width: "15%", marginRight: "10px" }}
@@ -205,26 +225,6 @@ const SiteEdit = ({ infos, setEditVisible }) => {
               style={{ width: "102px" }}
               onChange={handleChange}
               name="postalZipCode"
-              autoComplete="off"
-            />
-          </div>
-          <div className="site-form__row">
-            <label>Province/State*:</label>
-            <GenericList
-              list={provinceStateTerritoryCT}
-              value={formDatas.province_state}
-              handleChange={handleChange}
-              name="province_state"
-              autoComplete="off"
-            />
-          </div>
-          <div className="site-form__row">
-            <label>City*:</label>
-            <input
-              type="text"
-              onChange={handleChange}
-              name="city"
-              value={formDatas.city}
               autoComplete="off"
             />
           </div>

@@ -30,7 +30,7 @@ const ProblemListPU = ({
   const [errMsgPost, setErrMsgPost] = useState("");
 
   useFetchCategoryDatas(
-    "/problemlist_for_patient",
+    "/problemlist_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

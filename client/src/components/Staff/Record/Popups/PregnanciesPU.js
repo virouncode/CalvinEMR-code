@@ -30,7 +30,7 @@ const PregnanciesPU = ({
   const [errMsgPost, setErrMsgPost] = useState("");
 
   useFetchCategoryDatas(
-    "/pregnancies_for_patient",
+    "/pregnancies_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

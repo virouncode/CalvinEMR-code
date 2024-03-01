@@ -25,7 +25,7 @@ const useFetchClinicalNotes = (patientId) => {
         setLoading(true);
         setErrMsg("");
         const response = await axiosXanoStaff.get(
-          "/clinical_notes_for_patient",
+          "/clinical_notes_of_patient",
           {
             headers: {
               "Content-Type": "application/json",

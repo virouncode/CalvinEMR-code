@@ -20,7 +20,7 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get("/messages_for_staff", {
+        const response = await axiosXanoStaff.get("/messages_of_staff", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,

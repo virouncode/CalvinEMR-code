@@ -30,7 +30,7 @@ const RemindersPU = ({
   const [errMsgPost, setErrMsgPost] = useState(false);
 
   useFetchCategoryDatas(
-    "/reminders_for_patient",
+    "/reminders_of_patient",
     setTopicDatas,
     setLoading,
     setErrMsg,

@@ -29,7 +29,7 @@ const CalvinAIPrompt = ({
     errMsg: errMsgReports,
     hasMore: hasMoreReports,
   } = useFetchTopicDatas(
-    "/reports_for_patient",
+    "/reports_of_patient",
     paging,
     demographicsInfos.patient_id
   );

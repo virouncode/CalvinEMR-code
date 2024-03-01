@@ -29,7 +29,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
 
   const [formDatas, setFormDatas] = useState({
     date: toLocalDate(Date.now()),
-    provider_ohip_billing_nbr: staffIdToOHIP(staffInfos, user.id),
+    provider_ohip_billing_nbr:
+      user.access_level === "Admin" ? "" : staffIdToOHIP(staffInfos, user.id),
     referrer_ohip_billing_nbr: "",
     patient_id: 0,
     patient_hcn: "",
@@ -216,6 +217,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
             type="text"
             value={formDatas.provider_ohip_billing_nbr.toString()}
             name="provider_ohip_billing_nbr"
+            onChange={handleChange}
             readOnly={user.access_level !== "Admin"}
             style={{ textAlign: "end" }}
           />

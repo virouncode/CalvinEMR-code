@@ -15,7 +15,7 @@ const useAvailabilty = (userId, authToken) => {
     const fetchAvailability = async () => {
       try {
         const response = await axiosXanoStaff.get(
-          `/availability_for_staff?staff_id=${userId}`,
+          `/availability_of_staff?staff_id=${userId}`,
           {
             headers: {
               "Content-Type": "application/json",
