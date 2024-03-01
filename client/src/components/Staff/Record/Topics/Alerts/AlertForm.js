@@ -24,7 +24,9 @@ const AlertForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
+    AlertDescription: "",
     DateActive: Date.now(),
+    Notes: "",
   });
 
   //HANDLERS

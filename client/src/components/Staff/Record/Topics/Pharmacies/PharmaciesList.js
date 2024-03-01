@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useFetchCategoryDatas from "../../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../../hooks/useIntersection";
 import EmptyRow from "../../../../All/UI/Tables/EmptyRow";
 import LoadingRow from "../../../../All/UI/Tables/LoadingRow";
@@ -6,17 +7,33 @@ import PharmacyForm from "./PharmacyForm";
 import PharmacyItem from "./PharmacyItem";
 
 const PharmaciesList = ({
-  editCounter,
   topicDatas,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
   hasMore,
+  setHasMore,
+  paging,
   setPaging,
+  patientId,
+  editCounter,
   demographicsInfos,
 }) => {
   //HOOKS
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  useFetchCategoryDatas(
+    "/pharmacies",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
+  );
 
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);

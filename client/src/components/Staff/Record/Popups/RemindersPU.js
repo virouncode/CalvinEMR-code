@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
@@ -11,9 +12,14 @@ import ReminderItem from "../Topics/Reminders/ReminderItem";
 
 const RemindersPU = ({
   topicDatas,
-  hasMore,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
   setPaging,
   patientId,
   setPopUpVisible,
@@ -22,6 +28,16 @@ const RemindersPU = ({
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState(false);
+
+  useFetchCategoryDatas(
+    "/reminders_for_patient",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
+  );
 
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);

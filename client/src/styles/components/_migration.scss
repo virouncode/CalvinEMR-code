@@ -47,6 +47,20 @@
     border: solid 1px $grey;
     border-radius: 6px;
     overflow:scroll;
+    font-size: 0.8rem;
+    &__err {
+      padding : 10px 20px;
+      font-size: 0.9rem;
+      width : 100%;
+      margin:10px auto;
+      color : red;
+      background-color:rgba(255, 0, 0, 0.403);
+      border-radius: 6px;
+      text-align: center;
+    }
+    &__item {
+      font-size: 0.7rem;
+    }
   }
   &__patient-search {
     font-size: 0.8rem;

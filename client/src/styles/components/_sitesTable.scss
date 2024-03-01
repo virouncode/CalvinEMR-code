@@ -21,6 +21,9 @@
         min-width: 120px;
         padding: 10px;
         cursor: pointer;
+        &:nth-child(1) {
+          min-width:80px;
+        }
         &:nth-child(10) {
           min-width: 220px;
         }

@@ -3,7 +3,7 @@ export const onMessageSites = (message, sites, setSites) => {
 
   switch (message.action) {
     case "create":
-      setSites([...sites, message.content.data]);
+      setSites([message.content.data, ...sites]);
       break;
     case "update":
       setSites(

@@ -11,33 +11,42 @@ import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
 const ClinicalNotesCardHeaderFolded = ({
   tempFormDatas,
   handleTriangleProgressClick,
+  isChecked,
+  clinicalNote,
+  handleCheck,
 }) => {
   const { staffInfos } = useStaffInfosContext();
   return (
     <div className="clinical-notes__card-header clinical-notes__card-header--folded">
       <div className="clinical-notes__card-header--folded-title">
-        <label>
-          <strong>From: </strong>
-        </label>
-        {staffIdToTitleAndName(
-          staffInfos,
-          isUpdated(tempFormDatas)
-            ? getLastUpdate(tempFormDatas).updated_by_id
-            : tempFormDatas.created_by_id,
-          true
-        )}
-        {` ${toLocalDateAndTimeWithSeconds(
-          isUpdated(tempFormDatas)
-            ? getLastUpdate(tempFormDatas).date_updated
-            : tempFormDatas.date_created
-        )}`}
-        {" / "}
-        <label>
+        <input
+          className="clinical-notes__card-check"
+          type="checkbox"
+          checked={isChecked(clinicalNote.id)}
+          onChange={handleCheck}
+        />
+        <p>
+          <label>
+            <strong>From: </strong>
+          </label>
+          {staffIdToTitleAndName(
+            staffInfos,
+            isUpdated(tempFormDatas)
+              ? getLastUpdate(tempFormDatas).updated_by_id
+              : tempFormDatas.created_by_id,
+            true
+          )}
+          {` ${toLocalDateAndTimeWithSeconds(
+            isUpdated(tempFormDatas)
+              ? getLastUpdate(tempFormDatas).date_updated
+              : tempFormDatas.date_created
+          )}`}
+          {" / "}
           <strong>Subject: </strong>
-        </label>
-        {tempFormDatas.subject}
+          {tempFormDatas.subject}
+        </p>
       </div>
-      <div>
+      <div className="clinical-notes__card-header--folded-triangle">
         <TriangleButtonProgress
           handleTriangleClick={handleTriangleProgressClick}
           color="dark"

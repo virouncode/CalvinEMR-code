@@ -1,7 +1,6 @@
 import React from "react";
 import { toPatientName } from "../../../../utils/toPatientName";
 import PatientTopic from "./PatientTopic";
-import PatientTopicImmunizations from "./PatientTopicImmunizations";
 import PatientTopicReports from "./PatientTopicReports";
 
 const PatientMenuRight = ({
@@ -10,11 +9,141 @@ const PatientMenuRight = ({
   allContentsVisible,
   loadingPatient,
   errPatient,
+  personalHistory,
+  setPersonalHistory,
+  loadingPersonalHistory,
+  setLoadingPersonalHistory,
+  errPersonalHistory,
+  setErrPersonalHistory,
+  hasMorePersonalHistory,
+  setHasMorePersonalHistory,
+  pagingPersonalHistory,
+  setPagingPersonalHistory,
+
+  careElements,
+  setCareElements,
+  loadingCareElements,
+  setLoadingCareElements,
+  errCareElements,
+  setErrCareElements,
+  hasMoreCareElements,
+  setHasMoreCareElements,
+  pagingCareElements,
+  setPagingCareElements,
+
+  problemList,
+  setProblemList,
+  loadingProblemList,
+  setLoadingProblemList,
+  errProblemList,
+  setErrProblemList,
+  hasMoreProblemList,
+  setHasMoreProblemList,
+  pagingProblemList,
+  setPagingProblemList,
+
+  pregnancies,
+  setPregnancies,
+  loadingPregnancies,
+  setLoadingPregnancies,
+  errPregnancies,
+  setErrPregnancies,
+  hasMorePregnancies,
+  setHasMorePregnancies,
+  pagingPregnancies,
+  setPagingPregnancies,
+
+  allergies,
+  setAllergies,
+  loadingAllergies,
+  setLoadingAllergies,
+  errAllergies,
+  setErrAllergies,
+  hasMoreAllergies,
+  setHasMoreAllergies,
+  pagingAllergies,
+  setPagingAllergies,
+
+  labResults,
+  setLabResults,
+  loadingLabResults,
+  setLoadingLabResults,
+  errLabResults,
+  setErrLabResults,
+  hasMoreLabResults,
+  setHasMoreLabResults,
+  pagingLabResults,
+  setPagingLabResults,
+
+  reportsReceived,
+  setReportsReceived,
+  loadingReportsReceived,
+  setLoadingReportsReceived,
+  errReportsReceived,
+  setErrReportsReceived,
+  hasMoreReportsReceived,
+  setHasMoreReportsReceived,
+  pagingReportsReceived,
+  setPagingReportsReceived,
+
+  reportsSent,
+  setReportsSent,
+  loadingReportsSent,
+  setLoadingReportsSent,
+  errReportsSent,
+  setErrReportsSent,
+  hasMoreReportsSent,
+  setHasMoreReportsSent,
+  pagingReportsSent,
+  setPagingReportsSent,
+
+  immunizations,
+  setImmunizations,
+  loadingImmunizations,
+  setLoadingImmunizations,
+  errImmunizations,
+  setErrImmunizations,
+  hasMoreImmunizations,
+  setHasMoreImmunizations,
+  pagingImmunizations,
+  setPagingImmunizations,
+
+  appointments,
+  setAppointments,
+  loadingAppointments,
+  setLoadingAppointments,
+  errAppointments,
+  setErrAppointments,
+  hasMoreAppointments,
+  setHasMoreAppointments,
+  pagingAppointments,
+  setPagingAppointments,
+
+  messagesAbout,
+  setMessagesAbout,
+  loadingMessagesAbout,
+  setLoadingMessagesAbout,
+  errMessagesAbout,
+  setErrMessagesAbout,
+  hasMoreMessagesAbout,
+  setHasMoreMessagesAbout,
+  pagingMessagesAbout,
+  setPagingMessagesAbout,
+
+  messagesWith,
+  setMessagesWith,
+  loadingMessagesWith,
+  setLoadingMessagesWith,
+  errMessagesWith,
+  setErrMessagesWith,
+  hasMoreMessagesWith,
+  setHasMoreMessagesWith,
+  pagingMessagesWith,
+  setPagingMessagesWith,
 }) => {
   return (
     <div className="patient-record__menu">
       <PatientTopic
-        url="/personal_history_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#495867"
         topic="PERSONAL HISTORY"
@@ -22,10 +151,18 @@ const PatientMenuRight = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="right"
-        demographicsInfos={demographicsInfos}
+        topicDatas={personalHistory}
+        setTopicDatas={setPersonalHistory}
+        loading={loadingPersonalHistory}
+        setLoading={setLoadingPersonalHistory}
+        errMsg={errPersonalHistory}
+        setErrMsg={setErrPersonalHistory}
+        hasMore={hasMorePersonalHistory}
+        setHasMore={setHasMorePersonalHistory}
+        paging={pagingPersonalHistory}
+        setPaging={setPagingPersonalHistory}
       />
       <PatientTopic
-        url="/care_elements_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#577399"
         topic="CARE ELEMENTS"
@@ -33,9 +170,19 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={careElements}
+        setTopicDatas={setCareElements}
+        loading={loadingCareElements}
+        setLoading={setLoadingCareElements}
+        errMsg={errCareElements}
+        setErrMsg={setErrCareElements}
+        hasMore={hasMoreCareElements}
+        setHasMore={setHasMoreCareElements}
+        paging={pagingCareElements}
+        setPaging={setPagingCareElements}
       />
+
       <PatientTopic
-        url="/problemlist_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#326771"
         topic="PROBLEM LIST"
@@ -43,9 +190,19 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={problemList}
+        setTopicDatas={setProblemList}
+        loading={loadingProblemList}
+        setLoading={setLoadingProblemList}
+        errMsg={errProblemList}
+        setErrMsg={setErrProblemList}
+        hasMore={hasMoreProblemList}
+        setHasMore={setHasMoreProblemList}
+        paging={pagingProblemList}
+        setPaging={setPagingProblemList}
       />
+
       <PatientTopic
-        url="/pregnancies_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#01ba95"
         topic="PREGNANCIES"
@@ -53,9 +210,19 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={pregnancies}
+        setTopicDatas={setPregnancies}
+        loading={loadingPregnancies}
+        setLoading={setLoadingPregnancies}
+        errMsg={errPregnancies}
+        setErrMsg={setErrPregnancies}
+        hasMore={hasMorePregnancies}
+        setHasMore={setHasMorePregnancies}
+        paging={pagingPregnancies}
+        setPaging={setPagingPregnancies}
       />
+
       <PatientTopic
-        url="/allergies_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#2c8c99"
         topic="ALLERGIES & ADVERSE REACTIONS"
@@ -63,9 +230,19 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={allergies}
+        setTopicDatas={setAllergies}
+        loading={loadingAllergies}
+        setLoading={setLoadingAllergies}
+        errMsg={errAllergies}
+        setErrMsg={setErrAllergies}
+        hasMore={hasMoreAllergies}
+        setHasMore={setHasMoreAllergies}
+        paging={pagingAllergies}
+        setPaging={setPagingAllergies}
       />
+
       <PatientTopic
-        url="/laboratory_results_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#ef0b00"
         topic="LABORATORY RESULTS"
@@ -74,6 +251,16 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={labResults}
+        setTopicDatas={setLabResults}
+        loading={loadingLabResults}
+        setLoading={setLoadingLabResults}
+        errMsg={errLabResults}
+        setErrMsg={setErrLabResults}
+        hasMore={hasMoreLabResults}
+        setHasMore={setHasMoreLabResults}
+        paging={pagingLabResults}
+        setPaging={setPagingLabResults}
       />
 
       <PatientTopicReports
@@ -84,11 +271,32 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        reportsReceived={reportsReceived}
+        setReportsReceived={setReportsReceived}
+        loadingReportsReceived={loadingReportsReceived}
+        setLoadingReportsReceived={setLoadingReportsReceived}
+        errReportsReceived={errReportsReceived}
+        setErrReportsReceived={setErrReportsReceived}
+        hasMoreReportsReceived={hasMoreReportsReceived}
+        setHasMoreReportsReceived={setHasMoreReportsReceived}
+        pagingReportsReceived={pagingReportsReceived}
+        setPagingReportsReceived={setPagingReportsReceived}
+        reportsSent={reportsSent}
+        setReportsSent={setReportsSent}
+        loadingReportsSent={loadingReportsSent}
+        setLoadingReportsSent={setLoadingReportsSent}
+        errReportsSent={errReportsSent}
+        setErrReportsSent={setErrReportsSent}
+        hasMoreReportsSent={hasMoreReportsSent}
+        setHasMoreReportsSent={setHasMoreReportsSent}
+        pagingReportsSent={pagingReportsSent}
+        setPagingReportsSent={setPagingReportsSent}
       />
 
-      <PatientTopicImmunizations
+      <PatientTopic
         textColor="#FEFEFE"
         backgroundColor="#21201e"
+        topic="IMMUNIZATIONS"
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
@@ -96,10 +304,18 @@ const PatientMenuRight = ({
         side="right"
         loadingPatient={loadingPatient}
         errPatient={errPatient}
+        topicDatas={immunizations}
+        setTopicDatas={setImmunizations}
+        loading={loadingImmunizations}
+        setLoading={setLoadingImmunizations}
+        errMsg={errImmunizations}
+        setErrMsg={setErrImmunizations}
+        hasMore={hasMoreImmunizations}
+        setHasMore={setHasMoreImmunizations}
+        paging={pagingImmunizations}
+        setPaging={setPagingImmunizations}
       />
-
       <PatientTopic
-        url="/appointments_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#28464b"
         topic="APPOINTMENTS"
@@ -108,10 +324,19 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={appointments}
+        setTopicDatas={setAppointments}
+        loading={loadingAppointments}
+        setLoading={setLoadingAppointments}
+        errMsg={errAppointments}
+        setErrMsg={setErrAppointments}
+        hasMore={hasMoreAppointments}
+        setHasMore={setHasMoreAppointments}
+        paging={pagingAppointments}
+        setPaging={setPagingAppointments}
       />
 
       <PatientTopic
-        url="/messages_about_patient"
         textColor="#FEFEFE"
         backgroundColor="#2acbd6"
         topic="MESSAGES ABOUT PATIENT"
@@ -120,9 +345,12 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={messagesAbout}
+        loading={loadingMessagesAbout}
+        errMsg={errMessagesAbout}
       />
+
       <PatientTopic
-        url="/messages_external_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#CE2D4F"
         topic="MESSAGES WITH PATIENT"
@@ -131,6 +359,9 @@ const PatientMenuRight = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="right"
+        topicDatas={messagesWith}
+        loading={loadingMessagesWith}
+        errMsg={errMessagesWith}
       />
     </div>
   );

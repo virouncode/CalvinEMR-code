@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
+import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
 import {
@@ -11,27 +9,7 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {
-  const { auth } = useAuthContext();
   const { staffInfos } = useStaffInfosContext();
-  const [attachments, setAttachments] = useState([]);
-
-  useEffect(() => {
-    const fetchFiles = async () => {
-      const response = (
-        await axiosXanoStaff.get("/attachments_for_clinical_note", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
-            attachments_ids: clinicalNote.attachments_ids,
-          },
-        })
-      ).data;
-      setAttachments(response);
-    };
-    fetchFiles();
-  }, [auth.authToken, clinicalNote.attachments_ids]);
 
   //styles
   const BODY_STYLE = {
@@ -46,7 +24,10 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
   };
 
   return (
-    <div className="clinical-notes__card clinical-notes__card--print">
+    <div
+      className="clinical-notes__card clinical-notes__card--print"
+      style={{ fontFamily: "sans-serif" }}
+    >
       <div className="clinical-notes__card-header">
         <div className="clinical-notes__card-header-row">
           <p style={{ margin: "0", padding: "0" }}>
@@ -88,7 +69,9 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           {clinicalNote.MyClinicalNotesContent}
         </p>
         <ClinicalNotesAttachments
-          attachments={attachments}
+          attachments={clinicalNote.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0])}
           deletable={false}
           addable={false}
         />

@@ -1,8 +1,12 @@
 .clinical-notes {
     background-color: $white;
     font-size: 0.85rem;
-    border : solid 0.5px grey;
     border-radius: 2px;
+    margin-left: 1px;
+    margin-right : 1px;
+    border-bottom: solid 0.5px grey;
+    border-right: solid 0.5px grey;
+    border-left: solid 0.5px grey;
     &__err {
         background:$red;
         padding: 10px;
@@ -14,7 +18,10 @@
         justify-content: space-between;
         align-items: center;
         background-color: $blue;
-        border-bottom: solid 0.5px grey;
+        span {
+            text-align: center;
+            width: 98%;
+        }
     }
     &__toolbar {
         padding : 5px;
@@ -74,7 +81,7 @@
         }
     }
     &__form-header {
-        background:#D7D7D7;
+        background:$green;
         padding:10px;
     }
     &__form-row {
@@ -87,6 +94,13 @@
         }
         p {
             padding: 0;
+        }
+    }
+    &__form-subject {
+        display: flex;
+        align-items: center;
+        label {
+            margin-right: 5px;
         }
     }
     &__form-body {
@@ -140,31 +154,49 @@
             display:flex;
             justify-content: space-between;
             align-items: center;
+            &-title {
+                align-items: center;
+                display: flex;
+                width:98%;
+                p {
+                    padding:0;
+                }
+            }
+            &-triangle {
+                width:2%;
+                text-align:end;
+            }
         }
     }
     &__card-author {
         display:flex;
-        justify-content: space-between;
         align-items: center;
         input, p {
             padding:5px;
             margin:0;
         }
-    }
-    &__card-object {
-        input {
-            min-width: 500px;
-        }
+        width:50%;
     }
     &__card-version {
         display:flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: end;
         select{
             margin-left:5px;
             width:50px;
         }
+        width:48%;
     }
+    &__card-triangle {
+        width: 2%;
+        text-align: end;
+    }
+    &__card-subject {
+        input {
+            min-width: 500px;
+        }
+    }
+    
     &__card-btns{
         button {
             margin-left: 5px;

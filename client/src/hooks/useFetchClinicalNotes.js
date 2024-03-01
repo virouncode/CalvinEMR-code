@@ -3,18 +3,20 @@ import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
-const useFetchClinicalNotes = (paging, patientId) => {
+const useFetchClinicalNotes = (patientId) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const [order, setOrder] = useState(user.settings.clinical_notes_order);
+  const [search, setSearch] = useState("");
   const [clinicalNotes, setClinicalNotes] = useState([]);
-  const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errMsg, setErrMsg] = useState("");
+  const [hasMore, setHasMore] = useState(true);
+  const [paging, setPaging] = useState({ page: 1, perPage: 5, offset: 0 });
 
   useEffect(() => {
     setClinicalNotes([]);
-  }, [order]);
+  }, [order, search]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -34,6 +36,7 @@ const useFetchClinicalNotes = (paging, patientId) => {
               paging,
               orderBy: order,
               columnName: "date_created",
+              search,
             },
             signal: abortController.signal,
           }
@@ -43,24 +46,28 @@ const useFetchClinicalNotes = (paging, patientId) => {
         setHasMore(response.data.items.length > 0);
         setLoading(false);
       } catch (err) {
+        setLoading(false);
         if (err.name !== "CanceledError") {
           setErrMsg(err.message);
         }
-        setLoading(false);
       }
     };
     fetchClinicalNotes();
     return () => abortController.abort();
-  }, [auth.authToken, order, paging, patientId]);
+  }, [auth.authToken, order, paging, patientId, search]);
 
   return {
-    clinicalNotes,
-    setClinicalNotes,
     order,
     setOrder,
+    search,
+    setSearch,
+    clinicalNotes,
+    setClinicalNotes,
     loading,
     errMsg,
     hasMore,
+    setPaging,
+    paging,
   };
 };
 

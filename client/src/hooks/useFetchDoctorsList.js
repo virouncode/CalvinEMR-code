@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoAdmin } from "../api/xanoAdmin";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
+import useUserContext from "./useUserContext";
 
 const useFetchDoctorsList = (search, paging) => {
+  const { user } = useUserContext();
+  const { auth } = useAuthContext();
   const [doctors, setDoctors] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const { auth } = useAuthContext();
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setDoctors([]);
@@ -19,7 +24,7 @@ const useFetchDoctorsList = (search, paging) => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await axiosXanoStaff.get(`/doctors_search`, {
+        const response = await axiosXanoInstance.get(`/doctors_search`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,
@@ -49,7 +54,7 @@ const useFetchDoctorsList = (search, paging) => {
     };
     fetchDoctors();
     return () => abortController.abort();
-  }, [auth.authToken, paging, search]);
+  }, [auth.authToken, axiosXanoInstance, paging, search]);
 
   return { doctors, setDoctors, loading, err, hasMore };
 };

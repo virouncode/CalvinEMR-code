@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoAdmin } from "../api/xanoAdmin";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
+import useUserContext from "./useUserContext";
 
 const usePatientsList = (search, paging) => {
   const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setPatientsDemographics([]);
@@ -20,7 +25,7 @@ const usePatientsList = (search, paging) => {
       try {
         setLoading(true);
         setErr(false);
-        const response = await axiosXanoStaff.get(
+        const response = await axiosXanoInstance.get(
           "/demographics_simple_search",
           {
             headers: {
@@ -57,7 +62,7 @@ const usePatientsList = (search, paging) => {
     };
     fetchPatientsDemographics();
     return () => abortController.abort();
-  }, [auth.authToken, paging, search]);
+  }, [auth.authToken, axiosXanoInstance, paging, search]);
 
   return {
     loading,

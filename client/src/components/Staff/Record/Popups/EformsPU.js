@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -17,9 +18,14 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const EformsPU = ({
   topicDatas,
-  hasMore,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
   setPaging,
   patientId,
   setPopUpVisible,
@@ -31,6 +37,16 @@ const EformsPU = ({
   const { socket } = useSocketContext();
   const [addVisible, setAddVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+
+  useFetchCategoryDatas(
+    "/eforms_of_patient",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
+  );
 
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);

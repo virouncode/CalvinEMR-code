@@ -1,5 +1,6 @@
 import React from "react";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
+import { toLocalDate } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
 import { toPatientName } from "../../../../utils/toPatientName";
 import ClinicalNotesCardPrint from "../ClinicalNotes/ClinicalNotesCardPrint";
@@ -24,7 +25,8 @@ const ClinicalNotesPU = ({
         <em>
           {toPatientName(demographicsInfos)},{" "}
           {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
-          {getAge(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
+          {getAge(demographicsInfos.DateOfBirth)}, born{" "}
+          {toLocalDate(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
           {demographicsInfos.ChartNumber},{" "}
           <i className="fa-regular fa-envelope fa-sm"></i>{" "}
           {demographicsInfos.Email}, <i className="fa-solid fa-phone fa-sm"></i>{" "}

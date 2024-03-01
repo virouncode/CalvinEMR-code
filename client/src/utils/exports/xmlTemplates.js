@@ -1,8 +1,8 @@
 import xmlFormat from "xml-formatter";
 import { toLocalDate } from "../formatDates";
-import { patientIdToName } from "../patientIdToName";
+import { toPatientName } from "../toPatientName";
 
-export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
+export const toXmlDemographics = (jsObj, patientInfos = null) => {
   const xmlNames = `<Names>
 <cdsd:NamePrefix>${jsObj.Names?.NamePrefix ?? ""}</cdsd:NamePrefix>
     <cdsd:LegalName namePurpose=${jsObj.Names?.LegalName?._namePurpose}>
@@ -26,15 +26,16 @@ export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
       </cdsd:LastName>
       ${
         jsObj.Names?.LegalName?.OtherName?.length > 0
-          ? jsObj.Names?.LegalName?.OtherName.map(
-              (otherName) =>
-                `<cdsd:OtherName>
+          ? jsObj.Names?.LegalName?.OtherName.map((otherName) =>
+              otherName.Part
+                ? `<cdsd:OtherName>
             <cdsd:Part>${otherName.Part ?? ""}</cdsd:Part>
             <cdsd:PartType>${otherName.PartType ?? ""}</cdsd:PartType>
             <cdsd:PartQualifier>${
               otherName.PartQualifier ?? ""
             }</cdsd:PartQualifier>
           </cdsd:OtherName>`
+                : ""
             ).join("")
           : ""
       }
@@ -46,12 +47,14 @@ export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
               `<cdsd:OtherNames namePurpose=${item._namePurpose}>
       ${
         item.OtherName?.length > 0
-          ? item.OtherName.map(
-              (otherName) => `<cdsd:OtherName>
+          ? item.OtherName.map((otherName) =>
+              otherName.Part
+                ? `<cdsd:OtherName>
       <cdsd:Part>${otherName.Part ?? ""}</cdsd:Part>
       <cdsd:PartType>${otherName.PartType ?? ""}</cdsd:PartType>
       <cdsd:PartQualifier>${otherName.PartQualifier ?? ""}</cdsd:PartQualifier>
     </cdsd:OtherName>`
+                : ""
             ).join("")
           : ""
       }
@@ -402,7 +405,7 @@ export const toXmlDemographics = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlPersonalHistory = (jsObj, demographicsInfos = null) => {
+export const toXmlPersonalHistory = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -425,7 +428,7 @@ export const toXmlPersonalHistory = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlFamHistory = (jsObj, demographicsInfos = null) => {
+export const toXmlFamHistory = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -488,7 +491,7 @@ export const toXmlFamHistory = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlPastHealth = (jsObj, demographicsInfos = null) => {
+export const toXmlPastHealth = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -557,7 +560,7 @@ export const toXmlPastHealth = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlProblemList = (jsObj, demographicsInfos = null) => {
+export const toXmlProblemList = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -626,7 +629,7 @@ export const toXmlProblemList = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlRiskFactors = (jsObj, demographicsInfos = null) => {
+export const toXmlRiskFactors = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -678,7 +681,7 @@ export const toXmlRiskFactors = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlAllergies = (jsObj, demographicsInfos = null) => {
+export const toXmlAllergies = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -746,7 +749,7 @@ export const toXmlAllergies = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlMedications = (jsObj, demographicsInfos = null) => {
+export const toXmlMedications = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -900,7 +903,7 @@ export const toXmlMedications = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlImmunizations = (jsObj, demographicsInfos = null) => {
+export const toXmlImmunizations = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -971,11 +974,11 @@ export const toXmlImmunizations = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlLabResults = (jsObj, demographicsInfos = null) => {
+export const toXmlLabResults = (jsObj, patientInfos = null) => {
   return "";
 };
 
-export const toXmlAppointments = (jsObj, demographicsInfos = null) => {
+export const toXmlAppointments = (jsObj, patientInfos = null) => {
   const xmlTime = `<AppointmentTime>${
     jsObj.AppointmentTime ?? ""
   }</AppointmentTime>`;
@@ -983,9 +986,7 @@ export const toXmlAppointments = (jsObj, demographicsInfos = null) => {
   const xmlStatus = `<AppointmentStatus>${
     jsObj.AppointmentStatus ?? ""
   }</AppointmentStatus>`;
-  const xmlDate = `<AppointmentDate><cdsd:FullDate>${toLocalDate(
-    jsObj.AppointmentDate
-  )}</cdsd:FullDate></AppointmentDate>`;
+  const xmlDate = `<AppointmentDate><cdsd:FullDate>${jsObj.AppointmentDate}</cdsd:FullDate></AppointmentDate>`;
   const xmlProvider = `<Provider>
   <Name>
     <cdsd:FirstName>${jsObj.Provider?.Name.FirstName ?? ""}</cdsd:FirstName>
@@ -1017,7 +1018,7 @@ export const toXmlAppointments = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlClinicalNotes = (jsObj, demographicsInfos = null) => {
+export const toXmlClinicalNotes = (jsObj, patientInfos = null) => {
   const xmlNoteType = `<NoteType>${jsObj.NoteType ?? ""}</NoteType>`;
   const xmlContent = `<MyClinicalNotesContent>${
     jsObj.MyClinicalNotesContent ?? ""
@@ -1087,7 +1088,7 @@ export const toXmlClinicalNotes = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlReports = (jsObj, demographicsInfos = null) => {
+export const toXmlReports = (jsObj, patientInfos = null) => {
   const xmlMedia = `<Media>${jsObj.Media ?? ""}</Media>`;
   const xmlForm = `<Format>${jsObj.Format ?? ""}</Format>`;
   const xmlFileExtAndVer = `<FileExtensionAndVersion>${
@@ -1250,7 +1251,7 @@ export const toXmlReports = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlCareElements = (jsObj, demographicsInfos = null) => {
+export const toXmlCareElements = (jsObj, patientInfos = null) => {
   const xmlSmokingStatus =
     jsObj.SmokingStatus?.length > 0
       ? jsObj.SmokingStatus.map(
@@ -1438,7 +1439,7 @@ export const toXmlCareElements = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlAlerts = (jsObj, demographicsInfos = null) => {
+export const toXmlAlerts = (jsObj, patientInfos = null) => {
   const xmlResidual = `<ResidualInfo>
   ${
     jsObj.ResidualInfo?.DataElement?.length > 0
@@ -1481,7 +1482,7 @@ export const toXmlAlerts = (jsObj, demographicsInfos = null) => {
   });
 };
 
-export const toXmlPregnancies = (jsObj, demographicsInfos = null) => {
+export const toXmlPregnancies = (jsObj, patientInfos = null) => {
   const xmlPregnancies = `<NewCategory>
 <CategoryName>Pregnancies</CategoryName>
 <CategoryDescription>Encompasses data collected from the patient's pregnancy events</CategoryDescription>
@@ -1536,7 +1537,7 @@ ${
   });
 };
 
-export const toXmlRelationships = (jsObj, demographicsInfos) => {
+export const toXmlRelationships = (jsObj, patientInfos = null) => {
   const xmlRelationships = `<NewCategory>
   <CategoryName>Relationships</CategoryName>
   <CategoryDescription>Contains data about the patient’s relationships</CategoryDescription>
@@ -1555,10 +1556,7 @@ export const toXmlRelationships = (jsObj, demographicsInfos) => {
         ? `<cdsd:DataElement>
       <cdsd:Name>RelationName</cdsd:Name>
       <cdsd:DataType>text</cdsd:DataType>
-      <cdsd:Content>${patientIdToName(
-        demographicsInfos,
-        jsObj.relation_id
-      )}</cdsd:Content>
+      <cdsd:Content>${toPatientName(patientInfos)}</cdsd:Content>
     </cdsd:DataElement>`
         : ""
     }

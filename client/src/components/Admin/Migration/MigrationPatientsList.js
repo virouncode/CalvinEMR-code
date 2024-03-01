@@ -1,7 +1,8 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
-import { toLocalDate } from "../../../utils/formatDates";
-import { patientIdToName } from "../../../utils/patientIdToName";
+import useIntersection from "../../../hooks/useIntersection";
+import { toPatientName } from "../../../utils/toPatientName";
+import EmptyLi from "../../All/UI/Lists/EmptyLi";
+import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import PatientsListItem from "../../Staff/Messaging/PatientsListItem";
 
 const MigrationPatientsList = ({
@@ -9,55 +10,61 @@ const MigrationPatientsList = ({
   isAllPatientsIdsChecked,
   handleCheckPatientId,
   handleCheckAllPatientsIds,
-  search,
   isLoading,
+  patientsDemographics,
+  err,
+  loading,
+  hasMore,
+  setPaging,
 }) => {
-  const { clinic } = useAuthContext();
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
   return (
-    <ul className="migration-export__patients-list">
-      <li className="patients__list-item">
-        <input
-          type="checkbox"
-          onChange={handleCheckAllPatientsIds}
-          checked={isAllPatientsIdsChecked()}
-          disabled={isLoading}
-        />
-        <label>All</label>
-      </li>
-      {clinic.demographicsInfos
-        .filter(
-          (patient) =>
-            patient.Email.toLowerCase().includes(search.email.toLowerCase()) &&
-            patient.ChartNumber.includes(search.chart) &&
-            patientIdToName(clinic.demographicsInfos, patient.patient_id)
-              .toLowerCase()
-              .includes(search.name.toLowerCase()) &&
-            toLocalDate(patient.DateOfBirth).includes(search.birth) &&
-            (patient.PhoneNumber.find(
-              ({ _phoneNumberType }) => _phoneNumberType === "C"
-            )?.phoneNumber.includes(search.phone) ||
-              patient.PhoneNumber.find(
-                ({ _phoneNumberType }) => _phoneNumberType === "W"
-              )?.phoneNumber.includes(search.phone) ||
-              patient.PhoneNumber.find(
-                ({ _phoneNumberType }) => _phoneNumberType === "R"
-              )?.phoneNumber.includes(search.phone)) &&
-            patient.HealthCard?.Number.includes(search.hcn)
-        )
-        .map((info) => (
-          <PatientsListItem
-            info={info}
-            key={info.id}
-            handleCheckPatient={handleCheckPatientId}
-            isPatientChecked={isPatientIdChecked}
-            patientName={patientIdToName(
-              clinic.demographicsInfos,
-              info.patient_id
-            )}
-            isLoading={isLoading}
-          />
-        ))}
-    </ul>
+    <>
+      {err && (
+        <p className="migration-export__patients-list__err">
+          Unable to fetch patients datas
+        </p>
+      )}
+      {!err && (
+        <ul className="migration-export__patients-list" ref={rootRef}>
+          <li className="patients__list-item">
+            <input
+              type="checkbox"
+              onChange={handleCheckAllPatientsIds}
+              checked={isAllPatientsIdsChecked()}
+              disabled={isLoading}
+              style={{ marginRight: "5px" }}
+            />
+            <label>All</label>
+          </li>
+          {patientsDemographics && patientsDemographics.length > 0
+            ? patientsDemographics.map((item, index) =>
+                index === patientsDemographics.length - 1 ? (
+                  <PatientsListItem
+                    info={item}
+                    key={item.id}
+                    handleCheckPatient={handleCheckPatientId}
+                    isPatientChecked={isPatientIdChecked}
+                    patientName={toPatientName(item)}
+                    isLoading={isLoading}
+                    lastItemRef={lastItemRef}
+                  />
+                ) : (
+                  <PatientsListItem
+                    info={item}
+                    key={item.id}
+                    handleCheckPatient={handleCheckPatientId}
+                    isPatientChecked={isPatientIdChecked}
+                    patientName={toPatientName(item)}
+                    isLoading={isLoading}
+                  />
+                )
+              )
+            : !loading && <EmptyLi text="No corresponding patients" />}
+          {loading && <LoadingLi />}
+        </ul>
+      )}
+    </>
   );
 };
 

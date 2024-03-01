@@ -2,23 +2,15 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
-  getPatientRecord,
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
-import useFetchAttachmentsForClinicalNote from "../../../../hooks/useFetchAttachmentsForClinicalNote";
-import useFetchVersions from "../../../../hooks/useFetchVersions";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
-import useVersionsSocket from "../../../../hooks/useVersionsSocket";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
@@ -53,12 +45,9 @@ const ClinicalNotesCard = ({
   const [formDatas, setFormDatas] = useState(null);
   const [bodyVisible, setBodyVisible] = useState(true);
   const [popUpVisible, setPopUpVisible] = useState(false);
-
-  const { versions, setVersions, versionsLoading } = useFetchVersions(
-    patientId,
-    clinicalNote.id
+  const [choosenVersionNbr, setChoosenVersionNbr] = useState(
+    clinicalNote.version_nbr
   );
-  useVersionsSocket(versions, setVersions, clinicalNote.id);
 
   useEffect(() => {
     if (clinicalNote) {
@@ -70,9 +59,6 @@ const ClinicalNotesCard = ({
   useEffect(() => {
     setBodyVisible(allBodiesVisible);
   }, [allBodiesVisible]);
-
-  const { attachments, attachmentsLoading } =
-    useFetchAttachmentsForClinicalNote(clinicalNote.attachments_ids);
 
   //HANDLERS
   const handleTriangleProgressClick = (e) => {
@@ -116,57 +102,37 @@ const ClinicalNotesCard = ({
         }))) ||
       !_.isEqual(tempFormDatas, formDatas)
     ) {
-      //First post the former clinical note version to the clinical note log tbl
-      const logDatas = { ...formDatas };
-      logDatas.clinical_note_id = formDatas.id;
-      if (formDatas.version_nbr !== 1) {
-        logDatas.updates = [
-          {
-            updated_by_id: getLastUpdate(formDatas).updated_by_id,
-            date_updated: getLastUpdate(formDatas).date_updated,
-          },
-        ];
-      }
-
+      //First post the former clinical note to the clinical notes log tbl
+      const clinicalNoteLog = { ...formDatas }; //former version
+      clinicalNoteLog.clinical_note_id = formDatas.id;
+      clinicalNoteLog.version_nbr = clinicalNote.version_nbr;
       try {
         await postPatientRecord(
           "/clinical_notes_log",
           user.id,
           auth.authToken,
-          logDatas
+          clinicalNoteLog
         );
         //then put the new clinical note version in the clinical note tbl
-        tempFormDatas.version_nbr = clinicalNote.version_nbr + 1; //increment version
+        const datasToPost = { ...tempFormDatas };
+        datasToPost.version_nbr = clinicalNote.version_nbr + 1; //increment version
+        datasToPost.attachments_ids = clinicalNote.attachments_ids
+          .filter((item) => item)
+          .map(({ attachments }) => attachments?.[0].id); //format attachments_ids
+        datasToPost.date_created = Date.now(); //we update the date_created
+        delete datasToPost.version;
         await putPatientRecord(
           "/clinical_notes",
           clinicalNote.id,
           user.id,
           auth.authToken,
-          tempFormDatas,
+          datasToPost,
           socket,
           "CLINICAL NOTES"
         );
+        setChoosenVersionNbr(clinicalNote.version_nbr + 1);
         setEditVisible(false);
-        const versionsResults = (
-          await getPatientRecord(
-            "/clinical_notes_log_for_patient",
-            patientId,
-            auth.authToken
-          )
-        ).data.filter(
-          ({ clinical_note_id }) => clinical_note_id === clinicalNote.id
-        );
-
-        versionsResults.forEach(
-          (version) => (version.id = version.clinical_note_id)
-        );
-        versionsResults.sort((a, b) => a.version_nbr - b.version_nbr);
-        socket.emit("message", {
-          route: "VERSIONS",
-          content: { data: versionsResults },
-        });
-        // setVersions(versionsResults);
-        toast.success("Cli note saved successfully", { containerId: "A" });
+        toast.success("Clinical note saved successfully", { containerId: "A" });
       } catch (err) {
         toast.error(`Error: unable to save clinical note: ${err.message}`, {
           containerId: "A",
@@ -199,15 +165,27 @@ const ClinicalNotesCard = ({
 
   const handleVersionChange = async (e) => {
     const value = parseInt(e.target.value); //the choosen version
-    let updatedClinicalNotes = [...clinicalNotes];
-    const index = _.findIndex(updatedClinicalNotes, {
-      id: clinicalNote.id,
-    });
-    if (value < versions.length + 1) {
-      //former version
-      updatedClinicalNotes[index] = versions[value - 1];
+    setChoosenVersionNbr(value);
+
+    //We setClinicalNotes because we can't set a single clinical note
+    if (value < clinicalNote.version_nbr) {
+      //we replace the actual clinical note by the version
+      setClinicalNotes(
+        clinicalNotes.map((item) =>
+          item.id === clinicalNote.id
+            ? {
+                ...clinicalNote.versions.find(
+                  ({ version_nbr }) => version_nbr === value
+                ),
+                id: clinicalNote.id,
+                attachments_ids: clinicalNote.attachments_ids,
+                versions: clinicalNote.versions,
+              }
+            : item
+        )
+      );
     } else {
-      //last version
+      //back to last version
       const response = await axiosXanoStaff.get(
         `/clinical_notes/${clinicalNote.id}`,
         {
@@ -217,9 +195,12 @@ const ClinicalNotesCard = ({
           },
         }
       );
-      updatedClinicalNotes[index] = response.data;
+      setClinicalNotes(
+        clinicalNotes.map((item) =>
+          item.id === clinicalNote.id ? response.data : item
+        )
+      );
     }
-    setClinicalNotes(updatedClinicalNotes);
   };
 
   const isChecked = (progressNoteId) => {
@@ -236,8 +217,7 @@ const ClinicalNotesCard = ({
           clinicalNote={clinicalNote}
           tempFormDatas={tempFormDatas}
           editVisible={editVisible}
-          versions={versions}
-          versionsLoading={versionsLoading}
+          versions={clinicalNote.versions}
           handleVersionChange={handleVersionChange}
           handleEditClick={handleEditClick}
           handleCalvinAIClick={handleCalvinAIClick}
@@ -245,11 +225,15 @@ const ClinicalNotesCard = ({
           handleCancelClick={handleCancelClick}
           handleChange={handleChange}
           handleTriangleProgressClick={handleTriangleProgressClick}
+          choosenVersionNbr={choosenVersionNbr}
         />
       ) : (
         <ClinicalNotesCardHeaderFolded
           tempFormDatas={tempFormDatas}
           handleTriangleProgressClick={handleTriangleProgressClick}
+          isChecked={isChecked}
+          clinicalNote={clinicalNote}
+          handleCheck={handleCheck}
         />
       )}
       <div
@@ -266,36 +250,23 @@ const ClinicalNotesCard = ({
           handleChange={handleChange}
         />
         <ClinicalNotesAttachments
-          attachmentsLoading={attachmentsLoading}
-          attachments={attachments}
+          attachments={clinicalNote.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0])}
           deletable={false}
           patientId={patientId}
           date={clinicalNote.date_created}
         />
         {!editVisible && (
           <div className="clinical-notes__card-sign">
-            {isUpdated(tempFormDatas) ? (
-              <p style={{ padding: "0 10px" }}>
-                Updated by{" "}
-                {staffIdToTitleAndName(
-                  staffInfos,
-                  getLastUpdate(tempFormDatas).updated_by_id,
-                  true
-                )}{" "}
-                on{" "}
-                {toLocalDateAndTimeWithSeconds(
-                  getLastUpdate(tempFormDatas).date_updated
-                )}
-              </p>
-            ) : null}
             <p style={{ padding: "0 10px" }}>
               Created by{" "}
               {staffIdToTitleAndName(
                 staffInfos,
-                tempFormDatas.created_by_id,
+                clinicalNote.created_by_id,
                 true
               )}{" "}
-              on {toLocalDateAndTimeWithSeconds(tempFormDatas.date_created)}
+              on {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
             </p>
           </div>
         )}
@@ -311,7 +282,9 @@ const ClinicalNotesCard = ({
           setPopUpVisible={setPopUpVisible}
         >
           <CalvinAI
-            attachments={attachments}
+            attachments={clinicalNote.attachments_ids
+              .filter((item) => item)
+              .map(({ attachments }) => attachments?.[0])}
             initialBody={formDatas.MyClinicalNotesContent}
             demographicsInfos={demographicsInfos}
           />

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
@@ -11,9 +12,14 @@ import PastHealthItem from "../Topics/PastHealth/PastHealthItem";
 
 const PastHealthPU = ({
   topicDatas,
-  hasMore,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
   setPaging,
   patientId,
   setPopUpVisible,
@@ -22,6 +28,16 @@ const PastHealthPU = ({
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  useFetchCategoryDatas(
+    "/past_health_of_patient",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
+  );
 
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);

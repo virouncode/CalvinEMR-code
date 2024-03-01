@@ -1,10 +1,6 @@
-import { CircularProgress } from "@mui/material";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../hooks/useUserContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
@@ -17,7 +13,6 @@ const ClinicalNotesCardHeader = ({
   tempFormDatas,
   editVisible,
   versions,
-  versionsLoading,
   handleVersionChange,
   handleEditClick,
   handleCalvinAIClick,
@@ -25,8 +20,10 @@ const ClinicalNotesCardHeader = ({
   handleCancelClick,
   handleChange,
   handleTriangleProgressClick,
+  choosenVersionNbr,
 }) => {
   const { staffInfos } = useStaffInfosContext();
+  const { user } = useUserContext();
 
   return (
     <div className="clinical-notes__card-header">
@@ -42,27 +39,22 @@ const ClinicalNotesCardHeader = ({
             <strong>From: </strong>
             {staffIdToTitleAndName(
               staffInfos,
-              isUpdated(tempFormDatas)
-                ? getLastUpdate(tempFormDatas).updated_by_id
-                : tempFormDatas.created_by_id,
+              clinicalNote.created_by_id,
               true
             )}
-            {` ${toLocalDateAndTimeWithSeconds(
-              isUpdated(tempFormDatas)
-                ? getLastUpdate(tempFormDatas).date_updated
-                : tempFormDatas.date_created
-            )}`}
+            {` ${toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}`}
           </p>
         </div>
         <div className="clinical-notes__card-version">
           <label>
             <strong style={{ marginRight: "5px" }}>Version: </strong>
           </label>
+          {console.log("choosen version", choosenVersionNbr)}
           {!editVisible ? (
-            !versionsLoading ? (
+            versions && (
               <select
                 name="version_nbr"
-                value={tempFormDatas.version_nbr.toString()}
+                value={choosenVersionNbr}
                 onChange={handleVersionChange}
               >
                 {versions.map(({ version_nbr }) => (
@@ -74,31 +66,28 @@ const ClinicalNotesCardHeader = ({
                   {"V" + (versions.length + 1).toString()}
                 </option>
               </select>
-            ) : (
-              <CircularProgress size="0.8rem" style={{ margin: "5px" }} />
             )
           ) : (
-            <span style={{ marginRight: "10px" }}>{`V${
+            <span style={{ marginRight: "10px", fontWeight: "bold" }}>{`V${
               versions.length + 2
             }`}</span>
           )}
           <div className="clinical-notes__card-btns">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick} disabled={versionsLoading}>
+                <button
+                  onClick={handleEditClick}
+                  disabled={user.id !== clinicalNote.created_by_id}
+                >
                   Edit
                 </button>
-                <button disabled={versionsLoading}>
+                <button>
                   <a
                     href={`/staff/billing/${
                       demographicsInfos.patient_id
                     }/${toPatientName(demographicsInfos)}/${
                       demographicsInfos.HealthCard?.Number
-                    }/${
-                      isUpdated(clinicalNote)
-                        ? getLastUpdate(clinicalNote).date_updated
-                        : clinicalNote.date_created
-                    }`}
+                    }/${clinicalNote.date_created}`}
                     target="_blank"
                     rel="noreferrer"
                     style={{ color: "#FEFEFE" }}
@@ -106,12 +95,7 @@ const ClinicalNotesCardHeader = ({
                     Bill
                   </a>
                 </button>
-                <button
-                  onClick={handleCalvinAIClick}
-                  disabled={versionsLoading}
-                >
-                  CalvinAI
-                </button>
+                <button onClick={handleCalvinAIClick}>CalvinAI</button>
               </>
             ) : (
               <div
@@ -130,6 +114,15 @@ const ClinicalNotesCardHeader = ({
             )}
           </div>
         </div>
+        <div className="clinical-notes__card-triangle">
+          <TriangleButtonProgress
+            handleTriangleClick={handleTriangleProgressClick}
+            color="dark"
+            className={
+              "triangle-clinical-notes  triangle-clinical-notes--active"
+            }
+          />
+        </div>
       </div>
       <div className="clinical-notes__card-header-row">
         <div className="clinical-notes__card-subject">
@@ -137,7 +130,7 @@ const ClinicalNotesCardHeader = ({
             <strong>Subject: </strong>
           </label>
           {!editVisible ? (
-            tempFormDatas.subject
+            clinicalNote.subject
           ) : (
             <input
               type="text"
@@ -147,15 +140,6 @@ const ClinicalNotesCardHeader = ({
               autoComplete="off"
             />
           )}
-        </div>
-        <div>
-          <TriangleButtonProgress
-            handleTriangleClick={handleTriangleProgressClick}
-            color="dark"
-            className={
-              "triangle-clinical-notes  triangle-clinical-notes--active"
-            }
-          />
         </div>
       </div>
     </div>

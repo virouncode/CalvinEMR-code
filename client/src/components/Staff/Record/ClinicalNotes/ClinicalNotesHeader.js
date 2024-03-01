@@ -10,7 +10,7 @@ const ClinicalNotesHeader = ({
   addVisible,
   setAddVisible,
   search,
-  setSearch,
+  handleSearch,
   checkedNotes,
   setCheckedNotes,
   checkAllNotes,
@@ -27,7 +27,7 @@ const ClinicalNotesHeader = ({
   loadingPatient,
   errPatient,
 }) => {
-  const [selectAllDisabled, setSelectAllDisabled] = useState(true);
+  const [selectAllDisabled, setSelectAllDisabled] = useState(false);
   useEffect(() => {
     if (!clinicalNotes) return;
     if (clinicalNotes.length === 0 || !allContentsVisible) {
@@ -53,7 +53,7 @@ const ClinicalNotesHeader = ({
         addVisible={addVisible}
         setAddVisible={setAddVisible}
         search={search}
-        setSearch={setSearch}
+        handleSearch={handleSearch}
         contentRef={contentRef}
         triangleRef={triangleRef}
         checkedNotes={checkedNotes}

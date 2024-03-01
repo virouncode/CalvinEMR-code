@@ -4,12 +4,13 @@ import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import ClinicalNotesOrderRadio from "./ClinicalNotesOrderRadio";
 
 const ClinicalNotesToolBar = ({
   addVisible,
   setAddVisible,
   search,
-  setSearch,
+  handleSearch,
   contentRef,
   triangleRef,
   setCheckedNotes,
@@ -46,7 +47,6 @@ const ClinicalNotesToolBar = ({
     triangleRef.current.classList.add("triangle--active");
     contentRef.current.classList.add("clinical-notes__content--active");
   };
-
   const handleClickFold = (e) => {
     if (!allBodiesVisible) {
       triangleRef.current.classList.add("triangle--active");
@@ -57,12 +57,16 @@ const ClinicalNotesToolBar = ({
   const handleClickPrint = () => {
     setPopUpVisible((v) => !v);
   };
-
   const handleChange = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    triangleRef.current.classList.add("triangle--active");
-    contentRef.current.classList.add("clinical-notes-content--active");
+    handleSearch(e);
+    if (!triangleRef.current.classList.contains("triangle--active")) {
+      triangleRef.current.classList.add("triangle--active");
+    }
+    if (
+      !contentRef.current.classList.contains("clinical-notes__content--active")
+    ) {
+      contentRef.current.classList.add("clinical-notes__content--active");
+    }
   };
 
   const handleChangeOrder = async (e) => {
@@ -109,31 +113,10 @@ const ClinicalNotesToolBar = ({
         </label>
         <input type="text" value={search} onChange={handleChange}></input>
       </div>
-      <div className="clinical-notes__order">
-        <p>Most recent on:</p>
-        <div className="clinical-notes__radio-item">
-          <input
-            type="radio"
-            name="order"
-            value="desc"
-            id="top"
-            onChange={handleChangeOrder}
-            checked={order === "desc"}
-          />
-          <label htmlFor="top">Top</label>
-        </div>
-        <div className="clinical-notes__radio-item">
-          <input
-            type="radio"
-            name="order"
-            value="asc"
-            id="bottom"
-            onChange={handleChangeOrder}
-            checked={order === "asc"}
-          />
-          <label htmlFor="bottom">Bottom</label>
-        </div>
-      </div>
+      <ClinicalNotesOrderRadio
+        order={order}
+        handleChangeOrder={handleChangeOrder}
+      />
       <div>
         <button onClick={handleClickFold}>
           {allBodiesVisible ? "Fold All" : "Unfold All"}

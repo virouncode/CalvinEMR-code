@@ -9,6 +9,106 @@ const PatientMenuLeft = ({
   allContentsVisible,
   loadingPatient,
   errPatient,
+  pastHealth,
+  setPastHealth,
+  loadingPastHealth,
+  setLoadingPastHealth,
+  errPastHealth,
+  setErrPastHealth,
+  hasMorePastHealth,
+  setHasMorePastHealth,
+  pagingPastHealth,
+  setPagingPastHealth,
+  famHistory,
+  setFamHistory,
+  loadingFamHistory,
+  setLoadingFamHistory,
+  errFamHistory,
+  setErrFamHistory,
+  hasMoreFamHistory,
+  setHasMoreFamHistory,
+  pagingFamHistory,
+  setPagingFamHistory,
+  relationships,
+  setRelationships,
+  loadingRelationships,
+  setLoadingRelationships,
+  errRelationships,
+  setErrRelationships,
+  hasMoreRelationships,
+  setHasMoreRelationships,
+  pagingRelationships,
+  setPagingRelationships,
+  alerts,
+  setAlerts,
+  loadingAlerts,
+  setLoadingAlerts,
+  errAlerts,
+  setErrAlerts,
+  hasMoreAlerts,
+  setHasMoreAlerts,
+  pagingAlerts,
+  setPagingAlerts,
+  risks,
+  setRisks,
+  loadingRisks,
+  setLoadingRisks,
+  errRisks,
+  setErrRisks,
+  hasMoreRisks,
+  setHasMoreRisks,
+  pagingRisks,
+  setPagingRisks,
+  medications,
+  setMedications,
+  loadingMedications,
+  setLoadingMedications,
+  errMedications,
+  setErrMedications,
+  hasMoreMedications,
+  setHasMoreMedications,
+  pagingMedications,
+  setPagingMedications,
+  doctors,
+  setDoctors,
+  loadingDoctors,
+  setLoadingDoctors,
+  errDoctors,
+  setErrDoctors,
+  hasMoreDoctors,
+  setHasMoreDoctors,
+  pagingDoctors,
+  setPagingDoctors,
+  pharmacies,
+  setPharmacies,
+  loadingPharmacies,
+  setLoadingPharmacies,
+  errPharmacies,
+  setErrPharmacies,
+  hasMorePharmacies,
+  setHasMorePharmacies,
+  pagingPharmacies,
+  setPagingPharmacies,
+  eforms,
+  setEforms,
+  loadingEforms,
+  setLoadingEforms,
+  errEforms,
+  setErrEforms,
+  hasMoreEforms,
+  setHasMoreEforms,
+  pagingEforms,
+  setPagingEforms,
+  reminders,
+  setReminders,
+  loadingReminders,
+  setLoadingReminders,
+  errReminders,
+  setErrReminders,
+  hasMoreReminders,
+  setHasMoreReminders,
+  pagingReminders,
+  setPagingReminders,
 }) => {
   return (
     <div className="patient-record__menu">
@@ -25,7 +125,6 @@ const PatientMenuLeft = ({
         errPatient={errPatient}
       />
       <PatientTopic
-        url="/past_health_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#577399"
         topic="PAST HEALTH"
@@ -33,10 +132,19 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={pastHealth}
+        setTopicDatas={setPastHealth}
+        loading={loadingPastHealth}
+        setLoading={setLoadingPastHealth}
+        errMsg={errPastHealth}
+        setErrMsg={setErrPastHealth}
+        hasMore={hasMorePastHealth}
+        setHasMore={setHasMorePastHealth}
+        paging={pagingPastHealth}
+        setPaging={setPagingPastHealth}
       />
 
       <PatientTopic
-        url="/family_history_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#326771"
         topic="FAMILY HISTORY"
@@ -44,9 +152,18 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={famHistory}
+        setTopicDatas={setFamHistory}
+        loading={loadingFamHistory}
+        setLoading={setLoadingFamHistory}
+        errMsg={errFamHistory}
+        setErrMsg={setErrFamHistory}
+        hasMore={hasMoreFamHistory}
+        setHasMore={setHasMoreFamHistory}
+        paging={pagingFamHistory}
+        setPaging={setPagingFamHistory}
       />
       <PatientTopic
-        url="/relationships_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#01ba95"
         topic="RELATIONSHIPS"
@@ -54,11 +171,20 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={relationships}
+        setTopicDatas={setRelationships}
+        loading={loadingRelationships}
+        setLoading={setLoadingRelationships}
+        errMsg={errRelationships}
+        setErrMsg={setErrRelationships}
+        hasMore={hasMoreRelationships}
+        setHasMore={setHasMoreRelationships}
+        paging={pagingRelationships}
+        setPaging={setPagingRelationships}
         demographicsInfos={demographicsInfos}
       />
 
       <PatientTopic
-        url="/alerts_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#2c8c99"
         topic="ALERTS & SPECIAL NEEDS"
@@ -66,9 +192,18 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={alerts}
+        setTopicDatas={setAlerts}
+        loading={loadingAlerts}
+        setLoading={setLoadingAlerts}
+        errMsg={errAlerts}
+        setErrMsg={setErrAlerts}
+        hasMore={hasMoreAlerts}
+        setHasMore={setHasMoreAlerts}
+        paging={pagingAlerts}
+        setPaging={setPagingAlerts}
       />
       <PatientTopic
-        url="/risk_factors_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#ef0b00"
         topic="RISK FACTORS"
@@ -76,10 +211,19 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={risks}
+        setTopicDatas={setRisks}
+        loading={loadingRisks}
+        setLoading={setLoadingRisks}
+        errMsg={errRisks}
+        setErrMsg={setErrRisks}
+        hasMore={hasMoreRisks}
+        setHasMore={setHasMoreRisks}
+        paging={pagingRisks}
+        setPaging={setPagingRisks}
       />
 
       <PatientTopic
-        url="/medications_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#931621"
         topic="MEDICATIONS AND TREATMENTS"
@@ -87,6 +231,16 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={medications}
+        setTopicDatas={setMedications}
+        loading={loadingMedications}
+        setLoading={setLoadingMedications}
+        errMsg={errMedications}
+        setErrMsg={setErrMedications}
+        hasMore={hasMoreMedications}
+        setHasMore={setHasMoreMedications}
+        paging={pagingMedications}
+        setPaging={setPagingMedications}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopicDoctors
@@ -96,10 +250,19 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={doctors}
+        setTopicDatas={setDoctors}
+        loading={loadingDoctors}
+        setLoading={setLoadingDoctors}
+        errMsg={errDoctors}
+        setErrMsg={setErrDoctors}
+        hasMore={hasMoreDoctors}
+        setHasMore={setHasMoreDoctors}
+        paging={pagingDoctors}
+        setPaging={setPagingDoctors}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopic
-        url="/pharmacies"
         textColor="#FEFEFE"
         backgroundColor="#28464b"
         topic="PHARMACIES"
@@ -107,10 +270,19 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={pharmacies}
+        setTopicDatas={setPharmacies}
+        loading={loadingPharmacies}
+        setLoading={setLoadingPharmacies}
+        errMsg={errPharmacies}
+        setErrMsg={setErrPharmacies}
+        hasMore={hasMorePharmacies}
+        setHasMore={setHasMorePharmacies}
+        paging={pagingPharmacies}
+        setPaging={setPagingPharmacies}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopic
-        url="/eforms_of_patient"
         textColor="#FEFEFE"
         backgroundColor="#2acbd6"
         topic="E-FORMS"
@@ -118,10 +290,19 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
+        topicDatas={eforms}
+        setTopicDatas={setEforms}
+        loading={loadingEforms}
+        setLoading={setLoadingEforms}
+        errMsg={errEforms}
+        setErrMsg={setErrEforms}
+        hasMore={hasMoreEforms}
+        setHasMore={setHasMoreEforms}
+        paging={pagingEforms}
+        setPaging={setPagingEforms}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopic
-        url="/reminders_for_patient"
         textColor="#FEFEFE"
         backgroundColor="#CE2D4F"
         topic="REMINDERS"
@@ -129,6 +310,16 @@ const PatientMenuLeft = ({
         allContentsVisible={allContentsVisible}
         patientName={toPatientName(demographicsInfos)}
         side="left"
+        topicDatas={reminders}
+        setTopicDatas={setReminders}
+        loading={loadingReminders}
+        setLoading={setLoadingReminders}
+        errMsg={errReminders}
+        setErrMsg={setErrReminders}
+        hasMore={hasMoreReminders}
+        setHasMore={setHasMoreReminders}
+        paging={pagingReminders}
+        setPaging={setPagingReminders}
       />
     </div>
   );

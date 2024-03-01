@@ -3,13 +3,10 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../datas/codesTables";
-import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
 import { showDocument } from "../../../utils/showDocument";
 import SignCellStaff from "../../Staff/Record/Topics/SignCellStaff";
 
 const SiteItem = ({ site, handleEditClick }) => {
-  const { adminsInfos } = useAdminsInfosContext();
-
   const handleClickLogo = (e) => {
     showDocument(site.logo?.url, site.logo?.mime);
   };
@@ -24,7 +21,7 @@ const SiteItem = ({ site, handleEditClick }) => {
         </td>
         <td>{site.name || ""}</td>
         <td>{site.address || ""}</td>
-        <td>{site.postal_code || ""}</td>
+        <td>{site.postal_code || site.zip_code || ""}</td>
         <td>
           {toCodeTableName(provinceStateTerritoryCT, site.province_state) || ""}
         </td>

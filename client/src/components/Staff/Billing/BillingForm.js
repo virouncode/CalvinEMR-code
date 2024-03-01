@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoGet";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
-import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -18,7 +18,7 @@ import DiagnosisSearch from "./DiagnosisSearch";
 import PatientChartHealthSearch from "./PatientChartHealthSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
 
-const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
+const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const navigate = useNavigate();
   const { pid, pName, hcn, date } = useParams();
   const { auth } = useAuthContext();
@@ -26,7 +26,6 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
   const [progress, setProgress] = useState(false);
-  const [sites] = useFetchDatas("/sites", axiosXanoStaff, auth.authToken);
 
   const [formDatas, setFormDatas] = useState({
     date: toLocalDate(Date.now()),
@@ -42,6 +41,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
   const [patientSearchVisible, setPatientSearchVisible] = useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     if (date) {
@@ -50,7 +51,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
         patient_hcn: hcn || "",
         patient_id: parseInt(pid) || "",
         patient_name: pName || "",
-        date: toLocalDate(Date.parse(new Date(parseInt(date)))),
+        date: toLocalDate(parseInt(date)),
       });
       navigate("/staff/billing");
     }
@@ -107,7 +108,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
     }
     if (
       (
-        await axiosXanoStaff.get(
+        await axiosXanoInstance.get(
           `/diagnosis_codes_for_code?code=${formDatas.diagnosis_code}`,
           {
             headers: {
@@ -122,7 +123,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
       return;
     }
     for (const billing_code of formDatas.billing_codes) {
-      const response = await axiosXanoStaff.get(
+      const response = await axiosXanoInstance.get(
         `/ohip_fee_schedule_for_code?billing_code=${billing_code}`,
         {
           headers: {
@@ -153,7 +154,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
           diagnosis_id: (
             await xanoGet(
               `/diagnosis_codes_for_code`,
-              axiosXanoStaff,
+              axiosXanoInstance,
               auth.authToken,
               "code",
               formDatas.diagnosis_code
@@ -162,7 +163,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
           billing_code_id: (
             await xanoGet(
               `/ohip_fee_schedule_for_code`,
-              axiosXanoStaff,
+              axiosXanoInstance,
               auth.authToken,
               "billing_code",
               billing_code
@@ -170,12 +171,16 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
           ).data.id,
           site_id: formDatas.site_id,
         };
-        const response = await axiosXanoStaff.post("/billings", datasToPost, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        });
+        const response = await axiosXanoInstance.post(
+          "/billings",
+          datasToPost,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+          }
+        );
         socket.emit("message", {
           route: "BILLING",
           action: "create",
@@ -211,7 +216,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost }) => {
             type="text"
             value={formDatas.provider_ohip_billing_nbr.toString()}
             name="provider_ohip_billing_nbr"
-            readOnly
+            readOnly={user.access_level !== "Admin"}
             style={{ textAlign: "end" }}
           />
         </div>

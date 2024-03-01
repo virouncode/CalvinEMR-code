@@ -13,11 +13,12 @@ const BillingTable = ({
   setPaging,
   loading,
   errMsg,
+  sites,
 }) => {
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
-
   const { user } = useUserContext();
+  console.log("sites in billing table", sites);
 
   return (
     <>
@@ -52,6 +53,7 @@ const BillingTable = ({
                         billing={item}
                         errMsgPost={errMsgPost}
                         setErrMsgPost={setErrMsgPost}
+                        sites={sites}
                         lastItemRef={lastItemRef}
                       />
                     ) : (
@@ -60,6 +62,7 @@ const BillingTable = ({
                         billing={item}
                         errMsgPost={errMsgPost}
                         setErrMsgPost={setErrMsgPost}
+                        sites={sites}
                       />
                     )
                   )
@@ -73,6 +76,9 @@ const BillingTable = ({
               >
                 <td colSpan="8" style={{ fontWeight: "bold", border: "none" }}>
                   Total fees
+                </td>
+                <td style={{ fontWeight: "bold", border: "none" }}>
+                  Nbr of billings: {billings.length}
                 </td>
                 <td style={{ border: "none" }}>
                   {Math.round(
@@ -138,9 +144,6 @@ const BillingTable = ({
                       }, 0) * 100
                   ) / 100}{" "}
                   $
-                </td>
-                <td style={{ fontWeight: "bold", border: "none" }}>
-                  Nbr of billings: {billings.length}
                 </td>
               </tr>
             </tfoot>

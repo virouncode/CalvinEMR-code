@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
@@ -14,9 +15,14 @@ import AppointmentItem from "../Topics/Appointments/AppointmentItem";
 
 const AppointmentsPU = ({
   topicDatas,
-  hasMore,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
   setPaging,
   patientId,
   setPopUpVisible,
@@ -31,6 +37,16 @@ const AppointmentsPU = ({
     "/sites",
     axiosXanoStaff,
     auth.authToken
+  );
+
+  useFetchCategoryDatas(
+    "/appointments_for_patient",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
   );
 
   //INTERSECTION OBSERVER

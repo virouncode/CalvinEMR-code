@@ -92,7 +92,7 @@ const DemographicsPU = ({
       lastName: demographicsInfos.Names?.LegalName?.LastName?.Part || "",
       suffix: demographicsInfos.Names?.LastNameSuffix || "",
       nickName:
-        demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0].Part || "",
+        demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0]?.Part || "",
       chart: demographicsInfos.ChartNumber || "",
       dob: toLocalDate(demographicsInfos.DateOfBirth),
       age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),
@@ -254,7 +254,7 @@ const DemographicsPU = ({
       lastName: demographicsInfos.Names?.LegalName?.LastName?.Part || "",
       suffix: demographicsInfos.Names?.LastNameSuffix || "",
       nickName:
-        demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0].Part || "",
+        demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0]?.Part || "",
       chart: demographicsInfos.ChartNumber || "",
       dob: toLocalDate(demographicsInfos.DateOfBirth),
       age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),

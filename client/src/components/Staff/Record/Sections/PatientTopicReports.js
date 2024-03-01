@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import useFetchTopicDatas from "../../../../hooks/useFetchTopicDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ReportsPU from "../Popups/ReportsPU";
@@ -12,8 +11,28 @@ const PatientTopicReports = ({
   patientId,
   demographicsInfos,
   allContentsVisible,
-  side,
   patientName,
+  side,
+  reportsReceived,
+  setReportsReceived,
+  loadingReportsReceived,
+  setLoadingReportsReceived,
+  errReportsReceived,
+  setErrReportsReceived,
+  hasMoreReportsReceived,
+  setHasMoreReportsReceived,
+  pagingReportsReceived,
+  setPagingReportsReceived,
+  reportsSent,
+  setReportsSent,
+  loadingReportsSent,
+  setLoadingReportsSent,
+  errReportsSent,
+  setErrReportsSent,
+  hasMoreReportsSent,
+  setHasMoreReportsSent,
+  pagingReportsSent,
+  setPagingReportsSent,
 }) => {
   //HOOKS
   const [popUpVisible, setPopUpVisible] = useState(false);
@@ -21,40 +40,6 @@ const PatientTopicReports = ({
 
   //STYLE
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
-
-  //DATAS
-  const [pagingReportsReceived, setPagingReportsReceived] = useState({
-    page: 1,
-    perPage: 2,
-    offset: 0,
-  });
-  const [pagingReportsSent, setPagingReportsSent] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const {
-    topicDatas: reportsReceived,
-    setTopicDatas: setReportsReceived,
-    loading: loadingReportsReceived,
-    errMsg: errMsgReportsReceived,
-    hasMore: hasMoreReportsReceived,
-  } = useFetchTopicDatas(
-    "/reports_received_for_patient",
-    pagingReportsReceived,
-    patientId
-  );
-  const {
-    topicDatas: reportsSent,
-    setTopicDatas: setReportsSent,
-    loading: loadingReportsSent,
-    errMsg: errMsgReportsSent,
-    hasMore: hasMoreReportsSent,
-  } = useFetchTopicDatas(
-    "/reports_sent_for_patient",
-    pagingReportsSent,
-    patientId
-  );
 
   //SOCKET
   useTopicSocket(
@@ -102,10 +87,10 @@ const PatientTopicReports = ({
         <ReportsContent
           reportsReceived={reportsReceived}
           loadingReportsReceived={loadingReportsReceived}
-          errMsgReportsReceived={errMsgReportsReceived}
+          errMsgReportsReceived={errReportsReceived}
           reportsSent={reportsSent}
           loadingReportsSent={loadingReportsSent}
-          errMsgReportsSent={errMsgReportsSent}
+          errMsgReportsSent={errReportsSent}
         />
         {popUpVisible && (
           <FakeWindow
@@ -119,15 +104,25 @@ const PatientTopicReports = ({
           >
             <ReportsPU
               reportsReceived={reportsReceived}
+              setReportsReceived={setReportsReceived}
               loadingReportsReceived={loadingReportsReceived}
-              errMsgReportsReceived={errMsgReportsReceived}
+              setLoadingReportsReceived={setLoadingReportsReceived}
+              errMsgReportsReceived={errReportsReceived}
+              setErrMsgReportsReceived={setErrReportsReceived}
+              pagingReportsReceived={pagingReportsReceived}
               setPagingReportsReceived={setPagingReportsReceived}
               hasMoreReportsReceived={hasMoreReportsReceived}
+              setHasMoreReportsReceived={setHasMoreReportsReceived}
               reportsSent={reportsSent}
+              setReportsSent={setReportsSent}
               loadingReportsSent={loadingReportsSent}
-              errMsgReportsSent={errMsgReportsSent}
+              setLoadingReportsSent={setLoadingReportsSent}
+              errMsgReportsSent={errReportsSent}
+              setErrMsgReportsSent={setErrReportsSent}
+              pagingReportsSent={pagingReportsSent}
               setPagingReportsSent={setPagingReportsSent}
               hasMoreReportsSent={hasMoreReportsSent}
+              setHasMoreReportsSent={setHasMoreReportsSent}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
               demographicsInfos={demographicsInfos}

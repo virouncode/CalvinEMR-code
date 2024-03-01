@@ -1,4 +1,4 @@
 export const toSiteName = (sites, siteId) => {
-  if (!siteId) return "";
+  if (!siteId || !sites.length) return "";
   return sites.find(({ id }) => id === siteId)?.name || "";
 };

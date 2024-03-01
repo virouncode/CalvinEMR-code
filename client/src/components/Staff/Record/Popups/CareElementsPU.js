@@ -40,13 +40,11 @@ var _ = require("lodash");
 
 const CareElementsPU = ({
   topicDatas,
-  hasMore,
   loading,
   errMsg,
-  setPaging,
   patientId,
-  setPopUpVisible,
   patientName,
+  setPopUpVisible,
 }) => {
   //HOOKS
   const { auth } = useAuthContext();

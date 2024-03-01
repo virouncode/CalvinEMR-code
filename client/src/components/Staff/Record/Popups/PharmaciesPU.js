@@ -13,12 +13,17 @@ import PharmaciesList from "../Topics/Pharmacies/PharmaciesList";
 import PharmacyCard from "../Topics/Pharmacies/PharmacyCard";
 
 const PharmaciesPU = ({
-  patientId,
   topicDatas,
+  setTopicDatas,
   loading,
+  setLoading,
   errMsg,
+  setErrMsg,
   hasMore,
+  setHasMore,
+  paging,
   setPaging,
+  patientId,
   setPopUpVisible,
   demographicsInfos,
 }) => {
@@ -97,10 +102,16 @@ const PharmaciesPU = ({
       {addVisible && (
         <PharmaciesList
           topicDatas={topicDatas}
+          setTopicDatas={setTopicDatas}
           loading={loading}
+          setLoading={setLoading}
           errMsg={errMsg}
+          setErrMsg={setErrMsg}
           hasMore={hasMore}
+          setHasMore={setHasMore}
+          paging={paging}
           setPaging={setPaging}
+          patientId={patientId}
           editCounter={editCounter}
           demographicsInfos={demographicsInfos}
         />

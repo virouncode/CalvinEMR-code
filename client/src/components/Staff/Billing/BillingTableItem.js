@@ -1,10 +1,10 @@
 import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoGet";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
-import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -26,6 +26,7 @@ const BillingTableItem = ({
   errMsgPost,
   setErrMsgPost,
   lastItemRef = null,
+  sites,
 }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
@@ -37,7 +38,8 @@ const BillingTableItem = ({
   const [patientSearchVisible, setPatientSearchVisible] = useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
   const [progress, setProgress] = useState(false);
-  const [sites] = useFetchDatas("/sites", axiosXanoStaff, auth.authToken);
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setItemInfos({
@@ -110,7 +112,7 @@ const BillingTableItem = ({
       diagnosis_id: (
         await xanoGet(
           `/diagnosis_codes_for_code`,
-          axiosXanoStaff,
+          axiosXanoInstance,
           auth.authToken,
           "code",
           itemInfos.diagnosis_code
@@ -119,7 +121,7 @@ const BillingTableItem = ({
       billing_code_id: (
         await xanoGet(
           `/ohip_fee_schedule_for_code`,
-          axiosXanoStaff,
+          axiosXanoInstance,
           auth.authToken,
           "billing_code",
           itemInfos.billing_code
@@ -128,7 +130,7 @@ const BillingTableItem = ({
       site_id: itemInfos.site_id,
     };
     try {
-      const response = await axiosXanoStaff.post("/billings", datasToPost, {
+      const response = await axiosXanoInstance.post("/billings", datasToPost, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${auth.authToken}`,
@@ -158,7 +160,7 @@ const BillingTableItem = ({
     }
     if (
       (
-        await axiosXanoStaff.get(
+        await axiosXanoInstance.get(
           `/diagnosis_codes_for_code?code=${itemInfos.diagnosis_code}`,
           {
             headers: {
@@ -176,7 +178,7 @@ const BillingTableItem = ({
       setErrMsgPost("Please enter only one billing code");
       return;
     }
-    const response = await axiosXanoStaff.get(
+    const response = await axiosXanoInstance.get(
       `/ohip_fee_schedule_for_code?billing_code=${itemInfos.billing_code}`,
       {
         headers: {
@@ -199,7 +201,7 @@ const BillingTableItem = ({
       diagnosis_id: (
         await xanoGet(
           `/diagnosis_codes_for_code`,
-          axiosXanoStaff,
+          axiosXanoInstance,
           auth.authToken,
           "code",
           itemInfos.diagnosis_code
@@ -208,7 +210,7 @@ const BillingTableItem = ({
       billing_code_id: (
         await xanoGet(
           `/ohip_fee_schedule_for_code`,
-          axiosXanoStaff,
+          axiosXanoInstance,
           auth.authToken,
           "billing_code",
           itemInfos.billing_code
@@ -226,7 +228,7 @@ const BillingTableItem = ({
     };
     try {
       setProgress(true);
-      const response = await axiosXanoStaff.put(
+      const response = await axiosXanoInstance.put(
         `/billings/${billing.id}`,
         datasToPut,
         {
@@ -260,7 +262,7 @@ const BillingTableItem = ({
       })
     ) {
       try {
-        await axiosXanoStaff.delete(`/billings/${billing.id}`, {
+        await axiosXanoInstance.delete(`/billings/${billing.id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.authToken}`,

@@ -2,37 +2,58 @@ import dateFormat from "dateformat";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../hooks/useUserContext";
 import { exportPatientEMR } from "../../../utils/exports/exportsXML.";
 import { recordCategories } from "../../../utils/exports/recordCategories";
-import {
-  patientIdToFirstName,
-  patientIdToLastName,
-} from "../../../utils/patientIdToName";
+
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import xanoGet from "../../../api/xanoGet";
+import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
 } from "../../../utils/staffIdToName";
+import {
+  toPatientFirstName,
+  toPatientLastName,
+} from "../../../utils/toPatientName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import MigrationPatientSearchForm from "./MigrationPatientSearchForm";
 import MigrationPatientsList from "./MigrationPatientsList";
 import MigrationRecordsList from "./MigrationRecordsList";
 
 const MigrationExport = () => {
-  const { auth, clinic, user } = useAuthContext();
+  const { auth } = useAuthContext();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
+  const [paging, setPaging] = useState({
+    page: 1,
+    perPage: 15,
+    offset: 0,
+  });
   const [search, setSearch] = useState({
     name: "",
     email: "",
     phone: "",
     birth: "",
     chart: "",
-    sin: "",
+    health: "",
   });
+  const {
+    loading,
+    err,
+    patientsDemographics,
+    setPatientsDemographics,
+    hasMore,
+  } = usePatientsDemographics(search, paging);
+
   const [checkedPatientsIds, setCheckedPatientsIds] = useState([]);
   const [allPatientsIdsChecked, setAllPatientsIdsChecked] = useState(false);
   const [checkedRecordsIds, setCheckedRecordsIds] = useState([1]);
   const [allRecordsIdsChecked, setAllRecordsIdsChecked] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const isPatientIdChecked = (id) => {
     return checkedPatientsIds.includes(parseInt(id)) ? true : false;
@@ -71,15 +92,19 @@ const MigrationExport = () => {
     return allRecordsIdsChecked ? true : false;
   };
 
-  const handleCheckAllPatientsIds = (e) => {
+  const handleCheckAllPatientsIds = async (e) => {
     const checked = e.target.checked;
     if (checked) {
+      const allPatients = (
+        await xanoGet("/demographics", axiosXanoAdmin, auth.authToken)
+      ).data;
+      setPatientsDemographics(allPatients);
       setAllPatientsIdsChecked(true);
-      setCheckedPatientsIds(
-        clinic.demographicsInfos.map(({ patient_id }) => patient_id)
-      );
+      setCheckedPatientsIds(allPatients.map(({ patient_id }) => patient_id));
     } else {
       setCheckedPatientsIds([]);
+      setPatientsDemographics([]);
+      setPaging({ ...paging, page: 1 });
       setAllPatientsIdsChecked(false);
     }
   };
@@ -99,41 +124,27 @@ const MigrationExport = () => {
       alert("Please choose at least 1 patient !");
       return;
     }
-    setIsLoading(true);
+    setIsExporting(true);
     const dateOfExport = dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT");
     try {
       for (let patientId of checkedPatientsIds) {
-        const patientFirstName = patientIdToFirstName(
-          clinic.demographicsInfos,
-          patientId
+        const patientInfos = patientsDemographics.find(
+          ({ patient_id }) => patient_id === patientId
         );
-        const patientLastName = patientIdToLastName(
-          clinic.demographicsInfos,
-          patientId
-        );
-        const patientDob = dateFormat(
-          clinic.demographicsInfos.find(
-            ({ patient_id }) => patient_id === patientId
-          ).DateOfBirth,
-          "ddmmyyyy"
-        );
+        const patientFirstName = toPatientFirstName(patientInfos);
+        const patientLastName = toPatientLastName(patientInfos);
+        const patientDob = dateFormat(patientInfos.DateOfBirth, "ddmmyyyy");
         const doctorFirstName = staffIdToFirstName(
-          clinic.staffInfos,
-          clinic.demographicsInfos.find(
-            ({ patient_id }) => patient_id === patientId
-          ).assigned_staff_id
+          staffInfos,
+          patientInfos.assigned_staff_id
         );
         const doctorLastName = staffIdToLastName(
-          clinic.staffInfos,
-          clinic.demographicsInfos.find(
-            ({ patient_id }) => patient_id === patientId
-          ).assigned_staff_id
+          staffInfos,
+          patientInfos.assigned_staff_id
         );
         const doctorOHIP = staffIdToOHIP(
-          clinic.staffInfos,
-          clinic.demographicsInfos.find(
-            ({ patient_id }) => patient_id === patientId
-          ).assigned_staff_id
+          staffInfos,
+          patientInfos.assigned_staff_id
         );
 
         const sortedCheckedRecordsIds = [...checkedRecordsIds].sort(
@@ -152,17 +163,17 @@ const MigrationExport = () => {
           doctorOHIP,
           user.name,
           dateOfExport,
-          clinic.demographicsInfos
+          patientInfos
         );
       }
-      setIsLoading(false);
+      setIsExporting(false);
       toast.success("EMR exported successfully in your Downloads folder", {
         containerId: "A",
         autoClose: 5000,
       });
     } catch (err) {
       console.log(err.message);
-      setIsLoading(false);
+      setIsExporting(false);
       toast.error(`EMR export fail, please contact CalvinEMR: ${err.message}`, {
         containerId: "A",
         autoClose: 5000,
@@ -170,19 +181,33 @@ const MigrationExport = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setSearch({ ...search, [name]: value });
+    setPaging({ ...paging, page: 1 });
+  };
+
   return (
     <div className="migration-export">
       <div className="migration-export__form">
         <div className="migration-export__patients">
           <p className="migration-export__patients-title">Patients</p>
-          <MigrationPatientSearchForm search={search} setSearch={setSearch} />
+          <MigrationPatientSearchForm
+            search={search}
+            handleSearch={handleSearch}
+          />
           <MigrationPatientsList
             isPatientIdChecked={isPatientIdChecked}
             handleCheckPatientId={handleCheckPatientId}
-            search={search}
             handleCheckAllPatientsIds={handleCheckAllPatientsIds}
             isAllPatientsIdsChecked={isAllPatientsIdsChecked}
-            isLoading={isLoading}
+            isExporting={isExporting}
+            patientsDemographics={patientsDemographics}
+            loading={loading}
+            err={err}
+            hasMore={hasMore}
+            setPaging={setPaging}
           />
         </div>
         <div className="migration-export__records">
@@ -190,18 +215,17 @@ const MigrationExport = () => {
           <MigrationRecordsList
             isRecordIdChecked={isRecordIdChecked}
             handleCheckRecordId={handleCheckRecordId}
-            search={search}
             handleCheckAllRecordsIds={handleCheckAllRecordsIds}
             isAllRecordsIdsChecked={isAllRecordsIdsChecked}
-            isLoading={isLoading}
+            isExporting={isExporting}
           />
         </div>
       </div>
       <div className="migration-export__btn">
-        <button onClick={handleExport} disabled={isLoading}>
+        <button onClick={handleExport} disabled={isExporting}>
           Export
         </button>
-        {isLoading && <CircularProgressMedium />}
+        {isExporting && <CircularProgressMedium />}
       </div>
     </div>
   );

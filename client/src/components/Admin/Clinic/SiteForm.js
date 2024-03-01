@@ -18,11 +18,12 @@ const SiteForm = ({ setAddVisible }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const [err, setErr] = useState(false);
+  const [errMsg, setErrMsg] = useState(false);
   const [formDatas, setFormDatas] = useState({
     name: "",
     address: "",
     postal_code: "",
+    zip_code: "",
     province_state: "",
     city: "",
     phone: "",
@@ -30,6 +31,7 @@ const SiteForm = ({ setAddVisible }) => {
     logo: null,
     rooms: [],
   });
+  const [postalOrZip, setPostalOrZip] = useState("postal");
 
   const handleCancel = (e) => {
     setAddVisible(false);
@@ -38,7 +40,7 @@ const SiteForm = ({ setAddVisible }) => {
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setErr("");
+    setErrMsg("");
     if (file.size > 25000000) {
       toast.error("The file is over 25Mb, please choose another file", {
         containerId: "A",
@@ -76,10 +78,29 @@ const SiteForm = ({ setAddVisible }) => {
     };
   };
 
+  const handleChangePostalOrZip = (e) => {
+    setErrMsg("");
+    setPostalOrZip(e.target.value);
+    setFormDatas({
+      ...formDatas,
+      postal_code: "",
+      zip_code: "",
+    });
+  };
+
   const handleChange = (e) => {
+    setErrMsg("");
     const value = e.target.value;
     const name = e.target.name;
-    setErr("");
+    if (name === "postalZipCode") {
+      if (postalOrZip === "postal") {
+        setFormDatas({ ...formDatas, postal_code: value, zip_code: "" });
+        return;
+      } else {
+        setFormDatas({ ...formDatas, zip_code: value, postal_code: "" });
+        return;
+      }
+    }
     setFormDatas({ ...formDatas, [name]: value });
   };
 
@@ -102,13 +123,17 @@ const SiteForm = ({ setAddVisible }) => {
     };
     //Validation
     if (formDatas.rooms.length === 0) {
-      setErr("Please add at least one room for the appointments");
+      setErrMsg("Please add at least one room for the appointments");
+      return;
+    }
+    if (formDatas.rooms.find((room) => !room.title)) {
+      setErrMsg("All rooms should have a Name");
       return;
     }
     try {
       await siteSchema.validate(datasToPost);
     } catch (err) {
-      setErr(err.message);
+      setErrMsg(err.message);
       return;
     }
 
@@ -139,9 +164,9 @@ const SiteForm = ({ setAddVisible }) => {
   return (
     <div
       className="site-form__container"
-      style={{ border: err && "solid 1px red" }}
+      style={{ border: errMsg && "solid 1px red" }}
     >
-      {err && <p className="site-form__err">{err}</p>}
+      {errMsg && <p className="site-form__err">{errMsg}</p>}
       <form className="site-form">
         <div className="site-form__column">
           <div className="site-form__row">
@@ -165,12 +190,26 @@ const SiteForm = ({ setAddVisible }) => {
             />
           </div>
           <div className="site-form__row">
-            <label>Postal code*:</label>
+            <label>Postal/zip code*:</label>
+            <select
+              style={{ width: "15%", marginRight: "10px" }}
+              name="PostalOrZip"
+              value={postalOrZip}
+              onChange={handleChangePostalOrZip}
+            >
+              <option value="postal">Postal</option>
+              <option value="zip">Zip</option>
+            </select>
             <input
               type="text"
+              value={
+                postalOrZip === "postal"
+                  ? formDatas.postal_code
+                  : formDatas.zip_code
+              }
+              style={{ width: "102px" }}
               onChange={handleChange}
-              name="postal_code"
-              value={formDatas.postal_code}
+              name="postalZipCode"
               autoComplete="off"
             />
           </div>
@@ -243,7 +282,7 @@ const SiteForm = ({ setAddVisible }) => {
           <RoomsForm
             formDatas={formDatas}
             setFormDatas={setFormDatas}
-            setErr={setErr}
+            setErrMsg={setErrMsg}
           />
         </div>
       </form>

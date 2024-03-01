@@ -3,14 +3,6 @@ import NewWindow from "react-new-window";
 import useClinicalNotesSocket from "../../../../hooks/useClinicalNotesSocket";
 import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
 import useIntersection from "../../../../hooks/useIntersection";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
 import ClinicalNotesCard from "./ClinicalNotesCard";
 import ClinicalNotesForm from "./ClinicalNotesForm";
@@ -24,44 +16,45 @@ const ClinicalNotes = ({
   loadingPatient,
   errPatient,
 }) => {
-  //hooks
-  const { socket } = useSocketContext();
-  const { staffInfos } = useStaffInfosContext();
   const [addVisible, setAddVisible] = useState(false);
   const [popUpVisible, setPopUpVisible] = useState(false);
-  const [search, setSearch] = useState("");
   const [checkedNotes, setCheckedNotes] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [allBodiesVisible, setAllBodiesVisible] = useState(true);
   const triangleRef = useRef(null);
-  //DATAS
-  const [paging, setPaging] = useState({
-    page: 1,
-    perPage: 5,
-    offset: 0,
-  });
   const {
-    clinicalNotes,
-    setClinicalNotes,
     order,
     setOrder,
+    search,
+    setSearch,
+    clinicalNotes,
+    setClinicalNotes,
     loading,
     errMsg,
     hasMore,
-  } = useFetchClinicalNotes(paging, patientId);
+    setPaging,
+    paging,
+  } = useFetchClinicalNotes(patientId);
+
   //INTERSECTION OBSERVER
   const { rootRef: contentRef, lastItemRef } = useIntersection(
     loading,
     hasMore,
     setPaging
   );
+  //SOCKET
+  useClinicalNotesSocket(clinicalNotes, setClinicalNotes, patientId, order);
+
+  //HANDLERS
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setPaging({ ...paging, page: 1 });
+  };
 
   const checkAllNotes = () => {
     const allNotesIds = clinicalNotes.map(({ id }) => id);
     setCheckedNotes(allNotesIds);
   };
-
-  useClinicalNotesSocket(clinicalNotes, setClinicalNotes, patientId, order);
 
   return (
     <div className="clinical-notes">
@@ -73,14 +66,13 @@ const ClinicalNotes = ({
         addVisible={addVisible}
         setAddVisible={setAddVisible}
         search={search}
-        setSearch={setSearch}
+        handleSearch={handleSearch}
         checkedNotes={checkedNotes}
         setCheckedNotes={setCheckedNotes}
         checkAllNotes={checkAllNotes}
         setPopUpVisible={setPopUpVisible}
         selectAll={selectAll}
         setSelectAll={setSelectAll}
-        clinicalNotes={clinicalNotes}
         allBodiesVisible={allBodiesVisible}
         setAllBodiesVisible={setAllBodiesVisible}
         order={order}
@@ -130,41 +122,17 @@ const ClinicalNotes = ({
           />
         )}
         {errMsg && <p className="clinical-notes__err">{errMsg}</p>}
-        {clinicalNotes && clinicalNotes.length > 0
-          ? clinicalNotes
-              .filter(
-                (note) =>
-                  staffIdToTitleAndName(staffInfos, note.created_by_id)
-                    .toLowerCase()
-                    .includes(search.toLowerCase()) ||
-                  (isUpdated(note) &&
-                    staffIdToTitleAndName(
-                      staffInfos,
-                      getLastUpdate(note).updated_by_id
-                    )
-                      .toLowerCase()
-                      .includes(search.toLowerCase())) ||
-                  note.subject.toLowerCase().includes(search.toLowerCase()) ||
-                  note.MyClinicalNotesContent.toLowerCase().includes(
-                    search.toLowerCase()
-                  ) ||
-                  toLocalDateAndTimeWithSeconds(note.date_created).includes(
-                    search.toLowerCase()
-                  ) ||
-                  (isUpdated(note) &&
-                    toLocalDateAndTimeWithSeconds(
-                      getLastUpdate(note).date_updated
-                    ).includes(search.toLowerCase()))
-              )
-              .map((clinicalNote, index) =>
+        {!errMsg &&
+          (clinicalNotes && clinicalNotes.length > 0
+            ? clinicalNotes.map((item, index) =>
                 index === clinicalNotes.length - 1 ? (
                   <ClinicalNotesCard
-                    clinicalNote={clinicalNote}
+                    clinicalNote={item}
                     clinicalNotes={clinicalNotes}
                     setClinicalNotes={setClinicalNotes}
                     order={order}
                     patientId={patientId}
-                    key={clinicalNote.id}
+                    key={item.id}
                     checkedNotes={checkedNotes}
                     setCheckedNotes={setCheckedNotes}
                     setSelectAll={setSelectAll}
@@ -174,12 +142,12 @@ const ClinicalNotes = ({
                   />
                 ) : (
                   <ClinicalNotesCard
-                    clinicalNote={clinicalNote}
+                    clinicalNote={item}
                     clinicalNotes={clinicalNotes}
                     setClinicalNotes={setClinicalNotes}
                     order={order}
                     patientId={patientId}
-                    key={clinicalNote.id}
+                    key={item.id}
                     checkedNotes={checkedNotes}
                     setCheckedNotes={setCheckedNotes}
                     setSelectAll={setSelectAll}
@@ -188,8 +156,10 @@ const ClinicalNotes = ({
                   />
                 )
               )
-          : !addVisible &&
-            !loading && <div style={{ padding: "5px" }}>No clinical notes</div>}
+            : !addVisible &&
+              !loading && (
+                <div style={{ padding: "5px" }}>No clinical notes</div>
+              ))}
         {loading && <LoadingClinical />}
       </div>
     </div>

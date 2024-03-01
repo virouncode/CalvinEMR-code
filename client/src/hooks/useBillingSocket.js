@@ -14,13 +14,14 @@ const useBillingSocket = (billings, setBillings) => {
         billings,
         setBillings,
         user.id,
-        user.title === "Secretary"
+        user.title === "Secretary",
+        user.access_level === "Admin"
       );
     socket.on("message", onMessage);
     return () => {
       socket.off("message", onMessage);
     };
-  }, [billings, setBillings, socket, user.id, user.title]);
+  }, [billings, setBillings, socket, user.id, user.title, user.access_level]);
 };
 
 export default useBillingSocket;

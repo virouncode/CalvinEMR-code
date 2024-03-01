@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
@@ -12,15 +13,25 @@ import ReportItemSent from "../Topics/Reports/ReportItemSent";
 
 const ReportsPU = ({
   reportsReceived,
+  setReportsReceived,
   loadingReportsReceived,
+  setLoadingReportsReceived,
   errMsgReportsReceived,
+  setErrMsgReportsReceived,
+  pagingReportsReceived,
   setPagingReportsReceived,
   hasMoreReportsReceived,
+  setHasMoreReportsReceived,
   reportsSent,
+  setReportsSent,
   loadingReportsSent,
+  setLoadingReportsSent,
   errMsgReportsSent,
+  setErrMsgReportsSent,
+  pagingReportsSent,
   setPagingReportsSent,
   hasMoreReportsSent,
+  setHasMoreReportsSent,
   patientId,
   setPopUpVisible,
   demographicsInfos,
@@ -29,6 +40,26 @@ const ReportsPU = ({
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+
+  useFetchCategoryDatas(
+    "/reports_received_for_patient",
+    setReportsReceived,
+    setLoadingReportsReceived,
+    setErrMsgReportsReceived,
+    pagingReportsReceived,
+    setHasMoreReportsReceived,
+    patientId
+  );
+
+  useFetchCategoryDatas(
+    "/reports_sent_for_patient",
+    setReportsSent,
+    setLoadingReportsSent,
+    setErrMsgReportsSent,
+    pagingReportsSent,
+    setHasMoreReportsSent,
+    patientId
+  );
 
   //INTERSECTION OBSERVER
   const { rootRef: rootReceivedRef, lastItemRef: lastItemReceivedRef } =

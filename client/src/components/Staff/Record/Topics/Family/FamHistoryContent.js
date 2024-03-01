@@ -7,7 +7,7 @@ const FamHistoryContent = ({ topicDatas, loading, errMsg }) => {
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
-        {topicDatas && topicDatas.length >= 1 ? (
+        {topicDatas && topicDatas.length > 0 ? (
           <ul>
             {topicDatas.slice(0, 4).map((event) => (
               <li key={event.id}>

@@ -3,12 +3,14 @@ export const onMessageBilling = (
   billings,
   setBillings,
   userId,
-  isSecretary
+  isSecretary,
+  isAdmin
 ) => {
   if (message.route !== "BILLING") return;
   if (
     message.action !== "delete" &&
     !isSecretary &&
+    !isAdmin &&
     message.content.data.provider_id !== userId
   )
     return;

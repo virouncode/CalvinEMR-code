@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { axiosXanoAdmin } from "../api/xanoAdmin";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { toLocalDate } from "../utils/formatDates";
 import useAuthContext from "./useAuthContext";
+import useUserContext from "./useUserContext";
 
 const usePatientsDemographics = (search, paging) => {
   const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setPatientsDemographics([]);
@@ -21,7 +26,7 @@ const usePatientsDemographics = (search, paging) => {
       try {
         setLoading(true);
         setErr(false);
-        const response = await axiosXanoStaff.get(
+        const response = await axiosXanoInstance.get(
           "/demographics_search_paging",
           {
             headers: {

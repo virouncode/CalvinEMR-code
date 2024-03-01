@@ -3,7 +3,6 @@ import * as yup from "yup";
 export const siteSchema = yup.object({
   name: yup.string().required("Site name field is required"),
   address: yup.string().required("Address field is required"),
-  postal_code: yup.string().required("Postal code field is required"),
   province_state: yup.string().required("Province/state field is required"),
   city: yup.string().required("City field is required"),
   phone: yup
@@ -19,4 +18,14 @@ export const siteSchema = yup.object({
       /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g,
       { message: "Invalid Fax number", excludeEmptyString: true }
     ),
+  postal_code: yup
+    .string()
+    .matches(/^[a-zA-Z][0-9][a-zA-Z][\ \-]{0,1}[0-9][a-zA-Z][0-9]$/, {
+      message: "Invalid Postal Code",
+      excludeEmptyString: true,
+    }),
+  zip_code: yup.string().matches(/^[0-9]{5}(?:-[0-9]{4})?$/, {
+    message: "Invalid Zip Code",
+    excludeEmptyString: true,
+  }),
 });

@@ -34,6 +34,7 @@ const PatientRecordPage = () => {
             setDemographicsInfos={setDemographicsInfos}
             loadingPatient={loading}
             errPatient={err}
+            patientId={parseInt(id)}
           />
         </section>
       </>

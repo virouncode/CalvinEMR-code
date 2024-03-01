@@ -91,7 +91,13 @@ export const putPatientRecord = async (
   topic = null,
   abortController = null
 ) => {
-  datasToPut.updates.push({ updated_by_id: userId, date_updated: Date.now() });
+  if (url !== "/clinical_notes") {
+    //because we have a versioning for that
+    datasToPut.updates.push({
+      updated_by_id: userId,
+      date_updated: Date.now(),
+    });
+  }
 
   try {
     const response = await xanoPut(
@@ -106,14 +112,14 @@ export const putPatientRecord = async (
       socket.emit("message", {
         route: topic,
         action: "update",
-        content: { id: recordId, data: datasToPut },
+        content: { id: recordId, data: response.data },
       });
       if (topic === "APPOINTMENTS") {
         //if appointments put events as well
         socket.emit("message", {
           route: "EVENTS",
           action: "update",
-          content: { id: recordId, data: datasToPut },
+          content: { id: recordId, data: response.data },
         });
       }
     }

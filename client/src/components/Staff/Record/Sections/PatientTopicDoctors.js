@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
-import useFetchTopicDatas from "../../../../hooks/useFetchTopicDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import FamilyDoctorsPU from "../Popups/FamilyDoctorsPU";
@@ -16,6 +16,17 @@ const PatientTopicDoctors = ({
   patientId,
   allContentsVisible,
   side,
+  topicDatas,
+  setTopicDatas,
+  loading,
+  setLoading,
+  errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
+  setPaging,
+  demographicsInfos,
 }) => {
   //TOPICS
   const topicDoctors = "FAMILY DOCTORS/SPECIALISTS";
@@ -30,20 +41,16 @@ const PatientTopicDoctors = ({
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
 
   //DATAS
-  const [pagingDoctors, setPagingDoctors] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const {
-    topicDatas: doctors,
-    setTopicDatas: setDoctors,
-    loading: loadingDoctors,
-    errMsg: errMsgDoctors,
-    hasMore: hasMoreDoctors,
-  } = useFetchTopicDatas("/doctors", pagingDoctors, patientId);
-
-  useTopicSocket(topicDoctors, doctors, setDoctors, patientId);
+  useFetchCategoryDatas(
+    "/doctors",
+    setTopicDatas,
+    setLoading,
+    setErrMsg,
+    paging,
+    setHasMore,
+    patientId
+  );
+  useTopicSocket(topicDoctors, topicDatas, setTopicDatas, patientId);
 
   const [
     patientDoctors,
@@ -115,11 +122,11 @@ const PatientTopicDoctors = ({
             setPopUpVisible={setPopUpVisible}
           >
             <FamilyDoctorsPU
-              doctors={doctors}
-              loadingDoctors={loadingDoctors}
-              errMsgDoctors={errMsgDoctors}
-              hasMoreDoctors={hasMoreDoctors}
-              setPagingDoctors={setPagingDoctors}
+              doctors={topicDatas}
+              loadingDoctors={loading}
+              errMsgDoctors={errMsg}
+              hasMoreDoctors={hasMore}
+              setPagingDoctors={setPaging}
               patientDoctors={patientDoctors}
               loadingPatientDoctors={loadingPatientDoctors}
               errMsgPatientDoctors={errMsgPatientDoctors}

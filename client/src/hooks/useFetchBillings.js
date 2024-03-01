@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { axiosXanoAdmin } from "../api/xanoAdmin";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
@@ -16,6 +17,8 @@ const useFetchBillings = (paging) => {
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
   ); //end of the month
   const [hasMore, setHasMore] = useState(true);
+  const axiosXanoInstance =
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
 
   useEffect(() => {
     setBillings([]);
@@ -27,24 +30,27 @@ const useFetchBillings = (paging) => {
       try {
         setLoading(true);
         let response;
-        if (user.title !== "Secretary") {
+        if (user.title !== "Secretary" && user.access_level !== "Admin") {
           //billings concerning the user in range
-          response = await axiosXanoStaff.get(`/billings_for_staff_in_range`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              range_start: rangeStart,
-              range_end: rangeEnd,
-              staff_id: user.id,
-              paging,
-            },
-            signal: abortController.signal,
-          });
+          response = await axiosXanoInstance.get(
+            `/billings_for_staff_in_range`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.authToken}`,
+              },
+              params: {
+                range_start: rangeStart,
+                range_end: rangeEnd,
+                staff_id: user.id,
+                paging,
+              },
+              signal: abortController.signal,
+            }
+          );
         } else {
           //all billings
-          response = await axiosXanoStaff.get(`/billings_in_range`, {
+          response = await axiosXanoInstance.get(`/billings_in_range`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
@@ -70,7 +76,15 @@ const useFetchBillings = (paging) => {
     };
     fetchBillings();
     return () => abortController.abort();
-  }, [auth.authToken, rangeEnd, rangeStart, user.id, user.title, paging]);
+  }, [
+    auth.authToken,
+    paging,
+    rangeEnd,
+    rangeStart,
+    user.access_level,
+    user.id,
+    user.title,
+  ]);
 
   return {
     billings,

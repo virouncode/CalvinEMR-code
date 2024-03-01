@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import useFetchTopicDatas from "../../../../hooks/useFetchTopicDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import AlertsPU from "../Popups/AlertsPU";
@@ -9,6 +8,7 @@ import CareElementsPU from "../Popups/CareElementsPU";
 import DemographicsPU from "../Popups/DemographicsPU";
 import EformsPU from "../Popups/EformsPU";
 import FamHistoryPU from "../Popups/FamHistoryPU";
+import ImmunizationsPU from "../Popups/ImmunizationsPU";
 import MedicationsPU from "../Popups/MedicationsPU";
 import PastHealthPU from "../Popups/PastHealthPU";
 import PersonalHistoryPU from "../Popups/PersonalHistoryPU";
@@ -25,6 +25,7 @@ import CareElementsContent from "../Topics/CareElements/CareElementsContent";
 import DemographicsContent from "../Topics/Demographics/DemographicsContent";
 import EformsContent from "../Topics/Eforms/EformsContent";
 import FamHistoryContent from "../Topics/Family/FamHistoryContent";
+import ImmunizationsContent from "../Topics/Immunizations/ImmunizationsContent";
 import LabResultsContent from "../Topics/LabResults/LabResultsContent";
 import MedicationsContent from "../Topics/Medications/MedicationsContent";
 import MessagesContent from "../Topics/MessagesAboutPatient/MessagesContent";
@@ -40,15 +41,25 @@ import RiskContent from "../Topics/Risks/RiskContent";
 import PatientTopicHeader from "./PatientTopicHeader";
 
 const PatientTopic = ({
-  url = null,
   backgroundColor,
   textColor,
   topic,
   patientName,
   patientId,
-  demographicsInfos = null,
+  patientDob = null,
   allContentsVisible,
   side,
+  topicDatas,
+  setTopicDatas,
+  loading,
+  setLoading,
+  errMsg,
+  setErrMsg,
+  hasMore,
+  setHasMore,
+  paging,
+  setPaging,
+  demographicsInfos = null,
   loadingPatient = null,
   errPatient = null,
 }) => {
@@ -58,15 +69,6 @@ const PatientTopic = ({
 
   //STYLE
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
-
-  //DATAS
-  const [paging, setPaging] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const { topicDatas, setTopicDatas, loading, errMsg, hasMore } =
-    useFetchTopicDatas(url, paging, patientId);
 
   //SOCKET
   useTopicSocket(topic, topicDatas, setTopicDatas, patientId);
@@ -159,9 +161,14 @@ const PatientTopic = ({
           >
             <PastHealthPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -189,9 +196,14 @@ const PatientTopic = ({
           >
             <FamHistoryPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -219,9 +231,14 @@ const PatientTopic = ({
           >
             <RelationshipsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -250,9 +267,14 @@ const PatientTopic = ({
           >
             <AlertsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -280,9 +302,14 @@ const PatientTopic = ({
           >
             <RiskPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -310,9 +337,14 @@ const PatientTopic = ({
           >
             <MedicationsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -341,12 +373,17 @@ const PatientTopic = ({
             setPopUpVisible={setPopUpVisible}
           >
             <PharmaciesPU
-              patientId={patientId}
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
+              patientId={patientId}
               setPopUpVisible={setPopUpVisible}
               demographicsInfos={demographicsInfos}
             />
@@ -373,13 +410,53 @@ const PatientTopic = ({
           >
             <EformsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
               demographicsInfos={demographicsInfos}
+            />
+          </FakeWindow>
+        )}
+        {/*******************/}
+        {/* REMINDERS */}
+        {topic === "REMINDERS" && (
+          <RemindersContent
+            topicDatas={topicDatas}
+            loading={loading}
+            errMsg={errMsg}
+          />
+        )}
+        {topic === "REMINDERS" && popUpVisible && (
+          <FakeWindow
+            title={`REMINDERS for ${patientName}`}
+            width={800}
+            height={600}
+            x={(window.innerWidth - 800) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color={backgroundColor}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <RemindersPU
+              topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
+              loading={loading}
+              setLoading={setLoading}
+              errMsg={errMsg}
+              setErrMsg={setErrMsg}
+              hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
+              setPaging={setPaging}
+              patientId={patientId}
+              setPopUpVisible={setPopUpVisible}
             />
           </FakeWindow>
         )}
@@ -434,8 +511,6 @@ const PatientTopic = ({
               topicDatas={topicDatas}
               loading={loading}
               errMsg={errMsg}
-              hasMore={hasMore}
-              setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
               patientName={patientName}
@@ -463,39 +538,14 @@ const PatientTopic = ({
           >
             <ProblemListPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
-              setPaging={setPaging}
-              patientId={patientId}
-              setPopUpVisible={setPopUpVisible}
-            />
-          </FakeWindow>
-        )}
-        {/*******************/}
-        {/* REMINDERS */}
-        {topic === "REMINDERS" && (
-          <RemindersContent
-            topicDatas={topicDatas}
-            loading={loading}
-            errMsg={errMsg}
-          />
-        )}
-        {topic === "REMINDERS" && popUpVisible && (
-          <FakeWindow
-            title={`REMINDERS for ${patientName}`}
-            width={800}
-            height={600}
-            x={(window.innerWidth - 800) / 2}
-            y={(window.innerHeight - 600) / 2}
-            color={backgroundColor}
-            setPopUpVisible={setPopUpVisible}
-          >
-            <RemindersPU
-              topicDatas={topicDatas}
-              loading={loading}
-              errMsg={errMsg}
-              hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -523,9 +573,14 @@ const PatientTopic = ({
           >
             <PregnanciesPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -553,9 +608,14 @@ const PatientTopic = ({
           >
             <AllergiesPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
@@ -571,35 +631,39 @@ const PatientTopic = ({
           />
         )}
         {/*******************/}
-        {/* REPORTS */}
-        {/* {topic === "REPORTS" && (
-          <ReportsContent
-            topicDatas={topicDatas}
-            loading={loading}
-            errMsg={errMsg}
-          />
+        {/* IMMUNIZATIONS */}
+        {topic === "IMMUNIZATIONS" && (
+          <ImmunizationsContent loading={loading} errMsg={errMsg} />
         )}
-        {topic === "REPORTS" && popUpVisible && (
+        {topic === "IMMUNIZATIONS" && popUpVisible && (
           <FakeWindow
-            title={`REPORTS about ${patientName}`}
+            title={`IMMUNIZATIONS of ${patientName}`}
             width={1400}
-            height={600}
+            height={700}
             x={(window.innerWidth - 1400) / 2}
-            y={(window.innerHeight - 600) / 2}
+            y={(window.innerHeight - 700) / 2}
             color={backgroundColor}
             setPopUpVisible={setPopUpVisible}
           >
-            <ReportsPU
+            <ImmunizationsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
+              patientDob={patientDob}
+              loadingPatient={loadingPatient}
+              errPatient={errPatient}
             />
           </FakeWindow>
-        )} */}
+        )}
         {/*******************/}
         {/* APPOINTMENTS */}
         {topic === "APPOINTMENTS" && (
@@ -621,9 +685,14 @@ const PatientTopic = ({
           >
             <AppointmentsPU
               topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
               loading={loading}
+              setLoading={setLoading}
               errMsg={errMsg}
+              setErrMsg={setErrMsg}
               hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
               setPaging={setPaging}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}

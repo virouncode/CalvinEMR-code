@@ -66,7 +66,7 @@ const ImmunizationsPU = ({
                 textDecoration: "underline",
                 cursor: "pointer",
                 color: "blue",
-                marginLeft: "10px",
+                marginLeft: "5px",
                 fontWeight: "normal",
               }}
               onClick={handleClickReference}

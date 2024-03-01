@@ -18,8 +18,19 @@ const SiteEdit = ({ infos, setEditVisible }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const [err, setErr] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const [formDatas, setFormDatas] = useState(infos);
+  const [postalOrZip, setPostalOrZip] = useState("postal");
+
+  const handleChangePostalOrZip = (e) => {
+    setErrMsg("");
+    setPostalOrZip(e.target.value);
+    setFormDatas({
+      ...formDatas,
+      postal_code: "",
+      zip_code: "",
+    });
+  };
 
   const handleCancel = (e) => {
     setEditVisible(false);
@@ -28,7 +39,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setErr("");
+    setErrMsg("");
     if (file.size > 25000000) {
       toast.error("The file is over 25Mb, please choose another file", {
         containerId: "A",
@@ -67,14 +78,27 @@ const SiteEdit = ({ infos, setEditVisible }) => {
   };
 
   const handleChange = (e) => {
+    setErrMsg("");
     const value = e.target.value;
     const name = e.target.name;
-    setErr("");
+    if (name === "postalZipCode") {
+      if (postalOrZip === "postal") {
+        setFormDatas({ ...formDatas, postal_code: value, zip_code: "" });
+        return;
+      } else {
+        setFormDatas({ ...formDatas, zip_code: value, postal_code: "" });
+        return;
+      }
+    }
     setFormDatas({ ...formDatas, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formDatas.rooms.find((room) => !room.title)) {
+      setErrMsg("All rooms should have a Name");
+      return;
+    }
     //Formatting
     const datasToPut = {
       ...formDatas,
@@ -82,9 +106,11 @@ const SiteEdit = ({ infos, setEditVisible }) => {
       address: firstLetterUpper(formDatas.address),
       city: firstLetterUpper(formDatas.city),
       rooms: [
-        ...formDatas.rooms.map((room) => {
-          return { id: room.id, title: firstLetterUpper(room.title) };
-        }),
+        ...formDatas.rooms
+          .filter((room) => room.title)
+          .map((room) => {
+            return { id: room.id, title: firstLetterUpper(room.title) };
+          }),
       ],
       updates: [
         ...formDatas.updates,
@@ -99,10 +125,9 @@ const SiteEdit = ({ infos, setEditVisible }) => {
     try {
       await siteSchema.validate(datasToPut);
     } catch (err) {
-      setErr(err.message);
+      setErrMsg(err.message);
       return;
     }
-
     //Submission
     try {
       const response = await axiosXanoAdmin.put(
@@ -134,9 +159,9 @@ const SiteEdit = ({ infos, setEditVisible }) => {
   return (
     <div
       className="site-form__container"
-      style={{ border: err && "solid 1px red" }}
+      style={{ border: errMsg && "solid 1px red" }}
     >
-      {err && <p className="site-form__err">{err}</p>}
+      {errMsg && <p className="site-form__err">{errMsg}</p>}
       <form className="site-form">
         <div className="site-form__column">
           <div className="site-form__row">
@@ -161,11 +186,25 @@ const SiteEdit = ({ infos, setEditVisible }) => {
           </div>
           <div className="site-form__row">
             <label>Postal/zip code*:</label>
+            <select
+              style={{ width: "15%", marginRight: "10px" }}
+              name="PostalOrZip"
+              value={postalOrZip}
+              onChange={handleChangePostalOrZip}
+            >
+              <option value="postal">Postal</option>
+              <option value="zip">Zip</option>
+            </select>
             <input
               type="text"
+              value={
+                postalOrZip === "postal"
+                  ? formDatas.postal_code
+                  : formDatas.zip_code
+              }
+              style={{ width: "102px" }}
               onChange={handleChange}
-              name="postal_code"
-              value={formDatas.postal_code}
+              name="postalZipCode"
               autoComplete="off"
             />
           </div>
@@ -236,7 +275,11 @@ const SiteEdit = ({ infos, setEditVisible }) => {
           </div>
         </div>
         <div className="site-form__column">
-          <RoomsForm formDatas={formDatas} setFormDatas={setFormDatas} />
+          <RoomsForm
+            formDatas={formDatas}
+            setFormDatas={setFormDatas}
+            setErrMsg={setErrMsg}
+          />
         </div>
       </form>
       <div className="site-form__btn-container">

@@ -44,8 +44,11 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  const [templates, setTemplates, loadingTemplates, errTemplates] =
-    useFetchDatas("/clinical_notes_templates", axiosXanoStaff, auth.authToken);
+  const [templates, setTemplates] = useFetchDatas(
+    "/clinical_notes_templates",
+    axiosXanoStaff,
+    auth.authToken
+  );
 
   useClinicalTemplatesSocket(templates, setTemplates);
 
@@ -273,7 +276,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
             </div>
           </div>
           <div className="clinical-notes__form-row">
-            <div>
+            <div className="clinical-notes__form-subject">
               <label>
                 <strong>Subject: </strong>
               </label>

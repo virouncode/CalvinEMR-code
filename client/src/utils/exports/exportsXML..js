@@ -16,7 +16,7 @@ export const exportPatientEMR = async (
   doctorOHIP,
   authorName,
   dateOfExport,
-  demographicsInfos
+  patientInfos
 ) => {
   const xmlHeader = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!--file created by CALVIN EMR, compliant with EMR_Data_Migration_Schema.xsd version 1.0/ Publish
 Date: August 4,2017; Status: FINAL-->
@@ -40,7 +40,7 @@ Date: August 4,2017; Status: FINAL-->
       categoryURL,
       categoryTemplate,
       [patientId],
-      demographicsInfos
+      patientInfos
     );
   }
 
@@ -92,7 +92,7 @@ export const exportEMRCategory = async (
   categoryURL,
   categoryTemplate,
   checkedPatients = null,
-  demographicsInfos
+  patientInfos
 ) => {
   let jsArrayToExport = [];
   if (checkedPatients) {
@@ -137,7 +137,7 @@ export const exportEMRCategory = async (
       jsObj.PreferredPharmacy = jsObj.preferred_pharmacy;
       delete jsObj.preferred_pharmacy;
     }
-    xmlContent += categoryTemplate(jsObj, demographicsInfos);
+    xmlContent += categoryTemplate(jsObj, patientInfos);
   }
   return xmlContent;
 };

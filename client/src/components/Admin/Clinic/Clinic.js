@@ -3,7 +3,6 @@ import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSitesSocket from "../../../hooks/useSitesSocket";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SiteEdit from "./SiteEdit";
 import SiteForm from "./SiteForm";
@@ -11,12 +10,11 @@ import SitesTable from "./SitesTable";
 
 const Clinic = () => {
   const { auth } = useAuthContext();
-  const [sites, setSites] = useFetchDatas(
+  const [sites, setSites, loading, errMsg] = useFetchDatas(
     "/sites",
     axiosXanoAdmin,
     auth.authToken
   );
-  const [isLoading, setIsLoading] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedSiteId, setSelectedSiteId] = useState();
@@ -40,12 +38,12 @@ const Clinic = () => {
         </button>
       </div>
       <div className="clinic__subtitle">All Sites</div>
-      {!isLoading ? (
-        sites && <SitesTable sites={sites} handleEditClick={handleEditClick} />
-      ) : (
-        <CircularProgressMedium />
-      )}
-
+      <SitesTable
+        sites={sites}
+        loading={loading}
+        errMsg={errMsg}
+        handleEditClick={handleEditClick}
+      />
       {addVisible && (
         <FakeWindow
           title="ADD A NEW SITE"

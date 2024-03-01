@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import { axiosXanoStaff } from "../../../api/xanoStaff";
+import useAuthContext from "../../../hooks/useAuthContext";
 import useBillingSocket from "../../../hooks/useBillingSocket";
 import useFetchBillings from "../../../hooks/useFetchBillings";
+import useFetchDatas from "../../../hooks/useFetchDatas";
 import useUserContext from "../../../hooks/useUserContext";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import BillingFilter from "./BillingFilter";
 import BillingForm from "./BillingForm";
 import BillingTable from "./BillingTable";
@@ -11,6 +14,7 @@ import BillingTable from "./BillingTable";
 const Billing = () => {
   const { pid } = useParams();
   const { user } = useUserContext();
+  const { auth } = useAuthContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [errMsgPost, setErrMsgPost] = useState("");
   const [paging, setPaging] = useState({
@@ -28,7 +32,16 @@ const Billing = () => {
     hasMore,
     loading,
     errMsg,
-  } = useFetchBillings(paging);
+  } = useFetchBillings(
+    paging,
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff
+  );
+
+  const [sites] = useFetchDatas(
+    "/sites",
+    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff,
+    auth.authToken
+  );
 
   useBillingSocket(billings, setBillings);
 
@@ -56,32 +69,28 @@ const Billing = () => {
         <BillingForm
           setAddVisible={setAddVisible}
           setErrMsgPost={setErrMsgPost}
+          sites={sites}
         />
       )}
-      {billings ? (
-        <>
-          <BillingFilter
-            billings={billings}
-            rangeStart={rangeStart}
-            rangeEnd={rangeEnd}
-            setRangeStart={setRangeStart}
-            setRangeEnd={setRangeEnd}
-            paging={paging}
-            setPaging={setPaging}
-          />
-          <BillingTable
-            billings={billings}
-            errMsgPost={errMsgPost}
-            setErrMsgPost={setErrMsgPost}
-            setPaging={setPaging}
-            hasMore={hasMore}
-            loading={loading}
-            errMsg={errMsg}
-          />
-        </>
-      ) : (
-        <CircularProgressMedium />
-      )}
+      <BillingFilter
+        billings={billings}
+        rangeStart={rangeStart}
+        rangeEnd={rangeEnd}
+        setRangeStart={setRangeStart}
+        setRangeEnd={setRangeEnd}
+        paging={paging}
+        setPaging={setPaging}
+      />
+      <BillingTable
+        billings={billings}
+        errMsgPost={errMsgPost}
+        setErrMsgPost={setErrMsgPost}
+        setPaging={setPaging}
+        hasMore={hasMore}
+        loading={loading}
+        errMsg={errMsg}
+        sites={sites}
+      />
     </div>
   );
 };

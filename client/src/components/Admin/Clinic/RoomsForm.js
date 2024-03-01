@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import RoomItem from "./RoomItem";
 
-const RoomsForm = ({ formDatas, setFormDatas, setErr }) => {
+const RoomsForm = ({ formDatas, setFormDatas, setErrMsg }) => {
   const roomIds = [
     "a",
     "b",
@@ -33,7 +33,7 @@ const RoomsForm = ({ formDatas, setFormDatas, setErr }) => {
 
   const handleAddRoom = (e) => {
     e.preventDefault();
-    setErr("");
+    setErrMsg("");
     const idsTaken = [...formDatas.rooms].map(({ id }) => id);
     let nextId = roomIdCounter.current;
     let i = 0;
@@ -50,7 +50,7 @@ const RoomsForm = ({ formDatas, setFormDatas, setErr }) => {
   };
 
   const handleChangeRoomTitle = (e, id) => {
-    setErr("");
+    setErrMsg("");
     const value = e.target.value;
     setFormDatas({
       ...formDatas,
@@ -80,7 +80,7 @@ const RoomsForm = ({ formDatas, setFormDatas, setErr }) => {
   return (
     <div className="site-form__rooms">
       <label>Rooms*:</label>
-      <button onClick={handleAddRoom}>Add new room</button>
+      <button onClick={handleAddRoom}>Add a new room</button>
       <ul>
         {formDatas.rooms
           .filter(({ id }) => id !== "z")

@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import BillingAdmin from "../../components/Admin/Billing/BillingAdmin";
+import Billing from "../../components/Staff/Billing/Billing";
 import useTitle from "../../hooks/useTitle";
 
 const BillingPageAdmin = () => {
@@ -11,7 +11,7 @@ const BillingPageAdmin = () => {
         <title>Billing</title>
       </Helmet>
       <section className="billing-section">
-        <BillingAdmin />
+        <Billing />
       </section>
     </>
   );
