@@ -120,26 +120,12 @@ const PatientMenuRight = ({
   setPagingAppointments,
 
   messagesAbout,
-  setMessagesAbout,
   loadingMessagesAbout,
-  setLoadingMessagesAbout,
   errMessagesAbout,
-  setErrMessagesAbout,
-  hasMoreMessagesAbout,
-  setHasMoreMessagesAbout,
-  pagingMessagesAbout,
-  setPagingMessagesAbout,
 
   messagesWith,
-  setMessagesWith,
   loadingMessagesWith,
-  setLoadingMessagesWith,
   errMessagesWith,
-  setErrMessagesWith,
-  hasMoreMessagesWith,
-  setHasMoreMessagesWith,
-  pagingMessagesWith,
-  setPagingMessagesWith,
 }) => {
   return (
     <div className="patient-record__menu">

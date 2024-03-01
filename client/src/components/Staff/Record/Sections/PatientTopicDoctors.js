@@ -1,8 +1,5 @@
 import React, { useRef, useState } from "react";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
-import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import FamilyDoctorsPU from "../Popups/FamilyDoctorsPU";
@@ -16,16 +13,26 @@ const PatientTopicDoctors = ({
   patientId,
   allContentsVisible,
   side,
-  topicDatas,
-  setTopicDatas,
-  loading,
-  setLoading,
-  errMsg,
-  setErrMsg,
-  hasMore,
-  setHasMore,
-  paging,
-  setPaging,
+  doctors,
+  setDoctors,
+  loadingDoctors,
+  setLoadingDoctors,
+  errMsgDoctors,
+  setErrMsgDoctors,
+  hasMoreDoctors,
+  setHasMoreDoctors,
+  pagingDoctors,
+  setPagingDoctors,
+  patientDoctors,
+  setPatientDoctors,
+  loadingPatientDoctors,
+  setLoadingPatientDoctors,
+  errMsgPatientDoctors,
+  setErrMsgPatientDoctors,
+  hasMorePatientDoctors,
+  setHasMorePatientDoctors,
+  pagingPatientDoctors,
+  setPagingPatientDoctors,
   demographicsInfos,
 }) => {
   //TOPICS
@@ -33,7 +40,6 @@ const PatientTopicDoctors = ({
   const topicPatientDoctors = "PATIENT DOCTORS";
 
   //HOOKS
-  const { auth } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const containerRef = useRef("null");
 
@@ -43,28 +49,24 @@ const PatientTopicDoctors = ({
   //DATAS
   useFetchCategoryDatas(
     "/doctors",
-    setTopicDatas,
-    setLoading,
-    setErrMsg,
-    paging,
-    setHasMore,
+    setDoctors,
+    setLoadingDoctors,
+    setErrMsgDoctors,
+    pagingDoctors,
+    setHasMoreDoctors,
     patientId
   );
-  useTopicSocket(topicDoctors, topicDatas, setTopicDatas, patientId);
+  useTopicSocket(topicDoctors, doctors, setDoctors, patientId);
 
-  const [
-    patientDoctors,
-    setPatientDoctors,
-    loadingPatientDoctors,
-    errMsgPatientDoctors,
-  ] = useFetchDatas(
+  useFetchCategoryDatas(
     "/doctors_of_patient",
-    axiosXanoStaff,
-    auth.authToken,
-    "patient_id",
+    setPatientDoctors,
+    setLoadingPatientDoctors,
+    setErrMsgPatientDoctors,
+    pagingPatientDoctors,
+    setHasMorePatientDoctors,
     patientId
   );
-
   useTopicSocket(
     topicPatientDoctors,
     patientDoctors,
@@ -122,14 +124,16 @@ const PatientTopicDoctors = ({
             setPopUpVisible={setPopUpVisible}
           >
             <FamilyDoctorsPU
-              doctors={topicDatas}
-              loadingDoctors={loading}
-              errMsgDoctors={errMsg}
-              hasMoreDoctors={hasMore}
-              setPagingDoctors={setPaging}
+              doctors={doctors}
+              loadingDoctors={loadingDoctors}
+              errMsgDoctors={errMsgDoctors}
+              hasMoreDoctors={hasMoreDoctors}
+              setPagingDoctors={setPagingDoctors}
               patientDoctors={patientDoctors}
               loadingPatientDoctors={loadingPatientDoctors}
               errMsgPatientDoctors={errMsgPatientDoctors}
+              hasMorePatientDoctors={hasMorePatientDoctors}
+              setPagingPatientDoctors={setPagingPatientDoctors}
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
             />

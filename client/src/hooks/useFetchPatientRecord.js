@@ -76,6 +76,16 @@ const useFetchPatientRecord = (patientId) => {
     offset: 0,
   });
 
+  const [patientDoctors, setPatientDoctors] = useState([]);
+  const [loadingPatientDoctors, setLoadingPatientDoctors] = useState(true);
+  const [errPatientDoctors, setErrPatientDoctors] = useState("");
+  const [hasMorePatientDoctors, setHasMorePatientDoctors] = useState(true);
+  const [pagingPatientDoctors, setPagingPatientDoctors] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+
   const [pharmacies, setPharmacies] = useState([]);
   const [loadingPharmacies, setLoadingPharmacies] = useState(true);
   const [errPharmacies, setErrPharmacies] = useState("");
@@ -329,6 +339,15 @@ const useFetchPatientRecord = (patientId) => {
         abortController
       );
       await fetchTopicDatas(
+        "/doctors_of_patient",
+        setPatientDoctors,
+        pagingPatientDoctors,
+        setHasMorePatientDoctors,
+        setLoadingPatientDoctors,
+        setErrPatientDoctors,
+        abortController
+      );
+      await fetchTopicDatas(
         "/pharmacies",
         setPharmacies,
         pagingPharmacies,
@@ -548,6 +567,17 @@ const useFetchPatientRecord = (patientId) => {
     pagingDoctors,
     setPagingDoctors,
 
+    patientDoctors,
+    setPatientDoctors,
+    loadingPatientDoctors,
+    setLoadingPatientDoctors,
+    errPatientDoctors,
+    setErrPatientDoctors,
+    hasMorePatientDoctors,
+    setHasMorePatientDoctors,
+    pagingPatientDoctors,
+    setPagingPatientDoctors,
+
     pharmacies,
     setPharmacies,
     loadingPharmacies,
@@ -692,26 +722,12 @@ const useFetchPatientRecord = (patientId) => {
     setPagingAppointments,
 
     messagesAbout,
-    setMessagesAbout,
     loadingMessagesAbout,
-    setLoadingMessagesAbout,
     errMessagesAbout,
-    setErrMessagesAbout,
-    hasMoreMessagesAbout,
-    setHasMoreMessagesAbout,
-    pagingMessagesAbout,
-    setPagingMessagesAbout,
 
     messagesWith,
-    setMessagesWith,
     loadingMessagesWith,
-    setLoadingMessagesWith,
     errMessagesWith,
-    setErrMessagesWith,
-    hasMoreMessagesWith,
-    setHasMoreMessagesWith,
-    pagingMessagesWith,
-    setPagingMessagesWith,
   };
 };
 

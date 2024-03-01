@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
@@ -17,12 +18,24 @@ const FamilyDoctorsPU = ({
   patientDoctors,
   loadingPatientDoctors,
   errMsgPatientDoctors,
+  hasMorePatientDoctors,
+  setPagingPatientDoctors,
   patientId,
   setPopUpVisible,
 }) => {
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
+
+  //INTERSECTION OBSERVER
+  const {
+    rootRef: rootRefPatientDoctors,
+    lastItemRef: lastItemRefPatientDoctors,
+  } = useIntersection(
+    loadingPatientDoctors,
+    hasMorePatientDoctors,
+    setPagingPatientDoctors
+  );
 
   //HANDLERS
   const handleClose = async (e) => {
@@ -50,7 +63,7 @@ const FamilyDoctorsPU = ({
       )}
       {!errMsgPatientDoctors && (
         <>
-          <div className="doctors__table-container">
+          <div className="doctors__table-container" ref={rootRefPatientDoctors}>
             <table className="doctors__table">
               <thead>
                 <tr>
@@ -71,13 +84,22 @@ const FamilyDoctorsPU = ({
               </thead>
               <tbody>
                 {patientDoctors && patientDoctors.length > 0
-                  ? patientDoctors.map((item, index) => (
-                      <FamilyDoctorItem
-                        item={item}
-                        patientId={patientId}
-                        key={item.id}
-                      />
-                    ))
+                  ? patientDoctors.map((item, index) =>
+                      index === patientDoctors.length - 1 ? (
+                        <FamilyDoctorItem
+                          item={item}
+                          patientId={patientId}
+                          key={item.id}
+                          lastItemRef={lastItemRefPatientDoctors}
+                        />
+                      ) : (
+                        <FamilyDoctorItem
+                          item={item}
+                          patientId={patientId}
+                          key={item.id}
+                        />
+                      )
+                    )
                   : !loadingPatientDoctors && (
                       <EmptyRow colSpan="13" text="No family doctors" />
                     )}

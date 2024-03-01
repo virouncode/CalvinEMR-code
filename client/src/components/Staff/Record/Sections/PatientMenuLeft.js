@@ -79,6 +79,16 @@ const PatientMenuLeft = ({
   setHasMoreDoctors,
   pagingDoctors,
   setPagingDoctors,
+  patientDoctors,
+  setPatientDoctors,
+  loadingPatientDoctors,
+  setLoadingPatientDoctors,
+  errPatientDoctors,
+  setErrPatientDoctors,
+  hasMorePatientDoctors,
+  setHasMorePatientDoctors,
+  pagingPatientDoctors,
+  setPagingPatientDoctors,
   pharmacies,
   setPharmacies,
   loadingPharmacies,
@@ -250,16 +260,26 @@ const PatientMenuLeft = ({
         patientId={patientId}
         allContentsVisible={allContentsVisible}
         side="left"
-        topicDatas={doctors}
-        setTopicDatas={setDoctors}
-        loading={loadingDoctors}
-        setLoading={setLoadingDoctors}
-        errMsg={errDoctors}
-        setErrMsg={setErrDoctors}
-        hasMore={hasMoreDoctors}
-        setHasMore={setHasMoreDoctors}
-        paging={pagingDoctors}
-        setPaging={setPagingDoctors}
+        doctors={doctors}
+        setDoctors={setDoctors}
+        loadingDoctors={loadingDoctors}
+        setLoadingDoctors={setLoadingDoctors}
+        errMsgDoctors={errDoctors}
+        setErrMsgDoctors={setErrDoctors}
+        hasMoreDoctors={hasMoreDoctors}
+        setHasMoreDoctors={setHasMoreDoctors}
+        pagingDoctors={pagingDoctors}
+        setPagingDoctors={setPagingDoctors}
+        patientDoctors={patientDoctors}
+        setPatientDoctors={setPatientDoctors}
+        loadingPatientDoctors={loadingPatientDoctors}
+        setLoadingPatientDoctors={setLoadingPatientDoctors}
+        errMsgPatientDoctors={errPatientDoctors}
+        setErrMsgPatientDoctors={setErrPatientDoctors}
+        hasMorePatientDoctors={hasMorePatientDoctors}
+        setHasMorePatientDoctors={setHasMorePatientDoctors}
+        pagingPatientDoctors={pagingPatientDoctors}
+        setPagingPatientDoctors={setPagingPatientDoctors}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopic
