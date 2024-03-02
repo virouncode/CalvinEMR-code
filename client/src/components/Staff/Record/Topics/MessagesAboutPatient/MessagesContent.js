@@ -17,7 +17,6 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
       return "Inbox";
     }
   };
-  console.log("messages", topicDatas);
   return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>

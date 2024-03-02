@@ -32,7 +32,6 @@ const useFetchCategoryDatas = (
           signal: abortController.signal,
         });
         if (abortController.signal.aborted) return;
-        console.log(response.data.items);
         setTopicDatas((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);
         setLoading(false);

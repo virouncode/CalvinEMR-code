@@ -1,13 +1,13 @@
 import React from "react";
-import logo from "../../../../../assets/img/logoLoginTest.png";
-import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
-import { getAge } from "../../../../../utils/getAge";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../../utils/toPatientName";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import logo from "../../../../../../assets/img/logoLoginTest.png";
+import { genderCT, toCodeTableName } from "../../../../../../datas/codesTables";
+import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../../hooks/useUserContext";
+import { toLocalDate } from "../../../../../../utils/formatDates";
+import { getAge } from "../../../../../../utils/getAge";
+import { staffIdToTitleAndName } from "../../../../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../../../../utils/toPatientName";
+import CircularProgressMedium from "../../../../../All/UI/Progress/CircularProgressMedium";
 
 const PrescriptionPagePrint = ({
   printRef,

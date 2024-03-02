@@ -7,31 +7,32 @@ import jsPDF from "jspdf";
 import printJS from "print-js";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-import { postPatientRecord } from "../../../../api/fetchRecords";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
-import useFetchDatas from "../../../../hooks/useFetchDatas";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
+import { postPatientRecord } from "../../../../../../api/fetchRecords";
+import xanoPost from "../../../../../../api/xanoPost";
+import { axiosXanoStaff } from "../../../../../../api/xanoStaff";
+import useAuthContext from "../../../../../../hooks/useAuthContext";
+import useFetchDatas from "../../../../../../hooks/useFetchDatas";
+import useSocketContext from "../../../../../../hooks/useSocketContext";
+import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
+import useUserContext from "../../../../../../hooks/useUserContext";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../utils/staffIdToName";
+} from "../../../../../../utils/staffIdToName";
 import ConfirmGlobal, {
   confirmAlert,
-} from "../../../All/Confirm/ConfirmGlobal";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import MedicationForm from "../Topics/Medications/MedicationForm";
-import MedsTemplatesList from "../Topics/Medications/MedsTemplatesList";
-import PrescriptionActions from "../Topics/Prescription/PrescriptionActions";
-import PrescriptionPage from "../Topics/Prescription/PrescriptionPage";
-import PrescriptionPagePrint from "../Topics/Prescription/PrescriptionPagePrint";
+} from "../../../../../All/Confirm/ConfirmGlobal";
+import ToastCalvin from "../../../../../All/UI/Toast/ToastCalvin";
+import MedicationForm from "../MedicationForm";
+import MedsTemplatesList from "../MedsTemplatesList";
+import PrescriptionActions from "./PrescriptionActions";
+import PrescriptionPage from "./PrescriptionPage";
+import PrescriptionPagePrint from "./PrescriptionPagePrint";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
+const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -52,11 +53,7 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     "staff_id",
     user.id
   );
-  const [sites, setSites] = useFetchDatas(
-    "/sites",
-    axiosXanoStaff,
-    auth.authToken
-  );
+  const [sites] = useFetchDatas("/sites", axiosXanoStaff, auth.authToken);
 
   useEffect(() => {
     const generatePrescription = async () => {
@@ -175,6 +172,24 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
               attachments_array: datasAttachment,
             })
           ).data;
+
+          const prescriptionToPost = {
+            patient_id: patientId,
+            attachment_id: attach_ids[0],
+            unique_id: uniqueId,
+          };
+          const response = await xanoPost(
+            "/prescriptions",
+            axiosXanoStaff,
+            auth.authToken,
+            prescriptionToPost
+          );
+
+          socket.emit("message", {
+            route: "PRESCRIPTIONS",
+            action: "create",
+            content: { data: response.data },
+          });
 
           await postPatientRecord(
             "/clinical_notes",
@@ -399,4 +414,4 @@ const PrescriptionPU = ({ demographicsInfos, setPresVisible, patientId }) => {
   );
 };
 
-export default PrescriptionPU;
+export default RxPU;

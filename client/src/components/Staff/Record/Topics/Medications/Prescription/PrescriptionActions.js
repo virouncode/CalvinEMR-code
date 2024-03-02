@@ -1,6 +1,6 @@
 import React from "react";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
-import SelectSite from "../../../EventForm/SelectSite";
+import CircularProgressMedium from "../../../../../All/UI/Progress/CircularProgressMedium";
+import SelectSite from "../../../../EventForm/SelectSite";
 
 const PrescriptionActions = ({
   handlePrint,

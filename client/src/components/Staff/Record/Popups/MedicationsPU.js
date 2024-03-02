@@ -11,7 +11,7 @@ import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import { default as MedicationItem } from "../Topics/Medications/MedicationItem";
-import PrescriptionPU from "./PrescriptionPU";
+import RxPU from "../Topics/Medications/Prescription/RxPU";
 
 const MedicationsPU = ({
   topicDatas,
@@ -132,7 +132,7 @@ const MedicationsPU = ({
           color="#931621"
           setPopUpVisible={setPresVisible}
         >
-          <PrescriptionPU
+          <RxPU
             demographicsInfos={demographicsInfos}
             setPresVisible={setPresVisible}
             patientId={patientId}

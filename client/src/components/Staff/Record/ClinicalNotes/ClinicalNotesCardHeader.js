@@ -49,7 +49,6 @@ const ClinicalNotesCardHeader = ({
           <label>
             <strong style={{ marginRight: "5px" }}>Version: </strong>
           </label>
-          {console.log("choosen version", choosenVersionNbr)}
           {!editVisible ? (
             versions && (
               <select

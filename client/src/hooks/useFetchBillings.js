@@ -47,7 +47,6 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
           );
         } else {
           //all billings
-          console.log("all", rangeStart, rangeEnd);
           response = await axiosXanoInstance.get(`/billings_in_range`, {
             headers: {
               "Content-Type": "application/json",
@@ -62,7 +61,6 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
           });
         }
         if (abortController.signal.aborted) return;
-        console.log("billings", response.data.items);
         setBillings((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);
         setLoading(false);

@@ -6,6 +6,7 @@ import {
 } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
 import useAuthContext from "../../../../../hooks/useAuthContext";
+import useAvailableRooms from "../../../../../hooks/useAvailableRooms";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -54,7 +55,6 @@ const AppointmentItem = ({
   const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setEventInfos] = useState(null);
-  const [availableRooms, setAvailableRooms] = useState([]);
   const previousStartDate = useRef(toLocalDate(item.start));
   const previousEndDate = useRef(toLocalDate(item.end));
   const previousStartHours = useRef(toLocalHours(item.start));
@@ -77,41 +77,14 @@ const AppointmentItem = ({
     setEventInfos(item);
   }, [item]);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchAvailableRooms = async () => {
-      try {
-        const availableRoomsResult = await getAvailableRooms(
-          parseInt(item.id),
-          item.start,
-          item.end,
-          sites,
-          item.site_id,
-          auth.authToken,
-          abortController
-        );
-        if (abortController.signal.aborted) return;
-        setAvailableRooms(availableRoomsResult);
-      } catch (err) {
-        if (err.name !== "CanceledError")
-          toast.error(`Error: unable to get available rooms: ${err.message}`, {
-            containerId: "B",
-          });
-      }
-    };
-    fetchAvailableRooms();
-    return () => {
-      abortController.abort();
-    };
-  }, [
-    auth.authToken,
-    item.end,
-    item.host_id,
+  const [availableRooms, setAvailableRooms] = useAvailableRooms(
     item.id,
-    item.site_id,
     item.start,
+    item.end,
     sites,
-  ]);
+    item.site_id,
+    auth.authToken
+  );
 
   //HANDLERS
   const isSecretary = () => {
@@ -226,11 +199,15 @@ const AppointmentItem = ({
       );
 
       if (
-        itemInfos.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(itemInfos.room) ||
-        (!hypotheticAvailableRooms.includes(itemInfos.room) &&
+        itemInfos.room_id === "z" ||
+        hypotheticAvailableRooms.includes(itemInfos.room_id) ||
+        (!hypotheticAvailableRooms.includes(itemInfos.room_id) &&
           (await confirmAlert({
-            content: `${itemInfos.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${toRoomTitle(
+              sites,
+              itemInfos.site_id,
+              itemInfos.room_id
+            )} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {
@@ -327,11 +304,15 @@ const AppointmentItem = ({
         auth.authToken
       );
       if (
-        itemInfos.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(itemInfos.room) ||
-        (!hypotheticAvailableRooms.includes(itemInfos.room) &&
+        itemInfos.room_id === "z" ||
+        hypotheticAvailableRooms.includes(itemInfos.room_id) ||
+        (!hypotheticAvailableRooms.includes(itemInfos.room_id) &&
           (await confirmAlert({
-            content: `${itemInfos.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${toRoomTitle(
+              sites,
+              itemInfos.site_id,
+              itemInfos.room_id
+            )} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {
@@ -436,7 +417,15 @@ const AppointmentItem = ({
         OHIPPhysicianId: staffIdToOHIP(staffInfos, parseInt(itemInfos.host_id)),
       },
       AppointmentNotes: firstLetterOfFirstWordUpper(itemInfos.AppointmentNotes),
+      patients_guests_ids: itemInfos.patients_guests_ids.map(
+        ({ patient_infos }) => patient_infos.patient_id
+      ),
+      staff_guests_ids: itemInfos.staff_guests_ids.map(
+        ({ staff_infos }) => staff_infos.id
+      ),
     };
+    delete datasToPut.host_infos;
+    delete datasToPut.site_infos;
 
     //Validation
     try {
@@ -446,6 +435,7 @@ const AppointmentItem = ({
       return;
     }
     try {
+      console.log("datasToPut", datasToPut);
       await putPatientRecord(
         "/appointments",
         item.id,
@@ -511,7 +501,10 @@ const AppointmentItem = ({
     itemInfos && (
       <tr
         className="appointments__item"
-        style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
+        style={{
+          border: errMsgPost && editVisible && "solid 1.5px red",
+          backgroundColor: item.end < Date.now() && "#cecdcd",
+        }}
         ref={lastItemRef}
       >
         <td>
@@ -519,7 +512,12 @@ const AppointmentItem = ({
             <div className="appointments__item-btn-container">
               {!editVisible ? (
                 <>
-                  <button onClick={handleEditClick}>Edit</button>
+                  <button
+                    onClick={handleEditClick}
+                    disabled={item.end < Date.now()}
+                  >
+                    Edit
+                  </button>
                   <button onClick={handleDeleteClick}>Delete</button>
                 </>
               ) : (

@@ -14,6 +14,7 @@ import PastHealthPU from "../Popups/PastHealthPU";
 import PersonalHistoryPU from "../Popups/PersonalHistoryPU";
 import PharmaciesPU from "../Popups/PharmaciesPU";
 import PregnanciesPU from "../Popups/PregnanciesPU";
+import PrescriptionsPU from "../Popups/PrescriptionsPU";
 import ProblemListPU from "../Popups/ProblemListPU";
 import RelationshipsPU from "../Popups/RelationshipsPU";
 import RemindersPU from "../Popups/RemindersPU";
@@ -34,6 +35,7 @@ import PastHealthContent from "../Topics/PastHealth/PastHealthContent";
 import PersonalHistoryContent from "../Topics/PersonalHistory/PersonalHistoryContent";
 import PharmaciesContent from "../Topics/Pharmacies/PharmaciesContent";
 import PregnanciesContent from "../Topics/Pregnancies/PregnanciesContent";
+import PrescriptionsContent from "../Topics/Prescriptions/PrescriptionsContent";
 import ProblemListContent from "../Topics/ProblemList/ProblemListContent";
 import RelationshipsContent from "../Topics/Relationships/RelationshipsContent";
 import RemindersContent from "../Topics/Reminders/RemindersContent";
@@ -349,6 +351,41 @@ const PatientTopic = ({
               patientId={patientId}
               setPopUpVisible={setPopUpVisible}
               demographicsInfos={demographicsInfos}
+            />
+          </FakeWindow>
+        )}
+        {/*******************/}
+        {/* PRESCRIPTIONS */}
+        {topic === "PRESCRIPTIONS" && (
+          <PrescriptionsContent
+            topicDatas={topicDatas}
+            loading={loading}
+            errMsg={errMsg}
+          />
+        )}
+        {topic === "PRESCRIPTIONS" && popUpVisible && (
+          <FakeWindow
+            title={`PRESCRIPTIONS for ${patientName}`}
+            width={800}
+            height={700}
+            x={(window.innerWidth - 800) / 2}
+            y={(window.innerHeight - 700) / 2}
+            color={backgroundColor}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <PrescriptionsPU
+              topicDatas={topicDatas}
+              setTopicDatas={setTopicDatas}
+              loading={loading}
+              setLoading={setLoading}
+              errMsg={errMsg}
+              setErrMsg={setErrMsg}
+              hasMore={hasMore}
+              setHasMore={setHasMore}
+              paging={paging}
+              setPaging={setPaging}
+              patientId={patientId}
+              setPopUpVisible={setPopUpVisible}
             />
           </FakeWindow>
         )}

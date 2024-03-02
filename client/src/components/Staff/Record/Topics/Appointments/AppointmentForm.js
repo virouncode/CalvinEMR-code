@@ -47,7 +47,7 @@ const AppointmentForm = ({
     end: null,
     patients_guests_ids: [patientId],
     staff_guests_ids: [],
-    room: "To be determined",
+    room: "To Be Determined",
     all_day: false,
     Duration: 0,
     AppointmentStatus: "Scheduled",
@@ -168,11 +168,15 @@ const AppointmentForm = ({
         auth.authToken
       );
       if (
-        formDatas.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(formDatas.room) ||
-        (!hypotheticAvailableRooms.includes(formDatas.room) &&
+        formDatas.room_id === "z" ||
+        hypotheticAvailableRooms.includes(formDatas.room_id) ||
+        (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
           (await confirmAlert({
-            content: `${formDatas.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${toRoomTitle(
+              sites,
+              formDatas.site_id,
+              formDatas.room_id
+            )} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {
@@ -288,11 +292,15 @@ const AppointmentForm = ({
         auth.authToken
       );
       if (
-        formDatas.room === "To be determined" ||
-        hypotheticAvailableRooms.includes(formDatas.room) ||
-        (!hypotheticAvailableRooms.includes(formDatas.room) &&
+        formDatas.room_id === "z" ||
+        hypotheticAvailableRooms.includes(formDatas.room_id) ||
+        (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
           (await confirmAlert({
-            content: `${formDatas.room} will be occupied at this time slot, book it anyway ?`,
+            content: `${toRoomTitle(
+              sites,
+              formDatas.site_id,
+              formDatas.room_id
+            )} will be occupied at this time slot, book it anyway ?`,
           })))
       ) {
         switch (name) {

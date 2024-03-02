@@ -83,6 +83,17 @@ const PatientRecord = ({
     pagingMedications,
     setPagingMedications,
 
+    prescriptions,
+    setPrescriptions,
+    loadingPrescriptions,
+    setLoadingPrescriptions,
+    errPrescriptions,
+    setErrPrescriptions,
+    hasMorePrescriptions,
+    setHasMorePrescriptions,
+    pagingPrescriptions,
+    setPagingPrescriptions,
+
     doctors,
     setDoctors,
     loadingDoctors,
@@ -356,6 +367,16 @@ const PatientRecord = ({
           setHasMoreMedications={setHasMoreMedications}
           pagingMedications={pagingMedications}
           setPagingMedications={setPagingMedications}
+          prescriptions={prescriptions}
+          setPrescriptions={setPrescriptions}
+          loadingPrescriptions={loadingPrescriptions}
+          setLoadingPrescriptions={setLoadingPrescriptions}
+          errPrescriptions={errPrescriptions}
+          setErrPrescriptions={setErrPrescriptions}
+          hasMorePrescriptions={hasMorePrescriptions}
+          setHasMorePrescriptions={setHasMorePrescriptions}
+          pagingPrescriptions={pagingPrescriptions}
+          setPagingPrescriptions={setPagingPrescriptions}
           doctors={doctors}
           setDoctors={setDoctors}
           loadingDoctors={loadingDoctors}

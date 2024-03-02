@@ -66,6 +66,16 @@ const useFetchPatientRecord = (patientId) => {
     offset: 0,
   });
 
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [loadingPrescriptions, setLoadingPrescriptions] = useState(true);
+  const [errPrescriptions, setErrPrescriptions] = useState("");
+  const [hasMorePrescriptions, setHasMorePrescriptions] = useState(true);
+  const [pagingPrescriptions, setPagingPrescriptions] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+
   const [doctors, setDoctors] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
   const [errDoctors, setErrDoctors] = useState("");
@@ -259,7 +269,6 @@ const useFetchPatientRecord = (patientId) => {
         signal: abortController.signal,
       });
       if (abortController.signal.aborted) return;
-      console.log(url, response.data.items);
       setTopicDatas((prevDatas) => [...prevDatas, ...response.data.items]);
       setHasMore(response.data.items.length > 0);
       setLoading(false);
@@ -327,6 +336,15 @@ const useFetchPatientRecord = (patientId) => {
         setHasMoreMedications,
         setLoadingMedications,
         setErrMedications,
+        abortController
+      );
+      await fetchTopicDatas(
+        "/prescriptions_of_patient",
+        setPrescriptions,
+        pagingPrescriptions,
+        setHasMorePrescriptions,
+        setLoadingPrescriptions,
+        setErrPrescriptions,
         abortController
       );
       await fetchTopicDatas(
@@ -555,6 +573,17 @@ const useFetchPatientRecord = (patientId) => {
     setHasMoreMedications,
     pagingMedications,
     setPagingMedications,
+
+    prescriptions,
+    setPrescriptions,
+    loadingPrescriptions,
+    setLoadingPrescriptions,
+    errPrescriptions,
+    setErrPrescriptions,
+    hasMorePrescriptions,
+    setHasMorePrescriptions,
+    pagingPrescriptions,
+    setPagingPrescriptions,
 
     doctors,
     setDoctors,

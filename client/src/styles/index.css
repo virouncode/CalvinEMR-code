@@ -17466,4 +17466,74 @@ readers do not read off random characters that represent icons */
   text-align: center;
   padding: 10px;
   font-weight: bold;
+}
+
+.prescriptions__title {
+  font-size: 1.2rem;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.prescriptions__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.prescriptions__table-container {
+  height: 500px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.prescriptions__table {
+  table-layout: fixed;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.prescriptions__table thead {
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
+}
+.prescriptions__table th {
+  min-width: 120px;
+  padding: 10px;
+  cursor: pointer;
+}
+.prescriptions__item {
+  border-bottom: solid 1px #cecdcd;
+}
+.prescriptions__item td {
+  text-align: center;
+  padding: 10px;
+  word-break: break-word;
+}
+.prescriptions__item td input {
+  width: auto;
+}
+.prescriptions__link {
+  cursor: pointer;
+  color: #327AE6;
+  text-decoration: underline;
+}
+.prescriptions__item-btn-container {
+  display: flex;
+  justify-content: center;
+}
+.prescriptions__item-btn-container button {
+  margin-left: 5px;
+}
+.prescriptions__btn-container {
+  text-align: center;
+  margin-top: 20px;
+}
+.prescriptions__btn-container button {
+  margin-left: 5px;
 }/*# sourceMappingURL=index.css.map */

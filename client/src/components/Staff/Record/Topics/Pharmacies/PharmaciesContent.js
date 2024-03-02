@@ -22,7 +22,7 @@ const PharmaciesContent = ({
     patientId
   );
 
-  return !loadingPatient ? (
+  return !loadingPatient && !isObjectEmpty(demographicsInfos) ? (
     errPatient ? (
       <p className="topic-content__err">{errPatient}</p>
     ) : (

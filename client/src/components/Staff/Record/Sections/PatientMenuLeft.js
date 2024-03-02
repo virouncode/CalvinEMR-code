@@ -69,6 +69,16 @@ const PatientMenuLeft = ({
   setHasMoreMedications,
   pagingMedications,
   setPagingMedications,
+  prescriptions,
+  setPrescriptions,
+  loadingPrescriptions,
+  setLoadingPrescriptions,
+  errPrescriptions,
+  setErrPrescriptions,
+  hasMorePrescriptions,
+  setHasMorePrescriptions,
+  pagingPrescriptions,
+  setPagingPrescriptions,
   doctors,
   setDoctors,
   loadingDoctors,
@@ -251,6 +261,26 @@ const PatientMenuLeft = ({
         setHasMore={setHasMoreMedications}
         paging={pagingMedications}
         setPaging={setPagingMedications}
+        demographicsInfos={demographicsInfos}
+      />
+      <PatientTopic
+        textColor="#FEFEFE"
+        backgroundColor="#e3afce"
+        topic="PRESCRIPTIONS"
+        patientName={toPatientName(demographicsInfos)}
+        patientId={patientId}
+        allContentsVisible={allContentsVisible}
+        side="left"
+        topicDatas={prescriptions}
+        setTopicDatas={setPrescriptions}
+        loading={loadingPrescriptions}
+        setLoading={setLoadingPrescriptions}
+        errMsg={errPrescriptions}
+        setErrMsg={setErrPrescriptions}
+        hasMore={hasMorePrescriptions}
+        setHasMore={setHasMorePrescriptions}
+        paging={pagingPrescriptions}
+        setPaging={setPagingPrescriptions}
         demographicsInfos={demographicsInfos}
       />
       <PatientTopicDoctors
