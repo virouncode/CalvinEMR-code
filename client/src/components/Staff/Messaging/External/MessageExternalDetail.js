@@ -1,13 +1,11 @@
 import html2canvas from "html2canvas";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
-import useFetchMessageAttachments from "../../../../hooks/useFetchMessageAttachments";
-import useFetchPreviousMessagesExternal from "../../../../hooks/useFetchPreviousMessagesExternal";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -21,7 +19,6 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import CircularProgressSmallWhite from "../../../All/UI/Progress/CircularProgressSmallWhite";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessagesAttachments from "../MessagesAttachments";
 import ForwardMessageExternal from "./ForwardMessageExternal";
@@ -44,12 +41,22 @@ const MessageExternalDetail = ({
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
   const messageContentRef = useRef(null);
-  const { previousMsgs, loadingPrevious } = useFetchPreviousMessagesExternal(
-    message,
-    "staff"
-  );
-  const { attachments } = useFetchMessageAttachments(message, "staff");
+  const [previousMsgs, setPreviousMsgs] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
+
+  useEffect(() => {
+    setPreviousMsgs(
+      message.previous_messages_ids
+        .filter((item) => item)
+        .map(({ previous_messages }) => previous_messages?.[0])
+    );
+    setAttachments(
+      message.attachments_ids
+        .filter((item) => item)
+        .map(({ attachments }) => attachments?.[0])
+    );
+  }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -66,12 +73,21 @@ const MessageExternalDetail = ({
       })
     ) {
       try {
-        await axiosXanoStaff.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_staff_id: user.id,
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0]?.id),
+          previous_messages: message.previous_messages
+            .filter((item) => item)
+            .map(({ previous_messages }) => previous_messages?.[0]?.id),
+        };
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.form_patient_infos;
+        const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
-          {
-            ...message,
-            deleted_by_staff_id: user.id,
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -84,10 +100,7 @@ const MessageExternalDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_id: user.id,
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -95,10 +108,7 @@ const MessageExternalDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_id: user.id,
-            },
+            data: response.data,
           },
         });
         setCurrentMsgId(0);
@@ -304,9 +314,7 @@ const MessageExternalDetail = ({
         </div>
         <div className="message-detail__content" ref={messageContentRef}>
           <MessageExternal message={message} key={message.id} index={0} />
-          {loadingPrevious && <LoadingParagraph />}
-          {!loadingPrevious &&
-            previousMsgs &&
+          {previousMsgs &&
             previousMsgs.length > 0 &&
             previousMsgs.map((message, index) => (
               <MessageExternal

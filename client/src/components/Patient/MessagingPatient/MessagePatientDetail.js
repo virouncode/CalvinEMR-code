@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
-import useFetchMessageAttachments from "../../../hooks/useFetchMessageAttachments";
-import useFetchPreviousMessagesExternal from "../../../hooks/useFetchPreviousMessagesExternal";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { toPatientName } from "../../../utils/toPatientName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import MessageExternal from "../../Staff/Messaging/External/MessageExternal";
 import MessagesExternalPrintPU from "../../Staff/Messaging/External/MessagesExternalPrintPU";
 import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
@@ -26,11 +23,21 @@ const MessagePatientDetail = ({
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [replyVisible, setReplyVisible] = useState(false);
-  const { previousMsgs, loadingPrevious } = useFetchPreviousMessagesExternal(
-    message,
-    "patient"
-  );
-  const { attachments } = useFetchMessageAttachments(message, "patient");
+  const [previousMsgs, setPreviousMsgs] = useState([]);
+  const [attachments, setAttachments] = useState([]);
+
+  useEffect(() => {
+    setPreviousMsgs(
+      message.previous_messages_ids
+        .filter((item) => item)
+        .map(({ previous_messages }) => previous_messages?.[0])
+    );
+    setAttachments(
+      message.attachments_ids
+        .filter((item) => item)
+        .map(({ attachments }) => attachments?.[0])
+    );
+  }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -134,9 +141,7 @@ const MessagePatientDetail = ({
         </div>
         <div className="message-detail__content">
           <MessageExternal message={message} key={message.id} index={0} />
-          {loadingPrevious && <LoadingParagraph />}
-          {!loadingPrevious &&
-            previousMsgs &&
+          {previousMsgs &&
             previousMsgs.length > 0 &&
             previousMsgs.map((message, index) => (
               <MessageExternal

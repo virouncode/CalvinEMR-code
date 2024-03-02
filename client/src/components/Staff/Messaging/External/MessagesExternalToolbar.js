@@ -70,13 +70,13 @@ const MessagesExternalToolBar = ({
               },
             }
           );
-          const newMessage = {
+          const datasToPut = {
             ...response.data,
             deleted_by_staff_id: user.id,
           };
-          await axiosXanoStaff.put(
+          const response2 = await axiosXanoStaff.put(
             `/messages_external/${messageId}`,
-            newMessage,
+            datasToPut,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -87,12 +87,12 @@ const MessagesExternalToolBar = ({
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: messageId, data: response2.data },
           });
           socket.emit("message", {
             route: "MESSAGES WITH PATIENT",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: messageId, data: response2.data },
           });
         }
         setNewVisible(false);
@@ -110,25 +110,22 @@ const MessagesExternalToolBar = ({
   const handleClickUndelete = async (e) => {
     try {
       const msgsSelected = (
-        await axiosXanoStaff.post(
-          "/messages_external_selected",
-          { messages_ids: msgsSelectedIds },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        )
+        await axiosXanoStaff.get("/messages_external_selected", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: { messages_ids: msgsSelectedIds },
+        })
       ).data;
       for (let message of msgsSelected) {
-        const newMessage = {
+        const datasToPut = {
           ...message,
           deleted_by_staff_id: 0,
         };
-        await axiosXanoStaff.put(
+        const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
-          newMessage,
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -139,12 +136,12 @@ const MessagesExternalToolBar = ({
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES WITH PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       }
       // setSection("Inbox");

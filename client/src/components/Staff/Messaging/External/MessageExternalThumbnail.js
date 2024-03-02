@@ -19,7 +19,7 @@ const MessageExternalThumbnail = ({
   lastItemRef = null,
 }) => {
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
   const { staffInfos } = useStaffInfosContext();
   const { socket } = useSocketContext();
 
@@ -27,13 +27,21 @@ const MessageExternalThumbnail = ({
     if (!message.read_by_staff_id) {
       //create and replace message with read by user id
       try {
-        const newMessage = {
+        const datasToPut = {
           ...message,
           read_by_staff_id: user.id,
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0]?.id),
+          previous_messages_ids: message.previous_messages_ids
+            .filter((item) => item)
+            .map(({ previous_messages }) => previous_messages?.[0]?.id),
         };
-        await axiosXanoStaff.put(
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.from_patient_infos;
+        const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
-          newMessage,
+          datasToPut,
           {
             headers: {
               Authorization: `Bearer ${auth.authToken}`,
@@ -44,12 +52,12 @@ const MessageExternalThumbnail = ({
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES WITH PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
@@ -103,12 +111,21 @@ const MessageExternalThumbnail = ({
       })
     ) {
       try {
-        await axiosXanoStaff.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_staff_id: user.id,
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0]?.id),
+          previous_messages_ids: message.previous_messages_ids
+            .filter((item) => item)
+            .map(({ previous_messages }) => previous_messages?.[0]?.id),
+        };
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.from_patient_infos;
+        const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
-          {
-            ...message,
-            deleted_by_staff_id: user.id,
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -121,10 +138,7 @@ const MessageExternalThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_id: user.id,
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -132,10 +146,7 @@ const MessageExternalThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_id: user.id,
-            },
+            data: response.data,
           },
         });
         toast.success("Message deleted successfully", { containerId: "A" });

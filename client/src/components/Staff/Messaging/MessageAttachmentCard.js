@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import NewWindow from "react-new-window";
-import useAuthContext from "../../../hooks/useAuthContext";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
 import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import ReportForm from "../Record/Topics/Reports/ReportForm";
@@ -19,9 +16,6 @@ const MessageAttachmentCard = ({
   patientName,
   message,
 }) => {
-  const { auth } = useAuthContext();
-  const { user } = useUserContext();
-  const { socket } = useSocketContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");

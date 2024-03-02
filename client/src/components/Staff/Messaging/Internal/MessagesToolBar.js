@@ -74,21 +74,25 @@ const MessagesToolBar = ({
               user.id,
             ],
           };
-          await axiosXanoStaff.put(`/messages/${messageId}`, newMessage, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          });
+          const response2 = await axiosXanoStaff.put(
+            `/messages/${messageId}`,
+            newMessage,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.authToken}`,
+              },
+            }
+          );
           socket.emit("message", {
             route: "MESSAGES INBOX",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: messageId, data: response2.data },
           });
           socket.emit("message", {
             route: "MESSAGES ABOUT PATIENT",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: messageId, data: response2.data },
           });
         }
         setNewVisible(false);
@@ -106,40 +110,43 @@ const MessagesToolBar = ({
   const handleClickUndelete = async (e) => {
     try {
       const msgsSelected = (
-        await axiosXanoStaff.post(
-          "/messages_selected",
-          { messages_ids: msgsSelectedIds },
+        await axiosXanoStaff.get("/messages_selected", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
+            messages_ids: msgsSelectedIds,
+          },
+        })
+      ).data;
+      for (let message of msgsSelected) {
+        const newDeletedByStaffIds = message.deleted_by_staff_ids.filter(
+          (id) => id !== user.id
+        );
+        const datasToPut = {
+          ...message,
+          deleted_by_staff_ids: newDeletedByStaffIds,
+        };
+        const response = await axiosXanoStaff.put(
+          `/messages/${message.id}`,
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
           }
-        )
-      ).data;
-      for (let message of msgsSelected) {
-        const newDeletedByStaffIds = message.deleted_by_staff_ids.filter(
-          (id) => id !== user.id
         );
-        const newMessage = {
-          ...message,
-          deleted_by_staff_ids: newDeletedByStaffIds,
-        };
-        await axiosXanoStaff.put(`/messages/${message.id}`, newMessage, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        });
         socket.emit("message", {
           route: "MESSAGES INBOX",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES ABOUT PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       }
       // setSection("Inbox");

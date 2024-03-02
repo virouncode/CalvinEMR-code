@@ -110,16 +110,15 @@ const MessagesPatientToolBar = ({
   const handleClickUndelete = async (e) => {
     try {
       const msgsSelected = (
-        await axiosXanoPatient.post(
-          "/messages_external_selected",
-          { messages_ids: msgsSelectedIds },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        )
+        await axiosXanoPatient.get("/messages_external_selected", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
+            messages_ids: msgsSelectedIds,
+          },
+        })
       ).data;
       for (let message of msgsSelected) {
         const newMessage = {

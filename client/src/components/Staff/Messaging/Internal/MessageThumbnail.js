@@ -29,25 +29,38 @@ const MessageThumbnail = ({
     if (!message.read_by_staff_ids.includes(user.id)) {
       //create and replace message with read by user id
       try {
-        const newMessage = {
+        const datasToPut = {
           ...message,
           read_by_staff_ids: [...message.read_by_staff_ids, user.id],
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0]?.id),
+          previous_messages: message.previous_messages
+            .filter((item) => item)
+            .map((item) => {
+              return { message_type: item.message_type, id: item.id };
+            }),
         };
-        await axiosXanoStaff.put(`/messages/${message.id}`, newMessage, {
-          headers: {
-            Authorization: `Bearer ${auth.authToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        delete datasToPut.patient_infos;
+        const response = await axiosXanoStaff.put(
+          `/messages/${message.id}`,
+          datasToPut,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         socket.emit("message", {
           route: "MESSAGES INBOX",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES ABOUT PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
@@ -101,12 +114,22 @@ const MessageThumbnail = ({
       })
     ) {
       try {
-        await axiosXanoStaff.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0].id),
+          previous_messages: message.previous_messages
+            .filter((item) => item)
+            .map((item) => {
+              return { message_type: item.message_type, id: item.id };
+            }),
+        };
+        delete datasToPut.patient_infos;
+        const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
-          {
-            ...message,
-            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -119,10 +142,7 @@ const MessageThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -130,10 +150,7 @@ const MessageThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-            },
+            data: response.data,
           },
         });
         toast.success("Message deleted successfully", { containerId: "A" });

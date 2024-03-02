@@ -1,13 +1,11 @@
 import html2canvas from "html2canvas";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
-import useFetchMessageAttachments from "../../../../hooks/useFetchMessageAttachments";
-import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -21,7 +19,6 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import CircularProgressSmallWhite from "../../../All/UI/Progress/CircularProgressSmallWhite";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
@@ -45,9 +42,22 @@ const MessageDetail = ({
   const [replyVisible, setReplyVisible] = useState(false);
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
-  const { previousMsgs, loadingPrevious } = useFetchPreviousMessages(message);
-  const { attachments } = useFetchMessageAttachments(message, "staff");
+  const [previousMsgs, setPreviousMsgs] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
+
+  useEffect(() => {
+    setPreviousMsgs(
+      message.previous_messages
+        .filter((item) => item)
+        .map(({ previous_messages }) => previous_messages?.[0])
+    );
+    setAttachments(
+      message.attachments_ids
+        .filter((item) => item)
+        .map(({ attachments }) => attachments?.[0])
+    );
+  }, [message.attachments_ids, message.previous_messages]);
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -60,12 +70,22 @@ const MessageDetail = ({
       })
     ) {
       try {
-        await axiosXanoStaff.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+          attachments_ids: message.attachments_ids
+            .filter((item) => item)
+            .map(({ attachments }) => attachments?.[0]?.id),
+          previous_messages: message.previous_messages
+            .filter((item) => item)
+            .map((item) => {
+              return { message_type: item.message_type, id: item.id };
+            }),
+        };
+        delete datasToPut.patient_infos;
+        const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
-          {
-            ...message,
-            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -78,10 +98,7 @@ const MessageDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -89,10 +106,7 @@ const MessageDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-            },
+            data: response.data,
           },
         });
 
@@ -306,9 +320,7 @@ const MessageDetail = ({
         </div>
         <div ref={messageContentRef} className="message-detail__content">
           <Message message={message} key={message.id} index={0} />
-          {loadingPrevious && <LoadingParagraph />}
-          {!loadingPrevious &&
-            previousMsgs &&
+          {previousMsgs &&
             previousMsgs.length > 0 &&
             previousMsgs.map((message, index) =>
               message.type === "Internal" ? (
