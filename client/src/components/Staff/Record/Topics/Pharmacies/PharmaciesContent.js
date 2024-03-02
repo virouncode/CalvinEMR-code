@@ -1,26 +1,19 @@
-import React from "react";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../hooks/useAuthContext";
-import useFetchDatas from "../../../../../hooks/useFetchDatas";
+import React, { useEffect, useState } from "react";
 import useTopicSocket from "../../../../../hooks/useTopicSocket";
 import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const PharmaciesContent = ({ patientId, loadingPatient, errPatient }) => {
-  const { auth } = useAuthContext();
-  const [
-    preferredPharmacy,
-    setPreferredPharmacy,
-    loadingPharmacy,
-    errPharmacy,
-  ] = useFetchDatas(
-    `/preferred_pharmacy_of_patient`,
-    axiosXanoStaff,
-    auth.authToken,
-    "patient_id",
-    patientId,
-    true
-  );
+const PharmaciesContent = ({
+  patientId,
+  demographicsInfos,
+  loadingPatient,
+  errPatient,
+}) => {
+  const [preferredPharmacy, setPreferredPharmacy] = useState({});
+
+  useEffect(() => {
+    setPreferredPharmacy(demographicsInfos.preferred_pharmacy);
+  }, [demographicsInfos.preferred_pharmacy]);
 
   useTopicSocket(
     "PREFERRED PHARMACY",
@@ -29,12 +22,9 @@ const PharmaciesContent = ({ patientId, loadingPatient, errPatient }) => {
     patientId
   );
 
-  return !loadingPharmacy && !loadingPatient ? (
-    errPharmacy || errPatient ? (
-      <>
-        {errPharmacy && <p className="topic-content__err">{errPharmacy}</p>}
-        {errPatient && <p className="topic-content__err">{errPatient}</p>}
-      </>
+  return !loadingPatient ? (
+    errPatient ? (
+      <p className="topic-content__err">{errPatient}</p>
     ) : (
       <div className="topic-content">
         <label style={{ fontWeight: "bold" }}>Preferred Pharmacy: </label>

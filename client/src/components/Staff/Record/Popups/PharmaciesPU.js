@@ -1,13 +1,9 @@
-import React, { useRef, useState } from "react";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
-import useFetchDatas from "../../../../hooks/useFetchDatas";
+import React, { useEffect, useRef, useState } from "react";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import PharmaciesList from "../Topics/Pharmacies/PharmaciesList";
 import PharmacyCard from "../Topics/Pharmacies/PharmacyCard";
@@ -30,20 +26,11 @@ const PharmaciesPU = ({
   //HOOKS
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
-  const { auth } = useAuthContext();
-  const [
-    preferredPharmacy,
-    setPreferredPharmacy,
-    loadingPharmacy,
-    errPharmacy,
-  ] = useFetchDatas(
-    `/preferred_pharmacy_of_patient`,
-    axiosXanoStaff,
-    auth.authToken,
-    "patient_id",
-    patientId,
-    true
-  );
+  const [preferredPharmacy, setPreferredPharmacy] = useState({});
+
+  useEffect(() => {
+    setPreferredPharmacy(demographicsInfos.preferred_pharmacy);
+  }, [demographicsInfos.preferred_pharmacy]);
 
   useTopicSocket(
     "PREFERRED PHARMACY",
@@ -75,11 +62,7 @@ const PharmaciesPU = ({
         Patient preferred pharmacy{" "}
         <i className="fa-solid fa-prescription-bottle-medical"></i>
       </h1>
-      {loadingPharmacy ? (
-        <LoadingParagraph />
-      ) : errPharmacy ? (
-        <p className="pharmacies__err">{errPharmacy}</p>
-      ) : !isObjectEmpty(preferredPharmacy) ? (
+      {!isObjectEmpty(preferredPharmacy) ? (
         <PharmacyCard
           pharmacy={preferredPharmacy}
           demographicsInfos={demographicsInfos}
