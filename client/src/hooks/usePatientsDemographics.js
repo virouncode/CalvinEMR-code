@@ -27,20 +27,17 @@ const usePatientsDemographics = (search, paging) => {
       try {
         setLoading(true);
         setErr(false);
-        const response = await axiosXanoInstance.get(
-          "/demographics_search_paging",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              paging,
-              search,
-            },
-            signal: abortController.signal,
-          }
-        );
+        const response = await axiosXanoInstance.get("/demographics_search", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
+            paging,
+            search,
+          },
+          signal: abortController.signal,
+        });
         //Because we can't filter those things in Xano
         const filteredDatas = response.data.items.filter(
           (item) =>

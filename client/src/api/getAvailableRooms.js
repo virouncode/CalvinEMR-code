@@ -11,17 +11,17 @@ export const getAvailableRooms = async (
   controller = null
 ) => {
   try {
-    const response = await axiosXanoStaff.post(
+    const response = await axiosXanoStaff.get(
       "/appointments_in_range_and_sites",
-      {
-        range_start: rangeStart,
-        range_end: rangeEnd,
-        sites_ids: [siteId],
-      },
       {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
+        },
+        params: {
+          range_start: rangeStart,
+          range_end: rangeEnd,
+          sites_ids: [siteId],
         },
         ...(controller && { signal: controller.signal }),
       }

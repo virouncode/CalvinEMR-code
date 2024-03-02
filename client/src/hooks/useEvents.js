@@ -24,18 +24,18 @@ const useEvents = (
     const abortController = new AbortController();
     const fetchEvents = async () => {
       try {
-        const response = await axiosXanoStaff.post(
+        const response = await axiosXanoStaff.get(
           "/appointments_of_staff_and_sites",
-          {
-            hosts_ids: hostsIds,
-            range_start: rangeStart,
-            range_end: rangeEnd,
-            sites_ids: timelineVisible ? [timelineSiteId] : sitesIds,
-          },
           {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
+            },
+            params: {
+              hosts_ids: hostsIds,
+              range_start: rangeStart,
+              range_end: rangeEnd,
+              sites_ids: timelineVisible ? [timelineSiteId] : sitesIds,
             },
             signal: abortController.signal,
           }

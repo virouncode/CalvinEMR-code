@@ -24,43 +24,7 @@ const AttachmentCard = ({
   const handleAddToReports = () => {
     setAddToReports(true);
   };
-  //   try {
-  //     const response = await postPatientRecord(
-  //       "/reports",
-  //       user.id,
-  //       auth.authToken,
-  //       {
-  //         patient_id: patientId,
-  //         Name: attachment.alias,
-  //         Media: "Download",
-  //         Format:"Binary",
-  //         FileExtensionAndVersion: getExtension(attachment.path),
-  //         FilePath : attachment.path,
-  //         Content: {
-  //           Media: attachment,
-  //         },
-  //         Class:
-  //         assigned_staff_id: user.id,
-  //         description: attachment.alias,
-  //         file: attachment.file,
-  //         acknowledged: false,
-  //       },
-  //       socket,
-  //       "REPORTS"
-  //     );
-  //     socket.emit("message", {
-  //       route: "REPORTS INBOX",
-  //       action: "create",
-  //       content: { data: response.data },
-  //     });
-  //     toast.success("Saved successfully", { containerId: "A" });
-  //     // navigate(0); //to refresh the patient record
-  //   } catch (err) {
-  //     toast.error(`Error unable to save document: ${err.message}`, {
-  //       containerId: "A",
-  //     });
-  //   }
-  // };
+
   return (
     <>
       {!attachmentsLoading ? (

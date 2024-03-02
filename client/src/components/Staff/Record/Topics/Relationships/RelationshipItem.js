@@ -62,16 +62,16 @@ const RelationshipItem = ({
     try {
       //Delete the inverse relation ship of item
       const inverseRelationToDeleteId = (
-        await axiosXanoStaff.post(
-          "/relationship_between",
-          { patient_id: item.relation_id, relation_id: item.patient_id },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        )
+        await axiosXanoStaff.get("/relationship_between", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.authToken}`,
+          },
+          params: {
+            patient_id: item.relation_id,
+            relation_id: item.patient_id,
+          },
+        })
       ).data[0].id;
 
       await axiosXanoStaff.delete(
@@ -176,13 +176,17 @@ const RelationshipItem = ({
       try {
         if (relations.includes(itemInfos.relationship)) {
           const inverseRelationToDeleteId = (
-            await axiosXanoStaff.post(
+            await axiosXanoStaff.get(
               "/relationship_between",
-              { patient_id: item.relation_id, relation_id: item.patient_id },
+
               {
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${auth.authToken}`,
+                },
+                params: {
+                  patient_id: item.relation_id,
+                  relation_id: item.patient_id,
                 },
               }
             )

@@ -53,7 +53,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
     }
     //Submission
     try {
-      const response = await axiosXanoStaff.post(
+      const response = await axiosXanoStaff.put(
         "/medications_templates",
         datasToPut,
         {
