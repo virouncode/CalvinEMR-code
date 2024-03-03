@@ -20,9 +20,9 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
     const fetchPatientsDemographics = async () => {
       const patientsGuestsIds = patients_guests_ids
         ? patients_guests_ids.length > 0
-          ? patients_guests_ids.map(
-              ({ patient_infos }) => patient_infos.patient_id
-            )
+          ? patients_guests_ids
+              .filter((item) => item)
+              .map(({ patient_infos }) => patient_infos.patient_id)
           : []
         : [];
       try {
