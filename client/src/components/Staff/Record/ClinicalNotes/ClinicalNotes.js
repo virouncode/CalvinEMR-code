@@ -3,15 +3,20 @@ import NewWindow from "react-new-window";
 import useClinicalNotesSocket from "../../../../hooks/useClinicalNotesSocket";
 import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
 import useIntersection from "../../../../hooks/useIntersection";
+import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
 import ClinicalNotesCard from "./ClinicalNotesCard";
 import ClinicalNotesForm from "./ClinicalNotesForm";
 import ClinicalNotesHeader from "./ClinicalNotesHeader";
+import ClinicalNotesOverview from "./ClinicalNotesOverview";
 import LoadingClinical from "./LoadingClinical";
 
 const ClinicalNotes = ({
   demographicsInfos,
-  allContentsVisible,
+  notesVisible,
+  setNotesVisible,
+  contentsVisible,
+  setContentsVisible,
   patientId,
   loadingPatient,
   errPatient,
@@ -20,7 +25,7 @@ const ClinicalNotes = ({
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [checkedNotes, setCheckedNotes] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [allBodiesVisible, setAllBodiesVisible] = useState(true);
+  const [overviewVisible, setOverviewVisible] = useState(false);
   const triangleRef = useRef(null);
   const {
     order,
@@ -60,7 +65,10 @@ const ClinicalNotes = ({
     <div className="clinical-notes">
       <ClinicalNotesHeader
         demographicsInfos={demographicsInfos}
-        allContentsVisible={allContentsVisible}
+        notesVisible={notesVisible}
+        setNotesVisible={setNotesVisible}
+        contentsVisible={contentsVisible}
+        setContentsVisible={setContentsVisible}
         contentRef={contentRef}
         triangleRef={triangleRef}
         addVisible={addVisible}
@@ -73,14 +81,14 @@ const ClinicalNotes = ({
         setPopUpVisible={setPopUpVisible}
         selectAll={selectAll}
         setSelectAll={setSelectAll}
-        allBodiesVisible={allBodiesVisible}
-        setAllBodiesVisible={setAllBodiesVisible}
         order={order}
         setOrder={setOrder}
         paging={paging}
         setPaging={setPaging}
         loadingPatient={loadingPatient}
         errPatient={errPatient}
+        overviewVisible={overviewVisible}
+        setOverviewVisible={setOverviewVisible}
       />
       {popUpVisible && (
         <NewWindow
@@ -105,10 +113,28 @@ const ClinicalNotes = ({
           />
         </NewWindow>
       )}
+      {overviewVisible && (
+        <FakeWindow
+          title={`CLINICAL NOTES OVERVIEW`}
+          width={1400}
+          height={600}
+          x={(window.innerWidth - 1400) / 2}
+          y={(window.innerHeight - 600) / 2}
+          color="#93b5e9"
+          setPopUpVisible={setOverviewVisible}
+        >
+          <ClinicalNotesOverview
+            clinicalNotes={clinicalNotes}
+            loading={loading}
+            hasMore={hasMore}
+            setPaging={setPaging}
+          />
+        </FakeWindow>
+      )}
 
       <div
         className={
-          allContentsVisible
+          notesVisible
             ? "clinical-notes__content clinical-notes__content--active"
             : "clinical-notes__content"
         }
@@ -136,7 +162,7 @@ const ClinicalNotes = ({
                     checkedNotes={checkedNotes}
                     setCheckedNotes={setCheckedNotes}
                     setSelectAll={setSelectAll}
-                    allBodiesVisible={allBodiesVisible}
+                    contentsVisible={contentsVisible}
                     demographicsInfos={demographicsInfos}
                     lastItemRef={lastItemRef}
                   />
@@ -151,7 +177,7 @@ const ClinicalNotes = ({
                     checkedNotes={checkedNotes}
                     setCheckedNotes={setCheckedNotes}
                     setSelectAll={setSelectAll}
-                    allBodiesVisible={allBodiesVisible}
+                    contentsVisible={contentsVisible}
                     demographicsInfos={demographicsInfos}
                   />
                 )

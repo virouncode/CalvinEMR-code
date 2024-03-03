@@ -30,7 +30,7 @@ const ClinicalNotesCard = ({
   checkedNotes,
   setCheckedNotes,
   setSelectAll,
-  allBodiesVisible,
+  contentsVisible,
   demographicsInfos,
   lastItemRef = null,
 }) => {
@@ -57,8 +57,8 @@ const ClinicalNotesCard = ({
   }, [clinicalNote]);
 
   useEffect(() => {
-    setBodyVisible(allBodiesVisible);
-  }, [allBodiesVisible]);
+    setBodyVisible(contentsVisible);
+  }, [contentsVisible]);
 
   //HANDLERS
   const handleTriangleProgressClick = (e) => {

@@ -5,6 +5,10 @@ import ClinicalNotesToolBar from "./ClinicalNotesToolBar";
 const ClinicalNotesHeader = ({
   demographicsInfos,
   allContentsVisible,
+  notesVisible,
+  setNotesVisible,
+  contentsVisible,
+  setContentsVisible,
   contentRef,
   triangleRef,
   addVisible,
@@ -18,14 +22,14 @@ const ClinicalNotesHeader = ({
   selectAll,
   setSelectAll,
   clinicalNotes,
-  allBodiesVisible,
-  setAllBodiesVisible,
   order,
   setOrder,
   paging,
   setPaging,
   loadingPatient,
   errPatient,
+  overviewVisible,
+  setOverviewVisible,
 }) => {
   const [selectAllDisabled, setSelectAllDisabled] = useState(false);
   useEffect(() => {
@@ -42,7 +46,8 @@ const ClinicalNotesHeader = ({
     <div className="clinical-notes__header">
       <ClinicalNotesTitle
         demographicsInfos={demographicsInfos}
-        allContentsVisible={allContentsVisible}
+        notesVisible={notesVisible}
+        setNotesVisible={setNotesVisible}
         contentRef={contentRef}
         triangleRef={triangleRef}
         setSelectAllDisabled={setSelectAllDisabled}
@@ -50,6 +55,8 @@ const ClinicalNotesHeader = ({
         errPatient={errPatient}
       />
       <ClinicalNotesToolBar
+        contentsVisible={contentsVisible}
+        setContentsVisible={setContentsVisible}
         addVisible={addVisible}
         setAddVisible={setAddVisible}
         search={search}
@@ -63,12 +70,12 @@ const ClinicalNotesHeader = ({
         selectAllDisabled={selectAllDisabled}
         selectAll={selectAll}
         setSelectAll={setSelectAll}
-        allBodiesVisible={allBodiesVisible}
-        setAllBodiesVisible={setAllBodiesVisible}
         order={order}
         setOrder={setOrder}
         paging={paging}
         setPaging={setPaging}
+        overviewVisible={overviewVisible}
+        setOverviewVisible={setOverviewVisible}
       />
     </div>
   );

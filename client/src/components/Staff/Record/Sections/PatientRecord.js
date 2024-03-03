@@ -282,29 +282,67 @@ const PatientRecord = ({
     setPagingMessagesWith,
   } = useFetchPatientRecord(patientId);
 
-  const [allContentsVisible, setAllContentsVisible] = useState(true);
+  const [allContentsVisible, setAllContentsVisible] = useState(false);
+  const [leftContentsVisible, setLeftContentsVisible] = useState(false);
+  const [rightContentsVisible, setRightContentsVisible] = useState(false);
+  const [notesVisible, setNotesVisible] = useState(true);
+  const [notesContentsVisible, setNotesContentsVisible] = useState(true);
 
   usePatientDemoSocket(demographicsInfos, setDemographicsInfos);
 
-  const handleClickFold = (e) => {
-    setAllContentsVisible((v) => !v);
+  const handleClickAllFold = (e) => {
+    if (allContentsVisible) {
+      setAllContentsVisible(false);
+      setLeftContentsVisible(false);
+      setRightContentsVisible(false);
+      setNotesContentsVisible(false);
+      setNotesVisible(false);
+    } else {
+      setAllContentsVisible(true);
+      setLeftContentsVisible(true);
+      setRightContentsVisible(true);
+      setNotesContentsVisible(true);
+      setNotesVisible(true);
+    }
+  };
+  const handleClickLeftFold = (e) => {
+    setLeftContentsVisible((v) => !v);
+  };
+  const handleClickRightFold = (e) => {
+    setRightContentsVisible((v) => !v);
   };
 
   return demographicsInfos ? (
     <>
-      <button
-        type="button"
-        className="patient-record__fold"
-        onClick={handleClickFold}
-      >
-        {allContentsVisible ? "Fold All" : "Unfold All"}
-      </button>
+      <div className="patient-record__btn-container">
+        <button
+          type="button"
+          className="patient-record__fold"
+          onClick={handleClickLeftFold}
+        >
+          {leftContentsVisible ? "Fold" : "Unfold"}
+        </button>
+        <button
+          type="button"
+          className="patient-record__fold"
+          onClick={handleClickAllFold}
+        >
+          {allContentsVisible ? "Fold All" : "Unfold All"}
+        </button>
+        <button
+          type="button"
+          className="patient-record__fold"
+          onClick={handleClickRightFold}
+        >
+          {rightContentsVisible ? "Fold" : "Unfold"}
+        </button>
+      </div>
       <div className="patient-record__content">
         <PatientMenuLeft
           demographicsInfos={demographicsInfos}
           setDemographicsInfos={setDemographicsInfos}
           patientId={patientId}
-          allContentsVisible={allContentsVisible}
+          contentsVisible={leftContentsVisible}
           loadingPatient={loadingPatient}
           errPatient={errPatient}
           pastHealth={pastHealth}
@@ -430,7 +468,10 @@ const PatientRecord = ({
         />
         <ClinicalNotes
           demographicsInfos={demographicsInfos}
-          allContentsVisible={allContentsVisible}
+          notesVisible={notesVisible}
+          setNotesVisible={setNotesVisible}
+          contentsVisible={notesContentsVisible}
+          setContentsVisible={setNotesContentsVisible}
           patientId={patientId}
           loadingPatient={loadingPatient}
           errPatient={errPatient}
@@ -438,7 +479,7 @@ const PatientRecord = ({
         <PatientMenuRight
           demographicsInfos={demographicsInfos}
           patientId={patientId}
-          allContentsVisible={allContentsVisible}
+          contentsVisible={rightContentsVisible}
           loadingPatient={loadingPatient}
           errPatient={errPatient}
           personalHistory={personalHistory}

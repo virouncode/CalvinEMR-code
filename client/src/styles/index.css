@@ -11726,6 +11726,12 @@ readers do not read off random characters that represent icons */
   grid-template-columns: 20% 60% 20%;
   align-items: flex-start;
 }
+.patient-record__btn-container {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  width: 97%;
+  margin: 0 auto;
+}
 .patient-record__fold {
   display: block;
   padding: 5px 10px;
@@ -11778,7 +11784,11 @@ readers do not read off random characters that represent icons */
 .clinical-notes__toolbar label {
   padding: 5px;
 }
-.clinical-notes__toolbar button {
+.clinical-notes__toolbar-btn-container {
+  width: 60%;
+  text-align: right;
+}
+.clinical-notes__toolbar-btn-container button {
   margin-left: 5px;
 }
 .clinical-notes__order {
@@ -12014,6 +12024,30 @@ readers do not read off random characters that represent icons */
   padding: 40px;
   -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
+}
+.clinical-notes__overview {
+  margin-top: 40px;
+  height: 93%;
+  padding-bottom: 10px;
+  overflow-y: scroll;
+}
+.clinical-notes__overview-card {
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  padding: 10px;
+  margin: 10px;
+}
+.clinical-notes__overview-card label {
+  font-weight: bold;
+  min-width: 50px;
+}
+.clinical-notes__overview-card-row {
+  display: flex;
+}
+.clinical-notes__overview-card-row p {
+  padding: 0;
+  white-space: pre-wrap;
+  margin-left: 40px;
 }
 
 @media print {

@@ -49,7 +49,7 @@ const PatientTopic = ({
   patientName,
   patientId,
   patientDob = null,
-  allContentsVisible,
+  contentsVisible,
   side,
   topicDatas,
   setTopicDatas,
@@ -97,7 +97,7 @@ const PatientTopic = ({
           topic={topic}
           handleTriangleClick={handleTriangleClick}
           handlePopUpClick={handlePopUpClick}
-          allContentsVisible={allContentsVisible}
+          contentsVisible={contentsVisible}
           popUpButton={
             topic === "MESSAGES WITH PATIENT" ||
             topic === "MESSAGES ABOUT PATIENT"
@@ -108,7 +108,7 @@ const PatientTopic = ({
       </div>
       <div
         className={
-          allContentsVisible
+          contentsVisible
             ? topic === "REMINDERS" || topic === "MESSAGES WITH PATIENT"
               ? `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active patient-record__topic-container--bottom`
               : `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active`

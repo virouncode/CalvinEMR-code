@@ -6,16 +6,14 @@ const PatientTopicHeader = ({
   topic,
   handleTriangleClick,
   handlePopUpClick,
-  allContentsVisible,
+  contentsVisible,
   popUpButton = true,
 }) => {
   return (
     <>
       <TriangleButton
         handleTriangleClick={handleTriangleClick}
-        className={
-          allContentsVisible ? "triangle triangle--active" : "triangle"
-        }
+        className={contentsVisible ? "triangle triangle--active" : "triangle"}
         color="#FEFEFE"
       />
       {topic}

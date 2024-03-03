@@ -8,7 +8,8 @@ import TriangleButton from "../Buttons/TriangleButton";
 
 const ClinicalNotesTitle = ({
   demographicsInfos,
-  allContentsVisible,
+  notesVisible,
+  setNotesVisible,
   contentRef,
   triangleRef,
   setSelectAllDisabled,
@@ -19,6 +20,7 @@ const ClinicalNotesTitle = ({
     e.target.classList.toggle("triangle--active");
     contentRef.current.classList.toggle("clinical-notes__content--active");
     setSelectAllDisabled((d) => !d);
+    setNotesVisible((v) => !v);
   };
 
   return (
@@ -26,9 +28,7 @@ const ClinicalNotesTitle = ({
       <div>
         <TriangleButton
           handleTriangleClick={handleTriangleClick}
-          className={
-            allContentsVisible ? "triangle triangle--active" : "triangle"
-          }
+          className={notesVisible ? "triangle triangle--active" : "triangle"}
           color="#21201e"
           triangleRef={triangleRef}
         />

@@ -10,7 +10,7 @@ const PatientTopicReports = ({
   backgroundColor,
   patientId,
   demographicsInfos,
-  allContentsVisible,
+  contentsVisible,
   patientName,
   side,
   reportsReceived,
@@ -72,13 +72,13 @@ const PatientTopicReports = ({
           topic="REPORTS"
           handleTriangleClick={handleTriangleClick}
           handlePopUpClick={handlePopUpClick}
-          allContentsVisible={allContentsVisible}
+          contentsVisible={contentsVisible}
           popUpButton={true}
         />
       </div>
       <div
         className={
-          allContentsVisible
+          contentsVisible
             ? `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active`
             : `patient-record__topic-container patient-record__topic-container--${side} `
         }
