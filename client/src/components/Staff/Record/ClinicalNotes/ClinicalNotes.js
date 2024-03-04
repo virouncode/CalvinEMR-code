@@ -89,6 +89,7 @@ const ClinicalNotes = ({
         errPatient={errPatient}
         overviewVisible={overviewVisible}
         setOverviewVisible={setOverviewVisible}
+        setClinicalNotes={setClinicalNotes}
       />
       {popUpVisible && (
         <NewWindow
@@ -110,6 +111,9 @@ const ClinicalNotes = ({
             demographicsInfos={demographicsInfos}
             clinicalNotes={clinicalNotes}
             checkedNotes={checkedNotes}
+            selectAll={selectAll}
+            order={order}
+            setCheckedNotes={setCheckedNotes}
           />
         </NewWindow>
       )}

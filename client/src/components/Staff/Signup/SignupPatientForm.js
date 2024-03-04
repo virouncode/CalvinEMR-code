@@ -72,6 +72,7 @@ const SignupPatientForm = () => {
     preferredOffLang: "",
     avatar: "",
   });
+  const [progress, setProgress] = useState(false);
 
   //EVENT HANDLERS
   const handleChangePostalOrZip = (e) => {
@@ -162,6 +163,7 @@ const SignupPatientForm = () => {
       return;
     }
     //Is the mail already taken ?
+    setProgress(true);
     try {
       const response = await xanoGet(
         `/patient_with_email`,
@@ -171,11 +173,13 @@ const SignupPatientForm = () => {
         formDatas.email.toLowerCase()
       );
       if (response.data) {
+        setProgress(false);
         setErrMsg("There is already an account with this email");
         return;
       }
     } catch (err) {
       setErrMsg(`Unable to post new patient: ${err.message}`);
+      setProgress(false);
       return;
     }
 
@@ -205,6 +209,7 @@ const SignupPatientForm = () => {
       patientId = response2.data.id;
     } catch (err) {
       setErrMsg(`Unable to post new patient:${err.message}`);
+      setProgress(false);
       return;
     }
 
@@ -363,8 +368,10 @@ const SignupPatientForm = () => {
           content: { data: response.data },
         });
       });
+      setProgress(false);
     } catch (err) {
       setErrMsg(`Unable to post new patient:${err.message}`);
+      setProgress(false);
       return;
     }
 
@@ -413,8 +420,10 @@ const SignupPatientForm = () => {
         preferredOffLang: "",
         avatar: "",
       });
+      setProgress(false);
     } catch (err) {
       setErrMsg(`Unable to post new patient : ${err.message}`);
+      setProgress(false);
     }
   };
 
@@ -732,7 +741,7 @@ const SignupPatientForm = () => {
         </div>
       </form>
       <div className="signup-patient__submit">
-        <button disabled={isLoadingFile} onClick={handleSubmit}>
+        <button disabled={isLoadingFile || progress} onClick={handleSubmit}>
           Sign up
         </button>
       </div>

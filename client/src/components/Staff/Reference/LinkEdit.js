@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { linkSchema } from "../../../validation/linkValidation";
 import useSocketContext from "../../../hooks/useSocketContext";
-import xanoPut from "../../../api/xanoPut";
+import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkEdit = ({ link, setEditVisible }) => {
   const [errMsg, setErrMsg] = useState("");
   const [editedLink, setEditedLink] = useState(link);
   const { auth } = useAuthContext();
   const { socket } = useSocketContext();
+  const [progress, setProgress] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +27,7 @@ const LinkEdit = ({ link, setEditVisible }) => {
       urlFormatted = ["https://", editedLink.url].join("");
     }
     try {
+      setProgress(true);
       const response = await xanoPut(
         "/links",
         axiosXanoStaff,
@@ -41,8 +42,10 @@ const LinkEdit = ({ link, setEditVisible }) => {
       });
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to save link:${err.message}`);
+      setProgress(false);
     }
   };
   const handleChange = (e) => {
@@ -79,8 +82,10 @@ const LinkEdit = ({ link, setEditVisible }) => {
         />
       </div>
       <div className="reference__form-btns">
-        <input type="submit" value="Save" />
-        <button onClick={handleCancel}>Cancel</button>
+        <input type="submit" value="Save" disabled={progress} />
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </form>
   );

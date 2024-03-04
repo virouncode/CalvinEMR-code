@@ -473,10 +473,12 @@ const MedicationForm = ({
       ),
     });
   };
+
   const handleRouteChange = (value) => {
+    console.log(value);
     setFormDatas({
       ...formDatas,
-      Route: routeCT.find(({ name }) => name === value)?.code || value,
+      Route: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -498,7 +500,7 @@ const MedicationForm = ({
   const handleFrequencyChange = (value) => {
     setFormDatas({
       ...formDatas,
-      Frequency: frequencyCT.find(({ name }) => name === value)?.code || value,
+      Frequency: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -518,10 +520,10 @@ const MedicationForm = ({
     });
   };
   const handleDosageUnitChange = (value) => {
+    console.log("handle change");
     setFormDatas({
       ...formDatas,
-      DosageUnitOfMeasure:
-        dosageUnitCT.find(({ name }) => name === value)?.code || value,
+      DosageUnitOfMeasure: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -541,12 +543,12 @@ const MedicationForm = ({
     });
   };
   const handleStrengthUnitChange = (value) => {
+    console.log(value);
     setFormDatas({
       ...formDatas,
       Strength: {
         ...formDatas.Strength,
-        UnitOfMeasure:
-          strengthUnitCT.find(({ name }) => name === value)?.code || value,
+        UnitOfMeasure: value,
       },
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
@@ -569,7 +571,7 @@ const MedicationForm = ({
   const handleFormChange = (value) => {
     setFormDatas({
       ...formDatas,
-      Form: formCT.find(({ name }) => name === value)?.code || value,
+      Form: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -663,7 +665,6 @@ const MedicationForm = ({
           list={strengthUnitCT}
           value={formDatas.Strength.UnitOfMeasure}
           handleChange={handleStrengthUnitChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -672,7 +673,6 @@ const MedicationForm = ({
           list={formCT}
           value={formDatas.Form}
           handleChange={handleFormChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -691,7 +691,6 @@ const MedicationForm = ({
           list={dosageUnitCT}
           value={formDatas.DosageUnitOfMeasure}
           handleChange={handleDosageUnitChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -700,7 +699,6 @@ const MedicationForm = ({
           list={routeCT}
           value={formDatas.Route}
           handleChange={handleRouteChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">

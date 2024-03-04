@@ -248,6 +248,10 @@ select:focus {
   border-left: none !important;
 }
 
+.MuiChartsTooltip-root {
+  font-size: 0.75rem;
+}
+
 .login-section {
   display: flex;
   justify-content: center;
@@ -315,7 +319,6 @@ select:focus {
 }
 
 .credentials-section {
-  background: url("../../assets/img/splash.jpg") center/cover;
   width: 100%;
   min-height: 100vh;
 }
@@ -10949,7 +10952,7 @@ readers do not read off random characters that represent icons */
   width: 97%;
   margin: 0 auto;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border: solid 1px #cecdcd;
   background: #FEFEFE;
 }
@@ -10972,7 +10975,7 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   overflow: hidden;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .calendar__left-bar .calendar__shortcutpickr .flatpickr-calendar.animate.inline {
   top: 0;
@@ -11215,7 +11218,7 @@ readers do not read off random characters that represent icons */
 
 .calendar__filter {
   margin-top: 5px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   width: 100%;
   border-radius: 6px;
   font-weight: bold;
@@ -11635,7 +11638,7 @@ readers do not read off random characters that represent icons */
   position: relative;
   height: 550px;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .patient-result__table {
   table-layout: fixed;
@@ -11693,7 +11696,7 @@ readers do not read off random characters that represent icons */
   height: 450px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   position: relative;
   width: 98%;
   margin: 0 auto;
@@ -11837,7 +11840,7 @@ readers do not read off random characters that represent icons */
   margin: 4px;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .clinical-notes__form-err {
   padding: 10px 20px;
@@ -11907,7 +11910,7 @@ readers do not read off random characters that represent icons */
   margin: 4px;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .clinical-notes__card--print {
   font-size: 0.8rem;
@@ -12187,7 +12190,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   margin: 60px auto;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .demographics-card__header {
   display: flex;
@@ -12306,7 +12309,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   position: relative;
 }
 .pasthealth__table {
@@ -12378,7 +12381,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .famhistory__table {
   table-layout: fixed;
@@ -12449,7 +12452,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .risk__table {
   table-layout: fixed;
@@ -12517,7 +12520,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .medications__table {
   table-layout: fixed;
@@ -12682,7 +12685,7 @@ readers do not read off random characters that represent icons */
   justify-content: space-between;
   padding: 30px 40px;
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border-radius: 6px;
 }
 .medications-detail__container form {
@@ -12814,7 +12817,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .pharmacies-list__table {
   table-layout: fixed;
@@ -12859,7 +12862,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   border-radius: 6px;
   padding: 10px 20px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .pharmacies__card-row {
   display: flex;
@@ -12894,7 +12897,7 @@ readers do not read off random characters that represent icons */
   height: 150px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .doctors__table {
   table-layout: fixed;
@@ -12967,7 +12970,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .doctors-list__table {
   table-layout: fixed;
@@ -13026,7 +13029,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   border-radius: 6px;
   margin: 0 auto;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .care-elements__card-title {
   border-radius: 6px 6px 0 0;
@@ -13085,7 +13088,7 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: center;
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border-radius: 6px;
 }
 .care-elements__history-container p {
@@ -13121,7 +13124,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .reminders__table {
   table-layout: fixed;
@@ -13189,7 +13192,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .pregnancies__table {
   table-layout: fixed;
@@ -13264,7 +13267,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .allergies__table {
   table-layout: fixed;
@@ -13332,7 +13335,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .alerts__table {
   table-layout: fixed;
@@ -13565,7 +13568,7 @@ readers do not read off random characters that represent icons */
   height: 300px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .immunizations__table {
   table-layout: fixed;
@@ -13639,7 +13642,7 @@ readers do not read off random characters that represent icons */
   height: 200px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .reports__table {
   table-layout: fixed;
@@ -13686,7 +13689,7 @@ readers do not read off random characters that represent icons */
   width: 100%;
   border: solid 1px #cecdcd;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .reports__form-btn-container {
   text-align: center;
@@ -13763,7 +13766,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .appointments__table {
   table-layout: fixed;
@@ -13836,7 +13839,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .problemlist__table {
   table-layout: fixed;
@@ -13902,7 +13905,7 @@ readers do not read off random characters that represent icons */
   transform: translate(-50%, -50%);
   background: #FEFEFE;
   overflow: hidden;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .confirm-dialog-header {
   display: flex;
@@ -14080,7 +14083,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   width: 70%;
   margin: 40px auto 0;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
   background: #FEFEFE;
@@ -14176,7 +14179,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   width: 95%;
   margin: 50px auto 0;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
   background: #FEFEFE;
@@ -14233,7 +14236,7 @@ readers do not read off random characters that represent icons */
 }
 
 .myaccount-section__container {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
   background: #FEFEFE;
@@ -14417,7 +14420,7 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   width: 98%;
   margin: 0 auto;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 
 .messages-toggle {
@@ -15167,7 +15170,7 @@ readers do not read off random characters that represent icons */
   height: 400px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .relationships__table {
   table-layout: fixed;
@@ -15337,7 +15340,7 @@ readers do not read off random characters that represent icons */
   height: 200px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .eforms__table {
   table-layout: fixed;
@@ -15405,7 +15408,7 @@ readers do not read off random characters that represent icons */
 }
 
 .patient-account__container {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
   background: #FEFEFE;
@@ -15586,7 +15589,7 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   padding: 10px;
   font-size: 0.85rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .new-appointments__title {
   font-size: 0.9rem;
@@ -15681,7 +15684,7 @@ readers do not read off random characters that represent icons */
   height: 75vh;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .reportsinbox__table {
   table-layout: fixed;
@@ -15714,7 +15717,7 @@ readers do not read off random characters that represent icons */
   background-color: #FEFEFE;
   border: solid 1px #cecdcd;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   font-size: 0.8rem;
   padding: 20px;
   display: flex;
@@ -15915,7 +15918,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto 0;
   border: solid 2px #93b5e9;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   background: #FEFEFE;
 }
 .reset-container-title {
@@ -16038,7 +16041,7 @@ readers do not read off random characters that represent icons */
   display: block;
   resize: none;
   overflow: scroll;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .calvinai-prompt__intro-textarea, .calvinai-prompt__conclusion-textarea {
   height: 40px;
@@ -16120,7 +16123,7 @@ readers do not read off random characters that represent icons */
   align-items: center;
   border-radius: 6px;
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   padding: 5px 0;
   padding-left: 10px;
   padding-right: 20px;
@@ -16138,7 +16141,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
@@ -16199,7 +16202,7 @@ readers do not read off random characters that represent icons */
   align-items: center;
   border-radius: 6px;
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   padding: 5px 0;
   padding-left: 10px;
   padding-right: 20px;
@@ -16217,7 +16220,7 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   border: solid 1px #cecdcd;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
@@ -16314,7 +16317,7 @@ readers do not read off random characters that represent icons */
   border-radius: 8px;
   z-index: 100;
   overflow: hidden;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   overflow: hidden;
   font-size: 0.85rem;
 }
@@ -16541,7 +16544,7 @@ readers do not read off random characters that represent icons */
   height: 65vh;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 
 .billing-table {
@@ -16693,7 +16696,7 @@ readers do not read off random characters that represent icons */
 
 .reference {
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   background: #FEFEFE;
   border-radius: 6px;
   padding: 20px;
@@ -16798,7 +16801,7 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   padding: 10px;
   font-size: 0.85rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .appointments-patient--past {
   margin-bottom: 10px;
@@ -16918,7 +16921,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   margin: 30px auto 0;
   border: solid 1px #cecdcd;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   justify-content: space-between;
   border-radius: 6px;
   padding: 20px;
@@ -17037,7 +17040,7 @@ readers do not read off random characters that represent icons */
   width: 80%;
   margin: 60px auto;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .personalhistory-card__header {
   display: flex;
@@ -17111,6 +17114,9 @@ readers do not read off random characters that represent icons */
 .med-templates__form-row label {
   font-weight: bold;
   min-width: 180px;
+}
+.med-templates__form-row input {
+  width: 150px;
 }
 .med-templates__form-row--text {
   align-items: start;
@@ -17340,7 +17346,7 @@ readers do not read off random characters that represent icons */
   margin: 0 auto;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   position: relative;
 }
 .sites__table-container table {
@@ -17538,7 +17544,7 @@ readers do not read off random characters that represent icons */
   height: 500px;
   overflow: scroll;
   border-radius: 6px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
 }
 .prescriptions__table {
   table-layout: fixed;

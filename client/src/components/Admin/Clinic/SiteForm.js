@@ -32,6 +32,7 @@ const SiteForm = ({ setAddVisible }) => {
     rooms: [],
   });
   const [postalOrZip, setPostalOrZip] = useState("postal");
+  const [progress, setProgress] = useState(false);
 
   const handleCancel = (e) => {
     setAddVisible(false);
@@ -138,7 +139,9 @@ const SiteForm = ({ setAddVisible }) => {
     }
 
     //Submission
+
     try {
+      setProgress(true);
       const response = await axiosXanoAdmin.post("/sites", datasToPost, {
         headers: {
           "Content-Type": "application/json",
@@ -154,10 +157,12 @@ const SiteForm = ({ setAddVisible }) => {
       toast.success(`New site successfully added to database`, {
         containerId: "A",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to add new site to database: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -288,8 +293,10 @@ const SiteForm = ({ setAddVisible }) => {
         </div>
       </form>
       <div className="site-form__btn-container">
-        <button onClick={handleSubmit}>Save</button>
-        <button type="button" onClick={handleCancel}>
+        <button onClick={handleSubmit} disabled={isLoadingFile || progress}>
+          Save
+        </button>
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import {
   deletePatientRecord,
@@ -24,6 +24,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
+  const [progress, setProgress] = useState(false);
   const handleDeleteClick = async (e) => {
     if (
       await confirmAlert({
@@ -31,6 +32,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/reports",
           item.id,
@@ -44,10 +46,12 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
           content: { id: item.id },
         });
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete document: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -66,7 +70,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
           DateTimeReportReviewed: Date.now(),
         },
       ];
-
+      setProgress(true);
       await putPatientRecord(
         "/reports",
         item.id,
@@ -85,10 +89,12 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       toast.success("Document acknowledged successfully", {
         containerId: "A",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to acknowledge document : ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -98,12 +104,14 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
         <div className="reports__item-btn-container">
           {" "}
           {!item.acknowledged && item.assigned_staff_id === user.id && (
-            <button onClick={handleAcknowledge}>Acknowledge</button>
+            <button onClick={handleAcknowledge} disabled={progress}>
+              Acknowledge
+            </button>
           )}
-          <button>Fax</button>
+          <button disabled={progress}>Fax</button>
           <button
             onClick={handleDeleteClick}
-            disabled={user.id !== item.assigned_staff_id}
+            disabled={user.id !== item.assigned_staff_id || progress}
           >
             Delete
           </button>

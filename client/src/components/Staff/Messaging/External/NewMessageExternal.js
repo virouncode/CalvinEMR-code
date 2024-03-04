@@ -20,6 +20,7 @@ const NewMessageExternal = ({ setNewVisible }) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const handleChange = (e) => {
     setBody(e.target.value);
@@ -60,6 +61,7 @@ const NewMessageExternal = ({ setNewVisible }) => {
       return;
     }
     try {
+      setProgress(true);
       const attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
           attachments_array: attachments,
@@ -140,12 +142,12 @@ Powered by Calvin EMR`,
         });
 
       toast.success("Message sent successfully", { containerId: "A" });
-
-      //EMAIL + SMS pour prévenir le patient qu'il a un nouveau message dans son portail
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to send message: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -247,10 +249,12 @@ Powered by Calvin EMR`,
           />
         </div>
         <div className="new-message__btns">
-          <button onClick={handleSend} disabled={isLoadingFile}>
+          <button onClick={handleSend} disabled={isLoadingFile || progress}>
             Send
           </button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleCancel} disabled={progress}>
+            Cancel
+          </button>
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>

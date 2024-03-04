@@ -58,6 +58,7 @@ const RecImmunizationFormSecondDose = ({
     patient_id: patientId,
     recommended: true,
   });
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleCancel = () => {
@@ -82,6 +83,7 @@ const RecImmunizationFormSecondDose = ({
     }
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/immunizations",
         user.id,
@@ -92,10 +94,12 @@ const RecImmunizationFormSecondDose = ({
       );
       setFormVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save immunization: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
   const handleChange = (e) => {
@@ -231,8 +235,8 @@ const RecImmunizationFormSecondDose = ({
         />
       </div>
       <div className="recimmunizations-form__btns">
-        <input type="submit" value="Save" />
-        <button type="button" onClick={handleCancel}>
+        <input type="submit" value="Save" disabled={progress} />
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

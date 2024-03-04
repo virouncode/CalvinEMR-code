@@ -21,6 +21,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
   const [errMsg, setErrMsg] = useState("");
   const [formDatas, setFormDatas] = useState(infos);
   const [postalOrZip, setPostalOrZip] = useState("postal");
+  const [progress, setProgress] = useState(false);
 
   const handleChangePostalOrZip = (e) => {
     setErrMsg("");
@@ -130,6 +131,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
     }
     //Submission
     try {
+      setProgress(true);
       const response = await axiosXanoAdmin.put(
         `/sites/${infos.id}`,
         datasToPut,
@@ -149,10 +151,12 @@ const SiteEdit = ({ infos, setEditVisible }) => {
       toast.success(`Site successfully updated`, {
         containerId: "A",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to update site: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -283,8 +287,10 @@ const SiteEdit = ({ infos, setEditVisible }) => {
         </div>
       </form>
       <div className="site-form__btn-container">
-        <button onClick={handleSubmit}>Save</button>
-        <button type="button" onClick={handleCancel}>
+        <button onClick={handleSubmit} disabled={isLoadingFile || progress}>
+          Save
+        </button>
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

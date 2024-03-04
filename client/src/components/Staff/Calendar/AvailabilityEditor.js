@@ -27,6 +27,7 @@ const AvailabilityEditor = ({
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
+  const [progress, setProgress] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
   const days = [
@@ -59,6 +60,7 @@ const AvailabilityEditor = ({
     }
     //Submission
     try {
+      setProgress(true);
       await xanoPut(
         "/availability",
         axiosXanoStaff,
@@ -73,10 +75,12 @@ const AvailabilityEditor = ({
       });
       setEditVisible(false);
       toast.success("Availability saved successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to save availability : ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
   const handleStartMorningChange = (e, day, name) => {
@@ -168,8 +172,10 @@ const AvailabilityEditor = ({
             />
           </div>
           <div className="availability__btns">
-            <input type="submit" value="Save" />
-            <button onClick={handleCancel}>Cancel</button>
+            <input type="submit" value="Save" disabled={progress} />
+            <button onClick={handleCancel} disabled={progress}>
+              Cancel
+            </button>
           </div>
         </form>
       </div>

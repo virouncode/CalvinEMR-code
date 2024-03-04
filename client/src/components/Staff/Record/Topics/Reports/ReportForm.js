@@ -44,6 +44,7 @@ const ReportForm = ({
   });
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [sentOrReceived, setSentOrReceived] = useState("Received");
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -152,6 +153,7 @@ const ReportForm = ({
     }
 
     try {
+      setProgress(true);
       const response = await postPatientRecord(
         "/reports",
         user.id,
@@ -170,10 +172,12 @@ const ReportForm = ({
       }
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save document: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
   const handleUpload = async (e) => {
@@ -234,9 +238,13 @@ const ReportForm = ({
           <input
             type="submit"
             value={isLoadingFile ? "Loading" : "Save"}
-            disabled={isLoadingFile}
+            disabled={isLoadingFile || progress}
           />
-          <button type="button" onClick={handleCancel}>
+          <button
+            type="button"
+            onClick={handleCancel}
+            disabled={progress || isLoadingFile}
+          >
             Cancel
           </button>
         </div>

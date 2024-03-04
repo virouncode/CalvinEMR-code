@@ -31,6 +31,7 @@ const RecImmunizationEditMultiple = ({
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState(immunizationInfos);
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleCancel = () => {
@@ -43,6 +44,7 @@ const RecImmunizationEditMultiple = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/immunizations",
           immunizationInfos.id,
@@ -52,10 +54,12 @@ const RecImmunizationEditMultiple = ({
         );
         setEditVisible(false);
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete immunization: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -77,6 +81,7 @@ const RecImmunizationEditMultiple = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/immunizations",
         immunizationInfos.id,
@@ -88,10 +93,12 @@ const RecImmunizationEditMultiple = ({
       );
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save immunization: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
   const handleChange = (e) => {
@@ -226,11 +233,11 @@ const RecImmunizationEditMultiple = ({
         />
       </div>
       <div className="recimmunizations-form__btns">
-        <input type="submit" value="Save" />
-        <button type="button" onClick={handleDelete}>
+        <input type="submit" value="Save" disabled={progress} />
+        <button type="button" onClick={handleDelete} disabled={progress}>
           Delete
         </button>
-        <button type="button" onClick={handleCancel}>
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

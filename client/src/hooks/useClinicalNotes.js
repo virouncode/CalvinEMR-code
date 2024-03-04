@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { axiosXanoStaff } from "../api/xanoStaff";
-import { sortByDate } from "../utils/socketHandlers/updates";
+import { sortByDate } from "../utils/updates";
 import useAuthContext from "./useAuthContext";
 
 const initialHttpState = {

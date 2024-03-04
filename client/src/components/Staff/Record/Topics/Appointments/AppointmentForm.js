@@ -77,6 +77,7 @@ const AppointmentForm = ({
   const endAMPMInput = useRef("");
   const minStartDate = useRef(toLocalDate(Date.now()));
   const minEndDate = useRef(toLocalDate(Date.now()));
+  const [progress, setProgress] = useState(false);
 
   //STYLE
 
@@ -426,6 +427,7 @@ const AppointmentForm = ({
       return;
     }
     try {
+      setProgress(true);
       await postPatientRecord(
         "/appointments",
         user.id,
@@ -437,10 +439,12 @@ const AppointmentForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save appointment: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -458,8 +462,13 @@ const AppointmentForm = ({
     >
       <td>
         <div className="appointments__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

@@ -22,6 +22,7 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
     recreational_drugs: "",
   });
   const [errMsgPost, setErrMsgPost] = useState("");
+  const [progress, setProgress] = useState(false);
 
   const handleChange = (e) => {
     setErrMsgPost("");
@@ -96,6 +97,7 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
     };
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/personal_history",
         user.id,
@@ -105,11 +107,12 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         "PERSONAL HISTORY"
       );
       toast.success("Saved successfully", { containerId: "A" });
-      // setPopUpVisible(false);
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save social history: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
       return;
     }
   };
@@ -200,8 +203,12 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
         />
       </p>
       <p className="personalhistory-card__btns">
-        <button onClick={handleSubmit}>Save</button>
-        <button onClick={handleClose}>Close</button>
+        <button onClick={handleSubmit} disabled={progress}>
+          Save
+        </button>
+        <button onClick={handleClose} disabled={progress}>
+          Close
+        </button>
       </p>
     </form>
   );

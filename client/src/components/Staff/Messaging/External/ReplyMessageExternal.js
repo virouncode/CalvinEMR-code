@@ -26,12 +26,14 @@ const ReplyMessageExternal = ({
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const handleCancel = (e) => {
     setReplyVisible(false);
   };
   const handleSend = async (e) => {
     try {
+      setProgress(true);
       let attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
           attachments_array: attachments,
@@ -120,10 +122,12 @@ Powered by Calvin EMR`,
           }
         });
       toast.success("Message sent successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to send message: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -243,10 +247,12 @@ Powered by Calvin EMR`,
         />
       </div>
       <div className="reply-message__btns">
-        <button onClick={handleSend} disabled={isLoadingFile}>
+        <button onClick={handleSend} disabled={isLoadingFile || progress}>
           Send
         </button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
         {isLoadingFile && <CircularProgressMedium />}
       </div>
       <ToastCalvin id="B" />

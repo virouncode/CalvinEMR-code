@@ -19,7 +19,7 @@
         display:block;
         resize: none;
         overflow: scroll;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
     }
     &__intro-textarea, &__conclusion-textarea {
         height: 40px;
@@ -101,7 +101,7 @@
         align-items: center;
         border-radius: 6px;
         border: solid 1px $grey;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         padding:5px 0;
         padding-left:10px;
         padding-right:20px;
@@ -119,7 +119,7 @@
         padding: 20px;
         border: solid 1px $grey;
         border-radius: 6px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between;

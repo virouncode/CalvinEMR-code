@@ -25,6 +25,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
   });
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const fileInputRef = useRef(null);
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -81,6 +82,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
     }
 
     try {
+      setProgress(true);
       const response = await postPatientRecord(
         "/reports",
         user.id,
@@ -116,10 +118,12 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
         "Report posted successfully to patient's assigned practitioner",
         { containerId: "A" }
       );
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save document: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
   const handleUpload = async (e) => {
@@ -175,7 +179,11 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
     >
       <form className="reportsinbox__form-content" onSubmit={handleSubmit}>
         <div className="reportsinbox__form-row">
-          <input type="submit" value="Post" disabled={isLoadingFile} />
+          <input
+            type="submit"
+            value="Post"
+            disabled={isLoadingFile || progress}
+          />
         </div>
         <div className="reportsinbox__form-row">
           <label>Report Name</label>

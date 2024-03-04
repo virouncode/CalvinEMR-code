@@ -24,12 +24,14 @@ const ReplyMessagePatient = ({
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const handleCancel = (e) => {
     setReplyVisible(false);
   };
   const handleSend = async (e) => {
     try {
+      setProgress(true);
       const attachmentsToPost = attachments.map((attachment) => {
         return { ...attachment, date_created: Date.now() };
       });
@@ -91,10 +93,12 @@ const ReplyMessagePatient = ({
       setReplyVisible(false);
       setCurrentMsgId(0);
       toast.success("Message sent successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to send message: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -214,10 +218,12 @@ const ReplyMessagePatient = ({
         />
       </div>
       <div className="reply-message__btns">
-        <button onClick={handleSend} disabled={isLoadingFile}>
+        <button onClick={handleSend} disabled={isLoadingFile || progress}>
           Send
         </button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
         {isLoadingFile && <CircularProgressMedium />}
       </div>
       <ToastCalvin id="B" />

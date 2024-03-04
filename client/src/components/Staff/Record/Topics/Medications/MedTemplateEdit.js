@@ -56,7 +56,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
     try {
       setProgress(true);
       const response = await axiosXanoStaff.put(
-        "/medications_templates",
+        `/medications_templates/${med.id}`,
         datasToPut,
         {
           headers: {
@@ -306,7 +306,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
   const handleRouteChange = (value) => {
     setFormDatas({
       ...formDatas,
-      Route: routeCT.find(({ name }) => name === value)?.code || value,
+      Route: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -327,7 +327,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
   const handleFrequencyChange = (value) => {
     setFormDatas({
       ...formDatas,
-      Frequency: frequencyCT.find(({ name }) => name === value)?.code || value,
+      Frequency: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -348,8 +348,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
   const handleDosageUnitChange = (value) => {
     setFormDatas({
       ...formDatas,
-      DosageUnitOfMeasure:
-        dosageUnitCT.find(({ name }) => name === value)?.code || value,
+      DosageUnitOfMeasure: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -372,8 +371,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
       ...formDatas,
       Strength: {
         ...formDatas.Strength,
-        UnitOfMeasure:
-          strengthUnitCT.find(({ name }) => name === value)?.code || value,
+        UnitOfMeasure: value,
       },
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
@@ -395,7 +393,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
   const handleFormChange = (value) => {
     setFormDatas({
       ...formDatas,
-      Form: formCT.find(({ name }) => name === value)?.code || value,
+      Form: value,
       PrescriptionInstructions: toPrescriptionInstructions(
         formDatas.DrugName,
         formDatas.Strength.Amount,
@@ -453,7 +451,6 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
           list={strengthUnitCT}
           value={formDatas.Strength.UnitOfMeasure}
           handleChange={handleStrengthUnitChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -462,7 +459,6 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
           list={formCT}
           value={formDatas.Form}
           handleChange={handleFormChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -481,7 +477,6 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
           list={dosageUnitCT}
           value={formDatas.DosageUnitOfMeasure}
           handleChange={handleDosageUnitChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">
@@ -490,7 +485,6 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
           list={routeCT}
           value={formDatas.Route}
           handleChange={handleRouteChange}
-          placeHolder=""
         />
       </div>
       <div className="med-templates__form-row">

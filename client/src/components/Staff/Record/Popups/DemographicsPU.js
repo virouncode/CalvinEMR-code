@@ -25,12 +25,9 @@ import { toLocalDate, toLocalDateAndTime } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
 import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import { primaryPhysicianCaption } from "../../../../utils/primaryPhysicianCaption";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
+import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import { demographicsSchema } from "../../../../validation/demographicsValidation";
 import ConfirmGlobal, {
   confirmAlert,

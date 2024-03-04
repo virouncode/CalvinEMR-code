@@ -11,7 +11,6 @@ import {
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
@@ -31,8 +30,8 @@ const RecImmunizationEditSecondDose = ({
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
-  const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState(immunizationInfos);
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleCancel = () => {
@@ -45,6 +44,7 @@ const RecImmunizationEditSecondDose = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/immunizations",
           immunizationInfos.id,
@@ -54,10 +54,12 @@ const RecImmunizationEditSecondDose = ({
         );
         setEditVisible(false);
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete immunization: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -79,6 +81,7 @@ const RecImmunizationEditSecondDose = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/immunizations",
         immunizationInfos.id,
@@ -90,10 +93,12 @@ const RecImmunizationEditSecondDose = ({
       );
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save immunization: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
   const handleChange = (e) => {
@@ -228,11 +233,11 @@ const RecImmunizationEditSecondDose = ({
         />
       </div>
       <div className="recimmunizations-form__btns">
-        <input type="submit" value="Save" />
-        <button type="button" onClick={handleDelete}>
+        <input type="submit" value="Save" disabled={progress} />
+        <button type="button" onClick={handleDelete} disabled={progress}>
           Delete
         </button>
-        <button type="button" onClick={handleCancel}>
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

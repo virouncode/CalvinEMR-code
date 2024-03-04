@@ -21,6 +21,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const handleChange = (e) => {
     setBody(e.target.value);
@@ -60,6 +61,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
       return;
     }
     try {
+      setProgress(true);
       const attachmentsToPost = attachments.map((attachment) => {
         return { ...attachment, date_created: Date.now() };
       });
@@ -111,10 +113,12 @@ const NewMessagePatient = ({ setNewVisible }) => {
       });
       setNewVisible(false);
       toast.success("Message sent successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to send message: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -227,10 +231,12 @@ const NewMessagePatient = ({ setNewVisible }) => {
           />
         </div>
         <div className="new-message__btns new-message__btns--patient">
-          <button onClick={handleSend} disabled={isLoadingFile}>
+          <button onClick={handleSend} disabled={isLoadingFile || progress}>
             Send
           </button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleCancel} disabled={progress}>
+            Cancel
+          </button>
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>

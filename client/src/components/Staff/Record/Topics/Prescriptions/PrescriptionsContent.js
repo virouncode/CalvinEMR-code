@@ -3,7 +3,6 @@ import { showDocument } from "../../../../../utils/showDocument";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const PrescriptionsContent = ({ topicDatas, loading, errMsg }) => {
-  console.log("prescriptions", topicDatas);
   return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>

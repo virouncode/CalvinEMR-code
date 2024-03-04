@@ -21,7 +21,8 @@ const MyAccountForm = () => {
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState("");
-  const [isLoadingFile, setIsLoadingFile] = useState(false);
+  // const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setFormDatas(staffInfos.find(({ id }) => id === user.id));
@@ -91,6 +92,7 @@ const MyAccountForm = () => {
     }
     try {
       //Submission
+      setProgress(true);
       const response = await axiosXanoStaff.put(
         `/staff/${user.id}`,
         tempFormDatas,
@@ -126,9 +128,11 @@ const MyAccountForm = () => {
       });
 
       setEditVisible(false);
+      setProgress(false);
       setTimeout(() => setSuccessMsg(""), 2000);
     } catch (err) {
       setErrMsg(`Error: unable to save infos: ${err.message}`);
+      setProgress(false);
     }
   };
 
@@ -261,15 +265,19 @@ const MyAccountForm = () => {
       <div className="myaccount-section__btns">
         {editVisible ? (
           <>
-            <button onClick={handleSave} disabled={isLoadingFile}>
+            <button onClick={handleSave} disabled={progress}>
               Save
             </button>
-            <button onClick={handleCancel}>Cancel</button>
+            <button onClick={handleCancel} disabled={progress}>
+              Cancel
+            </button>
           </>
         ) : (
           <>
-            <button onClick={handleEdit}>Edit</button>
-            <button onClick={handleChangeCredentials}>
+            <button onClick={handleEdit} disabled={progress}>
+              Edit
+            </button>
+            <button onClick={handleChangeCredentials} disabled={progress}>
               Change email/password
             </button>
           </>

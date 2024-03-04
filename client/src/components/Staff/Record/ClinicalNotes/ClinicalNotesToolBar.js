@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
@@ -27,17 +28,19 @@ const ClinicalNotesToolBar = ({
   setPaging,
   overviewVisible,
   setOverviewVisible,
+  setClinicalNotes,
 }) => {
   //HOOKS
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
+  const { id } = useParams();
 
   //Events
   const handleClickOverview = () => {
     setOverviewVisible(true);
   };
-  const handleClickSelectAll = (e) => {
+  const handleClickSelectAll = async (e) => {
     if (selectAll) {
       setSelectAll(false);
       setCheckedNotes([]);

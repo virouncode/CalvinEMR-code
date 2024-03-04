@@ -27,6 +27,7 @@ const PregnancyItem = ({
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -44,6 +45,10 @@ const PregnancyItem = ({
       value = parseInt(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
+  };
+
+  const handleChangePregnancyEvent = (value) => {
+    setItemInfos({ ...itemInfos, description: value });
   };
 
   const handleSubmit = async (e) => {
@@ -66,6 +71,7 @@ const PregnancyItem = ({
       return;
     }
     try {
+      setProgress(true);
       await putPatientRecord(
         "/pregnancies",
         item.id,
@@ -79,10 +85,12 @@ const PregnancyItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to update pregnancy item: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -108,6 +116,7 @@ const PregnancyItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/pregnancies",
           item.id,
@@ -115,12 +124,13 @@ const PregnancyItem = ({
           socket,
           "PREGNANCIES"
         );
-
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to delete pregnancy item: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -136,13 +146,26 @@ const PregnancyItem = ({
           <div className="pregnancies-item__btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>
@@ -153,8 +176,7 @@ const PregnancyItem = ({
           {editVisible ? (
             <PregnanciesList
               value={itemInfos.description}
-              name="description"
-              handleChange={handleChange}
+              handleChange={handleChangePregnancyEvent}
             />
           ) : (
             itemInfos.description

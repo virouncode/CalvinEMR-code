@@ -29,7 +29,7 @@
         height:75vh;
         overflow:scroll;
         border-radius: 6px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
     }
     &__table {
         table-layout:fixed;
@@ -62,7 +62,7 @@
         background-color: $white;
         border: solid 1px $grey;
         border-radius: 6px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         font-size: 0.8rem;
         padding: 20px; 
         display: flex;

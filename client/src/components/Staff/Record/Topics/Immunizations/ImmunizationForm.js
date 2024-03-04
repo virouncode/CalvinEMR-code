@@ -35,8 +35,10 @@ const ImmunizationForm = ({
     Date: Date.now(),
     RefusedFlag: { ynIndicatorsimple: "N" },
   });
+  const [progress, setProgress] = useState(false);
 
   const handleRouteChange = (value) => {
+    console.log(value);
     setFormDatas({ ...formDatas, Route: value });
   };
   const handleSiteChange = (value) => {
@@ -61,6 +63,7 @@ const ImmunizationForm = ({
     }
 
     try {
+      setProgress(true);
       await postPatientRecord(
         "/immunizations",
         user.id,
@@ -72,10 +75,12 @@ const ImmunizationForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save immunization: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -103,8 +108,15 @@ const ImmunizationForm = ({
     <tr className="immunizations__form">
       <td style={{ textAlign: "center" }}>
         <div className="immunizations__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button onClick={handleCancel}>Cancel</button>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button onClick={handleCancel} disabled={progress}>
+            Cancel
+          </button>
         </div>
       </td>
       <td>

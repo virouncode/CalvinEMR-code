@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
@@ -28,9 +28,11 @@ const ReportsInboxItem = ({
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
+  const [progress, setProgress] = useState(false);
 
   const handleAcknowledge = async () => {
     try {
+      setProgress(true);
       const datasToPut = { ...item };
       datasToPut.acknowledged = true;
       datasToPut.ReportReviewed = [
@@ -63,10 +65,12 @@ const ReportsInboxItem = ({
       toast.success("Document acknowledged successfully", {
         containerId: "A",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to acknowledge document : ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -119,10 +123,12 @@ const ReportsInboxItem = ({
       <SignCell item={item} staffInfos={staffInfos} />
       <td>
         <div className="reports__item-btn-container">
-          <button onClick={handleAcknowledge}>Acknowledge</button>
+          <button onClick={handleAcknowledge} disabled={progress}>
+            Acknowledge
+          </button>
           <button
             onClick={(e) => handleForward(e, item.id)}
-            disabled={forwardVisible}
+            disabled={forwardVisible || progress}
           >
             Forward
           </button>

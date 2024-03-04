@@ -8,11 +8,8 @@ import useUserContext from "../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../utils/firstLetterUpper";
 import { toLocalDateAndTime } from "../../../../utils/formatDates";
 import { getResidualInfo } from "../../../../utils/getResidualInfo";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import { personalHistorySchema } from "../../../../validation/personalHistoryValidation";
 import ConfirmGlobal, {
   confirmAlert,
@@ -36,6 +33,7 @@ const PersonalHistoryPU = ({
   const [editVisible, setEditVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
   const [formDatas, setFormDatas] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     if (topicDatas && topicDatas.length > 0) {
@@ -154,6 +152,7 @@ const PersonalHistoryPU = ({
       },
     };
     try {
+      setProgress(true);
       await putPatientRecord(
         "/personal_history",
         topicDatas[0].id,
@@ -165,6 +164,7 @@ const PersonalHistoryPU = ({
       );
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(
         `Error: unable to update patient social history: ${err.message}`,
@@ -172,6 +172,7 @@ const PersonalHistoryPU = ({
           containerId: "B",
         }
       );
+      setProgress(false);
     }
   };
 

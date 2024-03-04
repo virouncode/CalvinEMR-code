@@ -3,11 +3,8 @@ import useAdminsInfosContext from "../../../../hooks/useAdminsInfosContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { adminIdToName } from "../../../../utils/adminIdToName";
 import { toLocalDate } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 
 const SignCellStaff = ({ item }) => {
   const { staffInfos } = useStaffInfosContext();

@@ -34,6 +34,7 @@ const AllergyItem = ({
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -70,6 +71,7 @@ const AllergyItem = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/allergies",
         item.id,
@@ -82,10 +84,12 @@ const AllergyItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to update allergy: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -111,6 +115,7 @@ const AllergyItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/allergies",
           item.id,
@@ -120,10 +125,12 @@ const AllergyItem = ({
         );
 
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to delete item: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -139,13 +146,26 @@ const AllergyItem = ({
           <div className="allergies__item-btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

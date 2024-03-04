@@ -53,7 +53,7 @@ const MigrationExport = () => {
   const [allPatientsIdsChecked, setAllPatientsIdsChecked] = useState(false);
   const [checkedRecordsIds, setCheckedRecordsIds] = useState([1]);
   const [allRecordsIdsChecked, setAllRecordsIdsChecked] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const isPatientIdChecked = (id) => {
     return checkedPatientsIds.includes(parseInt(id)) ? true : false;
@@ -124,7 +124,7 @@ const MigrationExport = () => {
       alert("Please choose at least 1 patient !");
       return;
     }
-    setIsExporting(true);
+    setProgress(true);
     const dateOfExport = dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT");
     try {
       for (let patientId of checkedPatientsIds) {
@@ -166,14 +166,14 @@ const MigrationExport = () => {
           patientInfos
         );
       }
-      setIsExporting(false);
+      setProgress(false);
       toast.success("EMR exported successfully in your Downloads folder", {
         containerId: "A",
         autoClose: 5000,
       });
     } catch (err) {
       console.log(err.message);
-      setIsExporting(false);
+      setProgress(false);
       toast.error(`EMR export fail, please contact CalvinEMR: ${err.message}`, {
         containerId: "A",
         autoClose: 5000,
@@ -202,7 +202,7 @@ const MigrationExport = () => {
             handleCheckPatientId={handleCheckPatientId}
             handleCheckAllPatientsIds={handleCheckAllPatientsIds}
             isAllPatientsIdsChecked={isAllPatientsIdsChecked}
-            isExporting={isExporting}
+            progress={progress}
             patientsDemographics={patientsDemographics}
             loading={loading}
             err={err}
@@ -217,15 +217,15 @@ const MigrationExport = () => {
             handleCheckRecordId={handleCheckRecordId}
             handleCheckAllRecordsIds={handleCheckAllRecordsIds}
             isAllRecordsIdsChecked={isAllRecordsIdsChecked}
-            isExporting={isExporting}
+            progress={progress}
           />
         </div>
       </div>
       <div className="migration-export__btn">
-        <button onClick={handleExport} disabled={isExporting}>
+        <button onClick={handleExport} disabled={progress}>
           Export
         </button>
-        {isExporting && <CircularProgressMedium />}
+        {progress && <CircularProgressMedium />}
       </div>
     </div>
   );

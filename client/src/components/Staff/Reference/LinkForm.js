@@ -18,6 +18,8 @@ const LinkForm = ({ links, setAddVisible }) => {
     staff_id: user.id,
   });
   const [errMsg, setErrMsg] = useState("");
+  const [progress, setProgress] = useState(false);
+
   const handleChange = (e) => {
     const id = e.target.id;
     const value = e.target.value;
@@ -41,6 +43,7 @@ const LinkForm = ({ links, setAddVisible }) => {
       urlFormatted = ["https://", newLink.url].join("");
     }
     try {
+      setProgress(true);
       const response = await xanoPost(
         "/links",
         axiosXanoStaff,
@@ -58,8 +61,10 @@ const LinkForm = ({ links, setAddVisible }) => {
       });
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to save link:${err.message}`);
+      setProgress(false);
     }
   };
   const handleCancel = (e) => {
@@ -90,8 +95,10 @@ const LinkForm = ({ links, setAddVisible }) => {
         />
       </div>
       <div className="reference__form-btns">
-        <input type="submit" value="Save" />
-        <button onClick={handleCancel}>Cancel</button>
+        <input type="submit" value="Save" disabled={progress} />
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </form>
   );

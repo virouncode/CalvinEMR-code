@@ -30,6 +30,7 @@ const ClinicalNotesHeader = ({
   errPatient,
   overviewVisible,
   setOverviewVisible,
+  setClinicalNotes,
 }) => {
   const [selectAllDisabled, setSelectAllDisabled] = useState(false);
   useEffect(() => {
@@ -76,6 +77,7 @@ const ClinicalNotesHeader = ({
         setPaging={setPaging}
         overviewVisible={overviewVisible}
         setOverviewVisible={setOverviewVisible}
+        setClinicalNotes={setClinicalNotes}
       />
     </div>
   );

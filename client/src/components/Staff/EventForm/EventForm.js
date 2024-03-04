@@ -92,6 +92,7 @@ const EventForm = ({
   const previousEnd = useRef(currentEvent.current.end);
   const initialColor = useRef(currentEvent.current.backgroundColor);
   const initialTextColor = useRef(currentEvent.current.textColor);
+  const [progress, setProgress] = useState(false);
 
   //============================ HANDLERS ==========================//
 
@@ -473,6 +474,7 @@ const EventForm = ({
       toast.success("Appointment saved successfully", { containerId: "A" });
       return;
     }
+    setProgress(true);
     const startAllDay = new Date(tempFormDatas.start).setHours(0, 0, 0, 0);
     let endAllDay = new Date(startAllDay);
     endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
@@ -556,11 +558,13 @@ const EventForm = ({
       }
       setCalendarSelectable(true);
       toast.success("Appointment saved successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       if (err.name !== "CanceledError")
         toast.error(`Error: unable to save appointment: ${err.message}`, {
           containerId: "A",
         });
+      setProgress(false);
     }
   };
 
@@ -716,20 +720,25 @@ const EventForm = ({
           currentEvent.current.extendedProps.host === user.id ? (
             <>
               <input type="submit" value="Save" />
-              <button onClick={handleCancel}>Cancel</button>
+              <button onClick={handleCancel} disabled={progress}>
+                Cancel
+              </button>
               <button
                 onClick={handleInvitation}
                 disabled={
                   (!tempFormDatas.staff_guests_ids.length &&
                     !tempFormDatas.patients_guests_ids.length) ||
-                  !tempFormDatas.host_id
+                  !tempFormDatas.host_id ||
+                  progress
                 }
               >
                 Send invitation
               </button>
             </>
           ) : (
-            <button onClick={handleCancel}>Close</button>
+            <button onClick={handleCancel} disabled={progress}>
+              Close
+            </button>
           )}
         </div>
       </form>

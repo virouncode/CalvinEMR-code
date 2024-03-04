@@ -14,7 +14,6 @@ import { toPatientName } from "../../../utils/toPatientName";
 import { toSiteName } from "../../../utils/toSiteName";
 import { billingItemSchema } from "../../../validation/billingValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SelectSite from "../EventForm/SelectSite";
 import DiagnosisSearch from "./DiagnosisSearch";
@@ -103,6 +102,7 @@ const BillingTableItem = ({
   };
 
   const handleDuplicateClick = async () => {
+    setProgress(true);
     const datasToPost = {
       date: itemInfos.date,
       date_created: Date.now(),
@@ -143,10 +143,12 @@ const BillingTableItem = ({
       });
       setEditVisible(false);
       toast.success(`Billing duplicated successfully`, { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Can't duplicate billing: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -158,6 +160,7 @@ const BillingTableItem = ({
       setErrMsgPost(err.message);
       return;
     }
+    setProgress(true);
     if (
       (
         await axiosXanoInstance.get(
@@ -172,10 +175,12 @@ const BillingTableItem = ({
       ).data === null
     ) {
       setErrMsgPost("There is no existing diagnosis with this code");
+      setProgress(false);
       return;
     }
     if (itemInfos.billing_code.includes(",")) {
       setErrMsgPost("Please enter only one billing code");
+      setProgress(false);
       return;
     }
     const response = await axiosXanoInstance.get(
@@ -189,6 +194,7 @@ const BillingTableItem = ({
     );
     if (response.data === null) {
       setErrMsgPost(`Billing code ${itemInfos.billing_code} doesn't exists`);
+      setProgress(false);
       return;
     }
     //Submission
@@ -227,7 +233,6 @@ const BillingTableItem = ({
       site_id: itemInfos.site_id,
     };
     try {
-      setProgress(true);
       const response = await axiosXanoInstance.put(
         `/billings/${billing.id}`,
         datasToPut,
@@ -248,10 +253,10 @@ const BillingTableItem = ({
       setProgress(false);
       toast.success(`Billing saved successfully`, { containerId: "A" });
     } catch (err) {
-      setProgress(false);
       toast.error(`Can't save billing: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -262,6 +267,7 @@ const BillingTableItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await axiosXanoInstance.delete(`/billings/${billing.id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -275,10 +281,12 @@ const BillingTableItem = ({
           content: { id: billing.id },
         });
         toast.success(`Billing deleted successfully`, { containerId: "A" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Can't delete billing: ${err.message}`, {
           containerId: "A",
         });
+        setProgress(false);
       }
     }
   };
@@ -296,21 +304,25 @@ const BillingTableItem = ({
               <div className="billing-table__item-btn-container">
                 {!editVisible ? (
                   <>
-                    <button onClick={handleEditClick}>Edit</button>
-                    <button onClick={handleDeleteClick}>Delete</button>
-                    <button onClick={handleDuplicateClick}>Duplicate</button>
+                    <button onClick={handleEditClick} disabled={progress}>
+                      Edit
+                    </button>
+                    <button onClick={handleDeleteClick} disabled={progress}>
+                      Delete
+                    </button>
+                    <button onClick={handleDuplicateClick} disabled={progress}>
+                      Duplicate
+                    </button>
                   </>
                 ) : (
                   <>
-                    {progress ? (
-                      <CircularProgressMedium />
-                    ) : (
-                      <input
-                        type="submit"
-                        value="Save"
-                        onClick={handleSubmit}
-                      />
-                    )}
+                    <input
+                      type="submit"
+                      value="Save"
+                      onClick={handleSubmit}
+                      disabled={progress}
+                    />
+
                     <button onClick={handleCancel} disabled={progress}>
                       Cancel
                     </button>

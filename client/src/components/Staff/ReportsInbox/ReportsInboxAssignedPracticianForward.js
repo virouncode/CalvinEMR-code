@@ -68,6 +68,7 @@ const ReportsInboxAssignedPracticianForward = ({
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [assignedId, setAssignedId] = useState(0);
+  const [progress, setProgress] = useState(false);
 
   const handleCheckPractician = (e) => {
     const checked = e.target.checked;
@@ -87,6 +88,7 @@ const ReportsInboxAssignedPracticianForward = ({
   };
   const handleForwardDocument = async () => {
     try {
+      setProgress(true);
       reportToForward.assigned_staff_id = assignedId;
       await putPatientRecord(
         "/reports",
@@ -108,10 +110,12 @@ const ReportsInboxAssignedPracticianForward = ({
       toast.success("Document forwarded successfully", {
         containerId: "A",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to forward document: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
 
@@ -134,10 +138,15 @@ const ReportsInboxAssignedPracticianForward = ({
           ))}
       </div>
       <div className="practicians-forward__btn">
-        <button onClick={handleForwardDocument} disabled={!assignedId}>
+        <button
+          onClick={handleForwardDocument}
+          disabled={!assignedId || progress}
+        >
           Forward
         </button>
-        <button onClick={handleCancelForward}>Cancel</button>
+        <button onClick={handleCancelForward} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </div>
   );

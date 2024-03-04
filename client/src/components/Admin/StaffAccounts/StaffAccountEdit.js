@@ -19,6 +19,7 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
   const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setFormDatas(infos);
@@ -82,6 +83,7 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
 
   const handleSave = async (e) => {
     try {
+      setProgress(true);
       const full_name =
         formDatas.first_name +
         " " +
@@ -119,6 +121,7 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
         await myAccountSchema.validate(datasToPut);
       } catch (err) {
         setErrMsg(err.message);
+        setProgress(false);
         return;
       }
 
@@ -145,8 +148,10 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
 
       setEditVisible(false);
       toast.success("Infos changed successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       setErrMsg(`Error: unable to save infos: ${err.message}`);
+      setProgress(false);
     }
   };
 
@@ -368,10 +373,12 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
         </div>
       )}
       <div className="staff-account__btns">
-        <button onClick={handleSave} disabled={isLoadingFile}>
+        <button onClick={handleSave} disabled={isLoadingFile || progress}>
           Save
         </button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </div>
   );

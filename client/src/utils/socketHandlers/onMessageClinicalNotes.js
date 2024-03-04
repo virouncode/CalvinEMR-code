@@ -1,4 +1,4 @@
-import { sortByDate } from "./updates";
+import { sortByDate } from "../updates";
 
 export const onMessageClinicalNotes = (
   message,

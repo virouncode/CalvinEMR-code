@@ -13,7 +13,6 @@ import {
 } from "../../../../../datas/codesTables";
 import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
@@ -31,13 +30,13 @@ const ImmunizationItem = ({
   editCounter,
 }) => {
   const { auth } = useAuthContext();
-  const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   useEffect(() => {
     setItemInfos(item);
   }, [item]);
+  const [progress, setProgress] = useState(false);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -79,6 +78,7 @@ const ImmunizationItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/immunizations",
           itemInfos.id,
@@ -88,10 +88,12 @@ const ImmunizationItem = ({
         );
         setEditVisible(false);
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete immunization: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -113,6 +115,7 @@ const ImmunizationItem = ({
     }
 
     try {
+      setProgress(true);
       await putPatientRecord(
         "/immunizations",
         itemInfos.id,
@@ -124,10 +127,12 @@ const ImmunizationItem = ({
       );
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save immunization: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -138,13 +143,26 @@ const ImmunizationItem = ({
           <div className="immunizations__item-btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>
@@ -210,7 +228,7 @@ const ImmunizationItem = ({
               handleChange={handleRouteChange}
             />
           ) : (
-            routeCT.find(({ code }) => code === item.Route)?.name || item.Route
+            item.Route
           )}
         </td>
         <td>
@@ -221,7 +239,7 @@ const ImmunizationItem = ({
               handleChange={handleSiteChange}
             />
           ) : (
-            siteCT.find(({ code }) => code === item.Site)?.name || item.Site
+            item.Site
           )}
         </td>
         <td>

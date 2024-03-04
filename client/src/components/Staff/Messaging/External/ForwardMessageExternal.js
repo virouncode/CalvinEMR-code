@@ -29,6 +29,7 @@ const ForwardMessageExternal = ({
   const [categories, setCategories] = useState([]);
   const [body, setBody] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [progress, setProgress] = useState(false);
 
   const handleChange = (e) => {
     setBody(e.target.value);
@@ -110,6 +111,7 @@ const ForwardMessageExternal = ({
       return;
     }
     try {
+      setProgress(true);
       let attach_ids = (
         await postPatientRecord("/attachments", user.id, auth.authToken, {
           attachments_array: attachments,
@@ -161,10 +163,12 @@ const ForwardMessageExternal = ({
 
       setForwardVisible(false);
       toast.success("Transfered successfully", { containerId: "A" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to forward message: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -305,10 +309,12 @@ const ForwardMessageExternal = ({
           />
         </div>
         <div className="forward-message__btns">
-          <button onClick={handleSend} disabled={isLoadingFile}>
+          <button onClick={handleSend} disabled={isLoadingFile || progress}>
             Send
           </button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleCancel} disabled={progress}>
+            Cancel
+          </button>
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </div>

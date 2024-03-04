@@ -31,6 +31,7 @@ const PregnancyForm = ({
     term_nbr_of_weeks: "",
     term_nbr_of_days: "",
   });
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -44,6 +45,10 @@ const PregnancyForm = ({
       value = parseInt(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
+  };
+
+  const handleChangePregnancyEvent = (value) => {
+    setFormDatas({ ...formDatas, description: value });
   };
 
   const handleCancel = (e) => {
@@ -75,6 +80,7 @@ const PregnancyForm = ({
     }
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/pregnancies",
         user.id,
@@ -86,10 +92,12 @@ const PregnancyForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to save pregnancey event: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -100,8 +108,13 @@ const PregnancyForm = ({
     >
       <td>
         <div className="pregnancies-form__btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>
@@ -109,8 +122,7 @@ const PregnancyForm = ({
       <td>
         <PregnanciesList
           value={formDatas.description}
-          name="description"
-          handleChange={handleChange}
+          handleChange={handleChangePregnancyEvent}
         />
       </td>
       <td>

@@ -40,6 +40,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     ai_consent: false,
     sign: null,
   });
+  const [progress, setProgress] = useState(false);
 
   const handleSiteChange = (e) => {
     setErrMsg("");
@@ -99,6 +100,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProgress(true);
     //Validation
     try {
       const response = await xanoGet(
@@ -113,10 +115,12 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         setErrMsg(
           "There is already an account with this email, please choose another one"
         );
+        setProgress(false);
         return;
       }
     } catch (err) {
       setErrMsg(`Error: unable to sign up staff: ${err.message}`);
+      setProgress(false);
       return;
     }
 
@@ -157,6 +161,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         await staffSchema.validate(datasToPost);
       } catch (err) {
         setErrMsg(err.message);
+        setProgress(false);
         return;
       }
       //Submission
@@ -336,8 +341,10 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
 
       toast.success("Staff member added successfully", { containerId: "A" });
       setAddVisible(false);
+      setProgress(false);
     } catch (err) {
       setErrMsg(err.message);
+      setProgress(false);
     }
   };
   return (
@@ -538,11 +545,11 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
           type="button"
           onClick={handleSubmit}
           value="Sign Up"
-          disabled={isLoadingFile}
+          disabled={isLoadingFile || progress}
         >
           Sign Up
         </button>
-        <button type="button" onClick={handleCancel}>
+        <button type="button" onClick={handleCancel} disabled={progress}>
           Cancel
         </button>
       </div>

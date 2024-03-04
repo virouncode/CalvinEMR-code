@@ -13,7 +13,7 @@
         width: 97%;
         margin: 0 auto;
         border-radius: 6px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         border: solid 1px $grey;
         background: $white;
     }
@@ -33,7 +33,7 @@
             border:solid 1px $grey;
             overflow:hidden;
             border-radius: 6px;      
-            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
+            box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px; 
             .flatpickr{
                 &-calendar.animate.inline {
                     top:0;

@@ -1,11 +1,8 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {
@@ -15,7 +12,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
   const BODY_STYLE = {
     padding: "10px",
     textAlign: "justify",
-    whiteSpace: "pre",
+    whiteSpace: "pre-wrap",
   };
   const FOOTER_STYLE = {
     textAlign: "end",
@@ -65,7 +62,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
         </div>
       </div>
       <div style={BODY_STYLE}>
-        <p style={{ whiteSpace: "pre" }}>
+        <p style={{ whiteSpace: "pre-wrap" }}>
           {clinicalNote.MyClinicalNotesContent}
         </p>
         <ClinicalNotesAttachments

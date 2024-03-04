@@ -22,11 +22,8 @@ import {
   kgToLbs,
   lbsToKg,
 } from "../../../../utils/measurements";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import { careElementsSchema } from "../../../../validation/careElementsValidation";
 import ConfirmGlobal, {
   confirmAlert,
@@ -56,6 +53,7 @@ const CareElementsPU = ({
   const [editVisible, setEditVisible] = useState(false);
   const [historyTopic, setHistoryTopic] = useState("");
   const [historyDatas, setHistoryDatas] = useState([]);
+  const [historyUnit, setHistoryUnit] = useState("");
   const [historyVisible, setHistoryVisible] = useState(false);
   const [lastDatas, setLastDatas] = useState({
     patient_id: parseInt(patientId),
@@ -101,6 +99,7 @@ const CareElementsPU = ({
     bodyMassIndex: { BMI: "", Date: "" },
     bodySurfaceArea: { BSA: "", Date: "" },
   });
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     //topicDatas[0] is the CareElements for patient
@@ -329,7 +328,8 @@ const CareElementsPU = ({
       };
 
       try {
-        //Validating
+        //Submission
+        setProgress(true);
         await postPatientRecord(
           "/care_elements",
           user.id,
@@ -342,10 +342,12 @@ const CareElementsPU = ({
         setEditVisible(false);
         editCounter.current -= 1;
         toast.success("Saved successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to save care elements: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     } else {
       if (_.isEqual(formDatas, lastDatas)) {
@@ -424,6 +426,7 @@ const CareElementsPU = ({
   const handleClickHistory = (e, row) => {
     setHistoryTopic(row);
     let historyDatasToPass = [];
+    let historyUnitToPass = "";
     switch (row) {
       case "SMOKING STATUS":
         historyDatasToPass = topicDatas.length
@@ -438,6 +441,7 @@ const CareElementsPU = ({
             ? topicDatas[0].SmokingPacks.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "packs";
         break;
       case "WEIGHT":
         historyDatasToPass = topicDatas.length
@@ -445,6 +449,15 @@ const CareElementsPU = ({
             ? topicDatas[0].Weight.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "kg";
+        break;
+      case "WEIGHT LBS":
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].Weight?.length
+            ? topicDatas[0].Weight.sort((a, b) => a.Date - b.Date)
+            : []
+          : [];
+        historyUnitToPass = "lbs";
         break;
       case "HEIGHT":
         historyDatasToPass = topicDatas.length
@@ -452,20 +465,33 @@ const CareElementsPU = ({
             ? topicDatas[0].Height.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "cm";
         break;
+      case "HEIGHT FEET":
+        historyDatasToPass = topicDatas.length
+          ? topicDatas[0].Height?.length
+            ? topicDatas[0].Height.sort((a, b) => a.Date - b.Date)
+            : []
+          : [];
+        historyUnitToPass = "feet";
+        break;
+
       case "WAIST CIRCUMFERENCE":
         historyDatasToPass = topicDatas.length
           ? topicDatas[0].WaistCircumference?.length
             ? topicDatas[0].WaistCircumference.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "cm";
         break;
+
       case "BLOOD PRESSURE":
         historyDatasToPass = topicDatas.length
           ? topicDatas[0].BloodPressure?.length
             ? topicDatas[0].BloodPressure.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "mmHg";
         break;
       case "BODY MASS INDEX":
         historyDatasToPass = topicDatas.length
@@ -473,6 +499,7 @@ const CareElementsPU = ({
             ? topicDatas[0].bodyMassIndex.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "kg/m2";
         break;
       case "BODY SURFACE AREA":
         historyDatasToPass = topicDatas.length
@@ -480,12 +507,14 @@ const CareElementsPU = ({
             ? topicDatas[0].bodySurfaceArea.sort((a, b) => a.Date - b.Date)
             : []
           : [];
+        historyUnitToPass = "m2";
         break;
       default:
         break;
     }
     setHistoryDatas(historyDatasToPass);
     setHistoryVisible(true);
+    setHistoryUnit(historyUnitToPass);
   };
 
   return (
@@ -510,13 +539,23 @@ const CareElementsPU = ({
                 <div className="care-elements__btn-container">
                   {!editVisible ? (
                     <>
-                      <button onClick={handleEdit}>Edit</button>
-                      <button onClick={handleClose}>Close</button>
+                      <button onClick={handleEdit} disabled={progress}>
+                        Edit
+                      </button>
+                      <button onClick={handleClose} disabled={progress}>
+                        Close
+                      </button>
                     </>
                   ) : (
                     <>
-                      <button onClick={handleSubmit}>Save</button>
-                      <button type="button" onClick={handleCancel}>
+                      <button onClick={handleSubmit} disabled={progress}>
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCancel}
+                        disabled={progress}
+                      >
                         Cancel
                       </button>
                     </>
@@ -623,7 +662,7 @@ const CareElementsPU = ({
                       <span className="care-elements__history">
                         <i
                           className="fa-solid fa-clock-rotate-left"
-                          onClick={(e) => handleClickHistory(e, "WEIGHT")}
+                          onClick={(e) => handleClickHistory(e, "WEIGHT LBS")}
                         ></i>
                       </span>
                     </div>
@@ -673,7 +712,7 @@ const CareElementsPU = ({
                       <span className="care-elements__history">
                         <i
                           className="fa-solid fa-clock-rotate-left"
-                          onClick={(e) => handleClickHistory(e, "HEIGHT")}
+                          onClick={(e) => handleClickHistory(e, "HEIGHT FEET")}
                         ></i>
                       </span>
                     </div>
@@ -864,6 +903,7 @@ const CareElementsPU = ({
           <CareElementHistory
             historyTopic={historyTopic}
             historyDatas={historyDatas}
+            historyUnit={historyUnit}
           />
         </FakeWindow>
       )}
