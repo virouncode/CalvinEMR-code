@@ -7,35 +7,35 @@ const confirmAction = {
   current: () => Promise.resolve(true), //initialisation avec une promesse résolue (c'est juste pour dire que la fonction est du style à renvoyer une promesse)
 };
 
-export const confirmAlert = (props) => {
-  return confirmAction.current(props);
+export const confirmAlert = ({ title, content }) => {
+  return confirmAction.current({ title, content });
 };
 
 const ConfirmGlobal = ({ isPopUp = false }) => {
   const [open, setOpen] = useState(false);
-  const [props, setProps] = useState({});
+  const [props, setProps] = useState({ title: "", content: "" });
   const resolveRef = useRef(() => {});
   //Quand le composant ConfirmGlobal est monté on redéfinit la fonction confirmAction
-  confirmAction.current = (props) =>
+  confirmAction.current = ({ title, content }) =>
     new Promise((resolve) => {
-      setProps(props); //la fonction passe les props de confirmAlert à ConfirmGlobal qui va les passer à ConfirmDialog
+      setProps({ title, content }); //la fonction passe les paramètres de confirmAlert à ConfirmGlobal qui va les passer à ConfirmDialog
       setOpen(true); //la fonction ouvre la boite de dialogue
       resolveRef.current = resolve; //permet de sortir resolve du contexte de la fonction et pouvoir la passer à ConfirmDialog
     });
-
+  console.log("render", "open?", open);
   return (
     open && (
       <ConfirmDialog
         onConfirm={() => {
-          resolveRef.current(true); //on execute resolve(true) ( on va donc avoir confirmAlert(props) = true )
+          resolveRef.current(true); //on execute resolve(true) ( donc le if va être validé et on continue )
           setOpen(false);
         }}
         onCancel={() => {
-          resolveRef.current(false); //on execute resolve(false)) ( on va donc avoir confirmAlert(props) = false )
+          resolveRef.current(false); //on execute resolve(false)) ( donc le if va bloquer )
           setOpen(false);
         }}
         open={open}
-        {...props}
+        props={props}
         isPopUp={isPopUp}
       />
     )

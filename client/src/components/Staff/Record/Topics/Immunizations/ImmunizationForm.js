@@ -31,6 +31,15 @@ const ImmunizationForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
+    ImmunizationType: "",
+    ImmunizationName: "",
+    Manufacturer: "",
+    LotNumber: "",
+    Route: "",
+    Site: "",
+    Dose: "",
+    Instructions: "",
+    Notes: "",
     recommended: false,
     Date: Date.now(),
     RefusedFlag: { ynIndicatorsimple: "N" },

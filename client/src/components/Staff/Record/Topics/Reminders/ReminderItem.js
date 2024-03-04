@@ -103,6 +103,7 @@ const ReminderItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/reminders",
           item.id,
@@ -111,10 +112,12 @@ const ReminderItem = ({
           "REMINDERS"
         );
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to delete reminder: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
