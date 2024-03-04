@@ -29,6 +29,7 @@ const FamHistoryItem = ({
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -66,6 +67,7 @@ const FamHistoryItem = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/family_history",
         item.id,
@@ -78,11 +80,13 @@ const FamHistoryItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(
         `Error unable to update family history item: ${err.message}`,
         { containerId: "B" }
       );
+      setProgress(false);
     }
   };
 
@@ -112,6 +116,7 @@ const FamHistoryItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/family_history",
           item.id,
@@ -120,11 +125,13 @@ const FamHistoryItem = ({
           "FAMILY HISTORY"
         );
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(
           `Error unable to delete family history item: ${err.message}`,
           { containerId: "B" }
         );
+        setProgress(false);
       }
     }
   };
@@ -140,13 +147,26 @@ const FamHistoryItem = ({
           <div className="famhistory__item-btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

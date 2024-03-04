@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../../api/fetchRecords";
 import {
@@ -13,9 +13,11 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
+  const [progress, setProgress] = useState(false);
 
   const handleRemoveFromPatient = async (e) => {
     try {
+      setProgress(true);
       await putPatientRecord(
         "/doctors",
         item.id,
@@ -37,17 +39,21 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
         patientId,
       });
       toast.success("Removed successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to update doctor:${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
   return (
     <tr className="doctors__item" ref={lastItemRef}>
       <td>
-        <button onClick={handleRemoveFromPatient}>Remove from patient</button>
+        <button onClick={handleRemoveFromPatient} disabled={progress}>
+          Remove from patient
+        </button>
       </td>
       <td>{item.LastName}</td>
       <td>{item.FirstName}</td>

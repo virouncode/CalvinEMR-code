@@ -25,6 +25,7 @@ const ReminderItem = ({
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -58,6 +59,7 @@ const ReminderItem = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/reminders",
         item.id,
@@ -70,10 +72,12 @@ const ReminderItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to update reminder: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -126,13 +130,26 @@ const ReminderItem = ({
           <div className="reminders__item-btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

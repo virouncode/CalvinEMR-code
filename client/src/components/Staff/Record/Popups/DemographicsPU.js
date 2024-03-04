@@ -60,6 +60,7 @@ const DemographicsPU = ({
   const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
+  const [progress, setProgress] = useState(false);
   const residencialAddress = demographicsInfos.Address?.find(
     ({ _addressType }) => _addressType === "R"
   )?.Structured;
@@ -483,6 +484,7 @@ const DemographicsPU = ({
     };
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/demographics",
         demographicsInfos.id,
@@ -494,6 +496,7 @@ const DemographicsPU = ({
       );
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(
         `Error: unable to update patient demographics : ${err.message}`,
@@ -501,6 +504,7 @@ const DemographicsPU = ({
           containerId: "B",
         }
       );
+      setProgress(false);
     }
   };
 
@@ -517,21 +521,28 @@ const DemographicsPU = ({
           <div className="demographics-card__btns">
             {!editVisible ? (
               <>
-                <button onClick={(e) => setEditVisible((v) => !v)}>Edit</button>
-                <button onClick={handleClose}>Close</button>
+                <button
+                  onClick={(e) => setEditVisible((v) => !v)}
+                  disabled={progress}
+                >
+                  Edit
+                </button>
+                <button onClick={handleClose} disabled={progress}>
+                  Close
+                </button>
               </>
             ) : (
               <>
                 <button
                   type="button"
-                  disabled={loadingFile}
+                  disabled={loadingFile || progress}
                   onClick={handleSubmit}
                 >
                   Save
                 </button>
                 <button
                   type="button"
-                  disabled={loadingFile}
+                  disabled={loadingFile || progress}
                   onClick={handleCancel}
                 >
                   Cancel

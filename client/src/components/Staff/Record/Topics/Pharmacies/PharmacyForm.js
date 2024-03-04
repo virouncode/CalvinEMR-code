@@ -35,7 +35,7 @@ const PharmacyForm = ({
     fax: "",
     email: "",
   });
-
+  const [progress, setProgress] = useState(false);
   //HANDLERS
   const handleChange = (e) => {
     setErrMsgPost("");
@@ -101,6 +101,7 @@ const PharmacyForm = ({
 
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/pharmacies",
         user.id,
@@ -112,10 +113,12 @@ const PharmacyForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to add pharmacy: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -133,8 +136,13 @@ const PharmacyForm = ({
     >
       <td>
         <div className="pharmacies__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={setProgress}>
             Cancel
           </button>
         </div>

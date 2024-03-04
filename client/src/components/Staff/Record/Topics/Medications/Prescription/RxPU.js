@@ -96,12 +96,11 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             compress: true,
           });
           pdf.addImage(dataURL, "JPEG", 0, 0, 21, 29.7);
-          const pdfDataURL = pdf.output("dataurl");
 
           let fileToUpload = await axiosXanoStaff.post(
             "/upload/attachment",
             {
-              content: pdfDataURL,
+              content: pdf.output("datauri"),
             },
             {
               headers: {
@@ -177,6 +176,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             patient_id: patientId,
             attachment_id: attach_ids[0],
             unique_id: uniqueId,
+            date_created: Date.now(),
           };
           const response = await xanoPost(
             "/prescriptions",
@@ -184,6 +184,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             auth.authToken,
             prescriptionToPost
           );
+          console.log("prescription", response.data);
 
           socket.emit("message", {
             route: "PRESCRIPTIONS",

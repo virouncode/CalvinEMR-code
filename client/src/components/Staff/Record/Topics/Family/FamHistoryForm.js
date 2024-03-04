@@ -35,6 +35,7 @@ const FamHistoryForm = ({
     Relationship: "",
     Notes: "",
   });
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -68,6 +69,7 @@ const FamHistoryForm = ({
     }
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/family_history",
         user.id,
@@ -79,10 +81,12 @@ const FamHistoryForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save family history item: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -104,8 +108,13 @@ const FamHistoryForm = ({
     >
       <td>
         <div className="famhistory__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

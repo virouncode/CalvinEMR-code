@@ -46,7 +46,7 @@ const BillingTableItem = ({
       date: billing.date,
       provider_ohip_billing_nbr:
         billing.provider_ohip_billing_nbr.ohip_billing_nbr,
-      referrer_ohip_billing_nbr: billing.referrer_ohip_billing_nbr,
+      referrer_ohip_billing_nbr: billing.referrer_ohip_billing_nbr || "",
       patient_id: billing.patient_id,
       patient_hcn: billing.patient_infos.HealthCard?.Number,
       patient_name: toPatientName(billing.patient_infos),

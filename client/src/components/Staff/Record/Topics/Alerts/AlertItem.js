@@ -26,6 +26,7 @@ const AlertItem = ({
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -59,6 +60,7 @@ const AlertItem = ({
     }
     //Submission
     try {
+      setProgress(true);
       await putPatientRecord(
         "/alerts",
         item.id,
@@ -72,10 +74,12 @@ const AlertItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to update alert: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -101,6 +105,7 @@ const AlertItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/alerts",
           item.id,
@@ -109,10 +114,12 @@ const AlertItem = ({
           "ALERTS & SPECIAL NEEDS"
         );
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete alert: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -133,8 +140,17 @@ const AlertItem = ({
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

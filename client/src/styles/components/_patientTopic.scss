@@ -24,19 +24,13 @@
         border:0px solid $black;
         background:$white;
         overflow:scroll;
-        &--left {
-            margin-right:-1px;
-        }
-        &--right {
-            margin-left:-1px;
-        }
         &--active {
             max-height:400px;
-            border-left : solid 0.5px grey;
-            border-right : solid 0.5px grey;
+            border-left : solid 0.5px $grey;
+            border-right : solid 0.5px $grey;
         }
         &--bottom {
-            border-bottom : solid 0.5px grey;
+            border-bottom : solid 0.5px $grey;
         }
     }
 }

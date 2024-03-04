@@ -29,6 +29,7 @@ const FamilyDoctorListItem = ({
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
   const [postalOrZip, setPostalOrZip] = useState("postal");
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos({
@@ -127,6 +128,7 @@ const FamilyDoctorListItem = ({
       })
     ) {
       try {
+        setProgress(true);
         await putPatientRecord(
           "/doctors",
           item.id,
@@ -148,10 +150,12 @@ const FamilyDoctorListItem = ({
         editCounter.current -= 1;
         setEditVisible(false);
         toast.success("Saved successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to update doctor:${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };

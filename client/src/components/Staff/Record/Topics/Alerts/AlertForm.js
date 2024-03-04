@@ -28,6 +28,7 @@ const AlertForm = ({
     DateActive: Date.now(),
     Notes: "",
   });
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -55,6 +56,7 @@ const AlertForm = ({
       return;
     }
     try {
+      setProgress(true);
       await postPatientRecord(
         "/alerts",
         user.id,
@@ -66,10 +68,12 @@ const AlertForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error unable to save ongoing concern: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -87,8 +91,13 @@ const AlertForm = ({
     >
       <td>
         <div className="alerts__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

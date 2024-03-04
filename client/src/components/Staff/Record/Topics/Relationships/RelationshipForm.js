@@ -38,6 +38,7 @@ const RelationshipForm = ({
     offset: 0,
   });
   const { patients, loading, errMsg, hasMore } = useFetchPatients(paging);
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -61,6 +62,7 @@ const RelationshipForm = ({
     }
     //Submission
     try {
+      setProgress(true);
       //Post the relationship
       const response = await postPatientRecord(
         "/relationships",
@@ -116,10 +118,12 @@ const RelationshipForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to save relationship: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -137,8 +141,13 @@ const RelationshipForm = ({
     >
       <td>
         <div className="relationships-form__btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

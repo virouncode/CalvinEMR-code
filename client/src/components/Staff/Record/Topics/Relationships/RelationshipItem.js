@@ -10,7 +10,6 @@ import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchPatients from "../../../../../hooks/useFetchPatients";
 import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { relations } from "../../../../../utils/relations";
 import { toInverseRelation } from "../../../../../utils/toInverseRelation";
@@ -30,10 +29,10 @@ const RelationshipItem = ({
 }) => {
   const { auth } = useAuthContext();
   const { user } = useUserContext();
-  const { staffInfos } = useStaffInfosContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   useEffect(() => {
     setItemInfos(item);
@@ -60,6 +59,7 @@ const RelationshipItem = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setProgress(true);
       //Delete the inverse relation ship of item
       const inverseRelationToDeleteId = (
         await axiosXanoStaff.get("/relationship_between", {
@@ -140,10 +140,12 @@ const RelationshipItem = ({
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to update relationship: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -174,6 +176,7 @@ const RelationshipItem = ({
       })
     ) {
       try {
+        setProgress(true);
         if (relations.includes(itemInfos.relationship)) {
           const inverseRelationToDeleteId = (
             await axiosXanoStaff.get(
@@ -208,10 +211,12 @@ const RelationshipItem = ({
           "RELATIONSHIPS"
         );
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error unable to delete relationship: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -227,13 +232,26 @@ const RelationshipItem = ({
           <div className="relationships-item__btn-container">
             {!editVisible ? (
               <>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
+                <button onClick={handleDeleteClick} disabled={progress}>
+                  Delete
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

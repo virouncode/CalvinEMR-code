@@ -21,5 +21,9 @@
     &__menu {
         display:flex;
         flex-direction: column;
+        height: 80vh;
+        overflow-y:scroll;
+        border-top:solid 0.5px $grey;
+        border-bottom : solid 0.5px $grey;
     }
 }

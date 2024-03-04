@@ -740,18 +740,12 @@ const EventForm = ({
         staffInfos={staffInfos}
         start={tempFormDatas.start}
         end={tempFormDatas.end}
-        patientsGuestsInfos={
-          patientsDemographics.length > 0
-            ? tempFormDatas.patients_guests_ids.map(({ patient_infos }) =>
-                patientsDemographics.find(
-                  ({ patient_id }) => patient_id === patient_infos.patient_id
-                )
-              )
-            : []
-        }
-        staffGuestsInfos={tempFormDatas.staff_guests_ids.map((staffGuestId) =>
-          staffInfos.find(({ id }) => id === staffGuestId)
-        )}
+        patientsGuestsInfos={tempFormDatas.patients_guests_ids
+          .filter((item) => item)
+          .map(({ patient_infos }) => patient_infos)}
+        staffGuestsInfos={tempFormDatas.staff_guests_ids
+          .filter((item) => item)
+          .map(({ staff_infos }) => staff_infos)}
         sites={sites}
         siteId={tempFormDatas.site_id}
       />

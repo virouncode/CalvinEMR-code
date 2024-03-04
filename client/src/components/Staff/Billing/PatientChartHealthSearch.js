@@ -35,7 +35,7 @@ const PatientChartHealthSearch = ({ handleClickPatient }) => {
           type="text"
           value={search}
           onChange={handleSearch}
-          placeHolder="Chart#, Health Card#, Name..."
+          placeholder="Chart#, Health Card#, Name..."
           style={{ width: "300px" }}
         />
       </div>

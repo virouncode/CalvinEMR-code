@@ -38,7 +38,7 @@ const EditGuests = ({
 
     if (guestType === "staff") {
       staffGuestsIdsUpdated = [
-        ...staffGuestsIdsUpdated,
+        ...staffGuestsIdsUpdated.filter((item) => item),
         {
           staff_infos: {
             id: guestId,
@@ -58,7 +58,7 @@ const EditGuests = ({
     } else {
       setPaging({ ...paging, page: 1 });
       patientsGuestsIdsUpdated = [
-        ...patientsGuestsIdsUpdated,
+        ...patientsGuestsIdsUpdated.filter((item) => item),
         {
           patient_infos: {
             patient_id: guestId,

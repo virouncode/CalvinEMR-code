@@ -1,6 +1,7 @@
 .calendar-section {
     width : 100%;
-    min-height : 100vh;
+    height : 85vh;
+    overflow-y:scroll;
     &__title {
         font-size: 1.2rem;
         text-align: center;

@@ -24,6 +24,7 @@ const FamilyDoctorForm = ({
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
+  const [progress, setProgress] = useState(false);
   // const [formDatas, setFormDatas] = useState({
   //   FirstName: "",
   //   LastName: "",
@@ -139,6 +140,7 @@ const FamilyDoctorForm = ({
     };
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/doctors",
         user.id,
@@ -150,10 +152,12 @@ const FamilyDoctorForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(`Error: unable to add doctor: ${err.message}`, {
         containerId: "B",
       });
+      setProgress(false);
     }
   };
 
@@ -171,8 +175,13 @@ const FamilyDoctorForm = ({
     >
       <td>
         <div className="doctors__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

@@ -29,7 +29,7 @@ const ReportsInbox = () => {
 
   return (
     <>
-      <h3 className="reportsinbox__subtitle">Reports to acknowledge inbox</h3>
+      <h3 className="reportsinbox__subtitle">Reports to acknowledge</h3>
       {errMsg && <div className="reportsInbox__err">{errMsg}</div>}
       {!errMsg && (
         <div className="reportsinbox__table-container" ref={rootRef}>

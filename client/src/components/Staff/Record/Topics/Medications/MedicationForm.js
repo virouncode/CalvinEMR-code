@@ -77,7 +77,7 @@ const MedicationForm = ({
     loading: loadingAllergies,
     errMsg: errAllergies,
   } = useFetchTopicDatas("/allergies_of_patient", paging, patientId);
-
+  const [progressTemplates, setProgressTemplates] = useState(false);
   //HANDLERS
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -195,6 +195,7 @@ const MedicationForm = ({
     };
     //Submission
     try {
+      setProgressTemplates(true);
       const response = await axiosXanoStaff.post(
         "/medications_templates",
         templateToPost,
@@ -213,8 +214,10 @@ const MedicationForm = ({
       toast.success("Medication template successfully added", {
         containerId: "B",
       });
+      setProgressTemplates(false);
     } catch (err) {
       toast.error(`Unable to add medication template: ${err.message}`);
+      setProgressTemplates(false);
     }
   };
   const handleChange = (e) => {
@@ -592,8 +595,15 @@ const MedicationForm = ({
         <p>Medications</p>
       </div>
       <div className="medications-form__btn-container">
-        <input type="submit" value="Add to RX" disabled={progress} />
-        <button onClick={handleSubmitAndSaveTemplate}>
+        <input
+          type="submit"
+          value="Add to RX"
+          disabled={progress || progressTemplates}
+        />
+        <button
+          onClick={handleSubmitAndSaveTemplate}
+          disabled={progress || progressTemplates}
+        >
           Add to RX & templates
         </button>
       </div>

@@ -3,9 +3,9 @@
 //no space : .class1.class2 apply to element that has both classes
 .calendar {
     z-index:1;
-    margin: 10px auto 20px;
+    margin: 10px auto 0;
     width : 97%;
-    min-height : 100%;
+    height : 100%;
     display: flex;
     justify-content: space-between;
     &__options{
@@ -27,8 +27,11 @@
     }
     &__left-bar {   
         width : 14%;
+        height: 79.5vh;
+        overflow-y :scroll;
         .calendar__shortcutpickr {
-            border-bottom : 1px solid rgb(218,218,218);
+            border:solid 1px $grey;
+            overflow:hidden;
             border-radius: 6px;      
             box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
             .flatpickr{
@@ -62,6 +65,9 @@
                 &-innerContainer, &-rContainer,&-weekdays, &-days{
                     font-size:0.8rem;
                 }
+                &-innerContainer {
+                    border:none;
+                }
                 &-day {
                     font-size : 0.7rem;
                     height: 10%;
@@ -69,6 +75,8 @@
                 }
                 &-days {
                     width:100%;
+                    border-radius: 0 0 6px 6px;
+                    border:none;
                 }
             }
             .dayContainer{
@@ -84,6 +92,8 @@
         border: solid 1px $grey;
         border-radius: 6px;
         padding: 10px;
+        height:79.5vh;
+        overflow-y:scroll;
         //fullcalendar
         .fc .fc-timegrid-col.fc-day-today {
             background: rgb(243, 243, 243);
@@ -178,6 +188,9 @@
 }
 
 .flatpickr {
+    &-calendar.open{
+        font-family: $font1;
+    }
     .numInputWrapper {
         font-size : 0.85rem;
     }

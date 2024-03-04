@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
 import useAuthContext from "../../../../../hooks/useAuthContext";
@@ -14,6 +14,7 @@ const EformItem = ({ item, lastItemRef = null }) => {
   const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
+  const [progress, setProgress] = useState(false);
 
   const handleDeleteClick = async (e) => {
     if (
@@ -22,6 +23,7 @@ const EformItem = ({ item, lastItemRef = null }) => {
       })
     ) {
       try {
+        setProgress(true);
         await deletePatientRecord(
           "/eforms",
           item.id,
@@ -30,10 +32,12 @@ const EformItem = ({ item, lastItemRef = null }) => {
           "E-FORMS"
         );
         toast.success("Deleted successfully", { containerId: "B" });
+        setProgress(false);
       } catch (err) {
         toast.error(`Error: unable to delete item: ${err.message}`, {
           containerId: "B",
         });
+        setProgress(false);
       }
     }
   };
@@ -42,8 +46,10 @@ const EformItem = ({ item, lastItemRef = null }) => {
     <tr className="eforms__item" ref={lastItemRef}>
       <td>
         <div className="eforms__item-btn-container">
-          <button>Fax</button>
-          <button onClick={handleDeleteClick}>Delete</button>
+          <button disabled={progress}>Fax</button>
+          <button onClick={handleDeleteClick} disabled={progress}>
+            Delete
+          </button>
         </div>
       </td>
       <td

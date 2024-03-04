@@ -26,6 +26,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState(med);
   const [errMsg, setErrMsg] = useState("");
+  const [progress, setProgress] = useState(false);
 
   const handleCancel = (e) => {
     e.preventDefault();
@@ -53,6 +54,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
     }
     //Submission
     try {
+      setProgress(true);
       const response = await axiosXanoStaff.put(
         "/medications_templates",
         datasToPut,
@@ -68,13 +70,14 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
         action: "update",
         content: { id: med.id, data: response.data },
       });
-
       setEditVisible(false);
       toast.success("Medication template successfully updated", {
         containerId: "B",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to update medication template: ${err.message}`);
+      setProgress(false);
     }
   };
   const handleChange = (e) => {
@@ -585,8 +588,10 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
         />
       </div>
       <div className="med-templates__form-btn-container">
-        <input type="submit" value="Save" />
-        <button onClick={handleCancel}>Cancel</button>
+        <input type="submit" value="Save" disabled={progress} />
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </form>
   );

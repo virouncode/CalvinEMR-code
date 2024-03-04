@@ -258,7 +258,8 @@ select:focus {
 
 .calendar-section {
   width: 100%;
-  min-height: 100vh;
+  height: 85vh;
+  overflow-y: scroll;
 }
 .calendar-section__title {
   font-size: 1.2rem;
@@ -383,7 +384,7 @@ select:focus {
 
 .patient-record-section {
   width: 100%;
-  height: 200vh;
+  height: 85vh;
 }
 .patient-record-section__title {
   font-size: 1.2rem;
@@ -10937,9 +10938,9 @@ readers do not read off random characters that represent icons */
 
 .calendar {
   z-index: 1;
-  margin: 10px auto 20px;
+  margin: 10px auto 0;
   width: 97%;
-  min-height: 100%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -10964,9 +10965,12 @@ readers do not read off random characters that represent icons */
 }
 .calendar__left-bar {
   width: 14%;
+  height: 79.5vh;
+  overflow-y: scroll;
 }
 .calendar__left-bar .calendar__shortcutpickr {
-  border-bottom: 1px solid rgb(218, 218, 218);
+  border: solid 1px #cecdcd;
+  overflow: hidden;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -10999,6 +11003,9 @@ readers do not read off random characters that represent icons */
 .calendar__left-bar .calendar__shortcutpickr .flatpickr-innerContainer, .calendar__left-bar .calendar__shortcutpickr .flatpickr-rContainer, .calendar__left-bar .calendar__shortcutpickr .flatpickr-weekdays, .calendar__left-bar .calendar__shortcutpickr .flatpickr-days {
   font-size: 0.8rem;
 }
+.calendar__left-bar .calendar__shortcutpickr .flatpickr-innerContainer {
+  border: none;
+}
 .calendar__left-bar .calendar__shortcutpickr .flatpickr-day {
   font-size: 0.7rem;
   height: 10%;
@@ -11006,6 +11013,8 @@ readers do not read off random characters that represent icons */
 }
 .calendar__left-bar .calendar__shortcutpickr .flatpickr-days {
   width: 100%;
+  border-radius: 0 0 6px 6px;
+  border: none;
 }
 .calendar__left-bar .calendar__shortcutpickr .dayContainer {
   min-width: 100%;
@@ -11017,6 +11026,8 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   border-radius: 6px;
   padding: 10px;
+  height: 79.5vh;
+  overflow-y: scroll;
 }
 .calendar__display .fc .fc-timegrid-col.fc-day-today {
   background: rgb(243, 243, 243);
@@ -11104,6 +11115,9 @@ readers do not read off random characters that represent icons */
   text-decoration: underline !important;
 }
 
+.flatpickr-calendar.open {
+  font-family: Lato, sans-serif;
+}
 .flatpickr .numInputWrapper {
   font-size: 0.85rem;
 }
@@ -11205,8 +11219,9 @@ readers do not read off random characters that represent icons */
   width: 100%;
   border-radius: 6px;
   font-weight: bold;
-  height: 670px;
   overflow-y: scroll;
+  height: 46.4vh;
+  border: solid 1px #cecdcd;
 }
 .calendar__filter-title {
   display: flex;
@@ -11214,7 +11229,7 @@ readers do not read off random characters that represent icons */
   align-items: center;
   position: sticky;
   top: 0;
-  border-radius: 6px 4px 0 0;
+  border-radius: 4px 4px 0 0;
   font-size: 0.85rem;
   height: 50px;
   color: #3D375A;
@@ -11740,6 +11755,10 @@ readers do not read off random characters that represent icons */
 .patient-record__menu {
   display: flex;
   flex-direction: column;
+  height: 80vh;
+  overflow-y: scroll;
+  border-top: solid 0.5px #cecdcd;
+  border-bottom: solid 0.5px #cecdcd;
 }
 
 .patient-menu-left, .patient-menu-right {
@@ -11750,12 +11769,11 @@ readers do not read off random characters that represent icons */
 .clinical-notes {
   background-color: #FEFEFE;
   font-size: 0.85rem;
-  border-radius: 2px;
-  margin-left: 1px;
-  margin-right: 1px;
-  border-bottom: solid 0.5px grey;
-  border-right: solid 0.5px grey;
-  border-left: solid 0.5px grey;
+  border-bottom: solid 0.5px #cecdcd;
+  border-top: solid 0.5px #cecdcd;
+  height: 80vh;
+  overflow-y: scroll;
+  position: relative;
 }
 .clinical-notes__err {
   background: rgba(255, 0, 0, 0.536);
@@ -11772,6 +11790,10 @@ readers do not read off random characters that represent icons */
 .clinical-notes__title span {
   text-align: center;
   width: 98%;
+}
+.clinical-notes__header {
+  position: sticky;
+  top: 0;
 }
 .clinical-notes__toolbar {
   padding: 5px;
@@ -12081,19 +12103,13 @@ readers do not read off random characters that represent icons */
   background: #FEFEFE;
   overflow: scroll;
 }
-.patient-record__topic-container--left {
-  margin-right: -1px;
-}
-.patient-record__topic-container--right {
-  margin-left: -1px;
-}
 .patient-record__topic-container--active {
   max-height: 400px;
-  border-left: solid 0.5px grey;
-  border-right: solid 0.5px grey;
+  border-left: solid 0.5px #cecdcd;
+  border-right: solid 0.5px #cecdcd;
 }
 .patient-record__topic-container--bottom {
-  border-bottom: solid 0.5px grey;
+  border-bottom: solid 0.5px #cecdcd;
 }
 
 .topic-content {

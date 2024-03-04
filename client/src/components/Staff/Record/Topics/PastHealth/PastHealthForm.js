@@ -34,6 +34,7 @@ const PastHealthForm = ({
     ProblemStatus: "",
     Notes: "",
   });
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleChange = (e) => {
@@ -70,6 +71,7 @@ const PastHealthForm = ({
     }
     //Submission
     try {
+      setProgress(true);
       await postPatientRecord(
         "/past_health",
         user.id,
@@ -81,11 +83,13 @@ const PastHealthForm = ({
       editCounter.current -= 1;
       setAddVisible(false);
       toast.success("Saved successfully", { containerId: "B" });
+      setProgress(false);
     } catch (err) {
       toast.error(
         `Error unable to save medical history event: ${err.message}`,
         { containerId: "B" }
       );
+      setProgress(false);
     }
   };
 
@@ -103,8 +107,13 @@ const PastHealthForm = ({
     >
       <td>
         <div className="pasthealth__form-btn-container">
-          <input type="submit" value="Save" onClick={handleSubmit} />
-          <button type="button" onClick={handleCancel}>
+          <input
+            type="submit"
+            value="Save"
+            onClick={handleSubmit}
+            disabled={progress}
+          />
+          <button type="button" onClick={handleCancel} disabled={progress}>
             Cancel
           </button>
         </div>

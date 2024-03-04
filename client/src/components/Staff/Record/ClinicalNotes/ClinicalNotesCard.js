@@ -119,7 +119,7 @@ const ClinicalNotesCard = ({
         datasToPost.attachments_ids = clinicalNote.attachments_ids
           .filter((item) => item)
           .map(({ attachments }) => attachments?.[0].id); //format attachments_ids
-        datasToPost.date_created = Date.now(); //we update the date_created
+        datasToPost.date_updated = Date.now(); //we update the date_updated
         delete datasToPost.version;
         await putPatientRecord(
           "/clinical_notes",
@@ -268,6 +268,12 @@ const ClinicalNotesCard = ({
               )}{" "}
               on {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
             </p>
+            {clinicalNote.date_updated && (
+              <p style={{ padding: "0 10px" }}>
+                Updated on{" "}
+                {toLocalDateAndTimeWithSeconds(clinicalNote.date_updated)}
+              </p>
+            )}
           </div>
         )}
       </div>

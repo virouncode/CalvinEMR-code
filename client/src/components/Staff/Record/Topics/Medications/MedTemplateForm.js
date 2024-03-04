@@ -57,6 +57,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
     },
   });
   const [errMsg, setErrMsg] = useState("");
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleCancel = (e) => {
@@ -84,6 +85,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
     //Submission
 
     try {
+      setProgress(true);
       const response = await axiosXanoStaff.post(
         "/medications_templates",
         datasToPost,
@@ -103,8 +105,10 @@ const MedTemplateForm = ({ setNewVisible }) => {
       toast.success("Medication template successfully added", {
         containerId: "B",
       });
+      setProgress(false);
     } catch (err) {
       toast.error(`Unable to add medication template: ${err.message}`);
+      setProgress(false);
     }
   };
 
@@ -661,8 +665,10 @@ const MedTemplateForm = ({ setNewVisible }) => {
         />
       </div>
       <div className="med-templates__form-btn-container">
-        <input type="submit" value="Save" />
-        <button onClick={handleCancel}>Cancel</button>
+        <input type="submit" value="Save" disabled={progress} />
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </form>
   );

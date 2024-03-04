@@ -1,10 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
-import {
-  getLastUpdate,
-  isUpdated,
-} from "../../../../utils/socketHandlers/updates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
 
@@ -29,18 +25,8 @@ const ClinicalNotesCardHeaderFolded = ({
           <label>
             <strong>From: </strong>
           </label>
-          {staffIdToTitleAndName(
-            staffInfos,
-            isUpdated(tempFormDatas)
-              ? getLastUpdate(tempFormDatas).updated_by_id
-              : tempFormDatas.created_by_id,
-            true
-          )}
-          {` ${toLocalDateAndTimeWithSeconds(
-            isUpdated(tempFormDatas)
-              ? getLastUpdate(tempFormDatas).date_updated
-              : tempFormDatas.date_created
-          )}`}
+          {staffIdToTitleAndName(staffInfos, tempFormDatas.created_by_id, true)}
+          {` ${toLocalDateAndTimeWithSeconds(tempFormDatas.date_created)}`}
           {" / "}
           <strong>Subject: </strong>
           {tempFormDatas.subject}

@@ -36,6 +36,7 @@ const Invitation = ({
     "In person appointment"
   );
   const [siteSelectedId, setSiteSelectedId] = useState(siteId || "");
+  const [progress, setProgress] = useState(false);
 
   //HANDLERS
   const handleSend = async (e) => {
@@ -104,7 +105,7 @@ const Invitation = ({
         "[video_call_link]",
         staffInfos.find(({ id }) => id === user.id).video_link
       );
-
+    setProgress(true);
     for (const patientInfos of patientsGuestsInfos) {
       const patientName =
         patientInfos.Names.LegalName.FirstName.Part +
@@ -129,6 +130,7 @@ const Invitation = ({
         toast.error(`Couldn't send the invitation : ${err.text}`, {
           containerId: "A",
         });
+        setProgress(false);
       }
       fetch("/api/twilio/messages", {
         method: "POST",
@@ -160,6 +162,7 @@ Powered by Calvin EMR`,
             toast.error(`Couldn't send the sms invitation`, {
               containerId: "A",
             });
+            setProgress(false);
           }
         });
     }
@@ -182,6 +185,7 @@ Powered by Calvin EMR`,
         toast.error(`Couldn't send the invitation email : ${err.text}`, {
           containerId: "A",
         });
+        setProgress(false);
       }
       fetch("/api/twilio/messages", {
         method: "POST",
@@ -213,9 +217,12 @@ Powered by Calvin EMR`,
             toast.error(`Couldn't send the sms invitation : $(err.text)`, {
               containerId: "A",
             });
+            setProgress(false);
           }
         });
     }
+    setProgress(false);
+    setInvitationVisible(false);
   };
   const handleSendAndSave = async (e) => {
     e.preventDefault();
@@ -224,6 +231,7 @@ Powered by Calvin EMR`,
     newTemplates.find(({ name }) => name === templateSelected).intro = intro;
     newTemplates.find(({ name }) => name === templateSelected).message =
       message;
+    setProgress(true);
     try {
       await axiosXanoStaff.put(
         `/settings/${user.settings.id}`,
@@ -239,6 +247,7 @@ Powered by Calvin EMR`,
       toast.error(`Error: unable to save templates: ${err.message}`, {
         containerId: "A",
       });
+      setProgress(false);
     }
   };
   const handleMessageChange = (e) => {
@@ -340,10 +349,16 @@ Powered by Calvin EMR`,
       </div>
       <div className="invitation__btns">
         {user.id === hostId && (
-          <button onClick={handleSendAndSave}>Send & Save Template</button>
+          <button onClick={handleSendAndSave} disabled={progress}>
+            Send & Save template
+          </button>
         )}
-        <button onClick={handleSend}>Send</button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button onClick={handleSend} disabled={progress}>
+          Send
+        </button>
+        <button onClick={handleCancel} disabled={progress}>
+          Cancel
+        </button>
       </div>
     </form>
   );
