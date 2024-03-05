@@ -60,22 +60,30 @@ const MessagesExternalToolBar = ({
       })
     ) {
       try {
-        for (let messageId of msgsSelectedIds) {
-          const response = await axiosXanoStaff.get(
-            `/messages_external/${messageId}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
-          );
+        const msgsSelected = (
+          await axiosXanoStaff.get("/messages_external_selected", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+            params: { messages_ids: msgsSelectedIds },
+          })
+        ).data;
+        for (let message of msgsSelected) {
           const datasToPut = {
-            ...response.data,
+            ...message,
             deleted_by_staff_id: user.id,
+            attachments_ids: message.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            ),
+            previous_messages_ids: message.previous_messages_ids.map(
+              ({ previous_message }) => previous_message.id
+            ),
           };
-          const response2 = await axiosXanoStaff.put(
-            `/messages_external/${messageId}`,
+          delete datasToPut.to_patient_infos;
+          delete datasToPut.from_patient_infos;
+          const response = await axiosXanoStaff.put(
+            `/messages_external/${message.id}`,
             datasToPut,
             {
               headers: {
@@ -87,12 +95,12 @@ const MessagesExternalToolBar = ({
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",
             action: "update",
-            content: { id: messageId, data: response2.data },
+            content: { id: message.id, data: response.data },
           });
           socket.emit("message", {
             route: "MESSAGES WITH PATIENT",
             action: "update",
-            content: { id: messageId, data: response2.data },
+            content: { id: message.id, data: response.data },
           });
         }
         setNewVisible(false);
@@ -122,7 +130,15 @@ const MessagesExternalToolBar = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_id: 0,
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.from_patient_infos;
         const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
           datasToPut,

@@ -284,7 +284,11 @@ const NewMessage = ({ setNewVisible }) => {
         </div>
         <div className="new-message__attach">
           <strong>Attach files</strong>
-          <i className="fa-solid fa-paperclip" onClick={handleAttach}></i>
+          <i
+            className="fa-solid fa-paperclip"
+            onClick={handleAttach}
+            disabled={progress || isLoadingFile}
+          ></i>
           {attachments.map((attachment) => (
             <span key={attachment.file.name} style={{ marginLeft: "5px" }}>
               {attachment.alias},

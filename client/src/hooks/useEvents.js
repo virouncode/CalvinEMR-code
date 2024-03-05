@@ -40,6 +40,7 @@ const useEvents = (
             signal: abortController.signal,
           }
         );
+        console.log("get appointments response", response.data);
         const formattedEvents = parseToEvents(
           response.data,
           staffInfos,

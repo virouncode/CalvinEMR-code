@@ -119,16 +119,17 @@ const ForwardMessage = ({
         })
       ).data;
 
-      attach_ids = [...message.attachments_ids, ...attach_ids];
+      attach_ids = [
+        ...message.attachments_ids.map(({ attachment }) => attachment),
+        ...attach_ids,
+      ];
 
       //create the message
       const forwardMessage = {
         from_id: user.id,
         to_staff_ids: recipientsIds,
         subject: previousMsgs.length
-          ? `Fwd ${previousMsgs.length + 1}: ${message.subject.slice(
-              message.subject.indexOf(":") + 1
-            )}`
+          ? `Fwd: ${message.subject.slice(message.subject.indexOf(":") + 1)}`
           : `Fwd: ${message.subject}`,
         attachments_ids: attach_ids,
         body: body,
@@ -268,7 +269,7 @@ const ForwardMessage = ({
         <div className="forward-message__subject">
           <strong>Subject:</strong>
           {previousMsgs.length
-            ? `\u00A0Fwd ${previousMsgs.length + 1}: ${message.subject.slice(
+            ? `\u00A0Fwd: ${message.subject.slice(
                 message.subject.indexOf(":") + 1
               )}`
             : `\u00A0Fwd: ${message.subject}`}

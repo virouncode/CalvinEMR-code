@@ -47,15 +47,11 @@ const MessageExternalDetail = ({
 
   useEffect(() => {
     setPreviousMsgs(
-      message.previous_messages_ids
-        .filter((item) => item)
-        .map(({ previous_messages }) => previous_messages?.[0])
+      message.previous_messages_ids.map(
+        ({ previous_message }) => previous_message
+      )
     );
-    setAttachments(
-      message.attachments_ids
-        .filter((item) => item)
-        .map(({ attachments }) => attachments?.[0])
-    );
+    setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
 
   const handleClickBack = (e) => {
@@ -76,9 +72,9 @@ const MessageExternalDetail = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_id: user.id,
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0]?.id),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
           previous_messages: message.previous_messages
             .filter((item) => item)
             .map(({ previous_messages }) => previous_messages?.[0]?.id),

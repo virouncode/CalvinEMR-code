@@ -25,18 +25,15 @@ const MessagePatientDetail = ({
   const [replyVisible, setReplyVisible] = useState(false);
   const [previousMsgs, setPreviousMsgs] = useState([]);
   const [attachments, setAttachments] = useState([]);
+  console.log("message", message);
 
   useEffect(() => {
     setPreviousMsgs(
-      message.previous_messages_ids
-        .filter((item) => item)
-        .map(({ previous_messages }) => previous_messages?.[0])
+      message.previous_messages_ids.map(
+        ({ previous_message }) => previous_message
+      )
     );
-    setAttachments(
-      message.attachments_ids
-        .filter((item) => item)
-        .map(({ attachments }) => attachments?.[0])
-    );
+    setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
 
   const handleClickBack = (e) => {

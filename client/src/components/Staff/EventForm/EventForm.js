@@ -533,6 +533,7 @@ const EventForm = ({
         datasToPut,
         currentEvent.current.id
       );
+      console.log("put response", response.data);
 
       setHostsIds([...hostsIds, tempFormDatas.host_id]);
       socket.emit("message", {

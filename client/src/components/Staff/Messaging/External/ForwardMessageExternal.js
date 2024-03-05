@@ -118,28 +118,30 @@ const ForwardMessageExternal = ({
         })
       ).data;
 
-      attach_ids = [...message.attachments_ids, ...attach_ids];
+      attach_ids = [
+        ...message.attachments_ids.map(({ attachment }) => attachment),
+        ...attach_ids,
+      ];
 
       //create the message
       const forwardMessage = {
         from_id: user.id,
-        to_staff_ids: recipientsIds.map((recipientId) => recipientId),
+        to_staff_ids: recipientsIds,
         subject: previousMsgs.length
-          ? `Fwd ${previousMsgs.length + 1}: ${message.subject.slice(
-              message.subject.indexOf(":") + 1
-            )}`
+          ? `Fwd: ${message.subject.slice(message.subject.indexOf(":") + 1)}`
           : `Fwd: ${message.subject}`,
         body: body,
         attachments_ids: attach_ids,
         related_patient_id: message.from_patient_id || message.to_patient_id,
         read_by_staff_ids: [user.id],
         previous_messages: [
-          ...message.previous_messages_ids.map((id) => {
-            return { message_type: "External", id };
+          ...message.previous_messages_ids.map(({ previous_message }) => {
+            return { message_type: "External", id: previous_message.id };
           }),
           { message_type: "External", id: message.id },
         ],
         date_created: Date.now(),
+        type: "Internal",
       };
 
       //post the message
@@ -151,7 +153,7 @@ const ForwardMessageExternal = ({
       });
 
       socket.emit("message", {
-        route: "MESSAGES INBOX EXTERNAL",
+        route: "MESSAGES INBOX",
         action: "create",
         content: { data: response.data },
       });
@@ -269,7 +271,7 @@ const ForwardMessageExternal = ({
         <div className="forward-message__subject">
           <strong>Subject:</strong>
           {previousMsgs.length
-            ? `\u00A0Fwd ${previousMsgs.length + 1}: ${message.subject.slice(
+            ? `\u00A0Fwd: ${message.subject.slice(
                 message.subject.indexOf(":") + 1
               )}`
             : `\u00A0Fwd: ${message.subject}`}

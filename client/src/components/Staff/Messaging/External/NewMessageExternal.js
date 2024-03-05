@@ -89,6 +89,7 @@ const NewMessageExternal = ({ setNewVisible }) => {
           },
         }
       );
+      console.log("External message posted", response.data);
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
         action: "create",

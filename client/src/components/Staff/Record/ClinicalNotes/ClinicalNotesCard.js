@@ -116,9 +116,9 @@ const ClinicalNotesCard = ({
         //then put the new clinical note version in the clinical note tbl
         const datasToPost = { ...tempFormDatas };
         datasToPost.version_nbr = clinicalNote.version_nbr + 1; //increment version
-        datasToPost.attachments_ids = clinicalNote.attachments_ids
-          .filter((item) => item)
-          .map(({ attachments }) => attachments?.[0].id); //format attachments_ids
+        datasToPost.attachments_ids = clinicalNote.attachments_ids.map(
+          ({ attachment }) => attachment.id
+        ); //format attachments_ids
         datasToPost.date_updated = Date.now(); //we update the date_updated
         delete datasToPost.version;
         await putPatientRecord(
@@ -250,9 +250,9 @@ const ClinicalNotesCard = ({
           handleChange={handleChange}
         />
         <ClinicalNotesAttachments
-          attachments={clinicalNote.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0])}
+          attachments={clinicalNote.attachments_ids.map(
+            ({ attachment }) => attachment
+          )}
           deletable={false}
           patientId={patientId}
           date={clinicalNote.date_created}
@@ -288,9 +288,9 @@ const ClinicalNotesCard = ({
           setPopUpVisible={setPopUpVisible}
         >
           <CalvinAI
-            attachments={clinicalNote.attachments_ids
-              .filter((item) => item)
-              .map(({ attachments }) => attachments?.[0])}
+            attachments={clinicalNote.attachments_ids.map(
+              ({ attachment }) => attachment
+            )}
             initialBody={formDatas.MyClinicalNotesContent}
             demographicsInfos={demographicsInfos}
           />

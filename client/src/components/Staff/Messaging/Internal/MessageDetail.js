@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -42,21 +43,12 @@ const MessageDetail = ({
   const [replyVisible, setReplyVisible] = useState(false);
   const [forwardVisible, setForwardVisible] = useState(false);
   const [allPersons, setAllPersons] = useState(false);
-  const [previousMsgs, setPreviousMsgs] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
 
+  const [previousMsgs, setPreviousMsgs] = useFetchPreviousMessages(message);
   useEffect(() => {
-    setPreviousMsgs(
-      message.previous_messages
-        .filter((item) => item)
-        .map(({ previous_messages }) => previous_messages?.[0])
-    );
-    setAttachments(
-      message.attachments_ids
-        .filter((item) => item)
-        .map(({ attachments }) => attachments?.[0])
-    );
+    setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages]);
 
   const handleClickBack = (e) => {
@@ -73,9 +65,9 @@ const MessageDetail = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0]?.id),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
           previous_messages: message.previous_messages
             .filter((item) => item)
             .map((item) => {

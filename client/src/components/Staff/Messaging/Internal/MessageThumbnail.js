@@ -21,7 +21,7 @@ const MessageThumbnail = ({
   lastItemRef = null,
 }) => {
   const { auth } = useAuthContext();
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
 
@@ -32,14 +32,9 @@ const MessageThumbnail = ({
         const datasToPut = {
           ...message,
           read_by_staff_ids: [...message.read_by_staff_ids, user.id],
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0]?.id),
-          previous_messages: message.previous_messages
-            .filter((item) => item)
-            .map((item) => {
-              return { message_type: item.message_type, id: item.id };
-            }),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
         };
         delete datasToPut.patient_infos;
         const response = await axiosXanoStaff.put(
@@ -52,6 +47,7 @@ const MessageThumbnail = ({
             },
           }
         );
+        console.log("message put infos", response.data);
         socket.emit("message", {
           route: "MESSAGES INBOX",
           action: "update",
@@ -117,14 +113,9 @@ const MessageThumbnail = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0].id),
-          previous_messages: message.previous_messages
-            .filter((item) => item)
-            .map((item) => {
-              return { message_type: item.message_type, id: item.id };
-            }),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
         };
         delete datasToPut.patient_infos;
         const response = await axiosXanoStaff.put(

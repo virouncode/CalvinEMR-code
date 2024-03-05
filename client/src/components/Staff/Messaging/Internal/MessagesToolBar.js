@@ -59,24 +59,29 @@ const MessagesToolBar = ({
       })
     ) {
       try {
-        for (let messageId of msgsSelectedIds) {
-          //get the particular message
-          const response = await axiosXanoStaff.get(`/messages/${messageId}`, {
+        const msgsSelected = (
+          await axiosXanoStaff.get("/messages_selected", {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${auth.authToken}`,
             },
-          });
-          const newMessage = {
-            ...response.data,
-            deleted_by_staff_ids: [
-              ...response.data.deleted_by_staff_ids,
-              user.id,
-            ],
+            params: {
+              messages_ids: msgsSelectedIds,
+            },
+          })
+        ).data;
+        for (let message of msgsSelected) {
+          const datasToPut = {
+            ...message,
+            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+            attachments_ids: message.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            ),
           };
-          const response2 = await axiosXanoStaff.put(
-            `/messages/${messageId}`,
-            newMessage,
+          delete datasToPut.patient_infos;
+          const response = await axiosXanoStaff.put(
+            `/messages/${message.id}`,
+            datasToPut,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -87,12 +92,12 @@ const MessagesToolBar = ({
           socket.emit("message", {
             route: "MESSAGES INBOX",
             action: "update",
-            content: { id: messageId, data: response2.data },
+            content: { id: message.id, data: response.data },
           });
           socket.emit("message", {
             route: "MESSAGES ABOUT PATIENT",
             action: "update",
-            content: { id: messageId, data: response2.data },
+            content: { id: message.id, data: response.data },
           });
         }
         setNewVisible(false);
@@ -121,13 +126,16 @@ const MessagesToolBar = ({
         })
       ).data;
       for (let message of msgsSelected) {
-        const newDeletedByStaffIds = message.deleted_by_staff_ids.filter(
-          (id) => id !== user.id
-        );
         const datasToPut = {
           ...message,
-          deleted_by_staff_ids: newDeletedByStaffIds,
+          deleted_by_staff_ids: message.deleted_by_staff_ids.filter(
+            (id) => id !== user.id
+          ),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
         };
+        delete datasToPut.patient_infos;
         const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
           datasToPut,

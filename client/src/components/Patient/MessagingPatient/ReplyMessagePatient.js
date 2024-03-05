@@ -50,15 +50,16 @@ const ReplyMessagePatient = ({
         )
       ).data;
 
-      attach_ids = [...message.attachments_ids, ...attach_ids];
+      attach_ids = [
+        ...message.attachments_ids.map(({ attachment }) => attachment),
+        ...attach_ids,
+      ];
 
       const replyMessage = {
         from_patient_id: user.id,
         to_staff_id: message.from_staff_id,
         subject: previousMsgs.length
-          ? `Re ${previousMsgs.length + 1}: ${message.subject.slice(
-              message.subject.indexOf(":") + 1
-            )}`
+          ? `Re: ${message.subject.slice(message.subject.indexOf(":") + 1)}`
           : `Re: ${message.subject}`,
         body: body,
         attachments_ids: attach_ids,
@@ -183,7 +184,7 @@ const ReplyMessagePatient = ({
       <div className="reply-message__subject">
         <strong>Subject:</strong>
         {previousMsgs.length
-          ? `\u00A0Re ${previousMsgs.length + 1}: ${message.subject.slice(
+          ? `\u00A0Re: ${message.subject.slice(
               message.subject.indexOf(":") + 1
             )}`
           : `\u00A0Re: ${message.subject}`}

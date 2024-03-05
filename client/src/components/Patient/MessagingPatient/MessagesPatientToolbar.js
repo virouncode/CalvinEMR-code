@@ -60,23 +60,33 @@ const MessagesPatientToolBar = ({
       })
     ) {
       try {
-        for (let messageId of msgsSelectedIds) {
-          const response = await axiosXanoPatient.get(
-            `/messages_external/${messageId}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
-          );
-          const newMessage = {
-            ...response.data,
+        const msgsSelected = (
+          await axiosXanoPatient.get("/messages_external_selected", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.authToken}`,
+            },
+            params: {
+              messages_ids: msgsSelectedIds,
+            },
+          })
+        ).data;
+        for (let message of msgsSelected) {
+          const datasToPut = {
+            ...message,
             deleted_by_patient_id: user.id,
+            attachments_ids: message.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            ),
+            previous_messages_ids: message.previous_messages_ids.map(
+              ({ previous_message }) => previous_message.id
+            ),
           };
-          await axiosXanoPatient.put(
-            `/messages_external/${messageId}`,
-            newMessage,
+          delete datasToPut.to_patient_infos;
+          delete datasToPut.from_patient_infos;
+          const response = await axiosXanoPatient.put(
+            `/messages_external/${message.id}`,
+            datasToPut,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -87,12 +97,12 @@ const MessagesPatientToolBar = ({
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: message.id, data: response.data },
           });
           socket.emit("message", {
             route: "MESSAGES WITH PATIENT",
             action: "update",
-            content: { id: messageId, data: newMessage },
+            content: { id: message.id, data: response.data },
           });
         }
         setNewVisible(false);
@@ -121,13 +131,21 @@ const MessagesPatientToolBar = ({
         })
       ).data;
       for (let message of msgsSelected) {
-        const newMessage = {
+        const datasToPut = {
           ...message,
           deleted_by_patient_id: 0,
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
-        await axiosXanoPatient.put(
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.from_patient_infos;
+        const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
-          newMessage,
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -138,12 +156,12 @@ const MessagesPatientToolBar = ({
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES WITH PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       }
       // setSection("Inbox");

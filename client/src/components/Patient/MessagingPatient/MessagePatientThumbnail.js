@@ -27,13 +27,21 @@ const MessagePatientThumbnail = ({
     if (message.read_by_patient_id !== user.id) {
       //create and replace message with read by user id
       try {
-        const newMessage = {
+        const datasToPut = {
           ...message,
           read_by_patient_id: user.id,
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
-        await axiosXanoPatient.put(
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.from_patient_infos;
+        const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
-          newMessage,
+          datasToPut,
           {
             headers: {
               Authorization: `Bearer ${auth.authToken}`,
@@ -41,15 +49,16 @@ const MessagePatientThumbnail = ({
             },
           }
         );
+        console.log("message external put", response.data);
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
         socket.emit("message", {
           route: "MESSAGES WITH PATIENT",
           action: "update",
-          content: { id: message.id, data: newMessage },
+          content: { id: message.id, data: response.data },
         });
       } catch (err) {
         toast.error(`Error: unable to get messages: ${err.message}`, {
@@ -102,12 +111,19 @@ const MessagePatientThumbnail = ({
       })
     ) {
       try {
-        await axiosXanoPatient.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_patient_id: user.id,
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
+        };
+        const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
-          {
-            ...message,
-            deleted_by_patient_id: user.id,
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -120,10 +136,7 @@ const MessagePatientThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_patient_id: user.id,
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -131,10 +144,7 @@ const MessagePatientThumbnail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_patient_id: user.id,
-            },
+            data: response.data,
           },
         });
         toast.success("Message deleted successfully", { containerId: "A" });

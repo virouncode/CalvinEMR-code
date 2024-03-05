@@ -30,12 +30,12 @@ const MessageExternalThumbnail = ({
         const datasToPut = {
           ...message,
           read_by_staff_id: user.id,
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0]?.id),
-          previous_messages_ids: message.previous_messages_ids
-            .filter((item) => item)
-            .map(({ previous_messages }) => previous_messages?.[0]?.id),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
         delete datasToPut.to_patient_infos;
         delete datasToPut.from_patient_infos;
@@ -49,6 +49,7 @@ const MessageExternalThumbnail = ({
             },
           }
         );
+        console.log("message external put", response.data);
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
@@ -114,12 +115,12 @@ const MessageExternalThumbnail = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_id: user.id,
-          attachments_ids: message.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0]?.id),
-          previous_messages_ids: message.previous_messages_ids
-            .filter((item) => item)
-            .map(({ previous_messages }) => previous_messages?.[0]?.id),
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
         delete datasToPut.to_patient_infos;
         delete datasToPut.from_patient_infos;

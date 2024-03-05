@@ -66,9 +66,9 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           {clinicalNote.MyClinicalNotesContent}
         </p>
         <ClinicalNotesAttachments
-          attachments={clinicalNote.attachments_ids
-            .filter((item) => item)
-            .map(({ attachments }) => attachments?.[0])}
+          attachments={clinicalNote.attachments_ids.map(
+            ({ attachment }) => attachment
+          )}
           deletable={false}
           addable={false}
         />

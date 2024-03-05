@@ -5,7 +5,6 @@ import { sendEmail } from "../../../../api/sendEmail";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import { toPatientName } from "../../../../utils/toPatientName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
@@ -22,7 +21,6 @@ const ReplyMessageExternal = ({
   const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
-  const { staffInfos } = useStaffInfosContext();
   const [body, setBody] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -40,15 +38,16 @@ const ReplyMessageExternal = ({
         })
       ).data;
 
-      attach_ids = [...message.attachments_ids, ...attach_ids];
+      attach_ids = [
+        ...message.attachments_ids.map(({ attachment }) => attachment),
+        ...attach_ids,
+      ];
 
       const replyMessage = {
         from_staff_id: user.id,
         to_patient_id: message.from_patient_id,
         subject: previousMsgs.length
-          ? `Re ${previousMsgs.length + 1}: ${message.subject.slice(
-              message.subject.indexOf(":") + 1
-            )}`
+          ? `Re: ${message.subject.slice(message.subject.indexOf(":") + 1)}`
           : `Re: ${message.subject}`,
         body: body,
         attachments_ids: attach_ids,
@@ -212,7 +211,7 @@ Powered by Calvin EMR`,
       <div className="reply-message__subject">
         <strong>Subject:</strong>
         {previousMsgs.length
-          ? `\u00A0Re ${previousMsgs.length + 1}: ${message.subject.slice(
+          ? `\u00A0Re: ${message.subject.slice(
               message.subject.indexOf(":") + 1
             )}`
           : `\u00A0Re: ${message.subject}`}
