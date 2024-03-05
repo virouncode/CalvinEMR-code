@@ -20,13 +20,14 @@ const useFetchPreviousMessages = (message) => {
               Authorization: `Bearer ${auth.authToken}`,
             },
             params: {
-              messages_ids: message.previous_messages.filter(
-                ({ message_type }) => message_type === "Internal"
-              ),
+              messages_ids: message.previous_messages
+                .filter(({ message_type }) => message_type === "Internal")
+                .map(({ id }) => id),
             },
             signal: abortController.signal,
           })
         ).data;
+        console.log("previousInternal", previousInternal);
         const previousExternal = (
           await axiosXanoStaff.get("/messages_external_selected", {
             headers: {
@@ -34,9 +35,9 @@ const useFetchPreviousMessages = (message) => {
               Authorization: `Bearer ${auth.authToken}`,
             },
             params: {
-              messages_ids: message.previous_messages.filter(
-                ({ message_type }) => message_type === "External"
-              ),
+              messages_ids: message.previous_messages
+                .filter(({ message_type }) => message_type === "External")
+                .map(({ id }) => id),
             },
             signal: abortController.signal,
           })
