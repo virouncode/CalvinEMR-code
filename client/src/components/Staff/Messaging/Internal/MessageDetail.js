@@ -20,6 +20,7 @@ import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import CircularProgressSmallWhite from "../../../All/UI/Progress/CircularProgressSmallWhite";
+import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
@@ -46,7 +47,7 @@ const MessageDetail = ({
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
 
-  const [previousMsgs, setPreviousMsgs] = useFetchPreviousMessages(message);
+  const [previousMsgs, loading, errMsg] = useFetchPreviousMessages(message);
   useEffect(() => {
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages]);
@@ -67,14 +68,9 @@ const MessageDetail = ({
           deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ),
-          previous_messages: message.previous_messages
-            .filter((item) => item)
-            .map((item) => {
-              return { message_type: item.message_type, id: item.id };
-            }),
+          ), //reformatted because of add-on
         };
-        delete datasToPut.patient_infos;
+        delete datasToPut.patient_infos; //from add-on
         const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
           datasToPut,
@@ -164,9 +160,14 @@ const MessageDetail = ({
       ];
 
       const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: datasAttachment,
-        })
+        await postPatientRecord(
+          "/clinical_notes_attachments",
+          user.id,
+          auth.authToken,
+          {
+            attachments_array: datasAttachment,
+          }
+        )
       ).data;
       await postPatientRecord(
         "/clinical_notes",
@@ -185,10 +186,10 @@ const MessageDetail = ({
           ParticipatingProviders: [
             {
               Name: {
-                FirstName: staffIdToFirstName(staffInfos, message.from_id),
-                LastName: staffIdToLastName(staffInfos, message.from_id),
+                FirstName: staffIdToFirstName(staffInfos, user.id),
+                LastName: staffIdToLastName(staffInfos, user.id),
               },
-              OHIPPhysicianId: staffIdToOHIP((staffInfos, message.from_id)),
+              OHIPPhysicianId: staffIdToOHIP((staffInfos, user.id)),
               DateTimeNoteCreated: Date.now(),
             },
           ],
@@ -312,19 +313,25 @@ const MessageDetail = ({
         </div>
         <div ref={messageContentRef} className="message-detail__content">
           <Message message={message} key={message.id} index={0} />
-          {previousMsgs &&
-            previousMsgs.length > 0 &&
-            previousMsgs.map((message, index) =>
-              message.type === "Internal" ? (
-                <Message message={message} key={message.id} index={index + 1} />
-              ) : (
-                <MessageExternal
-                  message={message}
-                  key={message.id}
-                  index={index + 1}
-                />
+          {errMsg && <p className="message-detail__content-err">{errMsg}</p>}
+          {!errMsg && previousMsgs && previousMsgs.length > 0
+            ? previousMsgs.map((message, index) =>
+                message.type === "Internal" ? (
+                  <Message
+                    message={message}
+                    key={message.id}
+                    index={index + 1}
+                  />
+                ) : (
+                  <MessageExternal
+                    message={message}
+                    key={message.id}
+                    index={index + 1}
+                  />
+                )
               )
-            )}
+            : !loading && null}
+          {loading && <LoadingParagraph />}
           <MessagesAttachments
             attachments={attachments}
             deletable={false}

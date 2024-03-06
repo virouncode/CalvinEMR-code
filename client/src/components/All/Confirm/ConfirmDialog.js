@@ -8,9 +8,7 @@ const ConfirmDialog = ({ onConfirm, onCancel, isPopUp, props }) => {
 
   useEffect(() => {
     const handleKeyboardShortcut = (e) => {
-      console.log("keyCode", e.keyCode);
       if (e.keyCode === 13) {
-        console.log("confirmed");
         onConfirm();
       }
     };

@@ -47,7 +47,6 @@ const ImmunizationForm = ({
   const [progress, setProgress] = useState(false);
 
   const handleRouteChange = (value) => {
-    console.log(value);
     setFormDatas({ ...formDatas, Route: value });
   };
   const handleSiteChange = (value) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -133,12 +133,17 @@ const NewMessage = ({ setNewVisible }) => {
     }
     try {
       setProgress(true);
-      const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
-
+      let attach_ids = [];
+      if (attachments.length > 0) {
+        attach_ids = (
+          await xanoPost(
+            "/messages_attachments",
+            axiosXanoStaff,
+            auth.authToken,
+            { attachments_array: attachments }
+          )
+        ).data;
+      }
       //create the message
       const message = {
         from_id: user.id,

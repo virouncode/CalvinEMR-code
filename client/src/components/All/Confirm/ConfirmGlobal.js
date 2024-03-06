@@ -22,7 +22,6 @@ const ConfirmGlobal = ({ isPopUp = false }) => {
       setOpen(true); //la fonction ouvre la boite de dialogue
       resolveRef.current = resolve; //permet de sortir resolve du contexte de la fonction et pouvoir la passer à ConfirmDialog
     });
-  console.log("render", "open?", open);
   return (
     open && (
       <ConfirmDialog

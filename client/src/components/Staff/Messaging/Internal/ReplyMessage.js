@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -35,16 +35,26 @@ const ReplyMessage = ({
   const handleSend = async (e) => {
     try {
       setProgress(true);
-      let attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
+      let attach_ids;
 
-      attach_ids = [
-        ...message.attachments_ids.map(({ attachment }) => attachment),
-        ...attach_ids,
-      ];
+      if (attachments.length > 0) {
+        const response = await xanoPost(
+          "/messages_attachments",
+          axiosXanoStaff,
+          auth.authToken,
+          {
+            attachments_array: attachments,
+          }
+        );
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+          ...response.data,
+        ];
+      } else {
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+        ];
+      }
 
       const replyMessage = {
         from_id: user.id,
@@ -62,9 +72,10 @@ const ReplyMessage = ({
         read_by_staff_ids: [user.id],
         previous_messages: [
           ...message.previous_messages,
-          { message_type: message.type, id: message.id },
+          { message_type: "Internal", id: message.id },
         ],
         date_created: Date.now(),
+        type: "Internal",
       };
 
       const response = await axiosXanoStaff.post("/messages", replyMessage, {

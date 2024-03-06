@@ -98,6 +98,5 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
     default:
       break;
   }
-  console.log("datasToPlot", datasToPlot);
   return datasToPlot;
 };

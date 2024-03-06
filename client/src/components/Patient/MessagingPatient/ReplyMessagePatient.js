@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
+import xanoPost from "../../../api/xanoPost";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -32,28 +33,25 @@ const ReplyMessagePatient = ({
   const handleSend = async (e) => {
     try {
       setProgress(true);
-      const attachmentsToPost = attachments.map((attachment) => {
-        return { ...attachment, date_created: Date.now() };
-      });
-      let attach_ids = (
-        await axiosXanoPatient.post(
-          "/attachments",
+      let attach_ids;
+      if (attachments.length > 0) {
+        const response = await xanoPost(
+          "/messages_attachments",
+          axiosXanoPatient,
+          auth.authToken,
           {
-            attachments_array: attachmentsToPost,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
+            attachments_array: attachments,
           }
-        )
-      ).data;
-
-      attach_ids = [
-        ...message.attachments_ids.map(({ attachment }) => attachment),
-        ...attach_ids,
-      ];
+        );
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+          ...response.data,
+        ];
+      } else {
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+        ];
+      }
 
       const replyMessage = {
         from_patient_id: user.id,

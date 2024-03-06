@@ -73,9 +73,14 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
     }
     try {
       const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
+        await postPatientRecord(
+          "/clinical_notes_attachments",
+          user.id,
+          auth.authToken,
+          {
+            attachments_array: attachments,
+          }
+        )
       ).data;
 
       await postPatientRecord(
@@ -119,9 +124,14 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
     }
     try {
       const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
+        await postPatientRecord(
+          "/clinical_notes_attachments",
+          user.id,
+          auth.authToken,
+          {
+            attachments_array: attachments,
+          }
+        )
       ).data;
 
       await postPatientRecord(

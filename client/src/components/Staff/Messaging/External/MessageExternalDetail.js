@@ -47,9 +47,9 @@ const MessageExternalDetail = ({
 
   useEffect(() => {
     setPreviousMsgs(
-      message.previous_messages_ids.map(
-        ({ previous_message }) => previous_message
-      )
+      message.previous_messages_ids
+        .map(({ previous_message }) => previous_message)
+        .sort((a, b) => b.date_created - a.date_created)
     );
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
@@ -75,9 +75,9 @@ const MessageExternalDetail = ({
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
           ),
-          previous_messages: message.previous_messages
-            .filter((item) => item)
-            .map(({ previous_messages }) => previous_messages?.[0]?.id),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
         };
         delete datasToPut.to_patient_infos;
         delete datasToPut.form_patient_infos;
@@ -159,9 +159,14 @@ const MessageExternalDetail = ({
       ];
 
       const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: datasAttachment,
-        })
+        await postPatientRecord(
+          "/clinical_notes_attachments",
+          user.id,
+          auth.authToken,
+          {
+            attachments_array: datasAttachment,
+          }
+        )
       ).data;
       await postPatientRecord(
         "/clinical_notes",
@@ -178,19 +183,10 @@ const MessageExternalDetail = ({
           ParticipatingProviders: [
             {
               Name: {
-                FirstName: staffIdToFirstName(
-                  staffInfos,
-                  message.from_staff_id || message.to_staff_id
-                ),
-                LastName: staffIdToLastName(
-                  staffInfos,
-                  message.from_staff_id || message.to_staff_id
-                ),
+                FirstName: staffIdToFirstName(staffInfos, user.id),
+                LastName: staffIdToLastName(staffInfos, user.id),
               },
-              OHIPPhysicianId: staffIdToOHIP(
-                staffInfos,
-                message.from_staff_id || message.to_staff_id
-              ),
+              OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
               DateTimeNoteCreated: Date.now(),
             },
           ],
@@ -200,13 +196,13 @@ const MessageExternalDetail = ({
         socket,
         "CLINICAL NOTES"
       );
-      toast.success("Message successfuly added to patient progress notes", {
+      toast.success("Message successfuly added to patient clinical notes", {
         containerId: "A",
       });
       setPosting(false);
     } catch (err) {
       toast.error(
-        `Unable to add message to patient progress notes: ${err.message}`,
+        `Unable to add message to patient clinical notes: ${err.message}`,
         {
           containerId: "A",
         }

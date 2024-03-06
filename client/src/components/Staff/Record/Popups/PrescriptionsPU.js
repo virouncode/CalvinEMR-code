@@ -19,7 +19,6 @@ const PrescriptionsPU = ({
   patientId,
   setPopUpVisible,
 }) => {
-  console.log("pagingPrescriptions in prescription PU", paging);
   useFetchCategoryDatas(
     "/prescriptions_of_patient",
     setTopicDatas,

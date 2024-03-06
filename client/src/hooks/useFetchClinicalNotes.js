@@ -19,7 +19,6 @@ const useFetchClinicalNotes = (patientId) => {
   }, [order, search]);
 
   useEffect(() => {
-    console.log("useFetchClinical");
     const abortController = new AbortController();
     const fetchClinicalNotes = async () => {
       try {

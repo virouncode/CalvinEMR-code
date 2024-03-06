@@ -74,11 +74,7 @@ const MessagesToolBar = ({
           const datasToPut = {
             ...message,
             deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-            attachments_ids: message.attachments_ids.map(
-              ({ attachment }) => attachment.id
-            ),
           };
-          delete datasToPut.patient_infos;
           const response = await axiosXanoStaff.put(
             `/messages/${message.id}`,
             datasToPut,
@@ -130,9 +126,6 @@ const MessagesToolBar = ({
           ...message,
           deleted_by_staff_ids: message.deleted_by_staff_ids.filter(
             (id) => id !== user.id
-          ),
-          attachments_ids: message.attachments_ids.map(
-            ({ attachment }) => attachment.id
           ),
         };
         delete datasToPut.patient_infos;

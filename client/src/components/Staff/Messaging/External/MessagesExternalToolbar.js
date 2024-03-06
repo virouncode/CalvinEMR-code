@@ -73,15 +73,9 @@ const MessagesExternalToolBar = ({
           const datasToPut = {
             ...message,
             deleted_by_staff_id: user.id,
-            attachments_ids: message.attachments_ids.map(
-              ({ attachment }) => attachment.id
-            ),
-            previous_messages_ids: message.previous_messages_ids.map(
-              ({ previous_message }) => previous_message.id
-            ),
           };
-          delete datasToPut.to_patient_infos;
-          delete datasToPut.from_patient_infos;
+          delete datasToPut.to_patient_infos; //From add-on
+          delete datasToPut.from_patient_infos; //From add-on
           const response = await axiosXanoStaff.put(
             `/messages_external/${message.id}`,
             datasToPut,
@@ -130,15 +124,9 @@ const MessagesExternalToolBar = ({
         const datasToPut = {
           ...message,
           deleted_by_staff_id: 0,
-          attachments_ids: message.attachments_ids.map(
-            ({ attachment }) => attachment.id
-          ),
-          previous_messages_ids: message.previous_messages_ids.map(
-            ({ previous_message }) => previous_message.id
-          ),
         };
-        delete datasToPut.to_patient_infos;
-        delete datasToPut.from_patient_infos;
+        delete datasToPut.to_patient_infos; //From add-on
+        delete datasToPut.from_patient_infos; //From add-on
         const response = await axiosXanoStaff.put(
           `/messages_external/${message.id}`,
           datasToPut,

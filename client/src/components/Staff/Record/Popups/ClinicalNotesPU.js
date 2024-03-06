@@ -25,7 +25,6 @@ const ClinicalNotesPU = ({
   const { id } = useParams();
 
   useEffect(() => {
-    console.log("fetchAllNotes");
     const abortController = new AbortController();
     const fetchAllClinicalNotes = async () => {
       try {

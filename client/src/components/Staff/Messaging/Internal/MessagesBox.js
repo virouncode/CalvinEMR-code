@@ -9,7 +9,6 @@ const MessagesBox = ({
   section,
   newVisible,
   setNewVisible,
-  setSection,
   msgsSelectedIds,
   setMsgsSelectedIds,
   currentMsgId,

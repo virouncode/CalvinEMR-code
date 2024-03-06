@@ -53,7 +53,6 @@ export const useEventForm = (eventId) => {
           signal: abortController.signal,
         });
         if (abortController.signal.aborted) return;
-        console.log("appointment", response.data);
         dispatch({ type: "FETCH_SUCCESS", payload: response.data });
       } catch (err) {
         if (err.name !== "CanceledError") {

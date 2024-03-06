@@ -27,7 +27,6 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
         setLoading(true);
         let response;
         if (user.title !== "Secretary" && user.access_level !== "Admin") {
-          console.log("staff");
           //billings concerning the user in range
           response = await axiosXanoInstance.get(
             `/billings_of_staff_in_range`,

@@ -5,7 +5,6 @@ import { toDatasToPlot } from "../../../../../utils/toDatasToPlot";
 import { toYDataKey } from "../../../../../utils/toYDataKey";
 
 const CareElementHistory = ({ historyTopic, historyDatas, historyUnit }) => {
-  console.log(historyDatas);
   const datasToPlot = toDatasToPlot(historyTopic, historyDatas);
   const yDataKey = toYDataKey(historyTopic);
   const keyToLabel = {

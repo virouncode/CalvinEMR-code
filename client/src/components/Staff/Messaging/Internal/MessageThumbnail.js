@@ -34,9 +34,9 @@ const MessageThumbnail = ({
           read_by_staff_ids: [...message.read_by_staff_ids, user.id],
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ),
+          ), //reformatted because off add-on
         };
-        delete datasToPut.patient_infos;
+        delete datasToPut.patient_infos; //from add-On
         const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
           datasToPut,
@@ -47,7 +47,6 @@ const MessageThumbnail = ({
             },
           }
         );
-        console.log("message put infos", response.data);
         socket.emit("message", {
           route: "MESSAGES INBOX",
           action: "update",
@@ -115,9 +114,9 @@ const MessageThumbnail = ({
           deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ),
+          ), //reformatted because off add-on
         };
-        delete datasToPut.patient_infos;
+        delete datasToPut.patient_infos; //from add-on
         const response = await axiosXanoStaff.put(
           `/messages/${message.id}`,
           datasToPut,

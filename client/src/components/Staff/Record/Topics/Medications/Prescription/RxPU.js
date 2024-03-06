@@ -167,9 +167,14 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           ];
 
           const attach_ids = (
-            await postPatientRecord("/attachments", user.id, auth.authToken, {
-              attachments_array: datasAttachment,
-            })
+            await postPatientRecord(
+              "/clinical_notes_attachments",
+              user.id,
+              auth.authToken,
+              {
+                attachments_array: datasAttachment,
+              }
+            )
           ).data;
 
           const prescriptionToPost = {
@@ -184,7 +189,6 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             auth.authToken,
             prescriptionToPost
           );
-          console.log("prescription", response.data);
 
           socket.emit("message", {
             route: "PRESCRIPTIONS",
@@ -313,7 +317,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     //     },
     //   ];
     //   const attach_ids = (
-    //     await postPatientRecord("/attachments", user.id, auth.authToken, {
+    //     await postPatientRecord("/clinical_notes_attachments", user.id, auth.authToken, {
     //       attachments_array: datasAttachment,
     //     })
     //   ).data;

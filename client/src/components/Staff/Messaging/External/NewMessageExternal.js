@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
 import { sendEmail } from "../../../../api/sendEmail";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -62,11 +62,17 @@ const NewMessageExternal = ({ setNewVisible }) => {
     }
     try {
       setProgress(true);
-      const attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
+      let attach_ids = [];
+      if (attachments.length > 0) {
+        attach_ids = (
+          await xanoPost(
+            "/messages_attachments",
+            axiosXanoStaff,
+            auth.authToken,
+            { attachments_array: attachments }
+          )
+        ).data;
+      }
 
       //create the message
       const message = {
@@ -89,7 +95,6 @@ const NewMessageExternal = ({ setNewVisible }) => {
           },
         }
       );
-      console.log("External message posted", response.data);
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
         action: "create",

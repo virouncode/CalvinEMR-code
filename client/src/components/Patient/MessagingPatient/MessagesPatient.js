@@ -26,7 +26,6 @@ const MessagesPatient = () => {
     useFetchMessagesPatient(paging, search, section, user.id, "patient");
 
   useMessagesExternalSocket(messages, setMessages, section, "patient");
-  console.log("messages external of patient", messages);
   return (
     <div className="messages-container">
       <MessagesPatientToolBar

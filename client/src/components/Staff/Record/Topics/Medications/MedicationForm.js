@@ -475,7 +475,6 @@ const MedicationForm = ({
   };
 
   const handleRouteChange = (value) => {
-    console.log(value);
     setFormDatas({
       ...formDatas,
       Route: value,
@@ -520,7 +519,6 @@ const MedicationForm = ({
     });
   };
   const handleDosageUnitChange = (value) => {
-    console.log("handle change");
     setFormDatas({
       ...formDatas,
       DosageUnitOfMeasure: value,
@@ -543,7 +541,6 @@ const MedicationForm = ({
     });
   };
   const handleStrengthUnitChange = (value) => {
-    console.log(value);
     setFormDatas({
       ...formDatas,
       Strength: {

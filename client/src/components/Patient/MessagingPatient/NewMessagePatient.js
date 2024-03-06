@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
+import xanoPost from "../../../api/xanoPost";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -62,24 +63,17 @@ const NewMessagePatient = ({ setNewVisible }) => {
     }
     try {
       setProgress(true);
-      const attachmentsToPost = attachments.map((attachment) => {
-        return { ...attachment, date_created: Date.now() };
-      });
-      let attach_ids = (
-        await axiosXanoPatient.post(
-          "/attachments",
-          {
-            attachments_array: attachmentsToPost,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
-        )
-      ).data;
-
+      let attach_ids = [];
+      if (attachments.length > 0) {
+        attach_ids = (
+          await xanoPost(
+            "/messages_attachments",
+            axiosXanoPatient,
+            auth.authToken,
+            { attachments_array: attachments }
+          )
+        ).data;
+      }
       //create the message
       const message = {
         from_patient_id: user.id,

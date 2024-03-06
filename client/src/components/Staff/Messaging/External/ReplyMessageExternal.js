@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
 import { sendEmail } from "../../../../api/sendEmail";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -32,16 +32,25 @@ const ReplyMessageExternal = ({
   const handleSend = async (e) => {
     try {
       setProgress(true);
-      let attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
-
-      attach_ids = [
-        ...message.attachments_ids.map(({ attachment }) => attachment),
-        ...attach_ids,
-      ];
+      let attach_ids;
+      if (attachments.length > 0) {
+        const response = await xanoPost(
+          "/messages_attachments",
+          axiosXanoStaff,
+          auth.authToken,
+          {
+            attachments_array: attachments,
+          }
+        );
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+          ...response.data,
+        ];
+      } else {
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+        ];
+      }
 
       const replyMessage = {
         from_staff_id: user.id,
@@ -57,6 +66,7 @@ const ReplyMessageExternal = ({
           message.id,
         ],
         date_created: Date.now(),
+        type: "External",
       };
 
       const response = await axiosXanoStaff.post(

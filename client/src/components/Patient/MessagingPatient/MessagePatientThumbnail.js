@@ -32,13 +32,13 @@ const MessagePatientThumbnail = ({
           read_by_patient_id: user.id,
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ),
+          ), //reformatted because of Add-on
           previous_messages_ids: message.previous_messages_ids.map(
             ({ previous_message }) => previous_message.id
           ),
-        };
-        delete datasToPut.to_patient_infos;
-        delete datasToPut.from_patient_infos;
+        }; //reformatted because of Add-on
+        delete datasToPut.to_patient_infos; //From Add-On
+        delete datasToPut.from_patient_infos; //From Add-On
         const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
           datasToPut,
@@ -49,7 +49,6 @@ const MessagePatientThumbnail = ({
             },
           }
         );
-        console.log("message external put", response.data);
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
           action: "update",
@@ -116,11 +115,13 @@ const MessagePatientThumbnail = ({
           deleted_by_patient_id: user.id,
           attachments_ids: message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ),
+          ), //Reformatted beause of Add-On
           previous_messages_ids: message.previous_messages_ids.map(
             ({ previous_message }) => previous_message.id
-          ),
+          ), //Reformatted beause of Add-On
         };
+        delete datasToPut.to_patient_infos; //From Add-On
+        delete datasToPut.from_patient_infos; //From Add-On
         const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
           datasToPut,

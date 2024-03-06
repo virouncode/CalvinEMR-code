@@ -25,13 +25,12 @@ const MessagePatientDetail = ({
   const [replyVisible, setReplyVisible] = useState(false);
   const [previousMsgs, setPreviousMsgs] = useState([]);
   const [attachments, setAttachments] = useState([]);
-  console.log("message", message);
 
   useEffect(() => {
     setPreviousMsgs(
-      message.previous_messages_ids.map(
-        ({ previous_message }) => previous_message
-      )
+      message.previous_messages_ids
+        .map(({ previous_message }) => previous_message)
+        .sort((a, b) => b.date_created - a.date_created)
     );
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
   }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
@@ -47,12 +46,21 @@ const MessagePatientDetail = ({
       })
     ) {
       try {
-        await axiosXanoPatient.put(
+        const datasToPut = {
+          ...message,
+          deleted_by_patient_id: user.id,
+          attachments_ids: message.attachments_ids.map(
+            ({ attachment }) => attachment.id
+          ),
+          previous_messages_ids: message.previous_messages_ids.map(
+            ({ previous_message }) => previous_message.id
+          ),
+        };
+        delete datasToPut.to_patient_infos;
+        delete datasToPut.form_patient_infos;
+        const response = await axiosXanoPatient.put(
           `/messages_external/${message.id}`,
-          {
-            ...message,
-            deleted_by_patient_id: user.id,
-          },
+          datasToPut,
           {
             headers: {
               "Content-Type": "application/json",
@@ -65,10 +73,7 @@ const MessagePatientDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_patient_id: user.id,
-            },
+            data: response.data,
           },
         });
         socket.emit("message", {
@@ -76,10 +81,7 @@ const MessagePatientDetail = ({
           action: "update",
           content: {
             id: message.id,
-            data: {
-              ...message,
-              deleted_by_patient_id: user.id,
-            },
+            data: response.data,
           },
         });
         setCurrentMsgId(0);

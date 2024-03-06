@@ -229,7 +229,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
             { name: "[Blank]", intro: "", infos: "", message: "" },
           ],
           date_created: Date.now(),
-          progress_notes_order: "top",
+          clinical_notes_order: "top",
         },
         {
           headers: {

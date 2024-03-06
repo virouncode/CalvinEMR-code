@@ -6,7 +6,7 @@ const useFetchPreviousMessages = (message) => {
   const { auth } = useAuthContext();
   const [previousMessages, setPreviousMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+  const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -27,7 +27,6 @@ const useFetchPreviousMessages = (message) => {
             signal: abortController.signal,
           })
         ).data;
-        console.log("previousInternal", previousInternal);
         const previousExternal = (
           await axiosXanoStaff.get("/messages_external_selected", {
             headers: {
@@ -42,7 +41,6 @@ const useFetchPreviousMessages = (message) => {
             signal: abortController.signal,
           })
         ).data;
-        console.log("previousExternal", previousExternal);
         if (abortController.signal.aborted) return;
         setLoading(false);
         setPreviousMessages(
@@ -50,9 +48,11 @@ const useFetchPreviousMessages = (message) => {
             (a, b) => b.date_created - a.date_created
           )
         );
-      } catch (err) {
-        if (err.name !== "CanceledError") {
-          setErr(`Error: unable to get datas: ${err.message}`);
+      } catch (errMsg) {
+        if (errMsg.name !== "CanceledError") {
+          setErrMsg(
+            `Error: unable to get previuos messages: ${errMsg.message}`
+          );
         }
         setLoading(false);
       }
@@ -61,7 +61,7 @@ const useFetchPreviousMessages = (message) => {
     return () => abortController.abort();
   }, [auth.authToken, message.previous_messages]);
 
-  return [previousMessages, setPreviousMessages, loading, err];
+  return [previousMessages, loading, errMsg];
 };
 
 export default useFetchPreviousMessages;

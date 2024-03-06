@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -113,17 +113,23 @@ const ForwardMessage = ({
     }
     try {
       setProgress(true);
-      let attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
-
-      attach_ids = [
-        ...message.attachments_ids.map(({ attachment }) => attachment),
-        ...attach_ids,
-      ];
-
+      let attach_ids;
+      if (attachments.length > 0) {
+        const response = await xanoPost(
+          "/messages_attachments",
+          axiosXanoStaff,
+          auth.authToken,
+          { attachments_array: attachments }
+        );
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+          ...response.data,
+        ];
+      } else {
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+        ];
+      }
       //create the message
       const forwardMessage = {
         from_id: user.id,
@@ -131,8 +137,8 @@ const ForwardMessage = ({
         subject: previousMsgs.length
           ? `Fwd: ${message.subject.slice(message.subject.indexOf(":") + 1)}`
           : `Fwd: ${message.subject}`,
-        attachments_ids: attach_ids,
         body: body,
+        attachments_ids: attach_ids,
         related_patient_id: message.related_patient_id || 0,
         read_by_staff_ids: [user.id],
         previous_messages: [

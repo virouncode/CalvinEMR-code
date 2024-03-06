@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -112,16 +112,23 @@ const ForwardMessageExternal = ({
     }
     try {
       setProgress(true);
-      let attach_ids = (
-        await postPatientRecord("/attachments", user.id, auth.authToken, {
-          attachments_array: attachments,
-        })
-      ).data;
-
-      attach_ids = [
-        ...message.attachments_ids.map(({ attachment }) => attachment),
-        ...attach_ids,
-      ];
+      let attach_ids;
+      if (attachments.length > 0) {
+        const response = await xanoPost(
+          "/messages_attachments",
+          axiosXanoStaff,
+          auth.authToken,
+          { attachments_array: attachments }
+        );
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+          ...response.data,
+        ];
+      } else {
+        attach_ids = [
+          ...message.attachments_ids.map(({ attachment }) => attachment.id),
+        ];
+      }
 
       //create the message
       const forwardMessage = {
@@ -141,7 +148,7 @@ const ForwardMessageExternal = ({
           { message_type: "External", id: message.id },
         ],
         date_created: Date.now(),
-        type: "Internal",
+        type: "Internal", //back to internal !!!
       };
 
       //post the message
@@ -153,7 +160,7 @@ const ForwardMessageExternal = ({
       });
 
       socket.emit("message", {
-        route: "MESSAGES INBOX",
+        route: "MESSAGES INBOX", //because back to internal !!!
         action: "create",
         content: { data: response.data },
       });
@@ -252,7 +259,7 @@ const ForwardMessageExternal = ({
         />
       </div>
       <div className="forward-message__form">
-        <div className="forward-message-form__recipients">
+        <div className="forward-message__recipients">
           <strong>To: </strong>
           <input
             type="text"
