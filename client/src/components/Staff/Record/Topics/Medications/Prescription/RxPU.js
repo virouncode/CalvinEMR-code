@@ -8,7 +8,7 @@ import printJS from "print-js";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { postPatientRecord } from "../../../../../../api/fetchRecords";
-import xanoPost from "../../../../../../api/xanoPost";
+import xanoPost from "../../../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../../hooks/useAuthContext";
 import useFetchDatas from "../../../../../../hooks/useFetchDatas";
@@ -97,16 +97,12 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           });
           pdf.addImage(dataURL, "JPEG", 0, 0, 21, 29.7);
 
-          let fileToUpload = await axiosXanoStaff.post(
+          let fileToUpload = await xanoPost(
             "/upload/attachment",
+            axiosXanoStaff,
+            auth.authToken,
             {
               content: pdf.output("datauri"),
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
             }
           );
 

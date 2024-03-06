@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../api/fetchRecords";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import { reportClassCT, reportFormatCT } from "../../../datas/codesTables";
 import useAuthContext from "../../../hooks/useAuthContext";
@@ -142,19 +143,12 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
     // here we tell the reader what to do when it's done reading...
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
-      let fileToUpload;
       try {
-        fileToUpload = await axiosXanoStaff.post(
+        const fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoStaff,
+          auth.authToken,
+          { content }
         );
         setIsLoadingFile(false);
         setFormDatas({

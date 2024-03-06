@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { provinceStateTerritoryCT } from "../../../datas/codesTables";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -56,17 +57,11 @@ const SiteForm = ({ setAddVisible }) => {
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        let fileToUpload = await axiosXanoAdmin.post(
+        let fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoAdmin,
+          auth.authToken,
+          { content }
         );
         setFormDatas({ ...formDatas, logo: fileToUpload.data });
         setIsLoadingFile(false);
@@ -142,12 +137,12 @@ const SiteForm = ({ setAddVisible }) => {
 
     try {
       setProgress(true);
-      const response = await axiosXanoAdmin.post("/sites", datasToPost, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      const response = await xanoPost(
+        "/sites",
+        axiosXanoAdmin,
+        auth.authToken,
+        datasToPost
+      );
       socket.emit("message", {
         route: "SITES",
         action: "create",

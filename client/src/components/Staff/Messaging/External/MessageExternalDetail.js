@@ -4,6 +4,8 @@ import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
+import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -81,15 +83,12 @@ const MessageExternalDetail = ({
         };
         delete datasToPut.to_patient_infos;
         delete datasToPut.form_patient_infos;
-        const response = await axiosXanoStaff.put(
-          `/messages_external/${message.id}`,
+        const response = await xanoPut(
+          "/messages_external",
+          axiosXanoStaff,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
@@ -131,18 +130,13 @@ const MessageExternalDetail = ({
         useCORS: true,
       });
       const dataURL = canvas.toDataURL("image/jpeg");
-      let fileToUpload = await axiosXanoStaff.post(
+      let fileToUpload = await xanoPost(
         "/upload/attachment",
-        {
-          content: dataURL,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken,
+        { content: dataURL }
       );
+
       //post attachment and get id
       const datasAttachment = [
         {

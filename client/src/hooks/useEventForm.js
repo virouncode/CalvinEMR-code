@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
@@ -45,13 +46,13 @@ export const useEventForm = (eventId) => {
     async (abortController) => {
       try {
         dispatch({ type: "FETCH_START" });
-        const response = await axiosXanoStaff.get(`/appointments/${eventId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          signal: abortController.signal,
-        });
+        const response = await xanoGet(
+          `/appointments/${eventId}`,
+          axiosXanoStaff,
+          auth.authToken,
+          null,
+          abortController
+        );
         if (abortController.signal.aborted) return;
         dispatch({ type: "FETCH_SUCCESS", payload: response.data });
       } catch (err) {

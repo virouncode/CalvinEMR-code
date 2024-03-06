@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoPatient } from "../api/xanoPatient";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
@@ -16,18 +17,12 @@ const useFetchPatientAppointments = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await axiosXanoPatient.get(
-          `/appointments_of_patient`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              patient_id: user.id,
-            },
-            signal: abortController.signal,
-          }
+        const response = await xanoGet(
+          "/appointments_of_patient",
+          axiosXanoPatient,
+          auth.authToken,
+          { patient_id: user.id },
+          abortController
         );
         if (abortController.signal.aborted) return;
         setAppointments(response.data);

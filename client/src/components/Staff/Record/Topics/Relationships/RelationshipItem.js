@@ -6,6 +6,8 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
+import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
+import xanoGet from "../../../../../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchPatients from "../../../../../hooks/useFetchPatients";
@@ -62,26 +64,17 @@ const RelationshipItem = ({
       setProgress(true);
       //Delete the inverse relation ship of item
       const inverseRelationToDeleteId = (
-        await axiosXanoStaff.get("/relationship_between", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
-            patient_id: item.relation_id,
-            relation_id: item.patient_id,
-          },
+        await xanoGet("/relationship_between", axiosXanoStaff, auth.authToken, {
+          patient_id: item.relation_id,
+          relation_id: item.patient_id,
         })
       ).data[0].id;
 
-      await axiosXanoStaff.delete(
-        `/relationships/${inverseRelationToDeleteId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+      await xanoDelete(
+        "/relationships",
+        axiosXanoStaff,
+        auth.authToken,
+        inverseRelationToDeleteId
       );
 
       //Put the relationship
@@ -179,18 +172,13 @@ const RelationshipItem = ({
         setProgress(true);
         if (relations.includes(itemInfos.relationship)) {
           const inverseRelationToDeleteId = (
-            await axiosXanoStaff.get(
+            await xanoGet(
               "/relationship_between",
-
+              axiosXanoStaff,
+              auth.authToken,
               {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${auth.authToken}`,
-                },
-                params: {
-                  patient_id: item.relation_id,
-                  relation_id: item.patient_id,
-                },
+                patient_id: item.relation_id,
+                relation_id: item.patient_id,
               }
             )
           ).data[0].id;

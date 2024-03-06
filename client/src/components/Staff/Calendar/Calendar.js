@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
-import xanoDelete from "../../../api/xanoDelete";
-import xanoPost from "../../../api/xanoPost";
-import xanoPut from "../../../api/xanoPut";
+import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailabilty from "../../../hooks/useAvailability";

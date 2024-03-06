@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
@@ -15,17 +16,16 @@ const useFetchStaffReports = (paging, staffId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get("/reports_of_staff", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
+        const response = await xanoGet(
+          "/reports_of_staff",
+          axiosXanoStaff,
+          auth.authToken,
+          {
             staff_id: staffId,
             paging,
           },
-          signal: abortController.signal,
-        });
+          abortController
+        );
         if (abortController.signal.aborted) return;
         setReports((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);

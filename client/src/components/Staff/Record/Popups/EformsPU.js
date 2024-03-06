@@ -2,6 +2,7 @@ import { PDFDocument } from "pdf-lib";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
@@ -81,17 +82,11 @@ const EformsPU = ({
       reader.onload = async (e) => {
         let content = e.target.result;
         try {
-          const response = await axiosXanoStaff.post(
+          const response = await xanoPost(
             "/upload/attachment",
-            {
-              content: content,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
+            axiosXanoStaff,
+            auth.authToken,
+            { content }
           );
           //flatten the pdf
           const formUrl = `${BASE_URL}${response.data.path}`;
@@ -111,17 +106,11 @@ const EformsPU = ({
           reader2.onload = async (e) => {
             let content = e.target.result;
             try {
-              const response2 = await axiosXanoStaff.post(
+              const response2 = await xanoPost(
                 "/upload/attachment",
-                {
-                  content: content,
-                },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth.authToken}`,
-                  },
-                }
+                axiosXanoStaff,
+                auth.authToken,
+                { content }
               );
               const datasToPost = {
                 patient_id: patientId,

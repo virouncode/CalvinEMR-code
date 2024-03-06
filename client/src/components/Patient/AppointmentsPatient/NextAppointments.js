@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -90,15 +91,11 @@ Cellphone: ${
             date_created: Date.now(),
             type: "External",
           };
-          const response = await axiosXanoPatient.post(
+          const response = await xanoPost(
             "/messages_external",
-            message,
-            {
-              headers: {
-                Authorization: `Bearer ${auth.authToken}`,
-                "Content-Type": "application/json",
-              },
-            }
+            axiosXanoPatient,
+            auth.authToken,
+            message
           );
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../api/xanoAdmin";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
@@ -24,19 +25,15 @@ const useFetchDiagnosisList = (search, paging) => {
     const fetchDiagnosis = async () => {
       try {
         setLoading(true);
-        const response = await axiosXanoInstance.get(
-          `/diagnosis_codes_search`,
+        const response = await xanoGet(
+          "/diagnosis_codes_search",
+          axiosXanoInstance,
+          auth.authToken,
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              search,
-              paging,
-            },
-            signal: abortController.signal,
-          }
+            search,
+            paging,
+          },
+          abortController
         );
         if (abortController.signal.aborted) return;
         setDiagnosis((prevDatas) => [...prevDatas, ...response.data.items]);

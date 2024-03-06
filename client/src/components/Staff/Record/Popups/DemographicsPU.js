@@ -2,6 +2,7 @@ import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import {
   enrollmentStatusCT,
@@ -207,17 +208,11 @@ const DemographicsPU = ({
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        let fileToUpload = await axiosXanoStaff.post(
+        let fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoStaff,
+          auth.authToken,
+          { content }
         );
         setFormDatas({ ...formDatas, avatar: fileToUpload.data });
         setLoadingFile(false);
@@ -395,7 +390,7 @@ const DemographicsPU = ({
         ExpiryDate: Date.parse(new Date(formDatas.healthExpiry)),
         ProvinceCode: formDatas.healthProvince,
       },
-      ChartNumber: formDatas.ChartNumber,
+      ChartNumber: formDatas.chart,
       Gender: formDatas.gender,
       Address: demographicsInfos.Address?.map((address) => {
         return address._addressType !== "R"

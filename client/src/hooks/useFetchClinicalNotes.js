@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
@@ -24,21 +25,16 @@ const useFetchClinicalNotes = (patientId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get(
+        const response = await xanoGet(
           "/clinical_notes_of_patient",
+          axiosXanoStaff,
+          auth.authToken,
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              patient_id: patientId,
-              paging,
-              orderBy: order,
-              columnName: "date_created",
-              search,
-            },
-            signal: abortController.signal,
+            patient_id: patientId,
+            paging,
+            orderBy: order,
+            columnName: "date_created",
+            search,
           }
         );
         if (abortController.signal.aborted) return;

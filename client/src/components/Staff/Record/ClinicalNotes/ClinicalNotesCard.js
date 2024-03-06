@@ -5,6 +5,7 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
+import xanoGet from "../../../../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -186,14 +187,10 @@ const ClinicalNotesCard = ({
       );
     } else {
       //back to last version
-      const response = await axiosXanoStaff.get(
+      const response = await xanoGet(
         `/clinical_notes/${clinicalNote.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken
       );
       setClinicalNotes(
         clinicalNotes.map((item) =>

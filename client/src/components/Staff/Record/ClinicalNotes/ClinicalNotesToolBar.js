@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -87,25 +88,20 @@ const ClinicalNotesToolBar = ({
     }
     setPaging({ ...paging, page: 1 });
     try {
-      await axiosXanoStaff.put(
-        `settings/${user.settings.id}`,
+      const response = await xanoPut(
+        "/settings",
+        axiosXanoStaff,
+        auth.authToken,
         { ...user.settings, clinical_notes_order: newOrder },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        user.settings.id
       );
+
       socket.emit("message", {
         route: "USER",
         action: "update",
         content: {
           id: user.id,
-          data: {
-            ...user,
-            settings: { ...user.settings, clinical_notes_order: newOrder },
-          },
+          data: response.data,
         },
       });
       toast.success("Saved preference", {

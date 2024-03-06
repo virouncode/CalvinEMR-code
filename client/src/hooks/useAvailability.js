@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 
 const useAvailabilty = (userId, authToken) => {
@@ -14,15 +15,11 @@ const useAvailabilty = (userId, authToken) => {
     const abortController = new AbortController();
     const fetchAvailability = async () => {
       try {
-        const response = await axiosXanoStaff.get(
-          `/availability_of_staff?staff_id=${userId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            signal: abortController.signal,
-          }
+        const response = await xanoGet(
+          "/availability_of_staff",
+          axiosXanoStaff,
+          authToken,
+          { staff_id: userId, abortController }
         );
         if (abortController.signal.aborted) return;
         setScheduleMorning(response.data.schedule_morning);

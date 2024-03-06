@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -93,15 +94,12 @@ const MyAccountForm = () => {
     try {
       //Submission
       setProgress(true);
-      const response = await axiosXanoStaff.put(
-        `/staff/${user.id}`,
+      const response = await xanoPut(
+        "/staff",
+        axiosXanoStaff,
+        auth.authToken,
         tempFormDatas,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        user.id
       );
       setSuccessMsg("Infos changed successfully");
 

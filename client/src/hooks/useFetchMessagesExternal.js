@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
 import useAuthContext from "./useAuthContext";
@@ -27,21 +28,18 @@ const useFetchMessagesExternal = (
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get(
+        const response = await xanoGet(
           "/messages_external_of_staff",
+          axiosXanoStaff,
+          auth.authToken,
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              staff_id: staffId,
-              search,
-              paging,
-            },
-            signal: abortController.signal,
-          }
+            staff_id: staffId,
+            search,
+            paging,
+          },
+          abortController
         );
+
         if (abortController.signal.aborted) return;
         setMessages((prevDatas) => {
           return filterAndSortExternalMessages(

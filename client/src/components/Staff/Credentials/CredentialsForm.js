@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -85,8 +86,7 @@ const CredentialsForm = () => {
           `/staff_with_email`,
           axiosXanoStaff,
           auth.authToken,
-          "email",
-          credentials.email.toLowerCase()
+          { email: credentials.email.toLowerCase() }
         );
         if (response.data) {
           setErrMsg("There is already an account with this email");
@@ -101,21 +101,11 @@ const CredentialsForm = () => {
     try {
       //get staffInfo
       const me = (
-        await axiosXanoStaff.get(`/staff/${user.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        })
+        await xanoGet(`/staff/${user.id}`, axiosXanoStaff, auth.authToken)
       ).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      await axiosXanoStaff.put(`/staff/${user.id}`, me, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      await xanoPut("/staff", axiosXanoStaff, auth.authToken, me, user.id);
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "update",

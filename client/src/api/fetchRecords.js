@@ -1,30 +1,8 @@
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { createChartNbr } from "../utils/createChartNbr";
-import xanoDelete from "./xanoDelete";
-import xanoGet from "./xanoGet";
-import xanoPost from "./xanoPost";
-import xanoPut from "./xanoPut";
-
-export const getPatientRecord = async (
-  url,
-  patientId,
-  authToken,
-  abortController = null
-) => {
-  try {
-    const response = xanoGet(
-      url,
-      axiosXanoStaff,
-      authToken,
-      "patient_id",
-      patientId,
-      abortController
-    );
-    return response;
-  } catch (err) {
-    if (err.name !== "CanceledError") throw err;
-  }
-};
+import xanoDelete from "./xanoCRUD/xanoDelete";
+import xanoPost from "./xanoCRUD/xanoPost";
+import xanoPut from "./xanoCRUD/xanoPut";
 
 export const postPatientRecord = async (
   url,

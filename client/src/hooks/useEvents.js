@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { parseToEvents } from "../utils/parseToEvents";
 import useAuthContext from "./useAuthContext";
@@ -24,20 +25,15 @@ const useEvents = (
     const abortController = new AbortController();
     const fetchEvents = async () => {
       try {
-        const response = await axiosXanoStaff.get(
+        const response = await xanoGet(
           "/appointments_of_staff_and_sites",
+          axiosXanoStaff,
+          auth.authToken,
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              hosts_ids: hostsIds,
-              range_start: rangeStart,
-              range_end: rangeEnd,
-              sites_ids: timelineVisible ? [timelineSiteId] : sitesIds,
-            },
-            signal: abortController.signal,
+            hosts_ids: hostsIds,
+            range_start: rangeStart,
+            range_end: rangeEnd,
+            sites_ids: timelineVisible ? [timelineSiteId] : sitesIds,
           }
         );
         const formattedEvents = parseToEvents(

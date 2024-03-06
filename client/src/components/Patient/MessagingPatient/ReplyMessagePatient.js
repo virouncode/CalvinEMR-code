@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
-import xanoPost from "../../../api/xanoPost";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -68,16 +68,11 @@ const ReplyMessagePatient = ({
         ],
         date_created: Date.now(),
       };
-
-      const response = await axiosXanoPatient.post(
+      const response = await xanoPost(
         "/messages_external",
-        replyMessage,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoPatient,
+        auth.authToken,
+        replyMessage
       );
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
@@ -128,17 +123,11 @@ const ReplyMessagePatient = ({
       reader.onload = async (e) => {
         let content = e.target.result; // this is the content!
         try {
-          const response = await axiosXanoPatient.post(
+          const response = await xanoPost(
             "/upload/attachment",
-            {
-              content: content,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
+            axiosXanoPatient,
+            auth.authToken,
+            { content }
           );
           if (!response.data.type) response.data.type = "document";
           setAttachments([

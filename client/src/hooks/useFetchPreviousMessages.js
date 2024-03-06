@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
@@ -14,32 +15,30 @@ const useFetchPreviousMessages = (message) => {
       try {
         setLoading(true);
         const previousInternal = (
-          await axiosXanoStaff.get("/messages_selected", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
+          await xanoGet(
+            "/messages_selected",
+            axiosXanoStaff,
+            auth.authToken,
+            {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "Internal")
                 .map(({ id }) => id),
             },
-            signal: abortController.signal,
-          })
+            abortController
+          )
         ).data;
         const previousExternal = (
-          await axiosXanoStaff.get("/messages_external_selected", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
+          await xanoGet(
+            "/messages_external_selected",
+            axiosXanoStaff,
+            auth.authToken,
+            {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "External")
                 .map(({ id }) => id),
             },
-            signal: abortController.signal,
-          })
+            abortController
+          )
         ).data;
         if (abortController.signal.aborted) return;
         setLoading(false);

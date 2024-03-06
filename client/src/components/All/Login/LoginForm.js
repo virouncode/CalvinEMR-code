@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
@@ -78,13 +79,10 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await axiosXanoStaff.post(
-          LOGIN_URL,
-          { email, password },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await xanoPost(LOGIN_URL, axiosXanoStaff, null, {
+          email,
+          password,
+        });
         const authToken = response?.data?.authToken;
         setAuth({ email, authToken });
         localStorage.setItem("auth", JSON.stringify({ email, authToken }));
@@ -107,8 +105,7 @@ const LoginForm = () => {
           `/settings_of_staff`,
           axiosXanoStaff,
           authToken,
-          "staff_id",
-          user.id
+          { staff_id: user.id }
         );
         const settings = response3?.data;
 
@@ -118,8 +115,7 @@ const LoginForm = () => {
             `/unread_messages_of_staff`,
             axiosXanoStaff,
             authToken,
-            "staff_id",
-            user.id
+            { staff_id: user.id }
           )
         ).data;
         const unreadMessagesExternalNbr = (
@@ -127,8 +123,7 @@ const LoginForm = () => {
             `/unread_messages_external_of_staff`,
             axiosXanoStaff,
             authToken,
-            "staff_id",
-            user.id
+            { staff_id: user.id }
           )
         ).data;
         const unreadNbr = unreadMessagesExternalNbr + unreadMessagesNbr;
@@ -205,8 +200,7 @@ const LoginForm = () => {
           `/demographics_of_patient`,
           axiosXanoPatient,
           authToken,
-          "patient_id",
-          user.id
+          { patient_id: user.id }
         );
         const demographics = response3?.data[0];
 
@@ -216,8 +210,7 @@ const LoginForm = () => {
             `/unread_messages_of_patient`,
             axiosXanoPatient,
             authToken,
-            "patient_id",
-            user.id
+            { patient_id: user.id }
           )
         ).data;
 

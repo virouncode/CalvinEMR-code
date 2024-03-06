@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -233,15 +234,12 @@ Powered by Calvin EMR`,
       message;
     setProgress(true);
     try {
-      await axiosXanoStaff.put(
-        `/settings/${user.settings.id}`,
+      await xanoPut(
+        "/settings",
+        axiosXanoStaff,
+        auth.authToken,
         { ...user.settings, invitation_templates: newTemplates },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        user.settings.id
       );
     } catch (err) {
       toast.error(`Error: unable to save templates: ${err.message}`, {

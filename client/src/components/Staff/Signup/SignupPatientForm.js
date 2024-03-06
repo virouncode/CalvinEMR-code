@@ -2,8 +2,8 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../api/fetchRecords";
 import { sendEmail } from "../../../api/sendEmail";
-import xanoGet from "../../../api/xanoGet";
-import xanoPost from "../../../api/xanoPost";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import {
   genderCT,
@@ -116,17 +116,11 @@ const SignupPatientForm = () => {
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        let fileToUpload = await axiosXanoStaff.post(
+        const fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoStaff,
+          auth.authToken,
+          { content }
         );
         setFormDatas({
           ...formDatas,
@@ -169,8 +163,7 @@ const SignupPatientForm = () => {
         `/patient_with_email`,
         axiosXanoStaff,
         auth.authToken,
-        "email",
-        formDatas.email.toLowerCase()
+        { email: formDatas.email.toLowerCase() }
       );
       if (response.data) {
         setProgress(false);
@@ -323,15 +316,11 @@ const SignupPatientForm = () => {
         relationship.date_created = Date.now();
       });
       relationshipsToPost.forEach(async (relationship) => {
-        const response = await axiosXanoStaff.post(
+        const response = await xanoPost(
           "/relationships",
-          relationship,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoStaff,
+          auth.authToken,
+          relationship
         );
         socket.emit("message", {
           route: "RELATIONSHIPS",
@@ -352,15 +341,11 @@ const SignupPatientForm = () => {
         ({ relationship }) => relationship !== "Undefined"
       );
       inverseRelationsToPost.forEach(async (relationship) => {
-        const response = await axiosXanoStaff.post(
+        const response = await xanoPost(
           "/relationships",
-          relationship,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoStaff,
+          auth.authToken,
+          relationship
         );
         socket.emit("message", {
           route: "RELATIONSHIPS",

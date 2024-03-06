@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailabilitySocket from "../../../hooks/useAvailabilitySocket";
@@ -52,17 +54,16 @@ const NewAppointment = () => {
     const fetchAppointmentsInRange = async () => {
       try {
         setLoadingAppointments(true);
-        const response = await axiosXanoPatient.get("/appointments_of_staff", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
+        const response = await xanoGet(
+          "/appointments_of_staff",
+          axiosXanoPatient,
+          auth.authToken,
+          {
             host_id: user.demographics.assigned_staff_id,
             range_start: rangeStart + 86400000, //+1 day
             range_end: rangeEnd + 86400000,
-          },
-        });
+          }
+        );
         if (abortController.signal.aborted) return;
         setAppointmentsInRange(
           response.data.filter(({ start }) => start > rangeStart + 86400000)
@@ -170,15 +171,11 @@ Cellphone: ${
             date_created: Date.now(),
             type: "External",
           };
-          const response = await axiosXanoPatient.post(
+          const response = await xanoPost(
             "/messages_external",
-            message,
-            {
-              headers: {
-                Authorization: `Bearer ${auth.authToken}`,
-                "Content-Type": "application/json",
-              },
-            }
+            axiosXanoPatient,
+            auth.authToken,
+            message
           );
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",

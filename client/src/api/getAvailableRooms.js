@@ -1,3 +1,4 @@
+import xanoGet from "./xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "./xanoStaff";
 var _ = require("lodash");
 
@@ -8,23 +9,19 @@ export const getAvailableRooms = async (
   sites,
   siteId,
   authToken,
-  controller = null
+  abortController = null
 ) => {
   try {
-    const response = await axiosXanoStaff.get(
+    const response = await xanoGet(
       "/appointments_in_range_and_sites",
+      axiosXanoStaff,
+      authToken,
       {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        params: {
-          range_start: rangeStart,
-          range_end: rangeEnd,
-          sites_ids: [siteId],
-        },
-        ...(controller && { signal: controller.signal }),
-      }
+        range_start: rangeStart,
+        range_end: rangeEnd,
+        sites_ids: [siteId],
+      },
+      abortController
     );
     const appointmentsInRange = response?.data;
     const otherAppointments = appointmentsInRange.filter(

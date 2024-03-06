@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../api/xanoAdmin";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
@@ -24,17 +25,16 @@ const useFetchDoctorsList = (search, paging) => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await axiosXanoInstance.get(`/doctors_search`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
+        const response = await xanoGet(
+          "/doctors_search",
+          axiosXanoInstance,
+          auth.authToken,
+          {
             search,
             paging,
           },
-          signal: abortController.signal,
-        });
+          abortController
+        );
         if (abortController.signal.aborted) {
           setLoading(false);
           return;

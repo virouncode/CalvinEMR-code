@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -59,17 +61,11 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        let fileToUpload = await axiosXanoAdmin.post(
+        let fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoAdmin,
+          auth.authToken,
+          { content }
         );
         setFormDatas({ ...formDatas, sign: fileToUpload.data });
         setIsLoadingFile(false);
@@ -124,19 +120,14 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
         setProgress(false);
         return;
       }
-
       //Submission
-      const response = await axiosXanoAdmin.put(
-        `/staff/${infos.id}`,
+      const response = await xanoPut(
+        "/staff",
+        axiosXanoAdmin,
+        auth.authToken,
         datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        infos.id
       );
-
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "update",
@@ -145,7 +136,6 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
           data: response.data,
         },
       });
-
       setEditVisible(false);
       toast.success("Infos changed successfully", { containerId: "A" });
       setProgress(false);

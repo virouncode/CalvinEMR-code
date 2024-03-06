@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -16,25 +18,19 @@ const StaffAIChatAgreement = ({ setStart }) => {
   };
   const handleStart = async () => {
     try {
-      const response = await axiosXanoStaff.get(`/staff/${user.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      const response = await xanoGet(
+        `/staff/${user.id}`,
+        axiosXanoStaff,
+        auth.authToken
+      );
       const datasToPut = response.data;
       datasToPut.ai_consent = true;
-      const response2 = await axiosXanoStaff.put(
-        `/staff/${user.id}`,
-        datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+      const response2 = await xanoPut(
+        "/staff",
+        axiosXanoStaff,
+        auth.authToken,
+        user.id
       );
-
       socket.emit("message", {
         route: "USER",
         action: "update",

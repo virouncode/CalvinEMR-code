@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 
 const useFetchDatas = (
   url,
@@ -19,13 +20,13 @@ const useFetchDatas = (
     const fetchDatas = async () => {
       try {
         setLoading(true);
-        const response = await axiosXanoInstance.get(finalURL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          signal: abortController.signal,
-        });
+        const response = await xanoGet(
+          finalURL,
+          axiosXanoInstance,
+          authToken,
+          null,
+          abortController
+        );
         if (abortController.signal.aborted) return;
         setLoading(false);
         setDatas(response.data);

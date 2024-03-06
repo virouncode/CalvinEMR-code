@@ -2,7 +2,10 @@ import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import xanoGet from "../../../api/xanoGet";
+import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -114,8 +117,7 @@ const BillingTableItem = ({
           `/diagnosis_codes_for_code`,
           axiosXanoInstance,
           auth.authToken,
-          "code",
-          itemInfos.diagnosis_code
+          { code: itemInfos.diagnosis_code }
         )
       ).data.id,
       billing_code_id: (
@@ -123,19 +125,18 @@ const BillingTableItem = ({
           `/ohip_fee_schedule_for_code`,
           axiosXanoInstance,
           auth.authToken,
-          "billing_code",
-          itemInfos.billing_code
+          { billing_code: itemInfos.billing_code }
         )
       ).data.id,
       site_id: itemInfos.site_id,
     };
     try {
-      const response = await axiosXanoInstance.post("/billings", datasToPost, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      const response = await xanoPost(
+        "/billings",
+        axiosXanoInstance,
+        auth.authToken,
+        datasToPost
+      );
       socket.emit("message", {
         route: "BILLING",
         action: "create",
@@ -163,14 +164,11 @@ const BillingTableItem = ({
     setProgress(true);
     if (
       (
-        await axiosXanoInstance.get(
-          `/diagnosis_codes_for_code?code=${itemInfos.diagnosis_code}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+        await xanoGet(
+          "/diagnosis_codes_for_code",
+          axiosXanoInstance,
+          auth.authToken,
+          { code: itemInfos.diagnosis_code }
         )
       ).data === null
     ) {
@@ -183,14 +181,11 @@ const BillingTableItem = ({
       setProgress(false);
       return;
     }
-    const response = await axiosXanoInstance.get(
-      `/ohip_fee_schedule_for_code?billing_code=${itemInfos.billing_code}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      }
+    const response = await xanoGet(
+      "/ohip_fee_schedule_for_code",
+      axiosXanoInstance,
+      auth.authToken,
+      { billing_code: itemInfos.billing_code }
     );
     if (response.data === null) {
       setErrMsgPost(`Billing code ${itemInfos.billing_code} doesn't exists`);
@@ -209,8 +204,7 @@ const BillingTableItem = ({
           `/diagnosis_codes_for_code`,
           axiosXanoInstance,
           auth.authToken,
-          "code",
-          itemInfos.diagnosis_code
+          { code: itemInfos.diagnosis_code }
         )
       ).data.id,
       billing_code_id: (
@@ -218,8 +212,7 @@ const BillingTableItem = ({
           `/ohip_fee_schedule_for_code`,
           axiosXanoInstance,
           auth.authToken,
-          "billing_code",
-          itemInfos.billing_code
+          { billing_code: itemInfos.billing_code }
         )
       ).data.id,
       updates: [
@@ -233,17 +226,13 @@ const BillingTableItem = ({
       site_id: itemInfos.site_id,
     };
     try {
-      const response = await axiosXanoInstance.put(
-        `/billings/${billing.id}`,
+      const response = await xanoPut(
+        "/billings",
+        axiosXanoInstance,
+        auth.authToken,
         datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        billing.id
       );
-
       socket.emit("message", {
         route: "BILLING",
         action: "update",
@@ -268,13 +257,12 @@ const BillingTableItem = ({
     ) {
       try {
         setProgress(true);
-        await axiosXanoInstance.delete(`/billings/${billing.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        });
-
+        await xanoDelete(
+          "/billings",
+          axiosXanoInstance,
+          auth.authToken,
+          billing.id
+        );
         socket.emit("message", {
           route: "BILLING",
           action: "delete",

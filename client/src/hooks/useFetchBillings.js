@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
@@ -28,36 +29,31 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
         let response;
         if (user.title !== "Secretary" && user.access_level !== "Admin") {
           //billings concerning the user in range
-          response = await axiosXanoInstance.get(
-            `/billings_of_staff_in_range`,
+          response = await xanoGet(
+            "/billings_of_staff_in_range",
+            axiosXanoInstance,
+            auth.authToken,
             {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-              params: {
-                range_start: rangeStart,
-                range_end: rangeEnd,
-                staff_id: user.id,
-                paging,
-              },
-              signal: abortController.signal,
-            }
+              range_start: rangeStart,
+              range_end: rangeEnd,
+              staff_id: user.id,
+              paging,
+            },
+            abortController
           );
         } else {
           //all billings
-          response = await axiosXanoInstance.get(`/billings_in_range`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
+          response = await xanoGet(
+            "/billings_in_range",
+            axiosXanoInstance,
+            auth.authToken,
+            {
               range_start: rangeStart,
               range_end: rangeEnd,
               paging,
             },
-            signal: abortController.signal,
-          });
+            abortController
+          );
         }
         if (abortController.signal.aborted) return;
         setBillings((prevDatas) => [...prevDatas, ...response.data.items]);

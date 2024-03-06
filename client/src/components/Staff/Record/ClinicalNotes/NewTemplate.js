@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -52,15 +53,11 @@ const NewTemplate = ({
     templateToSave.date_created = Date.now();
     templateToSave.author_id = user.id;
     try {
-      const response = await axiosXanoStaff.post(
+      const response = await xanoPost(
         "/clinical_notes_templates",
-        templateToSave,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken,
+        templateToSave
       );
       socket.emit("message", {
         route: "CLINICAL TEMPLATES",

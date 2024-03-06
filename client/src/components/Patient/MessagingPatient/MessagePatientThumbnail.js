@@ -1,5 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -39,15 +40,12 @@ const MessagePatientThumbnail = ({
         }; //reformatted because of Add-on
         delete datasToPut.to_patient_infos; //From Add-On
         delete datasToPut.from_patient_infos; //From Add-On
-        const response = await axiosXanoPatient.put(
-          `/messages_external/${message.id}`,
+        const response = await xanoPut(
+          "/messages_external",
+          axiosXanoPatient,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              Authorization: `Bearer ${auth.authToken}`,
-              "Content-Type": "application/json",
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
@@ -122,15 +120,12 @@ const MessagePatientThumbnail = ({
         };
         delete datasToPut.to_patient_infos; //From Add-On
         delete datasToPut.from_patient_infos; //From Add-On
-        const response = await axiosXanoPatient.put(
-          `/messages_external/${message.id}`,
+        const response = await xanoPut(
+          "/messages_external",
+          axiosXanoPatient,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",

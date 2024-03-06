@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -58,15 +59,12 @@ const MessagePatientDetail = ({
         };
         delete datasToPut.to_patient_infos;
         delete datasToPut.form_patient_infos;
-        const response = await axiosXanoPatient.put(
-          `/messages_external/${message.id}`,
+        const response = await xanoPut(
+          "/messages_external",
+          axiosXanoPatient,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",

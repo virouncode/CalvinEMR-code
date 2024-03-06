@@ -1,6 +1,7 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
@@ -196,15 +197,11 @@ const MedicationForm = ({
     //Submission
     try {
       setProgressTemplates(true);
-      const response = await axiosXanoStaff.post(
+      const response = await xanoPost(
         "/medications_templates",
-        templateToPost,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken,
+        templateToPost
       );
       socket.emit("message", {
         route: "MEDS TEMPLATES",

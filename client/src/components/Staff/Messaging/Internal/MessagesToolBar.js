@@ -1,5 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../../../../api/xanoCRUD/xanoGet";
+import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -60,14 +62,8 @@ const MessagesToolBar = ({
     ) {
       try {
         const msgsSelected = (
-          await axiosXanoStaff.get("/messages_selected", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            params: {
-              messages_ids: msgsSelectedIds,
-            },
+          await xanoGet("/messages_selected", axiosXanoStaff, auth.authToken, {
+            messages_ids: msgsSelectedIds,
           })
         ).data;
         for (let message of msgsSelected) {
@@ -75,15 +71,12 @@ const MessagesToolBar = ({
             ...message,
             deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
           };
-          const response = await axiosXanoStaff.put(
-            `/messages/${message.id}`,
+          const response = await xanoPut(
+            "/messages",
+            axiosXanoStaff,
+            auth.authToken,
             datasToPut,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
+            message.id
           );
           socket.emit("message", {
             route: "MESSAGES INBOX",
@@ -111,14 +104,8 @@ const MessagesToolBar = ({
   const handleClickUndelete = async (e) => {
     try {
       const msgsSelected = (
-        await axiosXanoStaff.get("/messages_selected", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
-            messages_ids: msgsSelectedIds,
-          },
+        await xanoGet("/messages_selected", axiosXanoStaff, auth.authToken, {
+          messages_ids: msgsSelectedIds,
         })
       ).data;
       for (let message of msgsSelected) {
@@ -129,15 +116,12 @@ const MessagesToolBar = ({
           ),
         };
         delete datasToPut.patient_infos;
-        const response = await axiosXanoStaff.put(
-          `/messages/${message.id}`,
+        const response = await xanoPut(
+          "/messages",
+          axiosXanoStaff,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -20,15 +21,12 @@ const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
     datasToPut.ai_consent_read = true;
     datasToPut.ai_consent = agreed;
     try {
-      await axiosXanoPatient.put(
-        `/demographics/${user.demographics.id}`,
+      await xanoPut(
+        "/demographics",
+        axiosXanoPatient,
+        auth.authToken,
         datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        user.demographics.id
       );
       socket.emit("message", {
         route: "DEMOGRAPHICS",

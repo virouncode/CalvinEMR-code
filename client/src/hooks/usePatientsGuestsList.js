@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { toLocalDate } from "../utils/formatDates";
 import useAuthContext from "./useAuthContext";
@@ -28,17 +29,16 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
       try {
         setLoading(true);
         setErr(false);
-        const response = await axiosXanoStaff.get("/demographics_search", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
+        const response = await xanoGet(
+          "/demographics_search",
+          axiosXanoStaff,
+          auth.authToken,
+          {
             paging,
             search,
           },
-          signal: abortController.signal,
-        });
+          abortController
+        );
         //Because we can't filter those things in Xano
         const filteredDatas = response.data.items.filter(
           (item) =>

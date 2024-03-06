@@ -1,6 +1,7 @@
 import axios from "axios";
 import xmlFormat from "xml-formatter";
 import { axiosXanoAdmin } from "../../api/xanoAdmin";
+import xanoGet from "../../api/xanoCRUD/xanoGet";
 import { recordCategories } from "./recordCategories";
 import { removeEmptyTags } from "./removeEmptyTags";
 
@@ -60,11 +61,8 @@ Date: August 4,2017; Status: FINAL-->
   let reportsFiles = [];
   if (checkedRecordCategoriesIds.includes(13)) {
     reportsFiles = (
-      await axiosXanoAdmin.get("/reports_files", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
+      await xanoGet("/reports_files_of_patient", axiosXanoAdmin, authToken, {
+        patient_id: patientId,
       })
     ).data
       .filter(({ File }) => File !== null)
@@ -98,16 +96,9 @@ export const exportEMRCategory = async (
   if (checkedPatients) {
     try {
       jsArrayToExport = (
-        await axiosXanoAdmin.post(
-          `${categoryURL}_of_patients`,
-          { patients: checkedPatients },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        )
+        await xanoGet(`${categoryURL}_of_patients`, axiosXanoAdmin, authToken, {
+          patients: checkedPatients,
+        })
       ).data;
     } catch (err) {
       console.log(err.message);
@@ -115,14 +106,8 @@ export const exportEMRCategory = async (
   } else {
     //All patients
     try {
-      jsArrayToExport = (
-        await axiosXanoAdmin.get(categoryURL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-      ).data;
+      jsArrayToExport = (await xanoGet(categoryURL, axiosXanoAdmin, authToken))
+        .data;
     } catch (err) {
       console.log(err.message);
     }

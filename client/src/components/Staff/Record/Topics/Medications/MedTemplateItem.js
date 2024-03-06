@@ -1,6 +1,8 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
+import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
@@ -42,15 +44,11 @@ const MedTemplateItem = ({
       date_created: Date.now(),
     };
     try {
-      const response = await axiosXanoStaff.post(
+      const response = await xanoPost(
         "/medications_templates",
-        datasToPost,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken,
+        datasToPost
       );
       socket.emit("message", {
         route: "MEDS TEMPLATES",
@@ -72,12 +70,12 @@ const MedTemplateItem = ({
       })
     ) {
       try {
-        await axiosXanoStaff.delete(`/medications_templates/${med.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        });
+        await xanoDelete(
+          "/medications_templates",
+          axiosXanoStaff,
+          auth.authToken,
+          med.id
+        );
         socket.emit("message", {
           route: "MEDS TEMPLATES",
           action: "delete",

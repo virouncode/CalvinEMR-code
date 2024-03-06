@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -109,14 +110,11 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
     }
     if (
       (
-        await axiosXanoInstance.get(
-          `/diagnosis_codes_for_code?code=${formDatas.diagnosis_code}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+        await xanoGet(
+          "/diagnosis_codes_for_code",
+          axiosXanoInstance,
+          auth.authToken,
+          { code: formDatas.diagnosis_code }
         )
       ).data === null
     ) {
@@ -124,16 +122,12 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
       return;
     }
     for (const billing_code of formDatas.billing_codes) {
-      const response = await axiosXanoInstance.get(
-        `/ohip_fee_schedule_for_code?billing_code=${billing_code}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+      const response = await xanoGet(
+        "/ohip_fee_schedule_for_code",
+        axiosXanoInstance,
+        auth.authToken,
+        { billing_code }
       );
-
       if (response.data === null) {
         setErrMsgPost(`Billing code ${billing_code} doesn't exists`);
         return;
@@ -157,8 +151,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
               `/diagnosis_codes_for_code`,
               axiosXanoInstance,
               auth.authToken,
-              "code",
-              formDatas.diagnosis_code
+              { code: formDatas.diagnosis_code }
             )
           ).data.id,
           billing_code_id: (
@@ -166,21 +159,16 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
               `/ohip_fee_schedule_for_code`,
               axiosXanoInstance,
               auth.authToken,
-              "billing_code",
-              billing_code
+              { billing_code }
             )
           ).data.id,
           site_id: formDatas.site_id,
         };
-        const response = await axiosXanoInstance.post(
+        const response = await xanoPost(
           "/billings",
-          datasToPost,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoInstance,
+          auth.authToken,
+          datasToPost
         );
         socket.emit("message", {
           route: "BILLING",

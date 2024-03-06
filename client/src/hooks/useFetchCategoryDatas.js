@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
@@ -20,17 +21,16 @@ const useFetchCategoryDatas = (
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await axiosXanoStaff.get(url, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-          params: {
+        const response = await xanoGet(
+          url,
+          axiosXanoStaff,
+          auth.authToken,
+          {
             patient_id: patientId,
             paging,
           },
-          signal: abortController.signal,
-        });
+          abortController
+        );
         if (abortController.signal.aborted) return;
         setTopicDatas((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);

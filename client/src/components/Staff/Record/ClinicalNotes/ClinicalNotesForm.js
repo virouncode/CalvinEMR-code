@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
@@ -199,17 +200,11 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
       reader.onload = async (e) => {
         let content = e.target.result; // this is the content!
         try {
-          const response = await axiosXanoStaff.post(
+          const response = await xanoPost(
             "/upload/attachment",
-            {
-              content: content,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
+            axiosXanoStaff,
+            auth.authToken,
+            { content }
           );
           if (!response.data.type) response.data.type = "document";
           setAttachments([

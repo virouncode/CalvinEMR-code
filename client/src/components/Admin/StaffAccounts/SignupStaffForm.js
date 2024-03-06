@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -76,17 +77,11 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        let fileToUpload = await axiosXanoAdmin.post(
+        let fileToUpload = await xanoPost(
           "/upload/attachment",
-          {
-            content: content,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          axiosXanoAdmin,
+          auth.authToken,
+          { content }
         );
         setFormDatas({ ...formDatas, sign: fileToUpload.data });
         setIsLoadingFile(false);
@@ -107,8 +102,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         "/staff_with_email",
         axiosXanoAdmin,
         auth.authToken,
-        "email",
-        formDatas.email.toLowerCase()
+        { email: formDatas.email.toLowerCase() }
       );
 
       if (response.data) {
@@ -165,164 +159,145 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         return;
       }
       //Submission
-      const response = await axiosXanoAdmin.post("/staff", datasToPost, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      const response = await xanoPost(
+        "/staff",
+        axiosXanoAdmin,
+        auth.authToken,
+        datasToPost
+      );
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "create",
         content: { data: response.data },
       });
+      await xanoPost("/settings", axiosXanoAdmin, auth.authToken, {
+        staff_id: response.data.id,
+        slot_duration: "00:15",
+        first_day: "0",
+        invitation_templates: [
+          {
+            name: "In person appointment",
+            intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
+            message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
+          },
+          {
+            name: "Video appointment",
+            intro: `This email/text message is to remind you about your upcoming VIDEO appointment.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: This appointment is online. DO NOT COME TO THE CLINIC.\n\nPlease login 5 minutes before your appointment by clicking the following link:\n[video_call_link]\n\n`,
+            message: `You will be directed to the virtual waiting room. The physician will let you in the meeting once available.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
+          },
+          {
+            name: "Phone appointment",
+            intro: `This email/text message is to remind you about your upcoming PHONE appointment.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: This appointment is a phone call. DO NOT COME TO THE CLINIC.\n\n`,
+            message: `Please make sure your phone is on and not on mute. The call will come from the clinic, or a No Caller ID number.\nIf you do not answer the phone, the appointment could be cancelled and rescheduled.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
+          },
+          {
+            name: "Surgery/Procedure",
+            intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your Surgery/Procedure.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
+            message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
+          },
+          {
+            name: "Meeting",
+            intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
+            message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
+          },
+          {
+            name: "Diagnostic Imaging",
+            intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your Diagnostic Imaging procedure (ultrasound, X-ray, etc…)\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
+            message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
+          },
+          {
+            name: "Blood test / Urine test",
+            intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your blood and/or urine test.\n`,
+            infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
+            message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
+          },
+          { name: "[Blank]", intro: "", infos: "", message: "" },
+        ],
+        date_created: Date.now(),
+        clinical_notes_order: "top",
+      });
 
-      await axiosXanoAdmin.post(
-        "/settings",
-        {
-          staff_id: response.data.id,
-          slot_duration: "00:15",
-          first_day: "0",
-          invitation_templates: [
-            {
-              name: "In person appointment",
-              intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
-              message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
-            },
-            {
-              name: "Video appointment",
-              intro: `This email/text message is to remind you about your upcoming VIDEO appointment.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: This appointment is online. DO NOT COME TO THE CLINIC.\n\nPlease login 5 minutes before your appointment by clicking the following link:\n[video_call_link]\n\n`,
-              message: `You will be directed to the virtual waiting room. The physician will let you in the meeting once available.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
-            },
-            {
-              name: "Phone appointment",
-              intro: `This email/text message is to remind you about your upcoming PHONE appointment.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: This appointment is a phone call. DO NOT COME TO THE CLINIC.\n\n`,
-              message: `Please make sure your phone is on and not on mute. The call will come from the clinic, or a No Caller ID number.\nIf you do not answer the phone, the appointment could be cancelled and rescheduled.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
-            },
-            {
-              name: "Surgery/Procedure",
-              intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your Surgery/Procedure.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
-              message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
-            },
-            {
-              name: "Meeting",
-              intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
-              message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\n`,
-            },
-            {
-              name: "Diagnostic Imaging",
-              intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your Diagnostic Imaging procedure (ultrasound, X-ray, etc…)\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
-              message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
-            },
-            {
-              name: "Blood test / Urine test",
-              intro: `This email/text message is to remind you about your upcoming IN-PERSON appointment for your blood and/or urine test.\n`,
-              infos: `You have an appointment with: [host_name]\nAppointment time: [date]\nLocation: [address_of_clinic]\n\n`,
-              message: `Please arrive 10 minutes before your appointment to check in at the front desk.\nBring your OHIP card and any relevant documentation.\nDue to the high volume of patients, we cannot guarantee that you will see the physician exactly at the time of your appointment. However, we make every effort possible to be respectful of your time.\n\nPlease inform the clinic at least 24 hours in advance if you need to cancel or reschedule your appointment.\n\nSpecial instructions:\nPlease do not eat or drink for at least 6 hours before your appointment.\n\n`,
-            },
-            { name: "[Blank]", intro: "", infos: "", message: "" },
+      await xanoPost("/availability", axiosXanoAdmin, auth.authToken, {
+        staff_id: response.data.id,
+        date_created: Date.now(),
+        schedule_morning: {
+          monday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
           ],
-          date_created: Date.now(),
-          clinical_notes_order: "top",
+          tuesday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
+          wednesday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
+          thursday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
+          friday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
+          saturday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
+          sunday: [
+            { hours: "09", min: "00", ampm: "AM" },
+            { hours: "12", min: "00", ampm: "PM" },
+          ],
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
-      );
-
-      await axiosXanoAdmin.post(
-        "/availability",
-        {
-          staff_id: response.data.id,
-          date_created: Date.now(),
-          schedule_morning: {
-            monday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            tuesday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            wednesday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            thursday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            friday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            saturday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-            sunday: [
-              { hours: "09", min: "00", ampm: "AM" },
-              { hours: "12", min: "00", ampm: "PM" },
-            ],
-          },
-          schedule_afternoon: {
-            monday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            tuesday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            wednesday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            thursday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            friday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            saturday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-            sunday: [
-              { hours: "01", min: "00", ampm: "PM" },
-              { hours: "04", min: "00", ampm: "PM" },
-            ],
-          },
-          unavailability: {
-            monday: false,
-            tuesday: false,
-            wednesday: false,
-            thursday: false,
-            friday: false,
-            saturday: false,
-            sunday: false,
-          },
-          default_duration_hours: 1,
-          default_duration_min: 0,
+        schedule_afternoon: {
+          monday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          tuesday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          wednesday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          thursday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          friday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          saturday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
+          sunday: [
+            { hours: "01", min: "00", ampm: "PM" },
+            { hours: "04", min: "00", ampm: "PM" },
+          ],
         },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.authToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        unavailability: {
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+        },
+        default_duration_hours: 1,
+        default_duration_min: 0,
+      });
 
       sendEmail(
         //formDatas.email,

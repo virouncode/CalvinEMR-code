@@ -1,6 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
-import xanoPut from "../../../api/xanoPut";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -35,7 +35,7 @@ const FirstDaySelect = () => {
       });
       toast.success("Saved preference", { containerId: "A" });
     } catch (err) {
-      toast.success(`Error: unable to save preference: ${err.message}`, {
+      toast.error(`Error: unable to save preference: ${err.message}`, {
         containerId: "A",
       });
     }

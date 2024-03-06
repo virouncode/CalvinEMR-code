@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
+import xanoGet from "../api/xanoCRUD/xanoGet";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import useAuthContext from "./useAuthContext";
 
@@ -33,15 +34,12 @@ export const usePatientRecord = (url, patientId) => {
       }
       try {
         dispatch({ type: "FETCH_START" });
-        const response = await axiosXanoStaff.get(
-          `${url}?patient_id=${patientId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-            signal: abortController.signal,
-          }
+        const response = await xanoGet(
+          url,
+          axiosXanoStaff,
+          auth.authToken,
+          { patient_id: patientId },
+          abortController
         );
         if (abortController.signal.aborted) return;
         dispatch({ type: "FETCH_SUCCESS", payload: response.data });

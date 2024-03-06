@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
+import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -54,14 +56,11 @@ const EditTemplate = ({
       })
     ) {
       try {
-        await axiosXanoStaff.delete(
-          `/clinical_notes_templates/${editTemplateSelectedId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+        await xanoDelete(
+          "/clinical_notes_templates",
+          axiosXanoStaff,
+          auth.authToken,
+          editTemplateSelectedId
         );
         socket.emit("message", {
           route: "CLINICAL TEMPLATES",
@@ -85,15 +84,12 @@ const EditTemplate = ({
     const templateToPut = { ...editedTemplate };
     templateToPut.date_created = Date.now();
     try {
-      const response = await axiosXanoStaff.put(
-        `/clinical_notes_templates/${editTemplateSelectedId}`,
+      const response = await xanoPut(
+        "/clinical_notes_templates",
+        axiosXanoStaff,
+        auth.authToken,
         templateToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        editTemplateSelectedId
       );
       socket.emit("message", {
         route: "CLINICAL TEMPLATES",

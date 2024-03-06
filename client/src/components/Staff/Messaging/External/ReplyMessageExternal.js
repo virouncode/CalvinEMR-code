@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../../api/sendEmail";
-import xanoPost from "../../../../api/xanoPost";
+import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -68,16 +68,11 @@ const ReplyMessageExternal = ({
         date_created: Date.now(),
         type: "External",
       };
-
-      const response = await axiosXanoStaff.post(
+      const response = await xanoPost(
         "/messages_external",
-        replyMessage,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        axiosXanoStaff,
+        auth.authToken,
+        replyMessage
       );
       socket.emit("message", {
         route: "MESSAGES INBOX EXTERNAL",
@@ -167,17 +162,11 @@ Powered by Calvin EMR`,
       reader.onload = async (e) => {
         let content = e.target.result; // this is the content!
         try {
-          const response = await axiosXanoStaff.post(
+          const response = await xanoPost(
             "/upload/attachment",
-            {
-              content: content,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.authToken}`,
-              },
-            }
+            axiosXanoStaff,
+            auth.authToken,
+            { content }
           );
           if (!response.data.type) response.data.type = "document";
           setAttachments([

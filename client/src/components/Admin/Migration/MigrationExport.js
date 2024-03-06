@@ -8,7 +8,7 @@ import { exportPatientEMR } from "../../../utils/exports/exportsXML.";
 import { recordCategories } from "../../../utils/exports/recordCategories";
 
 import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
 import {
   staffIdToFirstName,

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -37,15 +38,12 @@ const MessageThumbnail = ({
           ), //reformatted because off add-on
         };
         delete datasToPut.patient_infos; //from add-On
-        const response = await axiosXanoStaff.put(
-          `/messages/${message.id}`,
+        const response = await xanoPut(
+          "/messages",
+          axiosXanoStaff,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              Authorization: `Bearer ${auth.authToken}`,
-              "Content-Type": "application/json",
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",
@@ -117,15 +115,12 @@ const MessageThumbnail = ({
           ), //reformatted because off add-on
         };
         delete datasToPut.patient_infos; //from add-on
-        const response = await axiosXanoStaff.put(
-          `/messages/${message.id}`,
+        const response = await xanoPut(
+          "/messages",
+          axiosXanoStaff,
+          auth.authToken,
           datasToPut,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.authToken}`,
-            },
-          }
+          message.id
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",

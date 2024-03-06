@@ -1,6 +1,7 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
 import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
@@ -55,15 +56,12 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
     //Submission
     try {
       setProgress(true);
-      const response = await axiosXanoStaff.put(
-        `/medications_templates/${med.id}`,
+      const response = await xanoPut(
+        "/medications_templates",
+        axiosXanoStaff,
+        auth.authToken,
         datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        med.id
       );
       socket.emit("message", {
         route: "MEDS TEMPLATES",

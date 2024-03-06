@@ -1,18 +1,17 @@
-const xanoPut = async (
+const xanoGet = async (
   url,
   axiosXanoInstance,
   authToken,
-  datasToPut,
-  idToPut,
+  params = null,
   abortController = null
 ) => {
-  const finalUrl = `${url}/${parseInt(idToPut)}`;
   try {
-    return await axiosXanoInstance.put(finalUrl, datasToPut, {
+    return await axiosXanoInstance.get(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
+      params,
       ...(abortController && { signal: abortController.signal }),
     });
   } catch (err) {
@@ -20,4 +19,4 @@ const xanoPut = async (
   }
 };
 
-export default xanoPut;
+export default xanoGet;

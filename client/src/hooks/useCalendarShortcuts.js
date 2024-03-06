@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import xanoDelete from "../api/xanoDelete";
+import xanoDelete from "../api/xanoCRUD/xanoDelete";
 import { axiosXanoStaff } from "../api/xanoStaff";
 import { confirmAlert } from "../components/All/Confirm/ConfirmGlobal";
 import useAuthContext from "./useAuthContext";

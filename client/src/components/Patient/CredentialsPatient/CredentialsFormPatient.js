@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import xanoGet from "../../../api/xanoGet";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -86,8 +87,7 @@ const CredentialsFormPatient = () => {
           `/patient_with_email`,
           axiosXanoPatient,
           auth.authToken,
-          "email",
-          credentials.email.toLowerCase()
+          { email: credentials.email.toLowerCase() }
         );
         if (response.data) {
           setErrMsg("There is already an account with this email");
@@ -102,21 +102,11 @@ const CredentialsFormPatient = () => {
     try {
       //get patientInfo
       const me = (
-        await axiosXanoPatient.get(`/patients/${user.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        })
+        await xanoGet(`/patients/${user.id}`, axiosXanoPatient, auth.authToken)
       ).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      await axiosXanoPatient.put(`/patients/${user.id}`, me, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.authToken}`,
-        },
-      });
+      await xanoPut("/patients", axiosXanoPatient, auth.authToken, me, user.id);
       socket.emit("message", {
         route: "PATIENTS",
         action: "update",
@@ -127,15 +117,12 @@ const CredentialsFormPatient = () => {
         ...user.demographics,
         Email: credentials.email.toLowerCase(),
       };
-      await axiosXanoPatient.put(
-        `/demographics/${user.demographics.id}`,
+      await xanoPut(
+        "/demographics",
+        axiosXanoPatient,
+        auth.authToken,
         datasToPut,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.authToken}`,
-          },
-        }
+        user.demographics.id
       );
       socket.emit("message", {
         route: "DEMOGRAPHICS",
