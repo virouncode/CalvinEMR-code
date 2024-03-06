@@ -171,13 +171,10 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await axiosXanoPatient.post(
-          LOGIN_URL,
-          { email, password },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await xanoPost(LOGIN_URL, axiosXanoPatient, null, {
+          email,
+          password,
+        });
         const authToken = response?.data?.authToken;
         setAuth({ email, authToken });
         localStorage.setItem("auth", JSON.stringify({ email, authToken }));
@@ -255,13 +252,11 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await axiosXanoAdmin.post(
-          LOGIN_URL,
-          { email, password },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await xanoPost(LOGIN_URL, axiosXanoAdmin, null, {
+          email,
+          password,
+        });
+
         const authToken = response?.data?.authToken;
         setAuth({ email, authToken });
         localStorage.setItem("auth", JSON.stringify({ email, authToken }));

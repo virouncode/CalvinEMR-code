@@ -11954,7 +11954,7 @@ readers do not read off random characters that represent icons */
 .clinical-notes__card-version {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   width: 48%;
 }
 .clinical-notes__card-version select {
@@ -14616,6 +14616,17 @@ readers do not read off random characters that represent icons */
 
 .message-detail__content {
   margin-top: 0;
+}
+.message-detail__content-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 0 auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+  margin: 0 auto 20px;
 }
 .message-detail__toolbar {
   padding: 5px;

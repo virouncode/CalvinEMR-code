@@ -1,17 +1,16 @@
 const xanoPost = async (
   url,
   axiosXanoInstance,
-  authToken = null,
+  authToken,
   data,
   abortController = null
 ) => {
-  const headers = {
-    "Content-Type": "application/json",
-  };
-  authToken && (headers.Authorization = `Bearer ${authToken}`);
   try {
     return await axiosXanoInstance.post(url, data, {
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
       ...(abortController && { signal: abortController.signal }),
     });
   } catch (err) {

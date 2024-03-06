@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoReset } from "../../../api/xanoReset";
 
 const ResetPasswordForm = ({
@@ -67,16 +68,13 @@ const ResetPasswordForm = ({
       return;
     }
     try {
-      await axiosXanoReset.post(
+      await xanoPost(
         `/auth/${type}/reset_password`,
-        { password: pwd, confirm_password: confirmPwd },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${tempToken}`,
-          },
-        }
+        axiosXanoReset,
+        tempToken,
+        { password: pwd, confirm_password: confirmPwd }
       );
+
       setSuccesMsg(
         "Your password has been reset successfully, you will be redirected to the login page"
       );

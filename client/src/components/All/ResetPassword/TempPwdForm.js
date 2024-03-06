@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoReset } from "../../../api/xanoReset";
 
 const TempPwdForm = ({
@@ -16,10 +17,15 @@ const TempPwdForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosXanoReset.post(`/auth/${type}/temp_login`, {
-        email: emailInput,
-        password: tempPwd,
-      });
+      const response = await xanoPost(
+        `/auth/${type}/temp_login`,
+        axiosXanoReset,
+        null,
+        {
+          email: emailInput,
+          password: tempPwd,
+        }
+      );
       setTempToken(response.data.tempToken);
       setValidTempPwd(true);
     } catch (err) {}

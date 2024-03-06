@@ -1,6 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
+import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import { axiosXanoReset } from "../../../api/xanoReset";
 
 const EmailForm = ({
@@ -20,8 +21,11 @@ const EmailForm = ({
     e.preventDefault();
     //verifier l'email
     try {
-      const response = await axiosXanoReset.get(
-        `/${type}_with_email?email=${emailInput.toLowerCase()}`
+      const response = await xanoGet(
+        `/${type}_with_email`,
+        axiosXanoReset,
+        null,
+        { email: emailInput.toLowerCase() }
       );
       const mail = response.data;
       if (!mail) {
@@ -29,8 +33,11 @@ const EmailForm = ({
         return;
       }
       const user = (
-        await axiosXanoReset.get(
-          `/auth/${type}/request_temp_password?email=${emailInput.toLowerCase()}`
+        await xanoGet(
+          `/auth/${type}/request_temp_password`,
+          axiosXanoReset,
+          null,
+          { email: emailInput.toLowerCase() }
         )
       ).data;
 

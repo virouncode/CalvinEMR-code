@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 
@@ -15,14 +16,10 @@ const VerifyPasswordPatient = ({ setVerified }) => {
     e.preventDefault();
     try {
       //=============== AUTH =================//
-      await axiosXanoPatient.post(
-        LOGIN_URL,
-        JSON.stringify({ email: auth.email, password }),
-        {
-          "Content-Type": "application/json",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      await xanoPost(LOGIN_URL, axiosXanoPatient, null, {
+        email: auth.email,
+        password,
+      });
       setVerified(true);
     } catch (err) {
       setVerified(false);
