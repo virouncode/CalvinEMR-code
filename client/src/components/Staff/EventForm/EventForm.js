@@ -68,7 +68,7 @@ const EventForm = ({
     chart: "",
     health: "",
   });
-  const [{ formDatas, tempFormDatas }, setTempFormDatas] = useEventForm(
+  const [{ formDatas, tempFormDatas }, , setTempFormDatas] = useEventForm(
     currentEvent.current.id
   );
   const { loading, err, patientsDemographics, hasMore } = usePatientsGuestsList(
