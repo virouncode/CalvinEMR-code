@@ -1,30 +1,28 @@
 //Imports
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
-const axios = require("axios");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const { join } = require("path");
-
-const extractTextFromDoc = require("./extractTextFromDoc");
-// const xml2js = require("xml2js");
-// var stripPrefix = require("xml2js").processors.stripPrefix;
 const PORT = process.env.PORT || 4000;
 
 var xanoRouter = require("./routes/xano/xano");
 var twilioRouter = require("./routes/twilio/twilio");
-//****************** APP ***************************//
+var writeXMLRouter = require("./routes/writeXML/writeXML");
+var extractToTextRouter = require("./routes/extractToText/extractToText");
+// var xmlToJSRouter = require("./routes/xmlToJs/xmlToJs");
+
 const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static(join(__dirname, "..", "client", "build")));
 app.use("/xano", xanoRouter);
 app.use("/twilio", twilioRouter);
-
+app.use("/writeXML", writeXMLRouter);
+app.use("/extractToText", extractToTextRouter);
+// app.use("/xmlToJs", xmlToJsRouter);
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
+
 const httpServer = createServer(app); //my http server
 const io = new Server(httpServer, {
   cors: {
@@ -33,133 +31,6 @@ const io = new Server(httpServer, {
   },
 }); //Web socket server
 
-//**************** Endpoint DOCUMENT AI **************//
-app.post("/api/extractToText", async (req, res) => {
-  try {
-    const { docUrl, mime } = req.body;
-    const result = await extractTextFromDoc(docUrl, mime);
-    res.send(result);
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-//***********************************************************//
-
-//**************** Endpoint write XML File ****************//
-
-app.post("/api/writeXML", async (req, res) => {
-  try {
-    const {
-      xmlFinal,
-      patientFirstName,
-      patientLastName,
-      patientId,
-      patientDob,
-      doctorFirstName,
-      doctorLastName,
-      doctorOHIP,
-      authorName,
-      dateOfExport,
-      reportsFiles,
-    } = req.body;
-
-    //Names
-    const exportFolderName = `CalvinEMR_Export_${dateOfExport}`;
-    const folderName = `${doctorFirstName}_${doctorLastName}_${doctorOHIP}`;
-    const fileName = `${patientFirstName}_${patientLastName}_${patientId}_${patientDob}.xml`;
-    const reportsFilesFolderName = "Reports_files";
-
-    //Paths
-    const downloadsPath = path.join(os.homedir(), "Downloads");
-    const exportFolderPath = path.join(downloadsPath, exportFolderName);
-    const folderPath = path.join(downloadsPath, exportFolderName, folderName);
-    const filePath = path.join(folderPath, fileName);
-    const reportsFilesPath = path.join(folderPath, reportsFilesFolderName);
-
-    //Create folders
-    if (!fs.existsSync(exportFolderPath)) {
-      fs.mkdirSync(exportFolderPath);
-    }
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath);
-    }
-    if (!fs.existsSync(reportsFilesPath)) {
-      fs.mkdirSync(reportsFilesPath);
-    }
-
-    //Create ReadMe text
-    const readMeContent = `This EMR export from CalvinEMR software was performed by ${authorName} on ${new Date().toUTCString()}`;
-    const readMePath = path.join(folderPath, "README.md");
-
-    //Write file asynchronously
-    fs.writeFile(filePath, xmlFinal, (err) => {
-      if (err) {
-        console.error("Error when writing XML file: ", err);
-      } else {
-        console.log("XML file saved successfully in Downloads folder.");
-      }
-    });
-    fs.writeFile(readMePath, readMeContent, (err) => {
-      if (err) {
-        console.error("Error when writing README file: ", err);
-      } else {
-        console.log("README file saved successfully in Downloads folder.");
-      }
-    });
-
-    console.log(reportsFiles);
-    for (let reportFile of reportsFiles) {
-      console.log(reportFile.url);
-      const url = reportFile.url;
-      const destinationPath = path.join(reportsFilesPath, `${reportFile.name}`);
-      try {
-        const response = await axios.get(url, { responseType: "stream" });
-
-        const fileStream = fs.createWriteStream(destinationPath);
-        response.data.pipe(fileStream);
-
-        await new Promise((resolve, reject) => {
-          fileStream.on("finish", resolve);
-          fileStream.on("error", reject);
-        });
-
-        console.log("File downloaded successfully.");
-      } catch (error) {
-        console.error(`Error downloading file: ${error.message}`);
-      }
-    }
-
-    res.status(200).json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-//****************************************************//
-
-//****************************************************//
-
-// //******** Endpoint transform XML string to JSON **********/
-// app.post("/api/xmlToJs", (req, res) => {
-//   try {
-//     const { xmlContent } = req.body;
-//     const parser = new xml2js.Parser({
-//       explicitArray: false,
-//       tagNameProcessors: [stripPrefix],
-//     });
-//     parser.parseString(xmlContent, function (err, result) {
-//       res.send(result);
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
-//***************************************************//
-
-//****************** MY APP *****************/
-
-//Dans les autres cas on renvoie la single page app
 app.get("/*", (_, res) => {
   res.sendFile(join(__dirname, "..", "client", "build", "index.html"));
 });

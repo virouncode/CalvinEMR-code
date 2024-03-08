@@ -5,7 +5,6 @@ import { recordCategories } from "./recordCategories";
 import { removeEmptyTags } from "./removeEmptyTags";
 
 export const exportPatientEMR = async (
-  authToken,
   checkedRecordCategoriesIds,
   patientFirstName,
   patientLastName,
@@ -35,7 +34,6 @@ Date: August 4,2017; Status: FINAL-->
     ).template;
 
     xmlContent += await exportEMRCategory(
-      authToken,
       categoryName,
       categoryURL,
       categoryTemplate,
@@ -60,7 +58,7 @@ Date: August 4,2017; Status: FINAL-->
   let reportsFiles = [];
   if (checkedRecordCategoriesIds.includes(13)) {
     reportsFiles = (
-      await xanoGet("/reports_files_of_patient", "admin", authToken, {
+      await xanoGet("/reports_files_of_patient", "admin", {
         patient_id: patientId,
       })
     ).data
@@ -68,7 +66,7 @@ Date: August 4,2017; Status: FINAL-->
       .map(({ File }) => File);
   }
 
-  await axios.post("/api/writeXML", {
+  await axios.post("/writeXML", {
     xmlFinal,
     patientFirstName,
     patientLastName,
@@ -84,7 +82,6 @@ Date: August 4,2017; Status: FINAL-->
 };
 
 export const exportEMRCategory = async (
-  authToken,
   categoryName,
   categoryURL,
   categoryTemplate,
@@ -95,7 +92,7 @@ export const exportEMRCategory = async (
   if (checkedPatients) {
     try {
       jsArrayToExport = (
-        await xanoGet(`${categoryURL}_of_patients`, "admin", authToken, {
+        await xanoGet(`${categoryURL}_of_patients`, "admin", {
           patients: checkedPatients,
         })
       ).data;
@@ -105,7 +102,7 @@ export const exportEMRCategory = async (
   } else {
     //All patients
     try {
-      jsArrayToExport = (await xanoGet(categoryURL, "admin", authToken)).data;
+      jsArrayToExport = (await xanoGet(categoryURL, "admin")).data;
     } catch (err) {
       console.log(err.message);
     }

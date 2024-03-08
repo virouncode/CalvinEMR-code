@@ -1,9 +1,9 @@
 const { log } = require("console");
 const axios = require("axios");
-
+require("dotenv").config();
 const { DocumentProcessorServiceClient } =
   require("@google-cloud/documentai").v1;
-require("dotenv").config();
+
 const projectId = process.env.DOCUMENTAI_PROJECT_ID;
 const location = "us"; // Format is 'us' or 'eu'
 const processorId = process.env.DOCUMENTAI_PROCESSOR_ID; // Create processor in Cloud Console
