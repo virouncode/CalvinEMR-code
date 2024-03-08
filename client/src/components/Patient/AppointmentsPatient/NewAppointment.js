@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailabilitySocket from "../../../hooks/useAvailabilitySocket";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSocketContext from "../../../hooks/useSocketContext";
@@ -18,6 +16,7 @@ import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import AppointmentsSlots from "./AppointmentsSlots";
 import WeekPicker from "./WeekPicker";
+
 var _ = require("lodash");
 
 const optionsDate = {
@@ -33,7 +32,6 @@ const optionsTime = {
 };
 
 const NewAppointment = () => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -54,16 +52,11 @@ const NewAppointment = () => {
     const fetchAppointmentsInRange = async () => {
       try {
         setLoadingAppointments(true);
-        const response = await xanoGet(
-          "/appointments_of_staff",
-          axiosXanoPatient,
-          auth.authToken,
-          {
-            host_id: user.demographics.assigned_staff_id,
-            range_start: rangeStart + 86400000, //+1 day
-            range_end: rangeEnd + 86400000,
-          }
-        );
+        const response = await xanoGet("/appointments_of_staff", "patient", {
+          host_id: user.demographics.assigned_staff_id,
+          range_start: rangeStart + 86400000, //+1 day
+          range_end: rangeEnd + 86400000,
+        });
         if (abortController.signal.aborted) return;
         setAppointmentsInRange(
           response.data.filter(({ start }) => start > rangeStart + 86400000)
@@ -80,18 +73,12 @@ const NewAppointment = () => {
     };
     fetchAppointmentsInRange();
     return () => abortController.abort();
-  }, [
-    auth.authToken,
-    rangeEnd,
-    rangeStart,
-    user.demographics.assigned_staff_id,
-  ]);
+  }, [rangeEnd, rangeStart, user.demographics.assigned_staff_id]);
 
   const [availability, setAvailability, loadingAvailability, errAvailability] =
     useFetchDatas(
       "/availability_of_staff",
-      axiosXanoPatient,
-      auth.authToken,
+      "patient",
       "staff_id",
       user.demographics.assigned_staff_id,
       true
@@ -173,8 +160,7 @@ Cellphone: ${
           };
           const response = await xanoPost(
             "/messages_external",
-            axiosXanoPatient,
-            auth.authToken,
+            "patient",
             message
           );
           socket.emit("message", {

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -12,7 +11,6 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const MyAccountForm = () => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user, setUser } = useUserContext();
   const { staffInfos, setStaffInfos } = useStaffInfosContext();
   const { socket } = useSocketContext();
@@ -42,43 +40,6 @@ const MyAccountForm = () => {
     navigate("/staff/credentials");
   };
 
-  // const handleSignChange = async (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-  //   setErrMsg("");
-  //   if (file.size > 25000000) {
-  //     setErrMsg("File is over 25Mb, please choose another file");
-  //     return;
-  //   }
-  //   // setting up the reader
-  //   setIsLoadingFile(true);
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   // here we tell the reader what to do when it's done reading...
-  //   reader.onload = async (e) => {
-  //     let content = e.target.result; // this is the content!
-  //     try {
-  //       let fileToUpload = await axiosXanoStaff.post(
-  //         "/upload/attachment",
-  //         {
-  //           content: content,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${auth.authToken}`,
-  //           },
-  //         }
-  //       );
-  //       setTempFormDatas({ ...tempFormDatas, sign: fileToUpload.data });
-  //       setIsLoadingFile(false);
-  //     } catch (err) {
-  //       toast.error(`Error: unable to load file: ${err.message}`, {
-  //         containerId: "A",
-  //       });
-  //     }
-  //   };
-  // };
   const handleEdit = (e) => {
     setEditVisible(true);
   };
@@ -95,11 +56,9 @@ const MyAccountForm = () => {
       //Submission
       setProgress(true);
       const response = await xanoPut(
-        "/staff",
-        axiosXanoStaff,
-        auth.authToken,
-        tempFormDatas,
-        user.id
+        `/staff/${user.id}`,
+        "staff",
+        tempFormDatas
       );
       setSuccessMsg("Infos changed successfully");
 

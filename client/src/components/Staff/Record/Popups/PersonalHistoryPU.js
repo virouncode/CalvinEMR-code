@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -26,7 +25,7 @@ const PersonalHistoryPU = ({
   setPopUpVisible,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -157,7 +156,7 @@ const PersonalHistoryPU = ({
         "/personal_history",
         topicDatas[0].id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "PERSONAL HISTORY"

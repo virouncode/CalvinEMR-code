@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { lifeStageCT } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -21,7 +20,6 @@ const FamHistoryForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -73,7 +71,7 @@ const FamHistoryForm = ({
       await postPatientRecord(
         "/family_history",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "FAMILY HISTORY"

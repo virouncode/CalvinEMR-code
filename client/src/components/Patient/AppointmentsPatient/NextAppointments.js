@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -13,7 +11,6 @@ import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 
 const NextAppointments = ({ nextAppointments, loading, err }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -93,8 +90,8 @@ Cellphone: ${
           };
           const response = await xanoPost(
             "/messages_external",
-            axiosXanoPatient,
-            auth.authToken,
+            "patient",
+
             message
           );
           socket.emit("message", {

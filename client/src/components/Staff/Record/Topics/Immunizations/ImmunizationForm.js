@@ -7,7 +7,6 @@ import {
   siteCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -25,7 +24,6 @@ const ImmunizationForm = ({
   setErrMsgPost,
   editCounter,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -75,7 +73,7 @@ const ImmunizationForm = ({
       await postPatientRecord(
         "/immunizations",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "IMMUNIZATIONS"

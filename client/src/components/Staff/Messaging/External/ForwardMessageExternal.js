@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -20,7 +19,6 @@ const ForwardMessageExternal = ({
   previousMsgs,
   patientName,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -116,8 +114,8 @@ const ForwardMessageExternal = ({
       if (attachments.length > 0) {
         const response = await xanoPost(
           "/messages_attachments",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           { attachments_array: attachments }
         );
         attach_ids = [
@@ -154,8 +152,8 @@ const ForwardMessageExternal = ({
       //post the message
       const response = await xanoPost(
         "/messages",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         forwardMessage
       );
       socket.emit("message", {
@@ -205,8 +203,8 @@ const ForwardMessageExternal = ({
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

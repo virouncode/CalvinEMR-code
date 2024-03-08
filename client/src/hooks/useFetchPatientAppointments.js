@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoPatient } from "../api/xanoPatient";
-import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
 const useFetchPatientAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
 
   useEffect(() => {
@@ -19,8 +16,8 @@ const useFetchPatientAppointments = () => {
         setLoading(true);
         const response = await xanoGet(
           "/appointments_of_patient",
-          axiosXanoPatient,
-          auth.authToken,
+          "patient",
+
           { patient_id: user.id },
           abortController
         );
@@ -41,7 +38,7 @@ const useFetchPatientAppointments = () => {
     };
     fetchAppointments();
     return () => abortController.abort();
-  }, [auth.authToken, user.id]);
+  }, [user.id]);
 
   return { appointments, setAppointments, loading, err };
 };

@@ -3,8 +3,7 @@ import xanoGet from "../api/xanoCRUD/xanoGet";
 
 const useFetchDatas = (
   url,
-  axiosXanoInstance,
-  authToken,
+  userType,
   queryParam = null,
   queryValue = null,
   singleResult = false
@@ -22,8 +21,7 @@ const useFetchDatas = (
         setLoading(true);
         const response = await xanoGet(
           finalURL,
-          axiosXanoInstance,
-          authToken,
+          userType,
           null,
           abortController
         );
@@ -39,7 +37,7 @@ const useFetchDatas = (
     };
     fetchDatas();
     return () => abortController.abort();
-  }, [authToken, axiosXanoInstance, finalURL, url]);
+  }, [userType, finalURL, url]);
 
   return [datas, setDatas, loading, err];
 };

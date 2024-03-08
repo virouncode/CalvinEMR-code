@@ -1,14 +1,14 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
+
 var _ = require("lodash");
 
 const MedTemplateItem = ({
@@ -18,7 +18,6 @@ const MedTemplateItem = ({
   setFinalInstructions,
   body,
 }) => {
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
 
@@ -46,8 +45,8 @@ const MedTemplateItem = ({
     try {
       const response = await xanoPost(
         "/medications_templates",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         datasToPost
       );
       socket.emit("message", {
@@ -72,8 +71,8 @@ const MedTemplateItem = ({
       try {
         await xanoDelete(
           "/medications_templates",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           med.id
         );
         socket.emit("message", {

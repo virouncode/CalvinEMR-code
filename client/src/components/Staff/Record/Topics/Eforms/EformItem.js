@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
@@ -11,7 +10,6 @@ import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 
 const EformItem = ({ item, lastItemRef = null }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
   const [progress, setProgress] = useState(false);
@@ -27,7 +25,7 @@ const EformItem = ({ item, lastItemRef = null }) => {
         await deletePatientRecord(
           "/eforms",
           item.id,
-          auth.authToken,
+
           socket,
           "E-FORMS"
         );

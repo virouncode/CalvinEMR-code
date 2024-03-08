@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -15,7 +14,6 @@ import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessage = ({ setNewVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -136,12 +134,9 @@ const NewMessage = ({ setNewVisible }) => {
       let attach_ids = [];
       if (attachments.length > 0) {
         attach_ids = (
-          await xanoPost(
-            "/messages_attachments",
-            axiosXanoStaff,
-            auth.authToken,
-            { attachments_array: attachments }
-          )
+          await xanoPost("/messages_attachments", "staff", {
+            attachments_array: attachments,
+          })
         ).data;
       }
       //create the message
@@ -157,8 +152,8 @@ const NewMessage = ({ setNewVisible }) => {
       };
       const response = await xanoPost(
         "/messages",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         message
       );
       socket.emit("message", {
@@ -205,12 +200,9 @@ const NewMessage = ({ setNewVisible }) => {
       reader.onload = async (e) => {
         let content = e.target.result; // this is the content!
         try {
-          const response = await xanoPost(
-            "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
-            { content }
-          );
+          const response = await xanoPost("/upload/attachment", "staff", {
+            content,
+          });
           if (!response.data.type) response.data.type = "document";
           setAttachments([
             ...attachments,

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useReducer } from "react";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const initialState = {
   formDatas: null,
@@ -40,7 +39,6 @@ const httpReducer = (state, action) => {
 };
 
 export const useEventForm = (eventId) => {
-  const { auth } = useAuthContext();
   const [httpState, dispatch] = useReducer(httpReducer, initialState);
   const fetchEventFormDatas = useCallback(
     async (abortController) => {
@@ -48,8 +46,8 @@ export const useEventForm = (eventId) => {
         dispatch({ type: "FETCH_START" });
         const response = await xanoGet(
           `/appointments/${eventId}`,
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           null,
           abortController
         );
@@ -64,7 +62,7 @@ export const useEventForm = (eventId) => {
         }
       }
     },
-    [auth.authToken, eventId]
+    [eventId]
   );
 
   const setTempFormDatas = (newTempFormDatas) => {

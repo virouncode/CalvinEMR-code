@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
@@ -16,7 +14,6 @@ import SelectSite from "../../Staff/EventForm/SelectSite";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupStaffForm = ({ setAddVisible, sites }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
@@ -79,8 +76,8 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
       try {
         let fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoAdmin,
-          auth.authToken,
+          "admin",
+
           { content }
         );
         setFormDatas({ ...formDatas, sign: fileToUpload.data });
@@ -98,12 +95,9 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     setProgress(true);
     //Validation
     try {
-      const response = await xanoGet(
-        "/staff_with_email",
-        axiosXanoAdmin,
-        auth.authToken,
-        { email: formDatas.email.toLowerCase() }
-      );
+      const response = await xanoGet("/staff_with_email", "admin", {
+        email: formDatas.email.toLowerCase(),
+      });
 
       if (response.data) {
         setErrMsg(
@@ -159,18 +153,13 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         return;
       }
       //Submission
-      const response = await xanoPost(
-        "/staff",
-        axiosXanoAdmin,
-        auth.authToken,
-        datasToPost
-      );
+      const response = await xanoPost("/staff", "admin", datasToPost);
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "create",
         content: { data: response.data },
       });
-      await xanoPost("/settings", axiosXanoAdmin, auth.authToken, {
+      await xanoPost("/settings", "admin", {
         staff_id: response.data.id,
         slot_duration: "00:15",
         first_day: "0",
@@ -223,7 +212,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
         clinical_notes_order: "top",
       });
 
-      await xanoPost("/availability", axiosXanoAdmin, auth.authToken, {
+      await xanoPost("/availability", "admin", {
         staff_id: response.data.id,
         date_created: Date.now(),
         schedule_morning: {

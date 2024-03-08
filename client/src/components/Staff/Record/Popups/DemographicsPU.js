@@ -1,9 +1,9 @@
 import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import { putPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import {
   enrollmentStatusCT,
   genderCT,
@@ -15,7 +15,6 @@ import {
   terminationReasonCT,
   toCodeTableName,
 } from "../../../../datas/codesTables";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -41,6 +40,7 @@ import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import EnrolmentHistory from "../Topics/Demographics/EnrolmentHistory";
 import NewEnrolmentForm from "../Topics/Demographics/NewEnrolmentForm";
+
 var _ = require("lodash");
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
@@ -52,7 +52,7 @@ const DemographicsPU = ({
   errPatient,
 }) => {
   //============================= STATES ==============================//
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -210,8 +210,8 @@ const DemographicsPU = ({
       try {
         let fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           { content }
         );
         setFormDatas({ ...formDatas, avatar: fileToUpload.data });
@@ -481,7 +481,6 @@ const DemographicsPU = ({
         "/demographics",
         demographicsInfos.id,
         user.id,
-        auth.authToken,
         datasToPut,
         socket,
         "DEMOGRAPHICS"

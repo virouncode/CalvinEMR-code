@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -64,7 +63,6 @@ const ReportsInboxAssignedPracticianForward = ({
     psychosInfos,
     othersInfos,
   ];
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [assignedId, setAssignedId] = useState(0);
@@ -94,7 +92,7 @@ const ReportsInboxAssignedPracticianForward = ({
         "/reports",
         reportToForward.id,
         user.id,
-        auth.authToken,
+
         reportToForward,
         socket,
         "REPORTS"

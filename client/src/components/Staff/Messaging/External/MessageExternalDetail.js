@@ -3,11 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -35,7 +34,6 @@ const MessageExternalDetail = ({
   popUpVisible,
   setPopUpVisible,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -84,11 +82,9 @@ const MessageExternalDetail = ({
         delete datasToPut.to_patient_infos;
         delete datasToPut.form_patient_infos;
         const response = await xanoPut(
-          "/messages_external",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages_external/${message.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",
@@ -132,8 +128,8 @@ const MessageExternalDetail = ({
       const dataURL = canvas.toDataURL("image/jpeg");
       let fileToUpload = await xanoPost(
         "/upload/attachment",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         { content: dataURL }
       );
 
@@ -156,7 +152,7 @@ const MessageExternalDetail = ({
         await postPatientRecord(
           "/clinical_notes_attachments",
           user.id,
-          auth.authToken,
+
           {
             attachments_array: datasAttachment,
           }
@@ -165,7 +161,7 @@ const MessageExternalDetail = ({
       await postPatientRecord(
         "/clinical_notes",
         user.id,
-        auth.authToken,
+
         {
           patient_id: message.from_patient_id || message.to_patient_id,
           subject: `Message from: ${
@@ -211,7 +207,7 @@ const MessageExternalDetail = ({
   //       const response = await postPatientRecord(
   //         "/documents",
   //         user.id,
-  //         auth.authToken,
+  //
   //         {
   //           patient_id: message.related_patient_id,
   //           assigned_id: user.id,

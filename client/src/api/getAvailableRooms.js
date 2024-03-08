@@ -1,5 +1,5 @@
 import xanoGet from "./xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "./xanoStaff";
+
 var _ = require("lodash");
 
 export const getAvailableRooms = async (
@@ -8,14 +8,12 @@ export const getAvailableRooms = async (
   rangeEnd,
   sites,
   siteId,
-  authToken,
   abortController = null
 ) => {
   try {
     const response = await xanoGet(
       "/appointments_in_range_and_sites",
-      axiosXanoStaff,
-      authToken,
+      "staff",
       {
         range_start: rangeStart,
         range_end: rangeEnd,

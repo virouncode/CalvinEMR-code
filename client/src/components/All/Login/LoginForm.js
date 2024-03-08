@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
-import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
+import xanoPostAuth from "../../../api/xanoCRUD/xanoPostAuth";
 import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -79,52 +76,39 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await xanoPost(LOGIN_URL, axiosXanoStaff, null, {
+        await xanoPostAuth(LOGIN_URL, "staff", {
           email,
           password,
         });
-        const authToken = response?.data?.authToken;
-        setAuth({ email, authToken });
-        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
+        setAuth({ email });
+        localStorage.setItem("auth", JSON.stringify({ email }));
 
         //================ USER INFOS ===================//
 
-        const response2 = await xanoGet(
-          USERINFO_URL,
-          axiosXanoStaff,
-          authToken
-        );
-        if (response2.data.account_status === "Suspended") {
+        const user = (await xanoGet(USERINFO_URL, "staff")).data;
+        if (user.account_status === "Suspended") {
           navigate("/suspended");
           return;
         }
-        const user = response2?.data;
 
         //================ USER SETTINGS ===================//
-        const response3 = await xanoGet(
-          `/settings_of_staff`,
-          axiosXanoStaff,
-          authToken,
-          { staff_id: user.id }
-        );
-        const settings = response3?.data;
+        const settings = (
+          await xanoGet("/settings_of_staff", "staff", {
+            staff_id: user.id,
+          })
+        ).data;
 
         //================ USER UNREAD MESSAGES =============//
+
         const unreadMessagesNbr = (
-          await xanoGet(
-            `/unread_messages_of_staff`,
-            axiosXanoStaff,
-            authToken,
-            { staff_id: user.id }
-          )
+          await xanoGet("/unread_messages_of_staff", "staff", {
+            staff_id: user.id,
+          })
         ).data;
         const unreadMessagesExternalNbr = (
-          await xanoGet(
-            `/unread_messages_external_of_staff`,
-            axiosXanoStaff,
-            authToken,
-            { staff_id: user.id }
-          )
+          await xanoGet("/unread_messages_external_of_staff", "staff", {
+            staff_id: user.id,
+          })
         ).data;
         const unreadNbr = unreadMessagesExternalNbr + unreadMessagesNbr;
 
@@ -147,11 +131,9 @@ const LoginForm = () => {
         );
 
         //================== STAFF INFOS ====================//
-        const response6 = await xanoGet("/staff", axiosXanoStaff, authToken);
-        const staffInfos = response6.data;
+        const staffInfos = (await xanoGet("/staff", "staff")).data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
-
         setLoading(false);
         navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
       } catch (err) {
@@ -171,46 +153,36 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await xanoPost(LOGIN_URL, axiosXanoPatient, null, {
+        await xanoPostAuth(LOGIN_URL, "patient", {
           email,
           password,
         });
-        const authToken = response?.data?.authToken;
-        setAuth({ email, authToken });
-        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
+        setAuth({ email });
+        localStorage.setItem("auth", JSON.stringify({ email }));
 
         //================ USER INFOS ===================//
 
-        const response2 = await xanoGet(
-          USERINFO_URL,
-          axiosXanoPatient,
-          authToken
-        );
-        if (response2.data.account_status === "Suspended") {
+        const user = await xanoGet(USERINFO_URL, "patient");
+        if (user.account_status === "Suspended") {
           navigate("/suspended");
           return;
         }
-        const user = response2.data;
 
         //================ USER DEMOGRAPHICS =============//
-        const response3 = await xanoGet(
+        const demographics = await xanoGet(
           `/demographics_of_patient`,
-          axiosXanoPatient,
-          authToken,
+          "patient",
           { patient_id: user.id }
         );
-        const demographics = response3?.data[0];
 
         //================ USER UNREAD MESSAGES =============//
-        const unreadNbr = (
-          await xanoGet(
-            `/unread_messages_of_patient`,
-            axiosXanoPatient,
-            authToken,
-            { patient_id: user.id }
-          )
-        ).data;
-
+        const unreadNbr = await xanoGet(
+          `/unread_messages_of_patient`,
+          "patient",
+          {
+            patient_id: user.id,
+          }
+        );
         setUser({
           ...user,
           full_name: toPatientName(demographics),
@@ -227,8 +199,7 @@ const LoginForm = () => {
         );
 
         //================== STAFF INFOS ====================//
-        const response6 = await xanoGet("/staff", axiosXanoPatient, authToken);
-        const staffInfos = response6.data;
+        const staffInfos = await xanoGet("/staff", "patient");
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
 
@@ -252,33 +223,27 @@ const LoginForm = () => {
       try {
         setLoading(true);
         //=============== AUTH =================//
-        const response = await xanoPost(LOGIN_URL, axiosXanoAdmin, null, {
+        await xanoPostAuth(LOGIN_URL, "admin", {
           email,
           password,
         });
-
-        const authToken = response?.data?.authToken;
-        setAuth({ email, authToken });
-        localStorage.setItem("auth", JSON.stringify({ email, authToken }));
+        setAuth({ email });
+        localStorage.setItem("auth", JSON.stringify({ email }));
 
         //=============== AUTH =================//
-        const response2 = await xanoGet(
-          USERINFO_URL,
-          axiosXanoAdmin,
-          authToken
-        );
+        const response2 = await xanoGet(USERINFO_URL, "admin");
         const user = response2?.data;
         setUser(user);
         localStorage.setItem("user", JSON.stringify(user));
 
         //=============== STAFF INFOS =================//
-        const response3 = await xanoGet("/staff", axiosXanoAdmin, authToken);
+        const response3 = await xanoGet("/staff", "admin");
         const staffInfos = response3.data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
 
         //=============== ADMIN INFOS =================//
-        const response4 = await xanoGet("/admins", axiosXanoAdmin, authToken);
+        const response4 = await xanoGet("/admins", "admin");
         const adminsInfos = response4.data;
         setAdminsInfos(adminsInfos);
         localStorage.setItem("adminsInfos", JSON.stringify(adminsInfos));

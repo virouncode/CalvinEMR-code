@@ -5,7 +5,6 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useAvailableRooms from "../../../../../hooks/useAvailableRooms";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
@@ -49,7 +48,6 @@ const AppointmentItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -83,8 +81,7 @@ const AppointmentItem = ({
     item.start,
     item.end,
     sites,
-    item.site_id,
-    auth.authToken
+    item.site_id
   );
 
   //HANDLERS
@@ -101,8 +98,7 @@ const AppointmentItem = ({
         itemInfos.start,
         itemInfos.end,
         sites,
-        value,
-        auth.authToken
+        value
       );
       setAvailableRooms(availableRoomsResult);
     }
@@ -195,8 +191,7 @@ const AppointmentItem = ({
         value,
         rangeEnd,
         sites,
-        itemInfos.site_id,
-        auth.authToken
+        itemInfos.site_id
       );
 
       if (
@@ -301,8 +296,7 @@ const AppointmentItem = ({
         itemInfos.start,
         value,
         sites,
-        itemInfos.site_id,
-        auth.authToken
+        itemInfos.site_id
       );
       if (
         itemInfos.room_id === "z" ||
@@ -441,7 +435,7 @@ const AppointmentItem = ({
         "/appointments",
         item.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "APPOINTMENTS"
@@ -481,7 +475,7 @@ const AppointmentItem = ({
         await deletePatientRecord(
           "/appointments",
           item.id,
-          auth.authToken,
+
           socket,
           "APPOINTMENTS"
         );

@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
 const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [agreed, setAgreed] = useState(true);
   const handleChange = (e) => {
@@ -22,11 +19,9 @@ const PatientAIAgreement = ({ demographicsInfos, setPopUpVisible }) => {
     datasToPut.ai_consent = agreed;
     try {
       await xanoPut(
-        "/demographics",
-        axiosXanoPatient,
-        auth.authToken,
-        datasToPut,
-        user.demographics.id
+        `/demographics/${user.demographics.id}`,
+        "patient",
+        datasToPut
       );
       socket.emit("message", {
         route: "DEMOGRAPHICS",

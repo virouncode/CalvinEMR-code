@@ -1,4 +1,3 @@
-import { axiosXanoStaff } from "../api/xanoStaff";
 import { createChartNbr } from "../utils/createChartNbr";
 import xanoDelete from "./xanoCRUD/xanoDelete";
 import xanoPost from "./xanoCRUD/xanoPost";
@@ -21,7 +20,7 @@ export const postPatientRecord = async (
   try {
     const response = await xanoPost(
       url,
-      axiosXanoStaff,
+      "staff",
       authToken,
       datasToPost,
       abortController
@@ -80,7 +79,7 @@ export const putPatientRecord = async (
   try {
     const response = await xanoPut(
       url,
-      axiosXanoStaff,
+      "staff",
       authToken,
       datasToPut,
       recordId,
@@ -110,13 +109,12 @@ export const putPatientRecord = async (
 export const deletePatientRecord = async (
   url,
   recordId,
-  authToken,
   socket,
   topic,
   abortController = null
 ) => {
   try {
-    await xanoDelete(url, axiosXanoStaff, authToken, recordId, abortController);
+    await xanoDelete(`${url}/${parseInt(recordId)}`, "staff", abortController);
 
     if (socket && topic) {
       socket.emit("message", {

@@ -6,7 +6,6 @@ import {
   siteCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -27,7 +26,6 @@ const RecImmunizationFormFirstDose = ({
   setErrMsgPost,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
@@ -76,7 +74,7 @@ const RecImmunizationFormFirstDose = ({
       await postPatientRecord(
         "/immunizations",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "IMMUNIZATIONS"

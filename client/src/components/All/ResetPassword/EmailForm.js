@@ -1,8 +1,8 @@
 import React from "react";
 import { toast } from "react-toastify";
+
 import { sendEmail } from "../../../api/sendEmail";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
-import { axiosXanoReset } from "../../../api/xanoReset";
 
 const EmailForm = ({
   setRequestSent,
@@ -21,24 +21,18 @@ const EmailForm = ({
     e.preventDefault();
     //verifier l'email
     try {
-      const response = await xanoGet(
-        `/${type}_with_email`,
-        axiosXanoReset,
-        null,
-        { email: emailInput.toLowerCase() }
-      );
+      const response = await xanoGet(`/${type}_with_email`, "reset", {
+        email: emailInput.toLowerCase(),
+      });
       const mail = response.data;
       if (!mail) {
         setErrMsg(`There is no ${type} account associated with this email`);
         return;
       }
       const user = (
-        await xanoGet(
-          `/auth/${type}/request_temp_password`,
-          axiosXanoReset,
-          null,
-          { email: emailInput.toLowerCase() }
-        )
+        await xanoGet(`/auth/${type}/request_temp_password`, "reset", {
+          email: emailInput.toLowerCase(),
+        })
       ).data;
 
       sendEmail(

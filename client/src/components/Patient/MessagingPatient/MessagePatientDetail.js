@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import NewWindow from "react-new-window";
 import { toast } from "react-toastify";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { toPatientName } from "../../../utils/toPatientName";
@@ -20,7 +18,6 @@ const MessagePatientDetail = ({
   popUpVisible,
   setPopUpVisible,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [replyVisible, setReplyVisible] = useState(false);
@@ -60,11 +57,9 @@ const MessagePatientDetail = ({
         delete datasToPut.to_patient_infos;
         delete datasToPut.form_patient_infos;
         const response = await xanoPut(
-          "/messages_external",
-          axiosXanoPatient,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages_external/${message.id}`,
+          "patient",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",

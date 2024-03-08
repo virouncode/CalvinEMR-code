@@ -7,8 +7,7 @@ const useAvailableRooms = (
   rangeStart,
   rangeEnd,
   sites,
-  siteId,
-  authToken
+  siteId
 ) => {
   const [availableRooms, setAvailableRooms] = useState([]);
 
@@ -22,7 +21,6 @@ const useAvailableRooms = (
           rangeEnd,
           sites,
           siteId,
-          authToken,
           abortController
         );
         if (abortController.signal.aborted) return;
@@ -38,7 +36,7 @@ const useAvailableRooms = (
     return () => {
       abortController.abort();
     };
-  }, [appointmentId, authToken, rangeEnd, rangeStart, siteId, sites]);
+  }, [appointmentId, rangeEnd, rangeStart, siteId, sites]);
 
   return [availableRooms, setAvailableRooms];
 };

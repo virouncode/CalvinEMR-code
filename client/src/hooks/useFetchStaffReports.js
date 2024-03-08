@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const useFetchStaffReports = (paging, staffId) => {
-  const { auth } = useAuthContext();
   const [reports, setReports] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,8 +16,8 @@ const useFetchStaffReports = (paging, staffId) => {
         setErrMsg("");
         const response = await xanoGet(
           "/reports_of_staff",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           {
             staff_id: staffId,
             paging,
@@ -39,7 +37,7 @@ const useFetchStaffReports = (paging, staffId) => {
     };
     fetchStaffReports();
     return () => abortController.abort();
-  }, [auth.authToken, paging, staffId]);
+  }, [paging, staffId]);
 
   return {
     reports,

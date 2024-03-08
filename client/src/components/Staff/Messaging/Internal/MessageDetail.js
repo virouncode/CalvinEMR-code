@@ -3,11 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
@@ -38,7 +37,6 @@ const MessageDetail = ({
   popUpVisible,
   setPopUpVisible,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -51,8 +49,9 @@ const MessageDetail = ({
 
   const [previousMsgs, loading, errMsg] = useFetchPreviousMessages(message);
   useEffect(() => {
+    if (!message) return;
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
-  }, [message.attachments_ids, message.previous_messages]);
+  }, [message]);
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -74,11 +73,9 @@ const MessageDetail = ({
         };
         delete datasToPut.patient_infos; //from add-on
         const response = await xanoPut(
-          "/messages",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages/${message.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",
@@ -131,8 +128,8 @@ const MessageDetail = ({
       const dataURL = canvas.toDataURL("image/jpeg");
       let fileToUpload = await xanoPost(
         "/upload/attachment",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         { content: dataURL }
       );
       //post attachment and get id
@@ -156,7 +153,7 @@ const MessageDetail = ({
         await postPatientRecord(
           "/clinical_notes_attachments",
           user.id,
-          auth.authToken,
+
           {
             attachments_array: datasAttachment,
           }
@@ -165,7 +162,7 @@ const MessageDetail = ({
       await postPatientRecord(
         "/clinical_notes",
         user.id,
-        auth.authToken,
+
         {
           patient_id: message.related_patient_id,
           subject: `Message from ${staffIdToTitleAndName(
@@ -213,7 +210,7 @@ const MessageDetail = ({
   //       const response = await postPatientRecord(
   //         "/documents",
   //         user.id,
-  //         auth.authToken,
+  //
   //         {
   //           patient_id: message.related_patient_id,
   //           assigned_id: user.id,

@@ -5,7 +5,6 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -24,7 +23,6 @@ const FamHistoryItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -72,7 +70,7 @@ const FamHistoryItem = ({
         "/family_history",
         item.id,
         user.id,
-        auth.authToken,
+
         formDatas,
         socket,
         "FAMILY HISTORY"
@@ -120,7 +118,7 @@ const FamHistoryItem = ({
         await deletePatientRecord(
           "/family_history",
           item.id,
-          auth.authToken,
+
           socket,
           "FAMILY HISTORY"
         );

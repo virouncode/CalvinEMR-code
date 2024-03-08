@@ -5,7 +5,6 @@ import {
   enrollmentStatusCT,
   terminationReasonCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -20,7 +19,6 @@ const EnrolmentEdit = ({
   demographicsInfos,
   enrolmentHistory,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [err, setErr] = useState("");
@@ -111,7 +109,7 @@ const EnrolmentEdit = ({
         "/demographics",
         demographicsInfos.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "DEMOGRAPHICS"

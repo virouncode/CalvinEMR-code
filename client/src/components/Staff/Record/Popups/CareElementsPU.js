@@ -4,7 +4,6 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -44,7 +43,7 @@ const CareElementsPU = ({
   setPopUpVisible,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -333,7 +332,7 @@ const CareElementsPU = ({
         await postPatientRecord(
           "/care_elements",
           user.id,
-          auth.authToken,
+
           datasToPost,
           socket,
           "CARE ELEMENTS"
@@ -407,7 +406,7 @@ const CareElementsPU = ({
           "/care_elements",
           topicDatas[0].id,
           user.id,
-          auth.authToken,
+
           datasToPut,
           socket,
           "CARE ELEMENTS"

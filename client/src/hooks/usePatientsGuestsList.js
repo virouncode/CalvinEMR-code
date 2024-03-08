@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
 import { toLocalDate } from "../utils/formatDates";
-import useAuthContext from "./useAuthContext";
 
 const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
-  const { auth } = useAuthContext();
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,8 +29,8 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
         setErr(false);
         const response = await xanoGet(
           "/demographics_search",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           {
             paging,
             search,
@@ -76,7 +74,7 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
     };
     fetchPatientsDemographics();
     return () => abortController.abort();
-  }, [auth.authToken, paging, patients_guests_ids, search]);
+  }, [paging, patients_guests_ids, search]);
 
   return {
     loading,

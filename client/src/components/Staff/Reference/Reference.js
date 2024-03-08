@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
+
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useLinksSocket from "../../../hooks/useLinksSocket";
 import useUserContext from "../../../hooks/useUserContext";
@@ -9,12 +8,11 @@ import MyLinkItem from "./MyLinkItem";
 
 const Reference = () => {
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const [addVisible, setAddVisible] = useState(false);
   const [links, setLinks, loading, err] = useFetchDatas(
     "/links_of_staff",
-    axiosXanoStaff,
-    auth.authToken,
+    "staff",
+
     "staff_id",
     user.id
   );

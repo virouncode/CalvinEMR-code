@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-widgets/scss/styles.scss";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchPatients from "../../../../../hooks/useFetchPatients";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
@@ -22,7 +21,6 @@ const RelationshipForm = ({
   errMsgPost,
   demographicsInfos,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -67,7 +65,7 @@ const RelationshipForm = ({
       const response = await postPatientRecord(
         "/relationships",
         user.id,
-        auth.authToken,
+
         formDatas
       );
       //Emit socket apart to add relation_infos
@@ -100,7 +98,7 @@ const RelationshipForm = ({
         const response = await postPatientRecord(
           "/relationships",
           user.id,
-          auth.authToken,
+
           inverseRelationToPost
         );
         //Emit socket apart to add relation_infos

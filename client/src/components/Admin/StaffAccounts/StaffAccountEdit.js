@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
@@ -16,7 +14,6 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [errMsg, setErrMsg] = useState("");
@@ -63,8 +60,8 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
       try {
         let fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoAdmin,
-          auth.authToken,
+          "admin",
+
           { content }
         );
         setFormDatas({ ...formDatas, sign: fileToUpload.data });
@@ -121,13 +118,7 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
         return;
       }
       //Submission
-      const response = await xanoPut(
-        "/staff",
-        axiosXanoAdmin,
-        auth.authToken,
-        datasToPut,
-        infos.id
-      );
+      const response = await xanoPut(`/staff/${infos.id}`, "admin", datasToPut);
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "update",

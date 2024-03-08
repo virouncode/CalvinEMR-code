@@ -1,21 +1,25 @@
-import { useEffect } from "react";
-
-// Custom hook for managing localStorage and detecting tab closures
+//All the tabs must know how many of them are open => local storage tabCounter
+//When i close a tab i decrement tabCounter or i clear localStorage if it's the last remaining tab
+//when landing on App i increment tabCounter or i create it and set it to 1 if it doesn't exists
+import { useCallback, useEffect } from "react";
 export const useLocalStorageTracker = () => {
-  useEffect(() => {
-    const handleTabClosing = () => {
-      if (localStorage.getItem("tabCounter") === null) return;
-      if (localStorage.getItem("tabCounter") === "1") {
-        localStorage.clear();
-      } else {
-        localStorage.setItem(
-          "tabCounter",
-          (parseInt(localStorage.getItem("tabCounter")) - 1).toString()
-        );
-      }
-    };
+  const handleTabClosing = useCallback(() => {
+    if (localStorage.getItem("tabCounter") === "1") {
+      localStorage.clear();
+    } else {
+      localStorage.setItem(
+        "tabCounter",
+        (parseInt(localStorage.getItem("tabCounter")) - 1).toString() //else remove 1
+      );
+    }
+  }, []);
 
-    if (localStorage.getItem("tabCounter") === null) {
+  useEffect(() => {
+    console.log(localStorage.getItem("tabCounter"));
+    if (
+      !localStorage.getItem("tabCounter") ||
+      isNaN(localStorage.getItem("tabCounter"))
+    ) {
       localStorage.setItem("tabCounter", "1");
     } else {
       localStorage.setItem(
@@ -28,8 +32,7 @@ export const useLocalStorageTracker = () => {
     return () => {
       window.removeEventListener("beforeunload", handleTabClosing);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleTabClosing]);
 };
 
 export default useLocalStorageTracker;

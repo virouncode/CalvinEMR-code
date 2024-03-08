@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const useFetchPreviousMessages = (message) => {
-  const { auth } = useAuthContext();
   const [previousMessages, setPreviousMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
+    if (!message) return;
     const abortController = new AbortController();
     const fetchPreviousMessages = async () => {
       try {
@@ -17,8 +16,8 @@ const useFetchPreviousMessages = (message) => {
         const previousInternal = (
           await xanoGet(
             "/messages_selected",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "Internal")
@@ -30,8 +29,8 @@ const useFetchPreviousMessages = (message) => {
         const previousExternal = (
           await xanoGet(
             "/messages_external_selected",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "External")
@@ -58,7 +57,7 @@ const useFetchPreviousMessages = (message) => {
     };
     fetchPreviousMessages();
     return () => abortController.abort();
-  }, [auth.authToken, message.previous_messages]);
+  }, [message]);
 
   return [previousMessages, loading, errMsg];
 };

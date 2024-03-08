@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
 
-const useAvailabilty = (userId, authToken) => {
+const useAvailabilty = (userId) => {
   const [scheduleMorning, setScheduleMorning] = useState(null);
   const [scheduleAfternoon, setScheduleAfternoon] = useState(null);
   const [unavailability, setUnavailability] = useState(null);
@@ -15,12 +14,10 @@ const useAvailabilty = (userId, authToken) => {
     const abortController = new AbortController();
     const fetchAvailability = async () => {
       try {
-        const response = await xanoGet(
-          "/availability_of_staff",
-          axiosXanoStaff,
-          authToken,
-          { staff_id: userId, abortController }
-        );
+        const response = await xanoGet("/availability_of_staff", "staff", {
+          staff_id: userId,
+          abortController,
+        });
         if (abortController.signal.aborted) return;
         setScheduleMorning(response.data.schedule_morning);
         setScheduleAfternoon(response.data.schedule_afternoon);
@@ -40,7 +37,7 @@ const useAvailabilty = (userId, authToken) => {
     };
     fetchAvailability();
     return () => abortController.abort();
-  }, [authToken, userId]);
+  }, [userId]);
   return {
     scheduleMorning,
     setScheduleMorning,

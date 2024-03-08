@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
 const StaffAIAgreement = ({ setStart, setChatVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [agreed, setAgreed] = useState(false);
@@ -18,20 +15,10 @@ const StaffAIAgreement = ({ setStart, setChatVisible }) => {
   };
   const handleStart = async () => {
     if (agreed) {
-      const response = await xanoGet(
-        `/staff/${user.id}`,
-        axiosXanoStaff,
-        auth.authToken
-      );
+      const response = await xanoGet(`/staff/${user.id}`, "staff");
       const datasToPut = response.data;
       datasToPut.ai_consent = true;
-      const response2 = await xanoPut(
-        "/staff",
-        axiosXanoStaff,
-        auth.authToken,
-        datasToPut,
-        user.id
-      );
+      const response2 = await xanoPut(`/staff/${user.id}`, "staff", datasToPut);
       socket.emit("message", {
         route: "USER",
         action: "update",

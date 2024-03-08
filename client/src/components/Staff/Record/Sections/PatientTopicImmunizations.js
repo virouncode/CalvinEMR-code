@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
+
 import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
@@ -20,7 +19,6 @@ const PatientTopicImmunizations = ({
   errPatient,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const containerRef = useRef("null");
 
@@ -30,8 +28,8 @@ const PatientTopicImmunizations = ({
   //DATAS
   const [topicDatas, setTopicDatas, loading, errMsg] = useFetchDatas(
     "/immunizations_of_patient",
-    axiosXanoStaff,
-    auth.authToken,
+    "staff",
+
     "patient_id",
     patientId
   );

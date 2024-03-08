@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 
 const VerifyPassword = ({ setVerified }) => {
@@ -16,7 +16,7 @@ const VerifyPassword = ({ setVerified }) => {
     e.preventDefault();
     try {
       //=============== AUTH =================//
-      await xanoPost(LOGIN_URL, axiosXanoStaff, null, {
+      await xanoPost(LOGIN_URL, "staff", {
         email: auth.email,
         password,
       });

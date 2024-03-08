@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { toLocalDate } from "../../../../../utils/formatDates";
@@ -11,7 +10,6 @@ import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
 const ReportItemSent = ({ item, lastItemSentRef = null }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [progress, setProgress] = useState(false);
@@ -27,7 +25,7 @@ const ReportItemSent = ({ item, lastItemSentRef = null }) => {
         await deletePatientRecord(
           "/reports",
           item.id,
-          auth.authToken,
+
           socket,
           "REPORTS SENT"
         );

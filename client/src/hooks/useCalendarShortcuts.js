@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+
 import xanoDelete from "../api/xanoCRUD/xanoDelete";
-import { axiosXanoStaff } from "../api/xanoStaff";
 import { confirmAlert } from "../components/All/Confirm/ConfirmGlobal";
-import useAuthContext from "./useAuthContext";
 import useSocketContext from "./useSocketContext";
 import useUserContext from "./useUserContext";
 
@@ -16,7 +15,7 @@ const useCalendarShortcuts = (
   setFormVisible,
   setCalendarSelectable
 ) => {
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   useEffect(() => {
@@ -46,8 +45,8 @@ const useCalendarShortcuts = (
           try {
             await xanoDelete(
               "/appointments",
-              axiosXanoStaff,
-              auth.authToken,
+              "staff",
+
               currentEvent.current.id
             );
             toast.success("Deleted Successfully", { containerId: "A" });
@@ -101,7 +100,6 @@ const useCalendarShortcuts = (
       window.removeEventListener("keydown", handleKeyboardShortcut);
     };
   }, [
-    auth.authToken,
     currentEvent,
     eventCounter,
     fcRef,

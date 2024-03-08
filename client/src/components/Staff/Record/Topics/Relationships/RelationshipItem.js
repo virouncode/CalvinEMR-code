@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-widgets/scss/styles.scss";
+
 import {
   deletePatientRecord,
   postPatientRecord,
@@ -8,8 +9,6 @@ import {
 } from "../../../../../api/fetchRecords";
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../../../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchPatients from "../../../../../hooks/useFetchPatients";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -29,7 +28,6 @@ const RelationshipItem = ({
   lastItemRef = null,
   demographicsInfos,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -64,7 +62,7 @@ const RelationshipItem = ({
       setProgress(true);
       //Delete the inverse relation ship of item
       const inverseRelationToDeleteId = (
-        await xanoGet("/relationship_between", axiosXanoStaff, auth.authToken, {
+        await xanoGet("/relationship_between", "staff", {
           patient_id: item.relation_id,
           relation_id: item.patient_id,
         })
@@ -72,8 +70,8 @@ const RelationshipItem = ({
 
       await xanoDelete(
         "/relationships",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         inverseRelationToDeleteId
       );
 
@@ -82,7 +80,7 @@ const RelationshipItem = ({
         "/relationships",
         item.id,
         user.id,
-        auth.authToken,
+
         itemInfos
       );
       //Emit socket apart to add relation_infos
@@ -115,7 +113,7 @@ const RelationshipItem = ({
         await postPatientRecord(
           "/relationships",
           user.id,
-          auth.authToken,
+
           inverseRelationToPost
         );
       }
@@ -172,21 +170,16 @@ const RelationshipItem = ({
         setProgress(true);
         if (relations.includes(itemInfos.relationship)) {
           const inverseRelationToDeleteId = (
-            await xanoGet(
-              "/relationship_between",
-              axiosXanoStaff,
-              auth.authToken,
-              {
-                patient_id: item.relation_id,
-                relation_id: item.patient_id,
-              }
-            )
+            await xanoGet("/relationship_between", "staff", {
+              patient_id: item.relation_id,
+              relation_id: item.patient_id,
+            })
           ).data[0].id;
 
           await deletePatientRecord(
             "/relationships",
             inverseRelationToDeleteId,
-            auth.authToken,
+
             socket,
             "RELATIONSHIPS"
           );
@@ -194,7 +187,7 @@ const RelationshipItem = ({
         await deletePatientRecord(
           "/relationships",
           item.id,
-          auth.authToken,
+
           socket,
           "RELATIONSHIPS"
         );

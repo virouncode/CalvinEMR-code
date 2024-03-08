@@ -5,7 +5,6 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -23,7 +22,6 @@ const PharmacyItem = ({
   demographicsInfos,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -122,7 +120,7 @@ const PharmacyItem = ({
           "/pharmacies",
           item.id,
           user.id,
-          auth.authToken,
+
           datasToPut,
           socket,
           "PHARMACIES"
@@ -166,7 +164,7 @@ const PharmacyItem = ({
           "/demographics",
           demographicsInfos.id,
           user.id,
-          auth.authToken,
+
           newPatientDemographics,
           socket,
           "DEMOGRAPHICS"

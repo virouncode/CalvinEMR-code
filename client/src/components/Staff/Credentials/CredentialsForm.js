@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -84,8 +84,8 @@ const CredentialsForm = () => {
       try {
         const response = await xanoGet(
           `/staff_with_email`,
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           { email: credentials.email.toLowerCase() }
         );
         if (response.data) {
@@ -100,17 +100,16 @@ const CredentialsForm = () => {
 
     try {
       //get staffInfo
-      const me = (
-        await xanoGet(`/staff/${user.id}`, axiosXanoStaff, auth.authToken)
-      ).data;
+      const me = (await xanoGet(`/staff/${user.id}`, "staff")).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      await xanoPut("/staff", axiosXanoStaff, auth.authToken, me, user.id);
+      await xanoPut(`/staff/${user.id}`, "staff", me);
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "update",
         content: { id: user.id, data: me },
       });
+      //pas besoin de socket sur USER car il va se relogger
       setSuccessMsg("Credentials changed succesfully");
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {

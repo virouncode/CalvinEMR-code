@@ -13,17 +13,16 @@ const twilio = require("twilio")(
   process.env.TWILIO_AUTH_TOKEN
 );
 const extractTextFromDoc = require("./extractTextFromDoc");
-// const bodyParser = require("body-parser");
-const getExtension = require("./getExtension.js");
 // const xml2js = require("xml2js");
 // var stripPrefix = require("xml2js").processors.stripPrefix;
-
-const PORT = process.env.PORT || 4000;
+var router = require("./router/xano");
 
 //****************** APP ***************************//
 const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 4000;
+app.use(express.json({ limit: "50mb" }));
 app.use(express.static(join(__dirname, "..", "client", "build")));
+app.use("/api/xano", router);
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 const httpServer = createServer(app); //my http server
@@ -57,10 +56,8 @@ app.post("/api/extractToText", async (req, res) => {
     const { docUrl, mime } = req.body;
     const result = await extractTextFromDoc(docUrl, mime);
     res.send(result);
-    // res.send(JSON.stringify({ success: true }));
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
-    // res.send(JSON.stringify({ success: false }));
   }
 });
 
@@ -155,6 +152,8 @@ app.post("/api/writeXML", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+//****************************************************//
+
 //****************************************************//
 
 // //******** Endpoint transform XML string to JSON **********/

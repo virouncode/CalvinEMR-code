@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import ConfirmGlobal, {
@@ -19,7 +18,6 @@ const EditTemplate = ({
   setFormDatas,
   formDatas,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editTemplateSelectedId, setEditTemplateSelectedId] = useState("");
@@ -58,8 +56,8 @@ const EditTemplate = ({
       try {
         await xanoDelete(
           "/clinical_notes_templates",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           editTemplateSelectedId
         );
         socket.emit("message", {
@@ -85,11 +83,9 @@ const EditTemplate = ({
     templateToPut.date_created = Date.now();
     try {
       const response = await xanoPut(
-        "/clinical_notes_templates",
-        axiosXanoStaff,
-        auth.authToken,
-        templateToPut,
-        editTemplateSelectedId
+        `/clinical_notes_templates/${editTemplateSelectedId}`,
+        "staff",
+        templateToPut
       );
       socket.emit("message", {
         route: "CLINICAL TEMPLATES",

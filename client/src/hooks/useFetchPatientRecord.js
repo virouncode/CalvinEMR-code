@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const useFetchPatientRecord = (patientId) => {
-  const { auth } = useAuthContext();
+  ;
 
   const [loadingRecord, setLoadingRecord] = useState(false);
   const [pastHealth, setPastHealth] = useState([]);
@@ -260,8 +259,8 @@ const useFetchPatientRecord = (patientId) => {
       setErrPastHealth("");
       const response = await xanoGet(
         url,
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         {
           patient_id: patientId,
           paging,

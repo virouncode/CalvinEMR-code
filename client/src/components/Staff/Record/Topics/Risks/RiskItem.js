@@ -5,7 +5,6 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -23,7 +22,6 @@ const RiskItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -68,7 +66,7 @@ const RiskItem = ({
         "/risk_factors",
         item.id,
         user.id,
-        auth.authToken,
+
         formDatas,
         socket,
         "RISK FACTORS"
@@ -111,7 +109,7 @@ const RiskItem = ({
         await deletePatientRecord(
           "/risk_factors",
           item.id,
-          auth.authToken,
+
           socket,
           "RISK FACTORS"
         );

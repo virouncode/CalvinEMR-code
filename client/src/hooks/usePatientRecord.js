@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useReducer } from "react";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const initialHttpState = {
   datas: null,
@@ -25,7 +24,7 @@ const httpReducer = (state, action) => {
 };
 
 export const usePatientRecord = (url, patientId) => {
-  const { auth } = useAuthContext();
+  ;
   const [httpState, dispatch] = useReducer(httpReducer, initialHttpState);
   const fetchRecord = useCallback(
     async (abortController) => {
@@ -36,8 +35,8 @@ export const usePatientRecord = (url, patientId) => {
         dispatch({ type: "FETCH_START" });
         const response = await xanoGet(
           url,
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           { patient_id: patientId },
           abortController
         );
@@ -52,7 +51,7 @@ export const usePatientRecord = (url, patientId) => {
         }
       }
     },
-    [auth.authToken, patientId, url]
+    [patientId, url]
   );
 
   const setDatas = (newDatas) => {

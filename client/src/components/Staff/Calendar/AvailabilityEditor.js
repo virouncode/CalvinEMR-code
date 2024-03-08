@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { availabilitySchema } from "../../../validation/availabilityValidation";
@@ -24,7 +23,6 @@ const AvailabilityEditor = ({
   defaultDurationMin,
   setDefaultDurationMin,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [progress, setProgress] = useState(false);
@@ -61,13 +59,7 @@ const AvailabilityEditor = ({
     //Submission
     try {
       setProgress(true);
-      await xanoPut(
-        "/availability",
-        axiosXanoStaff,
-        auth.authToken,
-        datasToPut,
-        availabilityId
-      );
+      await xanoPut(`/availability/${availabilityId}`, "staff", datasToPut);
       socket.emit("message", {
         route: "AVAILABILITY",
         action: "update",

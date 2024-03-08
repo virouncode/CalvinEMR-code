@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { sendEmail } from "../../../../api/sendEmail";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
@@ -12,7 +11,6 @@ import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
 const NewMessageExternal = ({ setNewVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [attachments, setAttachments] = useState([]);
@@ -65,12 +63,9 @@ const NewMessageExternal = ({ setNewVisible }) => {
       let attach_ids = [];
       if (attachments.length > 0) {
         attach_ids = (
-          await xanoPost(
-            "/messages_attachments",
-            axiosXanoStaff,
-            auth.authToken,
-            { attachments_array: attachments }
-          )
+          await xanoPost("/messages_attachments", "staff", {
+            attachments_array: attachments,
+          })
         ).data;
       }
 
@@ -86,8 +81,8 @@ const NewMessageExternal = ({ setNewVisible }) => {
       };
       const response = await xanoPost(
         "/messages_external",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         message
       );
       socket.emit("message", {
@@ -177,8 +172,8 @@ Powered by Calvin EMR`,
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

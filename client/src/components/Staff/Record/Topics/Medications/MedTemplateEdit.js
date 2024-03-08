@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
   formCT,
@@ -11,7 +11,6 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
@@ -22,7 +21,6 @@ import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 
 const MedTemplateEdit = ({ setEditVisible, med }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState(med);
@@ -57,11 +55,9 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
     try {
       setProgress(true);
       const response = await xanoPut(
-        "/medications_templates",
-        axiosXanoStaff,
-        auth.authToken,
-        datasToPut,
-        med.id
+        `/medications_templates/${med.id}`,
+        "staff",
+        datasToPut
       );
       socket.emit("message", {
         route: "MEDS TEMPLATES",

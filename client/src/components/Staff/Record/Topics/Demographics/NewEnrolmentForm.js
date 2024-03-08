@@ -5,7 +5,6 @@ import {
   enrollmentStatusCT,
   terminationReasonCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -14,7 +13,6 @@ import { enrolmentSchema } from "../../../../../validation/enrolmentValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
 const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [newEnrolment, setNewEnrolment] = useState({
@@ -125,7 +123,7 @@ const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
         "/demographics",
         demographicsInfos.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "DEMOGRAPHICS"

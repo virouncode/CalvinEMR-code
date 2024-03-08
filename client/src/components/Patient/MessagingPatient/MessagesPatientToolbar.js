@@ -2,8 +2,6 @@ import React from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
@@ -25,7 +23,6 @@ const MessagesPatientToolBar = ({
   paging,
   setPaging,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
 
@@ -63,15 +60,9 @@ const MessagesPatientToolBar = ({
     ) {
       try {
         const msgsSelected = (
-          await xanoGet(
-            "/messages_external_selected",
-            axiosXanoPatient,
-            auth.authToken,
-            {
-              messages_ids: msgsSelectedIds,
-            },
-            auth.authToken
-          )
+          await xanoGet("/messages_external_selected", "patient", {
+            messages_ids: msgsSelectedIds,
+          })
         ).data;
         for (let message of msgsSelected) {
           const datasToPut = {
@@ -81,11 +72,9 @@ const MessagesPatientToolBar = ({
           delete datasToPut.to_patient_infos; //From add-on
           delete datasToPut.from_patient_infos; //From add-on
           const response = await xanoPut(
-            "/messages_external",
-            axiosXanoPatient,
-            auth.authToken,
-            datasToPut,
-            message.id
+            `/messages_external/${message.id}`,
+            "patient",
+            datasToPut
           );
           socket.emit("message", {
             route: "MESSAGES INBOX EXTERNAL",
@@ -115,8 +104,8 @@ const MessagesPatientToolBar = ({
       const msgsSelected = (
         await xanoGet(
           "/messages_external_selected",
-          axiosXanoPatient,
-          auth.authToken,
+          "patient",
+
           {
             messages_ids: msgsSelectedIds,
           }
@@ -130,11 +119,9 @@ const MessagesPatientToolBar = ({
         delete datasToPut.to_patient_infos; //From Add-on
         delete datasToPut.from_patient_infos; //From Add-on
         const response = await xanoPut(
-          "/messages_external",
-          axiosXanoPatient,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages_external/${message.id}`,
+          "patient",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX EXTERNAL",

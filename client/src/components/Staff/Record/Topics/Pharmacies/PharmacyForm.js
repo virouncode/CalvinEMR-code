@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { provinceStateTerritoryCT } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -19,7 +18,6 @@ const PharmacyForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -105,7 +103,7 @@ const PharmacyForm = ({
       await postPatientRecord(
         "/pharmacies",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "PHARMACIES"

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -27,7 +26,6 @@ import NewTemplate from "./NewTemplate";
 
 const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
   //hooks
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -47,8 +45,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
 
   const [templates, setTemplates] = useFetchDatas(
     "/clinical_notes_templates",
-    axiosXanoStaff,
-    auth.authToken
+    "staff"
   );
 
   useClinicalTemplatesSocket(templates, setTemplates);
@@ -77,7 +74,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
         await postPatientRecord(
           "/clinical_notes_attachments",
           user.id,
-          auth.authToken,
+
           {
             attachments_array: attachments,
           }
@@ -87,7 +84,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
       await postPatientRecord(
         "/clinical_notes",
         user.id,
-        auth.authToken,
+
         {
           ...formDatas,
           attachments_ids: attach_ids,
@@ -128,7 +125,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
         await postPatientRecord(
           "/clinical_notes_attachments",
           user.id,
-          auth.authToken,
+
           {
             attachments_array: attachments,
           }
@@ -138,7 +135,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
       await postPatientRecord(
         "/clinical_notes",
         user.id,
-        auth.authToken,
+
         {
           ...formDatas,
           attachments_ids: attach_ids,
@@ -202,8 +199,8 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

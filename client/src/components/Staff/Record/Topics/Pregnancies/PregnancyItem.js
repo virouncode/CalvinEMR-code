@@ -4,7 +4,6 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -22,7 +21,6 @@ const PregnancyItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -76,7 +74,7 @@ const PregnancyItem = ({
         "/pregnancies",
         item.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "PREGNANCIES"
@@ -120,7 +118,7 @@ const PregnancyItem = ({
         await deletePatientRecord(
           "/pregnancies",
           item.id,
-          auth.authToken,
+
           socket,
           "PREGNANCIES"
         );

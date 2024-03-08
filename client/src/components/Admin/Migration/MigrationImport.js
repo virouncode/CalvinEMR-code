@@ -21,12 +21,6 @@ const MigrationImport = () => {
         xmlToJsResult.data.OmdCds.PatientRecord.Demographics
       );
       setJsContent(JSON.stringify(finalDemographics, null, " "));
-      // await axiosXanoAdmin.post("/demographics", finalDemographics, {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${auth.authToken}`,
-      //   },
-      // });
     } catch (error) {
       console.error("Erreur lors de la lecture du fichier XML :", error);
     }

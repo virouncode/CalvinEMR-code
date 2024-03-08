@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkEdit = ({ link, setEditVisible }) => {
   const [errMsg, setErrMsg] = useState("");
   const [editedLink, setEditedLink] = useState(link);
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [progress, setProgress] = useState(false);
 
@@ -28,13 +26,10 @@ const LinkEdit = ({ link, setEditVisible }) => {
     }
     try {
       setProgress(true);
-      const response = await xanoPut(
-        "/links",
-        axiosXanoStaff,
-        auth.authToken,
-        { ...editedLink, url: urlFormatted },
-        link.id
-      );
+      const response = await xanoPut(`/links/${link.id}`, "staff", {
+        ...editedLink,
+        url: urlFormatted,
+      });
       socket.emit("message", {
         route: "LINKS",
         action: "update",

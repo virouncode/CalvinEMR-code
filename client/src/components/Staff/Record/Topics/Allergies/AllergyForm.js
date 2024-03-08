@@ -7,7 +7,6 @@ import {
   reactionSeverityCT,
   reactionTypeCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -25,7 +24,6 @@ const AllergyForm = ({
   errMsgPost,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -85,7 +83,7 @@ const AllergyForm = ({
       await postPatientRecord(
         "/allergies",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "ALLERGIES & ADVERSE REACTIONS"

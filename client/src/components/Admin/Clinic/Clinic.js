@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSitesSocket from "../../../hooks/useSitesSocket";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
@@ -9,12 +7,7 @@ import SiteForm from "./SiteForm";
 import SitesTable from "./SitesTable";
 
 const Clinic = () => {
-  const { auth } = useAuthContext();
-  const [sites, setSites, loading, errMsg] = useFetchDatas(
-    "/sites",
-    axiosXanoAdmin,
-    auth.authToken
-  );
+  const [sites, setSites, loading, errMsg] = useFetchDatas("/sites", "admin");
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedSiteId, setSelectedSiteId] = useState();

@@ -5,12 +5,10 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 
 const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [progress, setProgress] = useState(false);
@@ -22,7 +20,7 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
         "/doctors",
         item.id,
         user.id,
-        auth.authToken,
+
         {
           ...item,
           patients: item.patients.filter((id) => id !== patientId),

@@ -1,13 +1,11 @@
 import React from "react";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
 const FirstDaySelect = () => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
 
@@ -15,13 +13,7 @@ const FirstDaySelect = () => {
     const value = e.target.value;
     try {
       const datasToPut = { ...user.settings, first_day: value };
-      await xanoPut(
-        "/settings",
-        axiosXanoStaff,
-        auth.authToken,
-        datasToPut,
-        user.settings.id
-      );
+      await xanoPut(`/settings/${user.settings.id}`, "staff", datasToPut);
       socket.emit("message", {
         route: "USER",
         action: "update",

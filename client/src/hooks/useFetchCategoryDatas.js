@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
-import useAuthContext from "./useAuthContext";
 
 const useFetchCategoryDatas = (
   url,
@@ -12,8 +10,6 @@ const useFetchCategoryDatas = (
   setHasMore,
   patientId
 ) => {
-  const { auth } = useAuthContext();
-
   useEffect(() => {
     if (paging.page === 1) return;
     const abortController = new AbortController();
@@ -23,8 +19,8 @@ const useFetchCategoryDatas = (
         setErrMsg("");
         const response = await xanoGet(
           url,
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           {
             patient_id: patientId,
             paging,
@@ -47,7 +43,6 @@ const useFetchCategoryDatas = (
       abortController.abort();
     };
   }, [
-    auth.authToken,
     paging,
     patientId,
     setErrMsg,

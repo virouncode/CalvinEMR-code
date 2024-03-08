@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
@@ -15,7 +14,6 @@ const NewTemplate = ({
   setFormDatas,
   formDatas,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [copyTemplateSelectedId, setCopyTemplateSelectedId] = useState("");
@@ -55,8 +53,8 @@ const NewTemplate = ({
     try {
       const response = await xanoPost(
         "/clinical_notes_templates",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         templateToSave
       );
       socket.emit("message", {

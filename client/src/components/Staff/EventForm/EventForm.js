@@ -1,10 +1,9 @@
 //Libraries
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
+
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailableRooms from "../../../hooks/useAvailableRooms";
 import { useEventForm } from "../../../hooks/useEventForm";
 import usePatientsGuestsList from "../../../hooks/usePatientsGuestsList";
@@ -35,6 +34,7 @@ import Invitation from "./Invitation";
 import RoomsRadio from "./RoomsRadio";
 import SelectSite from "./SelectSite";
 import StatusesRadio from "./StatusesRadio";
+
 var _ = require("lodash");
 
 //MY COMPONENT
@@ -52,7 +52,6 @@ const EventForm = ({
   setSitesIds,
 }) => {
   //=========================== HOOKS =================================//
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -69,7 +68,7 @@ const EventForm = ({
     chart: "",
     health: "",
   });
-  const [{ formDatas, tempFormDatas }, , setTempFormDatas] = useEventForm(
+  const [{ formDatas, tempFormDatas }, setTempFormDatas] = useEventForm(
     currentEvent.current.id
   );
   const { loading, err, patientsDemographics, hasMore } = usePatientsGuestsList(
@@ -82,8 +81,7 @@ const EventForm = ({
     Date.parse(currentEvent.current.start),
     Date.parse(currentEvent.current.end),
     sites,
-    currentEvent.current.extendedProps.siteId,
-    auth.authToken
+    currentEvent.current.extendedProps.siteId
   );
   const [invitationVisible, setInvitationVisible] = useState(false);
   const fpStart = useRef(null); //flatpickr start date
@@ -151,8 +149,7 @@ const EventForm = ({
         tempFormDatas.start,
         tempFormDatas.end,
         sites,
-        value,
-        auth.authToken
+        value
       );
       setAvailableRooms(availableRoomsResult);
     }
@@ -198,8 +195,7 @@ const EventForm = ({
         date,
         rangeEnd,
         sites,
-        tempFormDatas.site_id,
-        auth.authToken
+        tempFormDatas.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to get available rooms: ${err.message}`, {
@@ -257,8 +253,7 @@ const EventForm = ({
         tempFormDatas.start,
         date,
         sites,
-        tempFormDatas.site_id,
-        auth.authToken
+        tempFormDatas.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to get available rooms: ${err.message}`, {
@@ -332,8 +327,7 @@ const EventForm = ({
         tempFormDatas.start,
         tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
         sites,
-        tempFormDatas.site_id,
-        auth.authToken
+        tempFormDatas.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to get available rooms: ${err.message}`, {
@@ -377,8 +371,7 @@ const EventForm = ({
         tempFormDatas.start,
         tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
         sites,
-        tempFormDatas.site_id,
-        auth.authToken
+        tempFormDatas.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to get available rooms: ${err.message}`, {
@@ -527,11 +520,9 @@ const EventForm = ({
     };
     try {
       const response = await xanoPut(
-        "/appointments",
-        axiosXanoStaff,
-        auth.authToken,
-        datasToPut,
-        currentEvent.current.id
+        `/appointments/${currentEvent.current.id}`,
+        "staff",
+        datasToPut
       );
       console.log("put response", response.data);
 

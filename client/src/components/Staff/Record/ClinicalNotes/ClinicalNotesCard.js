@@ -1,13 +1,12 @@
 import LinearProgress from "@mui/joy/LinearProgress";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+
 import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -21,6 +20,7 @@ import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 import ClinicalNotesCardBody from "./ClinicalNotesCardBody";
 import ClinicalNotesCardHeader from "./ClinicalNotesCardHeader";
 import ClinicalNotesCardHeaderFolded from "./ClinicalNotesCardHeaderFolded";
+
 var _ = require("lodash");
 
 const ClinicalNotesCard = ({
@@ -36,7 +36,6 @@ const ClinicalNotesCard = ({
   lastItemRef = null,
 }) => {
   //hooks
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -111,7 +110,7 @@ const ClinicalNotesCard = ({
         await postPatientRecord(
           "/clinical_notes_log",
           user.id,
-          auth.authToken,
+
           clinicalNoteLog
         );
         //then put the new clinical note version in the clinical note tbl
@@ -126,7 +125,6 @@ const ClinicalNotesCard = ({
           "/clinical_notes",
           clinicalNote.id,
           user.id,
-          auth.authToken,
           datasToPost,
           socket,
           "CLINICAL NOTES"
@@ -189,8 +187,7 @@ const ClinicalNotesCard = ({
       //back to last version
       const response = await xanoGet(
         `/clinical_notes/${clinicalNote.id}`,
-        axiosXanoStaff,
-        auth.authToken
+        "staff"
       );
       setClinicalNotes(
         clinicalNotes.map((item) =>

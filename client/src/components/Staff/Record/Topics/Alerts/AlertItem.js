@@ -4,7 +4,6 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -21,7 +20,6 @@ const AlertItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -65,7 +63,7 @@ const AlertItem = ({
         "/alerts",
         item.id,
         user.id,
-        auth.authToken,
+
         formDatas,
         socket,
         "ALERTS & SPECIAL NEEDS"
@@ -109,7 +107,7 @@ const AlertItem = ({
         await deletePatientRecord(
           "/alerts",
           item.id,
-          auth.authToken,
+
           socket,
           "ALERTS & SPECIAL NEEDS"
         );

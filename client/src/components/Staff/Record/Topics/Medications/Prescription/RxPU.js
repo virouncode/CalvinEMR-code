@@ -6,11 +6,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import printJS from "print-js";
 import { toast } from "react-toastify";
+
 import { v4 as uuidv4 } from "uuid";
 import { postPatientRecord } from "../../../../../../api/fetchRecords";
 import xanoPost from "../../../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../../hooks/useAuthContext";
 import useFetchDatas from "../../../../../../hooks/useFetchDatas";
 import useSocketContext from "../../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
@@ -33,7 +32,6 @@ import PrescriptionPagePrint from "./PrescriptionPagePrint";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -48,12 +46,12 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
   const [finalInstructions, setFinalInstructions] = useState("");
   const [medsTemplates, setMedsTemplates] = useFetchDatas(
     "/medications_templates_of_staff",
-    axiosXanoStaff,
-    auth.authToken,
+    "staff",
+
     "staff_id",
     user.id
   );
-  const [sites] = useFetchDatas("/sites", axiosXanoStaff, auth.authToken);
+  const [sites] = useFetchDatas("/sites", "staff");
 
   useEffect(() => {
     const generatePrescription = async () => {
@@ -99,8 +97,8 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
 
           let fileToUpload = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             {
               content: pdf.output("datauri"),
             }
@@ -140,7 +138,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
                 await postPatientRecord(
                   "/medications",
                   user.id,
-                  auth.authToken,
+
                   datasToPost,
                   socket,
                   "MEDICATIONS AND TREATMENTS"
@@ -166,7 +164,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             await postPatientRecord(
               "/clinical_notes_attachments",
               user.id,
-              auth.authToken,
+
               {
                 attachments_array: datasAttachment,
               }
@@ -181,8 +179,8 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           };
           const response = await xanoPost(
             "/prescriptions",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             prescriptionToPost
           );
 
@@ -195,7 +193,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
           await postPatientRecord(
             "/clinical_notes",
             user.id,
-            auth.authToken,
+
             {
               patient_id: demographicsInfos.patient_id,
               subject: `Prescription (id:${uniqueId})`,
@@ -237,7 +235,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     }
   }, [
     addedMeds,
-    auth.authToken,
+
     body,
     staffInfos,
     demographicsInfos.patient_id,
@@ -288,7 +286,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     //     pdf.internal.pageSize.getWidth(),
     //     pdf.internal.pageSize.getHeight()
     //   );
-    //   let fileToUpload = await axiosXanoStaff.post(
+    //   let fileToUpload = await "staff".post(
     //     "/upload/attachment",
     //     {
     //       content: pdf.output("dataurlstring"),
@@ -313,14 +311,14 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
     //     },
     //   ];
     //   const attach_ids = (
-    //     await postPatientRecord("/clinical_notes_attachments", user.id, auth.authToken, {
+    //     await postPatientRecord("/clinical_notes_attachments", user.id,  {
     //       attachments_array: datasAttachment,
     //     })
     //   ).data;
     //   await postPatientRecord(
     //     "/clinical_notes",
     //     user.id,
-    //     auth.authToken,
+    //
     //     {
     //       patient_id: demographicsInfos.patient_id,
     //       subject: `Prescription ${toLocalDateAndTimeWithSeconds(new Date())}`,

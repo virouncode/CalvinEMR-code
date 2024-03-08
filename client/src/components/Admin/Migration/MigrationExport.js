@@ -1,13 +1,11 @@
 import dateFormat from "dateformat";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { exportPatientEMR } from "../../../utils/exports/exportsXML.";
 import { recordCategories } from "../../../utils/exports/recordCategories";
 
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
 import {
@@ -25,7 +23,6 @@ import MigrationPatientsList from "./MigrationPatientsList";
 import MigrationRecordsList from "./MigrationRecordsList";
 
 const MigrationExport = () => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { staffInfos } = useStaffInfosContext();
   const [paging, setPaging] = useState({
@@ -95,9 +92,7 @@ const MigrationExport = () => {
   const handleCheckAllPatientsIds = async (e) => {
     const checked = e.target.checked;
     if (checked) {
-      const allPatients = (
-        await xanoGet("/demographics", axiosXanoAdmin, auth.authToken)
-      ).data;
+      const allPatients = (await xanoGet("/demographics", "admin")).data;
       setPatientsDemographics(allPatients);
       setAllPatientsIdsChecked(true);
       setCheckedPatientsIds(allPatients.map(({ patient_id }) => patient_id));
@@ -152,7 +147,6 @@ const MigrationExport = () => {
         );
 
         await exportPatientEMR(
-          auth.authToken,
           sortedCheckedRecordsIds,
           patientFirstName,
           patientLastName,

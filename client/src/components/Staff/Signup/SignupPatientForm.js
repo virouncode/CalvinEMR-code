@@ -4,7 +4,6 @@ import { postPatientRecord } from "../../../api/fetchRecords";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
 import {
   genderCT,
   namePrefixCT,
@@ -13,7 +12,6 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../datas/codesTables";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -33,7 +31,7 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupPatientForm = () => {
   //HOOKS
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -118,8 +116,8 @@ const SignupPatientForm = () => {
       try {
         const fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           { content }
         );
         setFormDatas({
@@ -161,8 +159,8 @@ const SignupPatientForm = () => {
     try {
       const response = await xanoGet(
         `/patient_with_email`,
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         { email: formDatas.email.toLowerCase() }
       );
       if (response.data) {
@@ -190,8 +188,8 @@ const SignupPatientForm = () => {
     try {
       const response2 = await xanoPost(
         "/patients",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         patientToPost
       );
       socket.emit("message", {
@@ -302,7 +300,7 @@ const SignupPatientForm = () => {
       const response3 = await postPatientRecord(
         "/demographics",
         user.id,
-        auth.authToken,
+
         demographicsToPost,
         socket,
         "DEMOGRAPHICS"
@@ -318,8 +316,8 @@ const SignupPatientForm = () => {
       relationshipsToPost.forEach(async (relationship) => {
         const response = await xanoPost(
           "/relationships",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           relationship
         );
         socket.emit("message", {
@@ -343,8 +341,8 @@ const SignupPatientForm = () => {
       inverseRelationsToPost.forEach(async (relationship) => {
         const response = await xanoPost(
           "/relationships",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           relationship
         );
         socket.emit("message", {

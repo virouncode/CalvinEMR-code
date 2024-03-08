@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import { personalHistorySchema } from "../../../../../validation/personalHistoryValidation";
 
 const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
@@ -101,7 +99,7 @@ const PersonalHistoryForm = ({ setPopUpVisible, patientId }) => {
       await postPatientRecord(
         "/personal_history",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "PERSONAL HISTORY"

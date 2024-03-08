@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
   formCT,
@@ -11,7 +11,6 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
@@ -23,7 +22,6 @@ import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 
 const MedTemplateForm = ({ setNewVisible }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
@@ -89,8 +87,8 @@ const MedTemplateForm = ({ setNewVisible }) => {
       setProgress(true);
       const response = await xanoPost(
         "/medications_templates",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         datasToPost
       );
       socket.emit("message", {

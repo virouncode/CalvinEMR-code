@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -37,7 +36,6 @@ const AppointmentForm = ({
   sites,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -95,8 +93,7 @@ const AppointmentForm = ({
         formDatas.start,
         formDatas.end,
         sites,
-        value,
-        auth.authToken
+        value
       );
       setAvailableRooms(availableRoomsResult);
     }
@@ -165,8 +162,7 @@ const AppointmentForm = ({
         value,
         rangeEnd,
         sites,
-        formDatas.site_id,
-        auth.authToken
+        formDatas.site_id
       );
       if (
         formDatas.room_id === "z" ||
@@ -208,14 +204,7 @@ const AppointmentForm = ({
           endMinInput.value = startMinInput.value;
           endAMPMInput.vzalue = startAMPMInput.value;
           setAvailableRooms(
-            await getAvailableRooms(
-              0,
-              value,
-              value,
-              sites,
-              formDatas.site_id,
-              auth.authToken
-            )
+            await getAvailableRooms(0, value, value, sites, formDatas.site_id)
           );
         } else {
           setFormDatas({
@@ -229,8 +218,7 @@ const AppointmentForm = ({
               value,
               formDatas.end,
               sites,
-              formDatas.site_id,
-              auth.authToken
+              formDatas.site_id
             )
           );
         }
@@ -289,8 +277,7 @@ const AppointmentForm = ({
         formDatas.start,
         value,
         sites,
-        formDatas.site_id,
-        auth.authToken
+        formDatas.site_id
       );
       if (
         formDatas.room_id === "z" ||
@@ -331,8 +318,7 @@ const AppointmentForm = ({
             formDatas.start,
             value,
             sites,
-            formDatas.site_id,
-            auth.authToken
+            formDatas.site_id
           )
         );
       } else {
@@ -431,7 +417,7 @@ const AppointmentForm = ({
       await postPatientRecord(
         "/appointments",
         user.id,
-        auth.authToken,
+
         datasToPost,
         socket,
         "APPOINTMENTS"

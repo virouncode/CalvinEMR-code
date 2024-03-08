@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   dosageUnitCT,
   formCT,
@@ -11,7 +11,6 @@ import {
   strengthUnitCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -22,6 +21,7 @@ import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
 import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
+
 var _ = require("lodash");
 
 const MedicationForm = ({
@@ -33,7 +33,6 @@ const MedicationForm = ({
   body,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState({
@@ -199,8 +198,7 @@ const MedicationForm = ({
       setProgressTemplates(true);
       const response = await xanoPost(
         "/medications_templates",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
         templateToPost
       );
       socket.emit("message", {

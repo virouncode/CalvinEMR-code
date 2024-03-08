@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
@@ -11,7 +9,6 @@ import StaffAccountSearch from "./StaffAccountSearch";
 import StaffAccountsTable from "./StaffAccountsTable";
 
 const StaffAccounts = () => {
-  const { auth } = useAuthContext();
   const { staffInfos } = useStaffInfosContext();
   const [editVisible, setEditVisible] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
@@ -27,7 +24,7 @@ const StaffAccounts = () => {
     ohip_billing_nbr: "",
     site_id: -1,
   });
-  const [sites] = useFetchDatas("/sites", axiosXanoAdmin, auth.authToken);
+  const [sites] = useFetchDatas("/sites", "admin");
 
   const handleAddNew = () => {
     setAddVisible((v) => !v);

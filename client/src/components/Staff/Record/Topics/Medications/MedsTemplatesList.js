@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -20,7 +19,6 @@ const MedsTemplatesList = ({
   setFinalInstructions,
   body,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [newVisible, setNewVisible] = useState(false);

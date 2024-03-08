@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -13,7 +11,6 @@ import MessagesAttachments from "../../Staff/Messaging/MessagesAttachments";
 import ContactsForPatient from "./ContactsForPatient";
 
 const NewMessagePatient = ({ setNewVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -66,12 +63,9 @@ const NewMessagePatient = ({ setNewVisible }) => {
       let attach_ids = [];
       if (attachments.length > 0) {
         attach_ids = (
-          await xanoPost(
-            "/messages_attachments",
-            axiosXanoPatient,
-            auth.authToken,
-            { attachments_array: attachments }
-          )
+          await xanoPost("/messages_attachments", "patient", {
+            attachments_array: attachments,
+          })
         ).data;
       }
       //create the message
@@ -86,8 +80,8 @@ const NewMessagePatient = ({ setNewVisible }) => {
       };
       const response = await xanoPost(
         "/messages_external",
-        axiosXanoPatient,
-        auth.authToken,
+        "patient",
+
         message
       );
       socket.emit("message", {
@@ -136,8 +130,8 @@ const NewMessagePatient = ({ setNewVisible }) => {
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoPatient,
-            auth.authToken,
+            "patient",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

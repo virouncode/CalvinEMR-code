@@ -11,7 +11,6 @@ import {
   reactionTypeCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -29,7 +28,6 @@ const AllergyItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -76,7 +74,7 @@ const AllergyItem = ({
         "/allergies",
         item.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "ALLERGIES & ADVERSE REACTIONS"
@@ -119,7 +117,7 @@ const AllergyItem = ({
         await deletePatientRecord(
           "/allergies",
           item.id,
-          auth.authToken,
+
           socket,
           "ALLERGIES & ADVERSE REACTIONS"
         );

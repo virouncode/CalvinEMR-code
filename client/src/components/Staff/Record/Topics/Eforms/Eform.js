@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
-import useAuthContext from "../../../../../hooks/useAuthContext";
+
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import useUserContext from "../../../../../hooks/useUserContext";
 import fillPdfForm from "../../../../../utils/fillPdfForm";
@@ -14,13 +13,8 @@ const Eform = ({
   setIsLoadingFile,
   demographicsInfos,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
-  const [eFormsBlank] = useFetchDatas(
-    "/eforms_blank",
-    axiosXanoStaff,
-    auth.authToken
-  );
+  const [eFormsBlank] = useFetchDatas("/eforms_blank", "staff");
   const [formSelectedId, setFormSelectedId] = useState("");
   const [formURL, setFormURL] = useState("");
 

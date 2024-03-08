@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
-const useFetchBillings = (paging, axiosXanoInstance) => {
+const useFetchBillings = (paging, userType) => {
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const [billings, setBillings] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,8 +30,7 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
           //billings concerning the user in range
           response = await xanoGet(
             "/billings_of_staff_in_range",
-            axiosXanoInstance,
-            auth.authToken,
+            userType,
             {
               range_start: rangeStart,
               range_end: rangeEnd,
@@ -46,8 +43,7 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
           //all billings
           response = await xanoGet(
             "/billings_in_range",
-            axiosXanoInstance,
-            auth.authToken,
+            userType,
             {
               range_start: rangeStart,
               range_end: rangeEnd,
@@ -70,14 +66,13 @@ const useFetchBillings = (paging, axiosXanoInstance) => {
     fetchBillings();
     return () => abortController.abort();
   }, [
-    auth.authToken,
-    axiosXanoInstance,
     paging,
     rangeEnd,
     rangeStart,
     user.access_level,
     user.id,
     user.title,
+    userType,
   ]);
 
   return {

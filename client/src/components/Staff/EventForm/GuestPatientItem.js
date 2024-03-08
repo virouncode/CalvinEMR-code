@@ -19,8 +19,7 @@ const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
           onClick={handleRemoveGuest}
           style={{ cursor: "pointer" }}
         />
-      </span>
-      ,{" "}
+      </span>{" "}
     </>
   );
 };

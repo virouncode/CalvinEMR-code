@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import { toLocalDate } from "../../../../utils/formatDates";
 import { getAge } from "../../../../utils/getAge";
 import { toPatientName } from "../../../../utils/toPatientName";
@@ -22,7 +20,6 @@ const ClinicalNotesPU = ({
   const [clinicalNotesToPrint, setClinicalNotesToPrint] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState(false);
-  const { auth } = useAuthContext();
   const { id } = useParams();
 
   useEffect(() => {
@@ -33,8 +30,8 @@ const ClinicalNotesPU = ({
         setErrMsg("");
         const response = await xanoGet(
           "/clinical_notes_of_patient",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           {
             patient_id: parseInt(id),
             orderBy: order,
@@ -59,7 +56,7 @@ const ClinicalNotesPU = ({
       fetchAllClinicalNotes();
     }
     return () => abortController.abort();
-  }, [auth.authToken, clinicalNotes, id, order, selectAll, setCheckedNotes]);
+  }, [clinicalNotes, id, order, selectAll, setCheckedNotes]);
 
   const handlePrint = (e) => {
     e.nativeEvent.view.print();

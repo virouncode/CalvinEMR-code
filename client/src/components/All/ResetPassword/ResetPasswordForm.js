@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoReset } from "../../../api/xanoReset";
+
+import xanoPostReset from "../../../api/xanoCRUD/xanoPostReset";
 
 const ResetPasswordForm = ({
   setErrMsg,
@@ -68,18 +68,16 @@ const ResetPasswordForm = ({
       return;
     }
     try {
-      await xanoPost(
-        `/auth/${type}/reset_password`,
-        axiosXanoReset,
-        tempToken,
-        { password: pwd, confirm_password: confirmPwd }
-      );
+      await xanoPostReset(`/auth/${type}/reset_password`, "reset", tempToken, {
+        password: pwd,
+        confirm_password: confirmPwd,
+      });
 
       setSuccesMsg(
         "Your password has been reset successfully, you will be redirected to the login page"
       );
       setResetOk(true);
-      setTimeout(() => navigate("/"), 5000);
+      setTimeout(() => navigate("/"), 3000);
     } catch (err) {
       setErrMsg(`Unable to reset password: ${err.message}`);
     }

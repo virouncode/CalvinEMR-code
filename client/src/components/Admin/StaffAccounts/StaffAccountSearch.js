@@ -1,10 +1,7 @@
 import React from "react";
-import useAuthContext from "../../../hooks/useAuthContext";
 import SelectSite from "../../Staff/EventForm/SelectSite";
 
 const StaffAccountSearch = ({ search, setSearch, sites }) => {
-  const { auth } = useAuthContext();
-
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;

@@ -5,7 +5,6 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -23,7 +22,6 @@ const ProblemListItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -73,7 +71,7 @@ const ProblemListItem = ({
         "/problemlist",
         item.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "PROBLEM LIST"
@@ -116,7 +114,7 @@ const ProblemListItem = ({
         await deletePatientRecord(
           "/problemlist",
           item.id,
-          auth.authToken,
+
           socket,
           "PROBLEM LIST"
         );

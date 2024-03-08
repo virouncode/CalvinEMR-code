@@ -9,7 +9,6 @@ import {
   siteCT,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -29,7 +28,6 @@ const RecImmunizationEdit = ({
   setErrMsgPost,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [formDatas, setFormDatas] = useState(immunizationInfos);
@@ -50,7 +48,7 @@ const RecImmunizationEdit = ({
         await deletePatientRecord(
           "/immunizations",
           immunizationInfos.id,
-          auth.authToken,
+
           socket,
           "IMMUNIZATIONS"
         );
@@ -87,7 +85,7 @@ const RecImmunizationEdit = ({
         "/immunizations",
         immunizationInfos.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "IMMUNIZATIONS"

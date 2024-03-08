@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoPatient } from "../api/xanoPatient";
 import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
-import useAuthContext from "./useAuthContext";
 
 const useFetchMessagesPatient = (
   paging,
@@ -11,7 +9,6 @@ const useFetchMessagesPatient = (
   patientId,
   userType
 ) => {
-  const { auth } = useAuthContext();
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,8 +26,8 @@ const useFetchMessagesPatient = (
         setErrMsg("");
         const response = await xanoGet(
           "/messages_external_of_patient",
-          axiosXanoPatient,
-          auth.authToken,
+          "patient",
+
           {
             patient_id: patientId,
             search,
@@ -61,7 +58,7 @@ const useFetchMessagesPatient = (
     return () => {
       abortController.abort();
     };
-  }, [auth.authToken, paging, patientId, search, section, userType]);
+  }, [paging, patientId, search, section, userType]);
 
   return {
     messages,

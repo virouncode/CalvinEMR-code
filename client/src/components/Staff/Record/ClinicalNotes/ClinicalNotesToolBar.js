@@ -1,9 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 
@@ -32,7 +31,6 @@ const ClinicalNotesToolBar = ({
   setClinicalNotes,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { id } = useParams();
@@ -88,13 +86,10 @@ const ClinicalNotesToolBar = ({
     }
     setPaging({ ...paging, page: 1 });
     try {
-      const response = await xanoPut(
-        "/settings",
-        axiosXanoStaff,
-        auth.authToken,
-        { ...user.settings, clinical_notes_order: newOrder },
-        user.settings.id
-      );
+      const response = await xanoPut(`/settings/${user.settings.id}`, "staff", {
+        ...user.settings,
+        clinical_notes_order: newOrder,
+      });
 
       socket.emit("message", {
         route: "USER",

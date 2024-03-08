@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { axiosXanoStaff } from "../api/xanoStaff";
 import { parseToEvents } from "../utils/parseToEvents";
-import useAuthContext from "./useAuthContext";
 import useUserContext from "./useUserContext";
 
 const useEvents = (
@@ -16,7 +15,7 @@ const useEvents = (
   sites,
   staffInfos
 ) => {
-  const { auth } = useAuthContext();
+  ;
   const { user } = useUserContext();
   const [events, setEvents] = useState([]);
   const [remainingStaff, setRemainingStaff] = useState([]);
@@ -27,8 +26,7 @@ const useEvents = (
       try {
         const response = await xanoGet(
           "/appointments_of_staff_and_sites",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
           {
             hosts_ids: hostsIds,
             range_start: rangeStart,
@@ -60,7 +58,6 @@ const useEvents = (
       abortController.abort();
     };
   }, [
-    auth.authToken,
     hostsIds,
     rangeEnd,
     rangeStart,

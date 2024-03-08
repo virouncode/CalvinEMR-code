@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
@@ -10,7 +9,6 @@ import LinkEdit from "./LinkEdit";
 
 const MyLinkItem = ({ link, setAddVisible }) => {
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const handleEdit = () => {
@@ -21,7 +19,7 @@ const MyLinkItem = ({ link, setAddVisible }) => {
       await confirmAlert({ content: "Do you reall want to remove this link ?" })
     ) {
       try {
-        await xanoDelete("/links", axiosXanoStaff, auth.authToken, link.id);
+        await xanoDelete("/links", "staff", link.id);
         socket.emit("message", {
           route: "LINKS",
           action: "delete",

@@ -1,9 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -21,7 +20,6 @@ const MessageThumbnail = ({
   section,
   lastItemRef = null,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -39,11 +37,9 @@ const MessageThumbnail = ({
         };
         delete datasToPut.patient_infos; //from add-On
         const response = await xanoPut(
-          "/messages",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages/${message.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",
@@ -116,11 +112,9 @@ const MessageThumbnail = ({
         };
         delete datasToPut.patient_infos; //from add-on
         const response = await xanoPut(
-          "/messages",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages/${message.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",

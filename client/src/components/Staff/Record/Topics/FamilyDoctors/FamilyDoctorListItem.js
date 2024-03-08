@@ -5,7 +5,6 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
@@ -23,7 +22,6 @@ const FamilyDoctorListItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -133,7 +131,7 @@ const FamilyDoctorListItem = ({
           "/doctors",
           item.id,
           user.id,
-          auth.authToken,
+
           datasToPut,
           socket,
           "FAMILY DOCTORS/SPECIALISTS"
@@ -173,7 +171,7 @@ const FamilyDoctorListItem = ({
         "/doctors",
         item.id,
         user.id,
-        auth.authToken,
+
         {
           ...item,
           patients: [...item.patients, patientId],

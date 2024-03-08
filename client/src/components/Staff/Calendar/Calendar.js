@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useAvailabilty from "../../../hooks/useAvailability";
 import useCalendarShortcuts from "../../../hooks/useCalendarShortcuts";
 import useEvents from "../../../hooks/useEvents";
@@ -40,7 +39,6 @@ const Calendar = () => {
     fcRef.current.calendar.currentData.options.selectable = selectable;
   };
   //================================= HOOKS ========================================//
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -56,7 +54,7 @@ const Calendar = () => {
       ? [0, ...staffInfos.map(({ id }) => id)]
       : [user.id]
   );
-  const [sites] = useFetchDatas("/sites", axiosXanoStaff, auth.authToken);
+  const [sites] = useFetchDatas("/sites", "staff");
   const [events, setEvents, remainingStaff] = useEvents(
     hostsIds,
     rangeStart,
@@ -80,7 +78,7 @@ const Calendar = () => {
     setDefaultDurationHours,
     defaultDurationMin,
     setDefaultDurationMin,
-  } = useAvailabilty(user.id, auth.authToken);
+  } = useAvailabilty(user.id);
 
   //Calendar Elements
   const fcRef = useRef(null); //fullcalendar
@@ -162,12 +160,7 @@ const Calendar = () => {
       })
     ) {
       try {
-        await xanoDelete(
-          "/appointments",
-          axiosXanoStaff,
-          auth.authToken,
-          currentEvent.current.id
-        );
+        await xanoDelete(`/appointments/${currentEvent.current.id}`, "staff");
         toast.success("Deleted Successfully", { containerId: "A" });
         socket.emit("message", {
           route: "EVENTS",
@@ -528,8 +521,7 @@ const Calendar = () => {
           startDate,
           endDate,
           sites,
-          timelineSiteId,
-          auth.authToken
+          timelineSiteId
         );
       } catch (err) {
         toast.error(`Error: unable to get available rooms: ${err.message}`, {
@@ -593,8 +585,7 @@ const Calendar = () => {
         try {
           const response = await xanoPost(
             "/appointments",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
             datasToPost
           );
           socket.emit("message", {
@@ -653,12 +644,7 @@ const Calendar = () => {
         };
       }
       try {
-        const response = await xanoPost(
-          "/appointments",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPost
-        );
+        const response = await xanoPost("/appointments", "staff", datasToPost);
         socket.emit("message", {
           route: "EVENTS",
           action: "create",
@@ -708,8 +694,7 @@ const Calendar = () => {
         startDate,
         endDate,
         sites,
-        timelineVisible ? timelineSiteId : user.site_id,
-        auth.authToken
+        timelineVisible ? timelineSiteId : user.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to get availabale rooms: ${err.message}`, {
@@ -775,11 +760,9 @@ const Calendar = () => {
         datasToPut.room_id = event.extendedProps.roomId;
         try {
           const response = await xanoPut(
-            "/appointments",
-            axiosXanoStaff,
-            auth.authToken,
-            datasToPut,
-            event.id
+            `/appointments/${event.id}`,
+            "staff",
+            datasToPut
           );
           socket.emit("message", {
             route: "EVENTS",
@@ -820,13 +803,7 @@ const Calendar = () => {
         event.setResources([newRoomId]);
         datasToPut.room_id = newRoomId;
         try {
-          await xanoPut(
-            "/appointments",
-            axiosXanoStaff,
-            auth.authToken,
-            datasToPut,
-            event.id
-          );
+          await xanoPut(`/appointments/${event.id}`, "staff", datasToPut);
           socket.emit("message", {
             route: "EVENTS",
             action: "update",
@@ -873,8 +850,7 @@ const Calendar = () => {
         startDate,
         endDate,
         sites,
-        timelineVisible ? timelineSiteId : user.site_id,
-        auth.authToken
+        timelineVisible ? timelineSiteId : user.site_id
       );
     } catch (err) {
       toast.error(`Error: unable to save appointment: ${err.message}`, {
@@ -939,11 +915,9 @@ const Calendar = () => {
 
       try {
         const response = await xanoPut(
-          "/appointments",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          event.id
+          `/appointments/${event.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "EVENTS",

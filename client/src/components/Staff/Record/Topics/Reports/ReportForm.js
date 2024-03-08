@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../../api/xanoStaff";
 import {
   reportClassCT,
   reportFormatCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -30,7 +29,6 @@ const ReportForm = ({
   attachment = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -158,7 +156,6 @@ const ReportForm = ({
       const response = await postPatientRecord(
         "/reports",
         user.id,
-        auth.authToken,
         datasToPost,
         socket,
         sentOrReceived === "Sent" ? "REPORTS SENT" : "REPORTS RECEIVED"
@@ -199,12 +196,9 @@ const ReportForm = ({
     reader.onload = async (e) => {
       let content = e.target.result; // this is the content!
       try {
-        const fileToUpload = await xanoPost(
-          "/upload/attachment",
-          axiosXanoStaff,
-          auth.authToken,
-          { content }
-        );
+        const fileToUpload = await xanoPost("/upload/attachment", "staff", {
+          content,
+        });
         setIsLoadingFile(false);
         setFormDatas({
           ...formDatas,

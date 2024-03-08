@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { sendEmail } from "../../../api/sendEmail";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import SelectSite from "./SelectSite";
@@ -21,7 +20,6 @@ const Invitation = ({
   siteId,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const [message, setMessage] = useState(
     user.settings.invitation_templates.find(
@@ -234,13 +232,10 @@ Powered by Calvin EMR`,
       message;
     setProgress(true);
     try {
-      await xanoPut(
-        "/settings",
-        axiosXanoStaff,
-        auth.authToken,
-        { ...user.settings, invitation_templates: newTemplates },
-        user.settings.id
-      );
+      await xanoPut(`/settings/${user.settings.id}`, "staff", {
+        ...user.settings,
+        invitation_templates: newTemplates,
+      });
     } catch (err) {
       toast.error(`Error: unable to save templates: ${err.message}`, {
         containerId: "A",

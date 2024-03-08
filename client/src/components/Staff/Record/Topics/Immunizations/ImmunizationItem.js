@@ -11,8 +11,8 @@ import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
+import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
@@ -29,7 +29,7 @@ const ImmunizationItem = ({
   setErrMsgPost,
   editCounter,
 }) => {
-  const { auth } = useAuthContext();
+  const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [itemInfos, setItemInfos] = useState(null);
@@ -82,7 +82,7 @@ const ImmunizationItem = ({
         await deletePatientRecord(
           "/immunizations",
           itemInfos.id,
-          auth.authToken,
+
           socket,
           "IMMUNIZATIONS"
         );
@@ -119,8 +119,7 @@ const ImmunizationItem = ({
       await putPatientRecord(
         "/immunizations",
         itemInfos.id,
-        auth.id,
-        auth.authToken,
+        user.id,
         datasToPut,
         socket,
         "IMMUNIZATIONS"

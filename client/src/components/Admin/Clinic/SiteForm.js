@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { provinceStateTerritoryCT } from "../../../datas/codesTables";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
@@ -15,7 +13,6 @@ import RoomsForm from "./RoomsForm";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SiteForm = ({ setAddVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -59,8 +56,8 @@ const SiteForm = ({ setAddVisible }) => {
       try {
         let fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoAdmin,
-          auth.authToken,
+          "admin",
+
           { content }
         );
         setFormDatas({ ...formDatas, logo: fileToUpload.data });
@@ -139,8 +136,8 @@ const SiteForm = ({ setAddVisible }) => {
       setProgress(true);
       const response = await xanoPost(
         "/sites",
-        axiosXanoAdmin,
-        auth.authToken,
+        "admin",
+
         datasToPost
       );
       socket.emit("message", {

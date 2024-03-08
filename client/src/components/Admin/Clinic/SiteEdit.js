@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import { provinceStateTerritoryCT } from "../../../datas/codesTables";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
@@ -16,7 +14,6 @@ import RoomsForm from "./RoomsForm";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SiteEdit = ({ infos, setEditVisible }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -59,8 +56,8 @@ const SiteEdit = ({ infos, setEditVisible }) => {
       try {
         let fileToUpload = await xanoPost(
           "/upload/attachment",
-          axiosXanoAdmin,
-          auth.authToken,
+          "admin",
+
           {
             content,
           }
@@ -130,13 +127,7 @@ const SiteEdit = ({ infos, setEditVisible }) => {
     //Submission
     try {
       setProgress(true);
-      const response = await xanoPut(
-        "/sites",
-        axiosXanoAdmin,
-        auth.authToken,
-        datasToPut,
-        infos.id
-      );
+      const response = await xanoPut(`/sites/${infos.id}`, "admin", datasToPut);
       socket.emit("message", {
         route: "SITES",
         action: "update",

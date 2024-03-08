@@ -1,6 +1,5 @@
 import axios from "axios";
 import xmlFormat from "xml-formatter";
-import { axiosXanoAdmin } from "../../api/xanoAdmin";
 import xanoGet from "../../api/xanoCRUD/xanoGet";
 import { recordCategories } from "./recordCategories";
 import { removeEmptyTags } from "./removeEmptyTags";
@@ -61,7 +60,7 @@ Date: August 4,2017; Status: FINAL-->
   let reportsFiles = [];
   if (checkedRecordCategoriesIds.includes(13)) {
     reportsFiles = (
-      await xanoGet("/reports_files_of_patient", axiosXanoAdmin, authToken, {
+      await xanoGet("/reports_files_of_patient", "admin", authToken, {
         patient_id: patientId,
       })
     ).data
@@ -96,7 +95,7 @@ export const exportEMRCategory = async (
   if (checkedPatients) {
     try {
       jsArrayToExport = (
-        await xanoGet(`${categoryURL}_of_patients`, axiosXanoAdmin, authToken, {
+        await xanoGet(`${categoryURL}_of_patients`, "admin", authToken, {
           patients: checkedPatients,
         })
       ).data;
@@ -106,8 +105,7 @@ export const exportEMRCategory = async (
   } else {
     //All patients
     try {
-      jsArrayToExport = (await xanoGet(categoryURL, axiosXanoAdmin, authToken))
-        .data;
+      jsArrayToExport = (await xanoGet(categoryURL, "admin", authToken)).data;
     } catch (err) {
       console.log(err.message);
     }

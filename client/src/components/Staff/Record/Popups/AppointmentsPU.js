@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
+
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useIntersection from "../../../../hooks/useIntersection";
@@ -29,15 +28,10 @@ const AppointmentsPU = ({
   demographicsInfos,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
-  const [sites, setSites] = useFetchDatas(
-    "/sites",
-    axiosXanoStaff,
-    auth.authToken
-  );
+  const [sites, setSites] = useFetchDatas("/sites", "staff");
 
   useFetchCategoryDatas(
     "/appointments_of_patient",

@@ -4,7 +4,6 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -20,7 +19,6 @@ import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 
 const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -36,7 +34,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
         await deletePatientRecord(
           "/reports",
           item.id,
-          auth.authToken,
+
           socket,
           "REPORTS RECEIVED"
         );
@@ -75,7 +73,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
         "/reports",
         item.id,
         user.id,
-        auth.authToken,
+
         datasToPut,
         socket,
         "REPORTS RECEIVED"

@@ -1,26 +1,28 @@
 import axios from "axios";
 
-const xanoGet = async (
+const xanoPostReset = async (
   url,
   userType,
-  params = null,
+  tempToken,
+  data,
   abortController = null
 ) => {
   try {
     const config = {
-      url: "/api/xano",
-      method: "get",
+      url: "/api/xano/reset",
+      method: "post",
+      data,
       params: {
         url,
         userType,
+        tempToken,
         abortController,
       },
     };
-    if (params) config.params.params = params;
     return await axios(config);
   } catch (err) {
     throw err;
   }
 };
 
-export default xanoGet;
+export default xanoPostReset;

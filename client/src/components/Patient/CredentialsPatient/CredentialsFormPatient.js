@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -83,12 +82,9 @@ const CredentialsFormPatient = () => {
 
     if (credentials.email.toLowerCase() !== auth.email.toLowerCase()) {
       try {
-        const response = await xanoGet(
-          `/patient_with_email`,
-          axiosXanoPatient,
-          auth.authToken,
-          { email: credentials.email.toLowerCase() }
-        );
+        const response = await xanoGet(`/patient_with_email`, "patient", {
+          email: credentials.email.toLowerCase(),
+        });
         if (response.data) {
           setErrMsg("There is already an account with this email");
           return;
@@ -101,28 +97,24 @@ const CredentialsFormPatient = () => {
 
     try {
       //get patientInfo
-      const me = (
-        await xanoGet(`/patients/${user.id}`, axiosXanoPatient, auth.authToken)
-      ).data;
+      const me = (await xanoGet(`/patients/${user.id}`, "patient")).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      await xanoPut("/patients", axiosXanoPatient, auth.authToken, me, user.id);
+      await xanoPut(`/patients/${user.id}`, "patient", me);
       socket.emit("message", {
         route: "PATIENTS",
         action: "update",
         content: { id: user.id, data: me },
       });
-
+      //pas besoin de socket sur USER car il va se relogger
       const datasToPut = {
         ...user.demographics,
         Email: credentials.email.toLowerCase(),
       };
       await xanoPut(
-        "/demographics",
-        axiosXanoPatient,
-        auth.authToken,
-        datasToPut,
-        user.demographics.id
+        `/demographics/${user.demographics.id}`,
+        "patient",
+        datasToPut
       );
       socket.emit("message", {
         route: "DEMOGRAPHICS",

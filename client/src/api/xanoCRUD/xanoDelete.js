@@ -1,19 +1,17 @@
-const xanoDelete = async (
-  url,
-  axiosXanoInstance,
-  authToken,
-  idToDelete,
-  abortController
-) => {
-  const finalUrl = `${url}/${parseInt(idToDelete)}`;
+import axios from "axios";
+
+const xanoDelete = async (url, userType, abortController) => {
   try {
-    return await axiosXanoInstance.delete(finalUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+    const config = {
+      url: "/api/xano",
+      method: "delete",
+      params: {
+        url,
+        userType,
+        abortController,
       },
-      ...(abortController && { signal: abortController.signal }),
-    });
+    };
+    return await axios(config);
   } catch (err) {
     throw err;
   }

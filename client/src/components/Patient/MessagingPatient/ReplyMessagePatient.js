@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoPatient } from "../../../api/xanoPatient";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -18,7 +16,6 @@ const ReplyMessagePatient = ({
   previousMsgs,
   setCurrentMsgId,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -37,8 +34,8 @@ const ReplyMessagePatient = ({
       if (attachments.length > 0) {
         const response = await xanoPost(
           "/messages_attachments",
-          axiosXanoPatient,
-          auth.authToken,
+          "patient",
+
           {
             attachments_array: attachments,
           }
@@ -70,8 +67,8 @@ const ReplyMessagePatient = ({
       };
       const response = await xanoPost(
         "/messages_external",
-        axiosXanoPatient,
-        auth.authToken,
+        "patient",
+
         replyMessage
       );
       socket.emit("message", {
@@ -125,8 +122,8 @@ const ReplyMessagePatient = ({
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoPatient,
-            auth.authToken,
+            "patient",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

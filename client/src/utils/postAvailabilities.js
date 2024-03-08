@@ -1,9 +1,8 @@
 import xanoPost from "../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../api/xanoStaff";
 
 export const postAvailabilities = async (staff_ids, authToken) => {
   for (let staffId of staff_ids) {
-    await xanoPost("/availability", axiosXanoStaff, authToken, {
+    await xanoPost("/availability", "staff", authToken, {
       staff_id: staffId,
       date_created: Date.now(),
       schedule_morning: {

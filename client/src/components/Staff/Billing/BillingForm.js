@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
@@ -23,7 +20,6 @@ import ReferringOHIPSearch from "./ReferringOHIPSearch";
 const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const navigate = useNavigate();
   const { pid, pName, hcn, date } = useParams();
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -44,8 +40,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
   const [patientSearchVisible, setPatientSearchVisible] = useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
-  const axiosXanoInstance =
-    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff;
+  const userType = user.access_level === "Admin" ? "admin" : "staff";
 
   useEffect(() => {
     if (date) {
@@ -111,12 +106,9 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
     }
     if (
       (
-        await xanoGet(
-          "/diagnosis_codes_for_code",
-          axiosXanoInstance,
-          auth.authToken,
-          { code: formDatas.diagnosis_code }
-        )
+        await xanoGet("/diagnosis_codes_for_code", userType, {
+          code: formDatas.diagnosis_code,
+        })
       ).data === null
     ) {
       setErrMsgPost("There is no existing diagnosis with this code");
@@ -125,8 +117,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
     for (const billing_code of formDatas.billing_codes) {
       const response = await xanoGet(
         "/ohip_fee_schedule_for_code",
-        axiosXanoInstance,
-        auth.authToken,
+        userType,
+
         { billing_code }
       );
       if (response.data === null) {
@@ -148,29 +140,18 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
           ),
           patient_id: formDatas.patient_id,
           diagnosis_id: (
-            await xanoGet(
-              `/diagnosis_codes_for_code`,
-              axiosXanoInstance,
-              auth.authToken,
-              { code: formDatas.diagnosis_code }
-            )
+            await xanoGet(`/diagnosis_codes_for_code`, userType, {
+              code: formDatas.diagnosis_code,
+            })
           ).data.id,
           billing_code_id: (
-            await xanoGet(
-              `/ohip_fee_schedule_for_code`,
-              axiosXanoInstance,
-              auth.authToken,
-              { billing_code }
-            )
+            await xanoGet(`/ohip_fee_schedule_for_code`, userType, {
+              billing_code,
+            })
           ).data.id,
           site_id: formDatas.site_id,
         };
-        const response = await xanoPost(
-          "/billings",
-          axiosXanoInstance,
-          auth.authToken,
-          datasToPost
-        );
+        const response = await xanoPost("/billings", userType, datasToPost);
         socket.emit("message", {
           route: "BILLING",
           action: "create",

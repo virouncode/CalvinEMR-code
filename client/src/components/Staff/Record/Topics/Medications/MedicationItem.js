@@ -7,7 +7,6 @@ import {
   strengthUnitCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { isMedicationActive } from "../../../../../utils/isMedicationActive";
@@ -19,7 +18,6 @@ import MedicationDetails from "./MedicationDetails";
 const MedicationItem = ({ item, lastItemRef = null }) => {
   //HOOKS
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
   const [detailVisible, setDetailVisible] = useState(false);
 
@@ -38,7 +36,7 @@ const MedicationItem = ({ item, lastItemRef = null }) => {
         await deletePatientRecord(
           "/medications",
           item.id,
-          auth.authToken,
+
           socket,
           "MEDICATIONS AND TREATMENTS"
         );

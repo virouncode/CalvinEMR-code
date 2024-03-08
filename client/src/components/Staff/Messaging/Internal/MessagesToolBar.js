@@ -1,9 +1,8 @@
 import React from "react";
 import { toast } from "react-toastify";
+
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
@@ -25,7 +24,6 @@ const MessagesToolBar = ({
   paging,
   setPaging,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
 
@@ -62,7 +60,7 @@ const MessagesToolBar = ({
     ) {
       try {
         const msgsSelected = (
-          await xanoGet("/messages_selected", axiosXanoStaff, auth.authToken, {
+          await xanoGet("/messages_selected", "staff", {
             messages_ids: msgsSelectedIds,
           })
         ).data;
@@ -72,11 +70,9 @@ const MessagesToolBar = ({
             deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
           };
           const response = await xanoPut(
-            "/messages",
-            axiosXanoStaff,
-            auth.authToken,
-            datasToPut,
-            message.id
+            `/messages/${message.id}`,
+            "staff",
+            datasToPut
           );
           socket.emit("message", {
             route: "MESSAGES INBOX",
@@ -104,7 +100,7 @@ const MessagesToolBar = ({
   const handleClickUndelete = async (e) => {
     try {
       const msgsSelected = (
-        await xanoGet("/messages_selected", axiosXanoStaff, auth.authToken, {
+        await xanoGet("/messages_selected", "staff", {
           messages_ids: msgsSelectedIds,
         })
       ).data;
@@ -117,11 +113,9 @@ const MessagesToolBar = ({
         };
         delete datasToPut.patient_infos;
         const response = await xanoPut(
-          "/messages",
-          axiosXanoStaff,
-          auth.authToken,
-          datasToPut,
-          message.id
+          `/messages/${message.id}`,
+          "staff",
+          datasToPut
         );
         socket.emit("message", {
           route: "MESSAGES INBOX",

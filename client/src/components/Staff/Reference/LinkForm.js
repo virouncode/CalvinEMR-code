@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkForm = ({ links, setAddVisible }) => {
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const { socket } = useSocketContext();
 
   const [newLink, setNewLink] = useState({
@@ -44,16 +42,11 @@ const LinkForm = ({ links, setAddVisible }) => {
     }
     try {
       setProgress(true);
-      const response = await xanoPost(
-        "/links",
-        axiosXanoStaff,
-        auth.authToken,
-        {
-          ...newLink,
-          url: urlFormatted,
-          date_created: Date.now(),
-        }
-      );
+      const response = await xanoPost("/links", "staff", {
+        ...newLink,
+        url: urlFormatted,
+        date_created: Date.now(),
+      });
       socket.emit("message", {
         route: "LINKS",
         action: "create",

@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+//If one tab logs out, logout all the tables
+//Listen to local storage events, if the key is "message" and the valu is "logout" => logout
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAdminsInfosContext from "./useAdminsInfosContext";
 import useAuthContext from "./useAuthContext";
@@ -11,8 +13,8 @@ const useLogoutForAll = () => {
   const { setAuth } = useAuthContext();
   const { setAdminsInfos } = useAdminsInfosContext();
   const navigate = useNavigate();
-  useEffect(() => {
-    const storageListener = (e) => {
+  const handleStorageEvent = useCallback(
+    (e) => {
       if (e.key !== "message") return;
       const message = e.newValue;
       if (!message) return;
@@ -23,12 +25,15 @@ const useLogoutForAll = () => {
         setAdminsInfos([]);
         navigate("/");
       }
-    };
-    window.addEventListener("storage", storageListener);
+    },
+    [navigate, setAdminsInfos, setAuth, setStaffInfos, setUser]
+  );
+  useEffect(() => {
+    window.addEventListener("storage", handleStorageEvent);
     return () => {
-      window.removeEventListener("storage", storageListener);
+      window.removeEventListener("storage", handleStorageEvent);
     };
-  }, [navigate, setAuth, setStaffInfos, setAdminsInfos, setUser]);
+  }, [handleStorageEvent]);
 };
 
 export default useLogoutForAll;

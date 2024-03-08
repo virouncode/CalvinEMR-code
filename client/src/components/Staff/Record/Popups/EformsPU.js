@@ -1,10 +1,9 @@
 import { PDFDocument } from "pdf-lib";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -15,6 +14,7 @@ import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Eform from "../Topics/Eforms/Eform";
 import EformItem from "../Topics/Eforms/EformItem";
+
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const EformsPU = ({
@@ -34,7 +34,7 @@ const EformsPU = ({
 }) => {
   //HOOKS
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
+  ;
   const { socket } = useSocketContext();
   const [addVisible, setAddVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
@@ -84,8 +84,8 @@ const EformsPU = ({
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             { content }
           );
           //flatten the pdf
@@ -108,8 +108,8 @@ const EformsPU = ({
             try {
               const response2 = await xanoPost(
                 "/upload/attachment",
-                axiosXanoStaff,
-                auth.authToken,
+                "staff",
+
                 { content }
               );
               const datasToPost = {
@@ -120,7 +120,7 @@ const EformsPU = ({
               const response = await postPatientRecord(
                 "/eforms",
                 user.id,
-                auth.authToken,
+
                 datasToPost
               );
               socket.emit("message", {

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { axiosXanoAdmin } from "../../../api/xanoAdmin";
-import { axiosXanoStaff } from "../../../api/xanoStaff";
-import useAuthContext from "../../../hooks/useAuthContext";
+
 import useBillingSocket from "../../../hooks/useBillingSocket";
 import useFetchBillings from "../../../hooks/useFetchBillings";
 import useFetchDatas from "../../../hooks/useFetchDatas";
@@ -14,7 +12,6 @@ import BillingTable from "./BillingTable";
 const Billing = () => {
   const { pid } = useParams();
   const { user } = useUserContext();
-  const { auth } = useAuthContext();
   const [addVisible, setAddVisible] = useState(false); //Add form
   const [errMsgPost, setErrMsgPost] = useState("");
   const [paging, setPaging] = useState({
@@ -34,13 +31,12 @@ const Billing = () => {
     errMsg,
   } = useFetchBillings(
     paging,
-    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff
+    user.access_level === "Admin" ? "admin" : "staff"
   );
 
   const [sites] = useFetchDatas(
     "/sites",
-    user.access_level === "Admin" ? axiosXanoAdmin : axiosXanoStaff,
-    auth.authToken
+    user.access_level === "Admin" ? "admin" : "staff"
   );
 
   useBillingSocket(billings, setBillings);

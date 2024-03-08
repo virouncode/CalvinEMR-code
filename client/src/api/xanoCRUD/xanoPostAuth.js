@@ -1,15 +1,14 @@
 import axios from "axios";
 
-const xanoPost = async (url, userType, data, abortController = null) => {
+const xanoPostAuth = async (url, userType, data) => {
   try {
     const config = {
-      url: "/api/xano",
+      url: "/api/xano/auth",
       method: "post",
       data,
       params: {
         url,
         userType,
-        abortController,
       },
     };
     return await axios(config);
@@ -18,4 +17,4 @@ const xanoPost = async (url, userType, data, abortController = null) => {
   }
 };
 
-export default xanoPost;
+export default xanoPostAuth;

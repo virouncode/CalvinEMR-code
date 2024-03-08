@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+
 import { sendEmail } from "../../../../api/sendEmail";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import { axiosXanoStaff } from "../../../../api/xanoStaff";
-import useAuthContext from "../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import { toPatientName } from "../../../../utils/toPatientName";
@@ -18,7 +17,6 @@ const ReplyMessageExternal = ({
   previousMsgs,
   setCurrentMsgId,
 }) => {
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [body, setBody] = useState("");
@@ -36,8 +34,8 @@ const ReplyMessageExternal = ({
       if (attachments.length > 0) {
         const response = await xanoPost(
           "/messages_attachments",
-          axiosXanoStaff,
-          auth.authToken,
+          "staff",
+
           {
             attachments_array: attachments,
           }
@@ -70,8 +68,8 @@ const ReplyMessageExternal = ({
       };
       const response = await xanoPost(
         "/messages_external",
-        axiosXanoStaff,
-        auth.authToken,
+        "staff",
+
         replyMessage
       );
       socket.emit("message", {
@@ -164,8 +162,8 @@ Powered by Calvin EMR`,
         try {
           const response = await xanoPost(
             "/upload/attachment",
-            axiosXanoStaff,
-            auth.authToken,
+            "staff",
+
             { content }
           );
           if (!response.data.type) response.data.type = "document";

@@ -5,7 +5,6 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useAuthContext from "../../../../../hooks/useAuthContext";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
@@ -23,7 +22,6 @@ const PastHealthItem = ({
   lastItemRef = null,
 }) => {
   //HOOKS
-  const { auth } = useAuthContext();
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
@@ -75,7 +73,7 @@ const PastHealthItem = ({
         "/past_health",
         item.id,
         user.id,
-        auth.authToken,
+
         formDatas,
         socket,
         "PAST HEALTH"
@@ -119,7 +117,6 @@ const PastHealthItem = ({
         await deletePatientRecord(
           "/past_health",
           item.id,
-          auth.authToken,
           socket,
           "PAST HEALTH"
         );
