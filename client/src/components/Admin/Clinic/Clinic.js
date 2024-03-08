@@ -66,6 +66,7 @@ const Clinic = () => {
             infos={sites.find(({ id }) => id === selectedSiteId)}
             setEditVisible={setEditVisible}
             handleEditClick={handleEditClick}
+            editVisible={editVisible}
           />
         </FakeWindow>
       )}

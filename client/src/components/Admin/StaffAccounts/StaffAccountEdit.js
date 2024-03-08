@@ -11,7 +11,7 @@ import SelectSite from "../../Staff/EventForm/SelectSite";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
+const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
   //HOOKS
   const [formDatas, setFormDatas] = useState(null);
   const { user } = useUserContext();
@@ -139,7 +139,7 @@ const StaffAccountEdit = ({ infos, setEditVisible, sites }) => {
   return (
     <div
       className="staff-account__container"
-      style={{ border: errMsg && "solid 1px red" }}
+      style={{ border: errMsg && editVisible && "solid 1.5px red" }}
     >
       {errMsg && <p className="staff-account__err">{errMsg}</p>}
       {formDatas && (

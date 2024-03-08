@@ -65,6 +65,7 @@ const StaffAccounts = () => {
             <StaffAccountEdit
               infos={staffInfos.find(({ id }) => id === selectedStaffId)}
               setEditVisible={setEditVisible}
+              editVisible={editVisible}
               sites={sites}
             />
           </FakeWindow>

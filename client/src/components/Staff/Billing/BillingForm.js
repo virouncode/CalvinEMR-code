@@ -114,15 +114,13 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
       setErrMsgPost("There is no existing diagnosis with this code");
       return;
     }
-    for (const billing_code of formDatas.billing_codes) {
-      const response = await xanoGet(
-        "/ohip_fee_schedule_for_code",
-        userType,
-
-        { billing_code }
-      );
+    for (let billing_code of formDatas.billing_codes) {
+      billing_code = billing_code.toUpperCase();
+      const response = await xanoGet("/ohip_fee_schedule_for_code", userType, {
+        billing_code,
+      });
       if (response.data === null) {
-        setErrMsgPost(`Billing code ${billing_code} doesn't exists`);
+        setErrMsgPost(`Billing code ${billing_code} doesn't exist`);
         return;
       }
     }
@@ -130,7 +128,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
     //Submission
     try {
       setProgress(true);
-      for (const billing_code of formDatas.billing_codes) {
+      for (let billing_code of formDatas.billing_codes) {
+        billing_code = billing_code.toUpperCase();
         const datasToPost = {
           date: Date.parse(new Date(formDatas.date)),
           date_created: Date.now(),

@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+var fs = require("fs");
+var path = require("path");
+var os = require("os");
 
 const postWriteXML = async (req, res) => {
   try {

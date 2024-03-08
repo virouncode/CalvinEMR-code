@@ -1,4 +1,4 @@
-const extractTextFromDoc = require("../extractTextFromDoc");
+var extractTextFromDoc = require("../extractTextFromDoc");
 
 const postExtractToText = async (req, res) => {
   try {

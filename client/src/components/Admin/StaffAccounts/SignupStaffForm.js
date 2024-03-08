@@ -314,7 +314,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
   return (
     <div
       className="signup-staff__container"
-      style={{ border: errMsg && "solid 1px red" }}
+      style={{ border: errMsg && "solid 1.5px red" }}
     >
       {errMsg && <p className="signup-staff__err">{errMsg}</p>}
       <form className="signup-staff__form">

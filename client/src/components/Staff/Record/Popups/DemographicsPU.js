@@ -52,7 +52,6 @@ const DemographicsPU = ({
   errPatient,
 }) => {
   //============================= STATES ==============================//
-  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();

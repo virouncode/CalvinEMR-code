@@ -116,7 +116,7 @@ const BillingTableItem = ({
       ).data.id,
       billing_code_id: (
         await xanoGet(`/ohip_fee_schedule_for_code`, userType, {
-          billing_code: itemInfos.billing_code,
+          billing_code: itemInfos.billing_code.toUpperCase(),
         })
       ).data.id,
       site_id: itemInfos.site_id,
@@ -165,10 +165,12 @@ const BillingTableItem = ({
       return;
     }
     const response = await xanoGet("/ohip_fee_schedule_for_code", userType, {
-      billing_code: itemInfos.billing_code,
+      billing_code: itemInfos.billing_code.toUpperCase(),
     });
     if (response.data === null) {
-      setErrMsgPost(`Billing code ${itemInfos.billing_code} doesn't exists`);
+      setErrMsgPost(
+        `Billing code ${itemInfos.billing_code.toUpperCase()} doesn't exists`
+      );
       setProgress(false);
       return;
     }
@@ -186,7 +188,7 @@ const BillingTableItem = ({
       ).data.id,
       billing_code_id: (
         await xanoGet(`/ohip_fee_schedule_for_code`, userType, {
-          billing_code: itemInfos.billing_code,
+          billing_code: itemInfos.billing_code.toUpperCase(),
         })
       ).data.id,
       updates: [
@@ -251,7 +253,7 @@ const BillingTableItem = ({
       <>
         <tr
           className="billing-table__item"
-          style={{ border: errMsgPost && "solid 1.5px red" }}
+          style={{ border: errMsgPost && editVisible && "solid 1.5px red" }}
           ref={lastItemRef}
         >
           {user.title !== "Secretary" ? (

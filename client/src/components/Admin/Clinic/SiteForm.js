@@ -161,7 +161,7 @@ const SiteForm = ({ setAddVisible }) => {
   return (
     <div
       className="site-form__container"
-      style={{ border: errMsg && "solid 1px red" }}
+      style={{ border: errMsg && "solid 1.5px red" }}
     >
       {errMsg && <p className="site-form__err">{errMsg}</p>}
       <form className="site-form">
