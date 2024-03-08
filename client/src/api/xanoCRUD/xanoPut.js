@@ -3,7 +3,7 @@ import axios from "axios";
 const xanoPut = async (url, userType, data, abortController = null) => {
   try {
     const config = {
-      url: "/api/xano",
+      url: "/xano",
       method: "put",
       params: {
         url,

@@ -8,21 +8,21 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const { join } = require("path");
-const twilio = require("twilio")(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+
 const extractTextFromDoc = require("./extractTextFromDoc");
 // const xml2js = require("xml2js");
 // var stripPrefix = require("xml2js").processors.stripPrefix;
-var router = require("./router/xano");
+const PORT = process.env.PORT || 4000;
 
+var xanoRouter = require("./routes/xano/xano");
+var twilioRouter = require("./routes/twilio/twilio");
 //****************** APP ***************************//
 const app = express();
-const PORT = process.env.PORT || 4000;
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static(join(__dirname, "..", "client", "build")));
-app.use("/api/xano", router);
+app.use("/xano", xanoRouter);
+app.use("/twilio", twilioRouter);
+
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 const httpServer = createServer(app); //my http server
@@ -32,23 +32,6 @@ const io = new Server(httpServer, {
       process.env.NODE_ENV === "production" ? false : ["http://localhost:3000"],
   },
 }); //Web socket server
-
-//***************** Endpoint TWILIO ******************//
-app.post("/api/twilio/messages", async (req, res) => {
-  try {
-    res.header("Content-Type", "application/json");
-    await twilio.messages.create({
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: req.body.to,
-      body: req.body.body,
-    });
-    res.send(JSON.stringify({ success: true }));
-  } catch (err) {
-    console.log(err);
-    res.send(JSON.stringify({ success: false }));
-  }
-});
-//****************************************************//
 
 //**************** Endpoint DOCUMENT AI **************//
 app.post("/api/extractToText", async (req, res) => {

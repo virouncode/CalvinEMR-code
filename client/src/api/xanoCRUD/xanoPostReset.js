@@ -9,7 +9,7 @@ const xanoPostReset = async (
 ) => {
   try {
     const config = {
-      url: "/api/xano/reset",
+      url: "/xano/reset",
       method: "post",
       data,
       params: {

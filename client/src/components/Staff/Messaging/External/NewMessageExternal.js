@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
+import axios from "axios";
 import { sendEmail } from "../../../../api/sendEmail";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -107,13 +108,13 @@ const NewMessageExternal = ({ setNewVisible }) => {
         "You have a new message, please login to your patient portal",
         `Best wishes, \nPowered by Calvin EMR`
       );
-
-      fetch("/api/twilio/messages", {
+      await axios({
+        url: "/twilio",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        data: {
           // from: "New Life",
           to: "+33683267962", //to be changed to patient cell_phone
           body: `
@@ -123,20 +124,8 @@ You have a new message, please login to your patient portal
           
 Best wishes,
 Powered by Calvin EMR`,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            console.log(data);
-          } else {
-            console.log("error");
-            toast.error(`Couldn't send the sms invitation : $(err.text)`, {
-              containerId: "A",
-            });
-          }
-        });
-
+        },
+      });
       toast.success("Message sent successfully", { containerId: "A" });
       setProgress(false);
     } catch (err) {

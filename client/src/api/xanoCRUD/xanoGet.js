@@ -8,7 +8,7 @@ const xanoGet = async (
 ) => {
   try {
     const config = {
-      url: "/api/xano",
+      url: "/xano",
       method: "get",
       params: {
         url,

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
+import axios from "axios";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useUserContext from "../../../hooks/useUserContext";
@@ -131,15 +132,17 @@ const Invitation = ({
         });
         setProgress(false);
       }
-      fetch("/api/twilio/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // from: "New Life",
-          to: "+33683267962", //to be changed to patientInfos.cell_phone
-          body: `
+      try {
+        await axios({
+          url: "/twilio",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            // from: "New Life",
+            to: "+33683267962", //to be changed to patientInfos.cell_phone
+            body: `
 Hello ${patientName},
           
 ${intro}
@@ -150,20 +153,11 @@ ${message}
           
 Best wishes,
 Powered by Calvin EMR`,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            console.log(data);
-          } else {
-            console.log("error");
-            toast.error(`Couldn't send the sms invitation`, {
-              containerId: "A",
-            });
-            setProgress(false);
-          }
+          },
         });
+      } catch (err) {
+        toast.error(`Couldn't send the sms invitation:${err.message}`);
+      }
     }
     for (const staffGuestInfos of staffGuestsInfos) {
       try {
@@ -186,15 +180,17 @@ Powered by Calvin EMR`,
         });
         setProgress(false);
       }
-      fetch("/api/twilio/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // from: "New Life",
-          to: "+33683267962", //to be changed to staffInfos.cell_phone
-          body: `
+      try {
+        await axios({
+          url: "/twilio",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            // from: "New Life",
+            to: "+33683267962", //to be changed to staffInfos.cell_phone
+            body: `
 Hello ${staffGuestInfos.full_name},
           
 ${intro}
@@ -205,20 +201,11 @@ ${message}
           
 Best wishes,
 Powered by Calvin EMR`,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            console.log(data);
-          } else {
-            console.log("error");
-            toast.error(`Couldn't send the sms invitation : $(err.text)`, {
-              containerId: "A",
-            });
-            setProgress(false);
-          }
+          },
         });
+      } catch (err) {
+        toast.error(`Couldn't send the sms invitation:${err.message}`);
+      }
     }
     setProgress(false);
     setInvitationVisible(false);

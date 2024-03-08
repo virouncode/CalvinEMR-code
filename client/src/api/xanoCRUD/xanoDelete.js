@@ -3,7 +3,7 @@ import axios from "axios";
 const xanoDelete = async (url, userType, abortController) => {
   try {
     const config = {
-      url: "/api/xano",
+      url: "/xano",
       method: "delete",
       params: {
         url,
