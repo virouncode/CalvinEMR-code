@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 require("dotenv").config();
 const { join } = require("path");
 const PORT = process.env.PORT || 4000;
+const cookieParser = require("cookie-parser");
 
 var xanoRouter = require("./routes/xano/xano");
 var twilioRouter = require("./routes/twilio/twilio");
@@ -15,6 +16,7 @@ var extractToTextRouter = require("./routes/extractToText/extractToText");
 const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static(join(__dirname, "..", "client", "build")));
+app.use(cookieParser());
 app.use("/xano", xanoRouter);
 app.use("/twilio", twilioRouter);
 app.use("/writeXML", writeXMLRouter);

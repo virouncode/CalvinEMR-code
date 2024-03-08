@@ -1,6 +1,5 @@
 var express = require("express");
 var xanoRouter = express.Router();
-let authToken;
 var xanoController = require("../../controllers/xanoController");
 
 xanoRouter

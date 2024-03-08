@@ -26,6 +26,7 @@ const getAxiosInstance = (userType) => {
 const getXano = async (req, res) => {
   try {
     const { url, userType, abortController, params } = req.query;
+    const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
@@ -55,6 +56,7 @@ const postXano = async (req, res) => {
   try {
     const { url, userType, abortController } = req.query;
     const datasToPost = req.body;
+    const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
@@ -84,6 +86,7 @@ const putXano = async (req, res) => {
   try {
     const { url, userType, abortController } = req.query;
     const datasToPut = req.body;
+    const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
@@ -113,7 +116,7 @@ const putXano = async (req, res) => {
 const deleteXano = async (req, res) => {
   try {
     const { url, userType, abortController } = req.query;
-
+    const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
@@ -151,7 +154,11 @@ const authXano = async (req, res) => {
     };
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
-    authToken = response.data.authToken;
+    res.cookie("token", response.data.authToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+    });
     res.status(response.status).send(JSON.stringify({ success: true }));
   } catch (err) {
     console.log(err.message);
