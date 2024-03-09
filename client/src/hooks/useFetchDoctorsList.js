@@ -24,7 +24,6 @@ const useFetchDoctorsList = (search, paging) => {
         const response = await xanoGet(
           "/doctors_search",
           userType,
-
           {
             search,
             paging,

@@ -18,7 +18,6 @@ const useFetchTopicDatas = (url, paging, patientId) => {
         const response = await xanoGet(
           url,
           "staff",
-
           {
             patient_id: patientId,
             paging,

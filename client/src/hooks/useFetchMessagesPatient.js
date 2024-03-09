@@ -27,7 +27,6 @@ const useFetchMessagesPatient = (
         const response = await xanoGet(
           "/messages_external_of_patient",
           "patient",
-
           {
             patient_id: patientId,
             search,

@@ -68,12 +68,7 @@ const RelationshipItem = ({
         })
       ).data[0].id;
 
-      await xanoDelete(
-        "/relationships",
-        "staff",
-
-        inverseRelationToDeleteId
-      );
+      await xanoDelete(`/relationships/${inverseRelationToDeleteId}`, "staff");
 
       //Put the relationship
       await putPatientRecord(

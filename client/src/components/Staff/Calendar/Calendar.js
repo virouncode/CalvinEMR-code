@@ -160,7 +160,11 @@ const Calendar = () => {
       })
     ) {
       try {
-        await xanoDelete(`/appointments/${currentEvent.current.id}`, "staff");
+        console.log("eventId", currentEvent.current.id);
+        await xanoDelete(
+          `/appointments/${parseInt(currentEvent.current.id)}`,
+          "staff"
+        );
         toast.success("Deleted Successfully", { containerId: "A" });
         socket.emit("message", {
           route: "EVENTS",
@@ -170,7 +174,7 @@ const Calendar = () => {
         socket.emit("message", {
           route: "APPOINTMENTS",
           action: "delete",
-          content: { id: currentEvent.current.id },
+          content: { id: parseInt(currentEvent.current.id) },
         });
         setFormVisible(false);
         setCalendarSelectable(true);
@@ -196,7 +200,21 @@ const Calendar = () => {
       info.view.type === "resourceTimeGridDay"
     ) {
       return (
-        <div style={{ fontSize: "0.7rem" }}>
+        <div
+          style={{
+            fontSize: "0.7rem",
+            height: "100%",
+            backgroundImage:
+              event.extendedProps.status === "Cancelled" &&
+              `repeating-linear-gradient(
+                45deg,
+                ${event.backgroundColor},
+                ${event.backgroundColor} 10px,
+                #aaaaaa 10px,
+                #aaaaaa 20px
+              )`,
+          }}
+        >
           <div
             style={{
               display: "flex",

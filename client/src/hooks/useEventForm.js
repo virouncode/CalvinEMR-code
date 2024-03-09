@@ -47,7 +47,6 @@ export const useEventForm = (eventId) => {
         const response = await xanoGet(
           `/appointments/${eventId}`,
           "staff",
-
           null,
           abortController
         );

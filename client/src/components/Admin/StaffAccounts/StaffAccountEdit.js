@@ -234,7 +234,8 @@ const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
                 onChange={handleChange}
                 name="account_status"
               >
-                <option value="Activated">Activated</option>
+                <option value="Active">Active</option>
+                <option value="Closed">Closed</option>
                 <option value="Suspended">Suspended</option>
               </select>
             </div>

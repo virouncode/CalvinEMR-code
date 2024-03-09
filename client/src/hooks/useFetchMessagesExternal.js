@@ -28,7 +28,6 @@ const useFetchMessagesExternal = (
         const response = await xanoGet(
           "/messages_external_of_staff",
           "staff",
-
           {
             staff_id: staffId,
             search,

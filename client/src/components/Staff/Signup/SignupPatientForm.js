@@ -31,7 +31,6 @@ const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const SignupPatientForm = () => {
   //HOOKS
-  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -157,12 +156,9 @@ const SignupPatientForm = () => {
     //Is the mail already taken ?
     setProgress(true);
     try {
-      const response = await xanoGet(
-        `/patient_with_email`,
-        "staff",
-
-        { email: formDatas.email.toLowerCase() }
-      );
+      const response = await xanoGet(`/patient_with_email`, "staff", {
+        email: formDatas.email.toLowerCase(),
+      });
       if (response.data) {
         setProgress(false);
         setErrMsg("There is already an account with this email");
@@ -180,7 +176,7 @@ const SignupPatientForm = () => {
       email: formDatas.email.toLowerCase(),
       password: newPassword,
       access_level: "Patient",
-      account_status: "Activated",
+      account_status: "Active",
       created_by_id: user.id,
       date_created: Date.now(),
     };

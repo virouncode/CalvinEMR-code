@@ -166,6 +166,16 @@ const NewMessage = ({ setNewVisible }) => {
         action: "create",
         content: { data: response.data },
       });
+      for (const to_staff_id of message.to_staff_ids) {
+        socket.emit("message", {
+          route: "USER",
+          action: "update",
+          content: {
+            id: to_staff_id,
+            content: {},
+          },
+        });
+      }
       setNewVisible(false);
       toast.success("Message sent successfully", { containerId: "A" });
       setProgress(false);

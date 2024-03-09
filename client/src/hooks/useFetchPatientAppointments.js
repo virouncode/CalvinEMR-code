@@ -17,7 +17,6 @@ const useFetchPatientAppointments = () => {
         const response = await xanoGet(
           "/appointments_of_patient",
           "patient",
-
           { patient_id: user.id },
           abortController
         );

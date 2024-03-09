@@ -30,7 +30,6 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
         const response = await xanoGet(
           "/demographics_search",
           "staff",
-
           {
             paging,
             search,

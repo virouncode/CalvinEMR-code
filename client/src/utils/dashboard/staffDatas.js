@@ -3,9 +3,8 @@ export const getNbrOfStaff = (staffInfos) => {
 };
 
 export const getNbrOfActiveStaff = (staffInfos) => {
-  return staffInfos.filter(
-    ({ account_status }) => account_status === "Activated"
-  ).length;
+  return staffInfos.filter(({ account_status }) => account_status === "Active")
+    .length;
 };
 
 export const getNbrOfStaffGender = (staffInfos, gender) => {

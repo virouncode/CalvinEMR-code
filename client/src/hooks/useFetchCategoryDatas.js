@@ -20,7 +20,6 @@ const useFetchCategoryDatas = (
         const response = await xanoGet(
           url,
           "staff",
-
           {
             patient_id: patientId,
             paging,

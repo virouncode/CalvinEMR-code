@@ -15,7 +15,6 @@ const useCalendarShortcuts = (
   setFormVisible,
   setCalendarSelectable
 ) => {
-  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   useEffect(() => {
@@ -44,10 +43,8 @@ const useCalendarShortcuts = (
         ) {
           try {
             await xanoDelete(
-              "/appointments",
-              "staff",
-
-              currentEvent.current.id
+              `/appointments/${parseInt(currentEvent.current.id)}`,
+              "staff"
             );
             toast.success("Deleted Successfully", { containerId: "A" });
             socket.emit("message", {

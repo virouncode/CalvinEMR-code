@@ -17,7 +17,6 @@ const useFetchStaffReports = (paging, staffId) => {
         const response = await xanoGet(
           "/reports_of_staff",
           "staff",
-
           {
             staff_id: staffId,
             paging,

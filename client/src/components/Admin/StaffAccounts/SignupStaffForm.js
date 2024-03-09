@@ -31,7 +31,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     subspeciality: "",
     licence_nbr: "",
     ohip_billing_nbr: "",
-    account_status: "Activated",
+    account_status: "Active",
     cell_phone: "",
     backup_phone: "",
     video_link: "",

@@ -19,7 +19,7 @@ const MyLinkItem = ({ link, setAddVisible }) => {
       await confirmAlert({ content: "Do you reall want to remove this link ?" })
     ) {
       try {
-        await xanoDelete("/links", "staff", link.id);
+        await xanoDelete(`/links/${link.id}`, "staff");
         socket.emit("message", {
           route: "LINKS",
           action: "delete",

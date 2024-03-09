@@ -4,7 +4,7 @@ export const getNbrOfPatients = (patientsInfos) => {
 
 export const getNbrOfActivePatients = (patientsInfos) => {
   return patientsInfos.filter(
-    ({ account_status }) => account_status === "Activated"
+    ({ account_status }) => account_status === "Active"
   ).length;
 };
 

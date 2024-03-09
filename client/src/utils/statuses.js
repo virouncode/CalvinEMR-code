@@ -6,4 +6,6 @@ export const statuses = [
   "In room with doctor",
   "Left the premises",
   "Billed",
+  "No-show",
+  "Cancelled",
 ];

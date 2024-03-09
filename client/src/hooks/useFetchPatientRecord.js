@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
 
 const useFetchPatientRecord = (patientId) => {
-  ;
-
   const [loadingRecord, setLoadingRecord] = useState(false);
   const [pastHealth, setPastHealth] = useState([]);
   const [loadingPastHealth, setLoadingPastHealth] = useState(true);
@@ -260,7 +258,6 @@ const useFetchPatientRecord = (patientId) => {
       const response = await xanoGet(
         url,
         "staff",
-
         {
           patient_id: patientId,
           paging,

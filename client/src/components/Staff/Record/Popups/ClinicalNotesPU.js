@@ -28,17 +28,12 @@ const ClinicalNotesPU = ({
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await xanoGet(
-          "/clinical_notes_of_patient",
-          "staff",
-
-          {
-            patient_id: parseInt(id),
-            orderBy: order,
-            columnName: "date_created",
-            search: "",
-          }
-        );
+        const response = await xanoGet("/clinical_notes_of_patient", "staff", {
+          patient_id: parseInt(id),
+          orderBy: order,
+          columnName: "date_created",
+          search: "",
+        });
         if (abortController.signal.aborted) return;
         setClinicalNotesToPrint(response.data.items);
         setCheckedNotes(response.data.items.map(({ id }) => id));

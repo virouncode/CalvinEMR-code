@@ -55,10 +55,8 @@ const EditTemplate = ({
     ) {
       try {
         await xanoDelete(
-          "/clinical_notes_templates",
-          "staff",
-
-          editTemplateSelectedId
+          `/clinical_notes_templates/${editTemplateSelectedId}`,
+          "staff"
         );
         socket.emit("message", {
           route: "CLINICAL TEMPLATES",

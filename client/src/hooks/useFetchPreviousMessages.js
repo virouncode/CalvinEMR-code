@@ -17,7 +17,6 @@ const useFetchPreviousMessages = (message) => {
           await xanoGet(
             "/messages_selected",
             "staff",
-
             {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "Internal")
@@ -30,7 +29,6 @@ const useFetchPreviousMessages = (message) => {
           await xanoGet(
             "/messages_external_selected",
             "staff",
-
             {
               messages_ids: message.previous_messages
                 .filter(({ message_type }) => message_type === "External")

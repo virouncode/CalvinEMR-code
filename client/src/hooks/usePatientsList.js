@@ -25,7 +25,6 @@ const usePatientsList = (search, paging) => {
         const response = await xanoGet(
           "/demographics_simple_search",
           userType,
-
           {
             paging,
             search,

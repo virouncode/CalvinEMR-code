@@ -17,7 +17,6 @@ const useFetchPatients = (paging) => {
         const response = await xanoGet(
           "/patients_names_ids_gender",
           "staff",
-
           { paging },
           abortController
         );

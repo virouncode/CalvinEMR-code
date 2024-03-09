@@ -69,12 +69,7 @@ const MedTemplateItem = ({
       })
     ) {
       try {
-        await xanoDelete(
-          "/medications_templates",
-          "staff",
-
-          med.id
-        );
+        await xanoDelete(`/medications_templates/${med.id}`, "staff");
         socket.emit("message", {
           route: "MEDS TEMPLATES",
           action: "delete",

@@ -61,12 +61,9 @@ const MessagesExternalToolBar = ({
     ) {
       try {
         const msgsSelected = (
-          await xanoGet(
-            "/messages_external_selected",
-            "staff",
-
-            { messages_ids: msgsSelectedIds }
-          )
+          await xanoGet("/messages_external_selected", "staff", {
+            messages_ids: msgsSelectedIds,
+          })
         ).data;
         for (let message of msgsSelected) {
           const datasToPut = {

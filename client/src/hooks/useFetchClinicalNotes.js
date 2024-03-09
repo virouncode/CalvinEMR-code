@@ -23,18 +23,13 @@ const useFetchClinicalNotes = (patientId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await xanoGet(
-          "/clinical_notes_of_patient",
-          "staff",
-
-          {
-            patient_id: patientId,
-            paging,
-            orderBy: order,
-            columnName: "date_created",
-            search,
-          }
-        );
+        const response = await xanoGet("/clinical_notes_of_patient", "staff", {
+          patient_id: patientId,
+          paging,
+          orderBy: order,
+          columnName: "date_created",
+          search,
+        });
         if (abortController.signal.aborted) return;
         setClinicalNotes((prevDatas) => [...prevDatas, ...response.data.items]);
         setHasMore(response.data.items.length > 0);
