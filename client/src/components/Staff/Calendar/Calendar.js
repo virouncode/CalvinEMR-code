@@ -299,14 +299,27 @@ const Calendar = () => {
       return (
         <div
           style={{
+            fontSize: "0.7rem",
+            height: "100%",
+            backgroundImage:
+              event.extendedProps.status === "Cancelled" &&
+              `repeating-linear-gradient(
+                45deg,
+                ${event.backgroundColor},
+                ${event.backgroundColor} 10px,
+                #aaaaaa 10px,
+                #aaaaaa 20px
+              )`,
             display: "flex",
             justifyContent: "space-between",
-            padding: "0 2px",
-            alignItems: "center",
-            fontSize: "0.7rem",
           }}
         >
-          <div>
+          <div
+            style={{
+              padding: "0 2px",
+              alignItems: "center",
+            }}
+          >
             {event.allDay ? "All Day" : info.timeText}
             <span style={{ marginLeft: "10px" }}>
               <strong>
@@ -369,7 +382,20 @@ const Calendar = () => {
     } else if (info.view.type === "listWeek") {
       //LIST
       return (
-        <>
+        <div
+          style={{
+            height: "100%",
+            backgroundImage:
+              event.extendedProps.status === "Cancelled" &&
+              `repeating-linear-gradient(
+          45deg,
+          ${event.backgroundColor},
+          ${event.backgroundColor} 10px,
+          #aaaaaa 10px,
+          #aaaaaa 20px
+        )`,
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -452,7 +478,7 @@ const Calendar = () => {
             <strong>Status: </strong>
             {event.extendedProps.status}
           </div>
-        </>
+        </div>
       );
     }
   };
