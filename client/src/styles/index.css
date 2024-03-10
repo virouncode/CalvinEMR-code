@@ -11810,7 +11810,7 @@ readers do not read off random characters that represent icons */
   padding: 5px;
 }
 .clinical-notes__toolbar-btn-container {
-  width: 60%;
+  width: 50%;
   text-align: right;
 }
 .clinical-notes__toolbar-btn-container button {

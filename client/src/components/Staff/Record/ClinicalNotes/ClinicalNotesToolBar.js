@@ -96,7 +96,10 @@ const ClinicalNotesToolBar = ({
         action: "update",
         content: {
           id: user.id,
-          data: response.data,
+          data: {
+            ...user,
+            settings: response.data,
+          },
         },
       });
       toast.success("Saved preference", {
@@ -122,13 +125,21 @@ const ClinicalNotesToolBar = ({
         <span onClick={handleChangeOrder}>
           {order === "asc" ? (
             <i
-              className="fa-solid fa-arrow-up"
-              style={{ marginLeft: "10px", cursor: "pointer" }}
+              className="fa-solid fa-arrow-down"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                cursor: "pointer",
+              }}
             ></i>
           ) : (
             <i
-              className="fa-solid fa-arrow-down"
-              style={{ marginLeft: "10px", cursor: "pointer" }}
+              className="fa-solid fa-arrow-up"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                cursor: "pointer",
+              }}
             ></i>
           )}
           {order === "asc" ? "Bottom" : "Top"}
