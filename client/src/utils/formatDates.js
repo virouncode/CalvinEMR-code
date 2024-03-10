@@ -206,3 +206,13 @@ export const toDurationMin = (durationMs) => {
   const durationMin = durationMs / 60000;
   return durationMin % 60;
 };
+
+export const getLimitTimestampForAge = (age) => {
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  let limit = new Date(today);
+  limit = limit.setFullYear(limit.getFullYear() - age);
+  return limit;
+};
