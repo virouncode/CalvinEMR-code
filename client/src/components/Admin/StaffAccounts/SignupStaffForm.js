@@ -26,7 +26,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     site_id: 1,
     gender: "Male",
     title: "Doctor",
-    access_level: "User",
+    access_level: "Staff",
     speciality: "",
     subspeciality: "",
     licence_nbr: "",

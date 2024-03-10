@@ -11,6 +11,8 @@ import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
 import useLogoutForAll from "./hooks/useLogoutForAll";
 import useSocketConfig from "./hooks/useSocketConfig";
 import useStaffInfosSocket from "./hooks/useStaffInfosSocket";
+import useUnreadExternalSocket from "./hooks/useUnreadExternalSocket";
+import useUnreadSocket from "./hooks/useUnreadSocket";
 import useUserSocket from "./hooks/useUserSocket";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
@@ -45,6 +47,8 @@ const App = () => {
   useSocketConfig(true); //true for dev, false for prod
   useStaffInfosSocket();
   useUserSocket();
+  useUnreadExternalSocket(); //for staff and patient
+  useUnreadSocket(); //for staff
 
   return (
     <Routes>
@@ -59,7 +63,7 @@ const App = () => {
       </Route>
       <Route path="staff" element={<StaffLayout />}>
         {/* protected routes */}
-        <Route element={<RequireAuth allowedAccesses={["User"]} />}>
+        <Route element={<RequireAuth allowedAccesses={["Staff"]} />}>
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="search-patient" element={<SearchPatientPage />} />
           <Route path="patient-record/:id" element={<PatientRecordPage />} />

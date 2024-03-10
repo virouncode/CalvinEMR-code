@@ -54,7 +54,7 @@ const Dashboard = () => {
       <div className="dashboard-row">
         <DashboardCard title="Billings"></DashboardCard>
         <DashboardCard title="Medications"></DashboardCard>
-        <DashboardCard title="patients"></DashboardCard>
+        <DashboardCard title="Staff"></DashboardCard>
       </div>
     </div>
   );

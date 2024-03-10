@@ -150,12 +150,7 @@ const NewMessage = ({ setNewVisible }) => {
         read_by_staff_ids: [user.id],
         date_created: Date.now(),
       };
-      const response = await xanoPost(
-        "/messages",
-        "staff",
-
-        message
-      );
+      const response = await xanoPost("/messages", "staff", message);
       socket.emit("message", {
         route: "MESSAGES INBOX",
         action: "create",
@@ -168,11 +163,10 @@ const NewMessage = ({ setNewVisible }) => {
       });
       for (const to_staff_id of message.to_staff_ids) {
         socket.emit("message", {
-          route: "USER",
+          route: "UNREAD",
           action: "update",
           content: {
             id: to_staff_id,
-            content: {},
           },
         });
       }
