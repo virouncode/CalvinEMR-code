@@ -6,7 +6,6 @@ import xanoPut from "./xanoCRUD/xanoPut";
 export const postPatientRecord = async (
   url,
   userId,
-  authToken,
   datasToPost,
   socket = null,
   topic = null,
@@ -18,13 +17,7 @@ export const postPatientRecord = async (
     datasToPost.date_created = Date.now();
   }
   try {
-    const response = await xanoPost(
-      url,
-      "staff",
-      authToken,
-      datasToPost,
-      abortController
-    );
+    const response = await xanoPost(url, "staff", datasToPost, abortController);
     if (socket && topic) {
       if (topic === "PATIENTS") {
         response.data.chart_nbr = createChartNbr(
@@ -62,7 +55,6 @@ export const putPatientRecord = async (
   url,
   recordId,
   userId,
-  authToken,
   datasToPut,
   socket = null,
   topic = null,
@@ -80,7 +72,6 @@ export const putPatientRecord = async (
     const response = await xanoPut(
       url,
       "staff",
-      authToken,
       datasToPut,
       recordId,
       abortController

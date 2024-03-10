@@ -88,7 +88,7 @@ input[type=submit] {
   background: rgb(156, 185, 228);
   background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  color: #FEFEFE;
+  color: #3D375A;
   border: none;
   outline: none;
   border-radius: 40px;
@@ -113,7 +113,7 @@ button {
   background: rgb(156, 185, 228);
   background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  color: #FEFEFE;
+  color: #3D375A;
   border: none;
   outline: none;
   border-radius: 40px;
@@ -16337,7 +16337,7 @@ readers do not read off random characters that represent icons */
   border-radius: 8px 8px 0 0;
   position: fixed;
   height: 40px;
-  color: #fff;
+  color: #3D375A;
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -16348,6 +16348,12 @@ readers do not read off random characters that represent icons */
 }
 .window-title-close {
   cursor: pointer;
+  border: solid 1px #3D375A;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .resize-handle {
@@ -17284,16 +17290,33 @@ readers do not read off random characters that represent icons */
 }
 
 .dashboard-card {
-  height: 300px;
-  width: 30%;
   border: solid 1px #cecdcd;
   border-radius: 6px;
   background-color: #FEFEFE;
   padding: 10px;
+  width: 90%;
+  margin: 0 auto;
+  font-size: 0.85rem;
+}
+.dashboard-card label {
+  font-weight: bold;
 }
 .dashboard-card__title {
+  font-size: 1rem;
   text-align: center;
   font-weight: bold;
+}
+.dashboard-card__content {
+  display: flex;
+}
+.dashboard-card__filter {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 20px auto;
+}
+.dashboard-card__filter label, .dashboard-card__filter input {
+  margin-right: 10px;
 }
 
 .patients-accounts {

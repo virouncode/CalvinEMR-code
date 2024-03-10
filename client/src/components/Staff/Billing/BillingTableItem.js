@@ -175,6 +175,11 @@ const BillingTableItem = ({
       return;
     }
     //Submission
+    console.log(
+      "billing code",
+      typeof itemInfos.billing_code.toUpperCase(),
+      itemInfos.billing_code.toUpperCase()
+    );
     const datasToPut = {
       date: itemInfos.date,
       date_created: billing.date_created,

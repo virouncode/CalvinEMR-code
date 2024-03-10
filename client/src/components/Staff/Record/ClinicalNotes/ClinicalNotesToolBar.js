@@ -118,7 +118,7 @@ const ClinicalNotesToolBar = ({
         <input type="text" value={search} onChange={handleChange}></input>
       </div>
       <div>
-        Date:
+        Most recent on:
         <span onClick={handleChangeOrder}>
           {order === "asc" ? (
             <i
@@ -131,6 +131,7 @@ const ClinicalNotesToolBar = ({
               style={{ marginLeft: "10px", cursor: "pointer" }}
             ></i>
           )}
+          {order === "asc" ? "Bottom" : "Top"}
         </span>
       </div>
       {/* <ClinicalNotesOrderRadio

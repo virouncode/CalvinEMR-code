@@ -121,14 +121,14 @@ const FakeWindow = ({
       >
         <p>{title}</p>
         {closeCross && (
-          <p
+          <div
             onClick={() => {
               setPopUpVisible(false);
             }}
             className="window-title-close"
           >
             X
-          </p>
+          </div>
         )}
       </div>
       <div

@@ -545,7 +545,7 @@ const Calendar = () => {
       start: info.allDay ? startAllDay : new Date(startDate),
       end: info.allDay ? endAllDay : new Date(endDate),
       color: user.title === "Secretary" ? "#bfbfbf" : "#6490D2",
-      textColor: "#FEFEFE",
+      textColor: "#3D375A",
       allDay: info.allDay,
       extendedProps: {
         host: user.title === "Secretary" ? 0 : user.id,

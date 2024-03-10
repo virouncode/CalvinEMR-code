@@ -71,20 +71,14 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
     }
     try {
       const attach_ids = (
-        await postPatientRecord(
-          "/clinical_notes_attachments",
-          user.id,
-
-          {
-            attachments_array: attachments,
-          }
-        )
+        await postPatientRecord("/clinical_notes_attachments", user.id, {
+          attachments_array: attachments,
+        })
       ).data;
 
       await postPatientRecord(
         "/clinical_notes",
         user.id,
-
         {
           ...formDatas,
           attachments_ids: attach_ids,
