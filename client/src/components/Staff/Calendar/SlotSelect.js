@@ -12,7 +12,11 @@ const SlotSelect = () => {
     const value = e.target.value;
     try {
       const datasToPut = { ...user.settings, slot_duration: value };
-      await xanoPut(`/settings/${user.settings.id}`, "staff", datasToPut);
+      const response = await xanoPut(
+        `/settings/${user.settings.id}`,
+        "staff",
+        datasToPut
+      );
       socket.emit("message", {
         route: "USER",
         action: "update",
@@ -20,7 +24,7 @@ const SlotSelect = () => {
           id: user.id,
           data: {
             ...user,
-            settings: { ...user.settings, slot_duration: value },
+            settings: response.data,
           },
         },
       });

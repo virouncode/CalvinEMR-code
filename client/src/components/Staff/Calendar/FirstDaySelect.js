@@ -13,7 +13,11 @@ const FirstDaySelect = () => {
     const value = e.target.value;
     try {
       const datasToPut = { ...user.settings, first_day: value };
-      await xanoPut(`/settings/${user.settings.id}`, "staff", datasToPut);
+      const response = await xanoPut(
+        `/settings/${user.settings.id}`,
+        "staff",
+        datasToPut
+      );
       socket.emit("message", {
         route: "USER",
         action: "update",
@@ -21,7 +25,7 @@ const FirstDaySelect = () => {
           id: user.id,
           data: {
             ...user,
-            settings: { ...user.settings, first_day: value },
+            settings: response.data,
           },
         },
       });
