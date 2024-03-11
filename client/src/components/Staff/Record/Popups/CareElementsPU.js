@@ -43,7 +43,6 @@ const CareElementsPU = ({
   setPopUpVisible,
 }) => {
   //HOOKS
-  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -403,10 +402,8 @@ const CareElementsPU = ({
       try {
         //Validating
         await putPatientRecord(
-          "/care_elements",
-          topicDatas[0].id,
+          `/care_elements/${topicDatas[0].id}`,
           user.id,
-
           datasToPut,
           socket,
           "CARE ELEMENTS"
