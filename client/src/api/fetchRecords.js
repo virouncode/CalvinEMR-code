@@ -59,7 +59,7 @@ export const putPatientRecord = async (
   topic = null,
   abortController = null
 ) => {
-  if (url !== "/clinical_notes") {
+  if (!url.includes("/clinical_notes")) {
     //because we have a versioning for that
     datasToPut.updates.push({
       updated_by_id: userId,

@@ -105,7 +105,6 @@ const AlertItem = ({
         await deletePatientRecord(
           "/alerts",
           item.id,
-
           socket,
           "ALERTS & SPECIAL NEEDS"
         );
