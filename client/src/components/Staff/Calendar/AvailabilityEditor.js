@@ -9,7 +9,7 @@ import DurationPicker from "../../All/UI/Pickers/DurationPicker";
 import AvailabilityItem from "./AvailabilityItem";
 
 const AvailabilityEditor = ({
-  setEditVisible,
+  setEditAvailabilityVisible,
   scheduleMorning,
   setScheduleMorning,
   scheduleAfternoon,
@@ -65,7 +65,7 @@ const AvailabilityEditor = ({
         action: "update",
         content: { data: datasToPut },
       });
-      setEditVisible(false);
+      setEditAvailabilityVisible(false);
       toast.success("Availability saved successfully", { containerId: "A" });
       setProgress(false);
     } catch (err) {
@@ -124,7 +124,7 @@ const AvailabilityEditor = ({
   };
 
   const handleCancel = () => {
-    setEditVisible(false);
+    setEditAvailabilityVisible(false);
   };
 
   return (

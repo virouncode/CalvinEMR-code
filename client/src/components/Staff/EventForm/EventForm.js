@@ -26,6 +26,7 @@ import { toSiteName } from "../../../utils/toSiteName";
 import { toRoomTitle } from "../../../validation/toRoomTitle";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import DurationPicker from "../../All/UI/Pickers/DurationPicker";
+import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import EditGuests from "./EditGuests";
 import FlatpickrEnd from "./FlatpickrEnd";
 import FlatpickrStart from "./FlatpickrStart";
@@ -68,9 +69,9 @@ const EventForm = ({
     chart: "",
     health: "",
   });
-  const [{ formDatas, tempFormDatas }, , setTempFormDatas] = useEventForm(
-    currentEvent.current.id
-  );
+  const { formDatas, tempFormDatas, setTempFormDatas, loadingEvent, errMsg } =
+    useEventForm(currentEvent.current.id);
+
   const { loading, err, patientsDemographics, hasMore } = usePatientsGuestsList(
     search,
     paging,
@@ -121,9 +122,9 @@ const EventForm = ({
       staffIdToTitleAndName(staffInfos, value, true)
     );
     if (value === user.id) {
-      currentEvent.current.setProp("color", "#6490D2");
-      currentEvent.current.setProp("textColor", "#FEFEFE");
-      setFormColor("#6490D2");
+      currentEvent.current.setProp("color", "#93B5E9");
+      currentEvent.current.setProp("textColor", "#3D375A");
+      setFormColor("#93B5E9");
     } else {
       const host = remainingStaff.find(({ id }) => id === value);
       currentEvent.current.setProp("color", host.color);
@@ -454,6 +455,7 @@ const EventForm = ({
     );
     currentEvent.current.setProp("color", initialColor.current);
     currentEvent.current.setProp("textColor", initialTextColor.current);
+    currentEvent.current.setExtendedProp("notes", formDatas.AppointmentNotes);
     setFormVisible(false);
     setCalendarSelectable(true);
   };
@@ -569,188 +571,209 @@ const EventForm = ({
   };
 
   return (
-    formDatas &&
-    tempFormDatas &&
-    (!invitationVisible ? (
-      <form
-        className={
-          user.title === "Secretary" ||
-          currentEvent.current.extendedProps.host === user.id
-            ? "event-form"
-            : "event-form event-form--uneditable"
-        }
-        onSubmit={handleSubmit}
-      >
-        <div className="event-form__row">
-          <div className="event-form__item">
-            <label>Host </label>
-            {user.title === "Secretary" ? (
-              <HostsList
-                handleHostChange={handleHostChange}
-                hostId={tempFormDatas.host_id}
-              />
-            ) : (
-              <p>
-                {staffIdToTitleAndName(staffInfos, tempFormDatas.host_id, true)}
-              </p>
-            )}
-          </div>
-          <div className="event-form__item">
-            <label htmlFor="purpose">Purpose</label>
-            <input
-              type="text"
-              value={tempFormDatas.AppointmentPurpose}
-              onChange={handlePurposeChange}
-              name="AppointmentPurpose"
-              id="purpose"
-              autoComplete="off"
-            />
-          </div>
+    <div className="event-form__container">
+      {errMsg && (
+        <div style={{ textAlign: "center" }}>
+          <p className="event-form__err">{errMsg}</p>{" "}
+          <button onClick={handleCancel} disabled={progress}>
+            Close
+          </button>
         </div>
-        <div className="event-form__row">
-          <div className="event-form__item">
-            <FlatpickrStart
-              fpStart={fpStart}
-              startTime={tempFormDatas.start}
-              handleStartChange={handleStartChange}
-              allDay={tempFormDatas.all_day}
-            />
-          </div>
-          <div className="event-form__item">
-            <FlatpickrEnd
-              fpEnd={fpEnd}
-              start={currentEvent.current.start}
-              endTime={tempFormDatas.end}
-              allDay={currentEvent.current.allDay}
-              handleEndChange={handleEndChange}
-            />
-          </div>
-          <div className="event-form__item">
-            <DurationPicker
-              durationHours={
-                tempFormDatas.all_day
-                  ? ""
-                  : parseInt(tempFormDatas.Duration / 60).toString()
-              }
-              durationMin={
-                tempFormDatas.all_day
-                  ? ""
-                  : parseInt(tempFormDatas.Duration % 60).toString()
-              }
-              disabled={tempFormDatas.all_day}
-              handleDurationHoursChange={handleDurationHoursChange}
-              handleDurationMinChange={handleDurationMinChange}
-            />
-          </div>
-          <div className="event-form__item">
-            <label>All Day</label>
-            <input
-              type="checkbox"
-              className="all-day-checkbox"
-              checked={tempFormDatas.all_day}
-              onChange={handleCheckAllDay}
-            />
-          </div>
-        </div>
-        <div className="event-form__row event-form__row--guest">
-          <EditGuests
-            tempFormDatas={tempFormDatas}
-            setTempFormDatas={setTempFormDatas}
-            currentEvent={currentEvent}
-            editable={
-              user.title === "Secretary" || user.id === tempFormDatas.host_id
+      )}
+      {!errMsg &&
+        formDatas &&
+        tempFormDatas &&
+        (!invitationVisible ? (
+          <form
+            className={
+              user.title === "Secretary" ||
+              currentEvent.current.extendedProps.host === user.id
+                ? "event-form"
+                : "event-form event-form--uneditable"
             }
-            hostId={tempFormDatas.host_id}
-            search={search}
-            setSearch={setSearch}
-            paging={paging}
-            setPaging={setPaging}
-            loading={loading}
-            err={err}
-            hasMore={hasMore}
-            patientsDemographics={patientsDemographics}
-          />
-        </div>
-        <div className="event-form__row event-form__row--radio">
-          <div style={{ marginBottom: "5px" }}>
-            <SelectSite
-              handleSiteChange={handleSiteChange}
-              sites={sites}
-              value={tempFormDatas.site_id}
-            />
-          </div>
-          <RoomsRadio
-            handleRoomChange={handleRoomChange}
-            roomSelectedId={tempFormDatas.room_id}
-            rooms={sites
-              .find(({ id }) => id === tempFormDatas.site_id)
-              ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
-            isRoomOccupied={isRoomOccupied}
-          />
-        </div>
-        <div className="event-form__row event-form__row--radio">
-          <StatusesRadio
-            handleStatusChange={handleStatusChange}
-            statuses={statuses}
-            selectedStatus={tempFormDatas.AppointmentStatus}
-          />
-        </div>
-        <div className="event-form__row">
-          <div className="event-form__item">
-            <label>Notes</label>
-            <textarea
-              value={tempFormDatas.AppointmentNotes}
-              onChange={handleNotesChange}
-              name="AppointmentNotes"
-              id="notes"
-              autoComplete="off"
-            />
-          </div>
-        </div>
-        <div className="event-form__btns">
-          {user.title === "Secretary" ||
-          currentEvent.current.extendedProps.host === user.id ? (
-            <>
-              <input type="submit" value="Save" />
-              <button onClick={handleCancel} disabled={progress}>
-                Cancel
-              </button>
-              <button
-                onClick={handleInvitation}
-                disabled={
-                  (!tempFormDatas.staff_guests_ids.length &&
-                    !tempFormDatas.patients_guests_ids.length) ||
-                  !tempFormDatas.host_id ||
-                  progress
+            onSubmit={handleSubmit}
+          >
+            <div className="event-form__row">
+              <div className="event-form__item">
+                <label>Host </label>
+                {user.title === "Secretary" ? (
+                  <HostsList
+                    handleHostChange={handleHostChange}
+                    hostId={tempFormDatas.host_id}
+                  />
+                ) : (
+                  <p>
+                    {staffIdToTitleAndName(
+                      staffInfos,
+                      tempFormDatas.host_id,
+                      true
+                    )}
+                  </p>
+                )}
+              </div>
+              <div className="event-form__item">
+                <label htmlFor="purpose">Purpose</label>
+                <input
+                  type="text"
+                  value={tempFormDatas.AppointmentPurpose}
+                  onChange={handlePurposeChange}
+                  name="AppointmentPurpose"
+                  id="purpose"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+            <div className="event-form__row">
+              <div className="event-form__item">
+                <FlatpickrStart
+                  fpStart={fpStart}
+                  startTime={tempFormDatas.start}
+                  handleStartChange={handleStartChange}
+                  allDay={tempFormDatas.all_day}
+                />
+              </div>
+              <div className="event-form__item">
+                <FlatpickrEnd
+                  fpEnd={fpEnd}
+                  start={currentEvent.current.start}
+                  endTime={tempFormDatas.end}
+                  allDay={currentEvent.current.allDay}
+                  handleEndChange={handleEndChange}
+                />
+              </div>
+              <div className="event-form__item">
+                <DurationPicker
+                  durationHours={
+                    tempFormDatas.all_day
+                      ? ""
+                      : parseInt(tempFormDatas.Duration / 60).toString()
+                  }
+                  durationMin={
+                    tempFormDatas.all_day
+                      ? ""
+                      : parseInt(tempFormDatas.Duration % 60).toString()
+                  }
+                  disabled={tempFormDatas.all_day}
+                  handleDurationHoursChange={handleDurationHoursChange}
+                  handleDurationMinChange={handleDurationMinChange}
+                />
+              </div>
+              <div className="event-form__item">
+                <label>All Day</label>
+                <input
+                  type="checkbox"
+                  className="all-day-checkbox"
+                  checked={tempFormDatas.all_day}
+                  onChange={handleCheckAllDay}
+                />
+              </div>
+            </div>
+            <div className="event-form__row event-form__row--guest">
+              <EditGuests
+                tempFormDatas={tempFormDatas}
+                setTempFormDatas={setTempFormDatas}
+                currentEvent={currentEvent}
+                editable={
+                  user.title === "Secretary" ||
+                  user.id === tempFormDatas.host_id
                 }
-              >
-                Send invitation
-              </button>
-            </>
-          ) : (
-            <button onClick={handleCancel} disabled={progress}>
-              Close
-            </button>
-          )}
+                hostId={tempFormDatas.host_id}
+                search={search}
+                setSearch={setSearch}
+                paging={paging}
+                setPaging={setPaging}
+                loading={loading}
+                err={err}
+                hasMore={hasMore}
+                patientsDemographics={patientsDemographics}
+              />
+            </div>
+            <div className="event-form__row event-form__row--radio">
+              <div style={{ marginBottom: "5px" }}>
+                <SelectSite
+                  handleSiteChange={handleSiteChange}
+                  sites={sites}
+                  value={tempFormDatas.site_id}
+                />
+              </div>
+              <RoomsRadio
+                handleRoomChange={handleRoomChange}
+                roomSelectedId={tempFormDatas.room_id}
+                rooms={sites
+                  .find(({ id }) => id === tempFormDatas.site_id)
+                  ?.rooms.sort((a, b) => a.id.localeCompare(b.id))}
+                isRoomOccupied={isRoomOccupied}
+              />
+            </div>
+            <div className="event-form__row event-form__row--radio">
+              <StatusesRadio
+                handleStatusChange={handleStatusChange}
+                statuses={statuses}
+                selectedStatus={tempFormDatas.AppointmentStatus}
+              />
+            </div>
+            <div className="event-form__row">
+              <div className="event-form__item">
+                <label>Notes</label>
+                <textarea
+                  value={tempFormDatas.AppointmentNotes}
+                  onChange={handleNotesChange}
+                  name="AppointmentNotes"
+                  id="notes"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+            <div className="event-form__btns">
+              {user.title === "Secretary" ||
+              currentEvent.current.extendedProps.host === user.id ? (
+                <>
+                  <input type="submit" value="Save" />
+                  <button onClick={handleCancel} disabled={progress}>
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleInvitation}
+                    disabled={
+                      (!tempFormDatas.staff_guests_ids.length &&
+                        !tempFormDatas.patients_guests_ids.length) ||
+                      !tempFormDatas.host_id ||
+                      progress
+                    }
+                  >
+                    Send invitation
+                  </button>
+                </>
+              ) : (
+                <button onClick={handleCancel} disabled={progress}>
+                  Close
+                </button>
+              )}
+            </div>
+          </form>
+        ) : (
+          <Invitation
+            setInvitationVisible={setInvitationVisible}
+            hostId={tempFormDatas.host_id}
+            staffInfos={staffInfos}
+            start={tempFormDatas.start}
+            end={tempFormDatas.end}
+            patientsGuestsInfos={tempFormDatas.patients_guests_ids
+              .filter((item) => item)
+              .map(({ patient_infos }) => patient_infos)}
+            staffGuestsInfos={tempFormDatas.staff_guests_ids
+              .filter((item) => item)
+              .map(({ staff_infos }) => staff_infos)}
+            sites={sites}
+            siteId={tempFormDatas.site_id}
+          />
+        ))}
+      {loadingEvent && (
+        <div style={{ marginTop: "50px" }}>
+          <LoadingParagraph />
         </div>
-      </form>
-    ) : (
-      <Invitation
-        setInvitationVisible={setInvitationVisible}
-        hostId={tempFormDatas.host_id}
-        staffInfos={staffInfos}
-        start={tempFormDatas.start}
-        end={tempFormDatas.end}
-        patientsGuestsInfos={tempFormDatas.patients_guests_ids
-          .filter((item) => item)
-          .map(({ patient_infos }) => patient_infos)}
-        staffGuestsInfos={tempFormDatas.staff_guests_ids
-          .filter((item) => item)
-          .map(({ staff_infos }) => staff_infos)}
-        sites={sites}
-        siteId={tempFormDatas.site_id}
-      />
-    ))
+      )}
+    </div>
   );
 };
 

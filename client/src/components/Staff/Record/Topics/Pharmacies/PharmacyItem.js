@@ -117,10 +117,8 @@ const PharmacyItem = ({
       try {
         setProgress(true);
         await putPatientRecord(
-          "/pharmacies",
-          item.id,
+          `/pharmacies/${item.id}`,
           user.id,
-
           datasToPut,
           socket,
           "PHARMACIES"
@@ -161,10 +159,8 @@ const PharmacyItem = ({
           PreferredPharmacy: item.id,
         };
         await putPatientRecord(
-          "/demographics",
-          demographicsInfos.id,
+          `/demographics/${demographicsInfos.id}`,
           user.id,
-
           newPatientDemographics,
           socket,
           "DEMOGRAPHICS"

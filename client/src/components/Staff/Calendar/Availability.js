@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import AvailabilityEditor from "./AvailabilityEditor";
 
@@ -15,10 +15,11 @@ const Availability = ({
   setDefaultDurationHours,
   defaultDurationMin,
   setDefaultDurationMin,
+  editAvailabilityVisible,
+  setEditAvailabilityVisible,
 }) => {
-  const [editVisible, setEditVisible] = useState(false);
   const handleEdit = (e) => {
-    setEditVisible((v) => !v);
+    setEditAvailabilityVisible((v) => !v);
   };
   return (
     <>
@@ -30,7 +31,7 @@ const Availability = ({
           className="fa-regular fa-pen-to-square"
         ></i>
       </div>
-      {editVisible && (
+      {editAvailabilityVisible && (
         <FakeWindow
           title="MY AVAILABILITY"
           width={1000}
@@ -38,10 +39,10 @@ const Availability = ({
           x={(window.innerWidth - 1000) / 2}
           y={(window.innerHeight - 400) / 2}
           color={"#94bae8"}
-          setPopUpVisible={setEditVisible}
+          setPopUpVisible={setEditAvailabilityVisible}
         >
           <AvailabilityEditor
-            setEditVisible={setEditVisible}
+            setEditAvailabilityVisible={setEditAvailabilityVisible}
             scheduleMorning={scheduleMorning}
             setScheduleMorning={setScheduleMorning}
             scheduleAfternoon={scheduleAfternoon}

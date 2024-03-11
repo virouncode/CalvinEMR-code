@@ -16,7 +16,7 @@ const PatientResultItem = ({ patient, lastPatientRef }) => {
           <NavLink
             to={`/staff/patient-record/${patient.patient_id}`}
             className="record-link"
-            target="_blank"
+            // target="_blank"
           >
             {patient.Names.LegalName.LastName.Part || ""}
           </NavLink>

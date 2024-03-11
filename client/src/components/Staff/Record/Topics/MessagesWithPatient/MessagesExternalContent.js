@@ -44,7 +44,7 @@ const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
                       to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/External`}
-                      target="_blank"
+                      // target="_blank"
                     >
                       {message.subject} - {message.body}
                     </NavLink>
@@ -55,7 +55,7 @@ const MessagesExternalContent = ({ topicDatas, loading, errMsg }) => {
                       to={`/staff/messages/${message.id}/${getSection(
                         message
                       )}/External`}
-                      target="_blank"
+                      // target="_blank"
                     >
                       {toLocalDate(message.date_created)}
                     </NavLink>

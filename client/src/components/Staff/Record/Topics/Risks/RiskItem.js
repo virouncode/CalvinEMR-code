@@ -63,10 +63,8 @@ const RiskItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/risk_factors",
-        item.id,
+        `/risk_factors/${item.id}`,
         user.id,
-
         formDatas,
         socket,
         "RISK FACTORS"

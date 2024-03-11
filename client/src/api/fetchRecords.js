@@ -53,7 +53,6 @@ export const postPatientRecord = async (
 
 export const putPatientRecord = async (
   url,
-  recordId,
   userId,
   datasToPut,
   socket = null,
@@ -69,25 +68,19 @@ export const putPatientRecord = async (
   }
 
   try {
-    const response = await xanoPut(
-      url,
-      "staff",
-      datasToPut,
-      recordId,
-      abortController
-    );
+    const response = await xanoPut(url, "staff", datasToPut, abortController);
     if (socket && topic) {
       socket.emit("message", {
         route: topic,
         action: "update",
-        content: { id: recordId, data: response.data },
+        content: { id: response.data.id, data: response.data },
       });
       if (topic === "APPOINTMENTS") {
         //if appointments put events as well
         socket.emit("message", {
           route: "EVENTS",
           action: "update",
-          content: { id: recordId, data: response.data },
+          content: { id: response.data.id, data: response.data },
         });
       }
     }

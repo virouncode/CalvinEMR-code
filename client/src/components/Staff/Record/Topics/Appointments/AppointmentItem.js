@@ -432,10 +432,8 @@ const AppointmentItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/appointments",
-        item.id,
+        `/appointments/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "APPOINTMENTS"

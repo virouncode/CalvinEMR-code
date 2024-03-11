@@ -17,10 +17,8 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
     try {
       setProgress(true);
       await putPatientRecord(
-        "/doctors",
-        item.id,
+        `/doctors/${item.id}`,
         user.id,
-
         {
           ...item,
           patients: item.patients.filter((id) => id !== patientId),

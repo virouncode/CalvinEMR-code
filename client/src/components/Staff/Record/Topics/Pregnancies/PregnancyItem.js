@@ -71,10 +71,8 @@ const PregnancyItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/pregnancies",
-        item.id,
+        `/pregnancies/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "PREGNANCIES"

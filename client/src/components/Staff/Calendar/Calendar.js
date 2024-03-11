@@ -46,9 +46,10 @@ const Calendar = () => {
   const [formVisible, setFormVisible] = useState(false);
   const [rangeStart, setRangeStart] = useState(new Date().setHours(0, 0, 0));
   const [rangeEnd, setRangeEnd] = useState(new Date().setHours(23, 59, 59));
-  const [formColor, setFormColor] = useState("#6490D2");
+  const [formColor, setFormColor] = useState("#93B5E9");
   const [sitesIds, setSitesIds] = useState([user.site_id]); //Sites for CalendarFilter
   const [timelineSiteId, setTimelineSiteId] = useState(user.site_id); //SelectTimelineSite
+  const [editAvailabilityVisible, setEditAvailabilityVisible] = useState(false);
   const [hostsIds, setHostsIds] = useState(
     user.title === "Secretary"
       ? [0, ...staffInfos.map(({ id }) => id)]
@@ -89,6 +90,7 @@ const Calendar = () => {
   const eventCounter = useRef(0);
 
   useEffect(() => {
+    console.log("lastCurrentId", lastCurrentId.current);
     if (lastCurrentId.current) {
       currentEventElt.current = document.getElementsByClassName(
         `event-${lastCurrentId.current}`
@@ -98,7 +100,7 @@ const Calendar = () => {
       ) {
         document.getElementsByClassName(
           `event-${lastCurrentId.current}`
-        )[0].style.opacity = 1;
+        )[0].style.border = "solid 1px red";
       }
     }
   }, [events]);
@@ -110,7 +112,8 @@ const Calendar = () => {
     eventCounter,
     formVisible,
     setFormVisible,
-    setCalendarSelectable
+    setCalendarSelectable,
+    editAvailabilityVisible
   );
   useEventsSocket(events, setEvents, sites);
 
@@ -131,28 +134,28 @@ const Calendar = () => {
     const eventElt = document.getElementsByClassName(`event-${event.id}`)[0];
     if (currentEvent.current && currentEvent.current.id !== event.id) {
       //event selection change
-      //change opacity and unselect previous event
-      currentEventElt.current.style.opacity = 0.65;
+      //change border and unselect previous event
+      currentEventElt.current.style.border = "none";
       //Change current event, current event element and current view
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
     } else if (currentEvent.current === null) {
       //first event selection
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
     } else {
       //click on already selected event
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
     }
     if (
       await confirmAlert({
@@ -320,7 +323,15 @@ const Calendar = () => {
               alignItems: "center",
             }}
           >
-            {event.allDay ? "All Day" : info.timeText}
+            <span
+              style={{
+                width: "70px",
+                textAlign: "left",
+                display: "inline-block",
+              }}
+            >
+              {event.allDay ? "All Day" : info.timeText}
+            </span>
             <span style={{ marginLeft: "10px" }}>
               <strong>
                 {event.extendedProps.purpose?.toUpperCase() ?? "APPOINTMENT"}
@@ -371,7 +382,8 @@ const Calendar = () => {
             {event.extendedProps.hostName} / <strong>Site:</strong>{" "}
             {event.extendedProps.siteName} / <strong>Room: </strong>
             {event.extendedProps.roomTitle} / <strong>Status: </strong>
-            {event.extendedProps.status}
+            {event.extendedProps.status} / <strong>Notes: </strong>
+            {event.extendedProps.notes}
           </div>
           <i
             className="fa-solid fa-trash"
@@ -478,6 +490,10 @@ const Calendar = () => {
             <strong>Status: </strong>
             {event.extendedProps.status}
           </div>
+          <div>
+            <strong>Notes: </strong>
+            {event.extendedProps.notes}
+          </div>
         </div>
       );
     }
@@ -490,37 +506,43 @@ const Calendar = () => {
     const view = info.view;
     if (currentEvent.current && currentEvent.current.id !== event.id) {
       //event selection change
-      //change opacity and unselect previous event
-      currentEventElt.current.style.opacity = 0.65;
+      console.log("event selection change");
+      //change border and unselect previous event
+      currentEventElt.current.style.border = "none";
       //Change current event, current event element and current view
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
     } else if (currentEvent.current === null) {
+      console.log("new event selection");
       //first event selection
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
     } else {
       //click on already selected event
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
       currentView.current = view;
-      eventElt.style.opacity = "1";
+      eventElt.style.border = "solid 1px red";
       setFormColor(event.backgroundColor);
       setFormVisible(true);
       setCalendarSelectable(false);
     }
+    console.log("lastCurrentId after click", lastCurrentId.current);
   };
   // DATES SET
   const handleDatesSet = (info) => {
     setRangeStart(Date.parse(info.startStr));
     setRangeEnd(Date.parse(info.endStr));
+    if (currentEventElt.current) {
+      currentEventElt.current.style.border = "none";
+    }
     currentEvent.current = null;
     lastCurrentId.current = "";
     currentEventElt.current = null;
@@ -528,7 +550,7 @@ const Calendar = () => {
   };
   // //DATE SELECT
   const handleDateSelect = async (info) => {
-    if (currentEventElt.current) currentEventElt.current.style.opacity = 0.65;
+    if (currentEventElt.current) currentEventElt.current.style.border = "none";
     const startDate = Date.parse(info.startStr);
     const defaultDuration =
       defaultDurationHours * 3600000 + defaultDurationMin * 60000;
@@ -544,7 +566,7 @@ const Calendar = () => {
     let newEvent = {
       start: info.allDay ? startAllDay : new Date(startDate),
       end: info.allDay ? endAllDay : new Date(endDate),
-      color: user.title === "Secretary" ? "#bfbfbf" : "#6490D2",
+      color: user.title === "Secretary" ? "#bfbfbf" : "#93B5E9",
       textColor: "#3D375A",
       allDay: info.allDay,
       extendedProps: {
@@ -718,14 +740,14 @@ const Calendar = () => {
     }
     setFormVisible(false);
     if (currentEvent.current.id !== info.event.id) {
-      currentEventElt.current.style.opacity = 0.65;
+      currentEventElt.current.style.border = "none";
     }
   };
   const handleDrop = async (info) => {
     const event = info.event;
     const eventElt = info.el;
-    if (currentEventElt.current) currentEventElt.current.style.opacity = 0.65;
-    info.el.style.opacity = "1";
+    if (currentEventElt.current) currentEventElt.current.style.border = "none";
+    info.el.style.border = "solid 1px red";
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
@@ -877,8 +899,8 @@ const Calendar = () => {
     const event = info.event;
     const eventElt = info.el;
 
-    if (currentEventElt.current) currentEventElt.current.style.opacity = 0.65;
-    info.el.style.opacity = "1";
+    if (currentEventElt.current) currentEventElt.current.style.border = "none";
+    info.el.style.border = "solod 1px red";
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
@@ -983,7 +1005,6 @@ const Calendar = () => {
       info.revert();
     }
   };
-
   return events ? (
     <div>
       <CalendarOptions
@@ -999,6 +1020,8 @@ const Calendar = () => {
         setDefaultDurationHours={setDefaultDurationHours}
         defaultDurationMin={defaultDurationMin}
         setDefaultDurationMin={setDefaultDurationMin}
+        editAvailabilityVisible={editAvailabilityVisible}
+        setEditAvailabilityVisible={setEditAvailabilityVisible}
       />
       <div className="calendar">
         <div className="calendar__left-bar">

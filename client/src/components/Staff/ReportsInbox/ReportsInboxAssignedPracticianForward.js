@@ -89,10 +89,8 @@ const ReportsInboxAssignedPracticianForward = ({
       setProgress(true);
       reportToForward.assigned_staff_id = assignedId;
       await putPatientRecord(
-        "/reports",
-        reportToForward.id,
+        `/reports/${reportToForward.id}`,
         user.id,
-
         reportToForward,
         socket,
         "REPORTS"

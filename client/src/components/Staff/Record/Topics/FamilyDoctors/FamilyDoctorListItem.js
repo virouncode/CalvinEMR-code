@@ -128,10 +128,8 @@ const FamilyDoctorListItem = ({
       try {
         setProgress(true);
         await putPatientRecord(
-          "/doctors",
-          item.id,
+          `/doctors/${item.id}`,
           user.id,
-
           datasToPut,
           socket,
           "FAMILY DOCTORS/SPECIALISTS"
@@ -168,10 +166,8 @@ const FamilyDoctorListItem = ({
     try {
       //Upadte doctors list
       await putPatientRecord(
-        "/doctors",
-        item.id,
+        `/doctors/${item.id}`,
         user.id,
-
         {
           ...item,
           patients: [...item.patients, patientId],

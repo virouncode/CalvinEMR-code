@@ -67,10 +67,8 @@ const FamHistoryItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/family_history",
-        item.id,
+        `/family_history/${item.id}`,
         user.id,
-
         formDatas,
         socket,
         "FAMILY HISTORY"

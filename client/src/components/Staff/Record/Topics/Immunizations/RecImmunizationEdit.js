@@ -82,10 +82,8 @@ const RecImmunizationEdit = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/immunizations",
-        immunizationInfos.id,
+        `/immunizations/${immunizationInfos.id}`,
         user.id,
-
         datasToPut,
         socket,
         "IMMUNIZATIONS"

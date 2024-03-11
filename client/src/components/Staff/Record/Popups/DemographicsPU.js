@@ -477,8 +477,7 @@ const DemographicsPU = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/demographics",
-        demographicsInfos.id,
+        `/demographics/${demographicsInfos.id}`,
         user.id,
         datasToPut,
         socket,

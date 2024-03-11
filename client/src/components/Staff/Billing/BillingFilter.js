@@ -119,9 +119,9 @@ const BillingFilter = ({
                 staffInfos,
                 user.id
               )}
-              target="_blank"
+              // target="_blank"
               headers={headers}
-              style={{ color: "#FEFEFE" }}
+              style={{ color: "#3D375A" }}
             >
               Export to CSV
             </CSVLink>

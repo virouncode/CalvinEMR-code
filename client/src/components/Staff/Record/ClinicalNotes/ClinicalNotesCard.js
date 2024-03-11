@@ -110,7 +110,6 @@ const ClinicalNotesCard = ({
         await postPatientRecord(
           "/clinical_notes_log",
           user.id,
-
           clinicalNoteLog
         );
         //then put the new clinical note version in the clinical note tbl
@@ -122,8 +121,7 @@ const ClinicalNotesCard = ({
         datasToPost.date_updated = Date.now(); //we update the date_updated
         delete datasToPost.version;
         await putPatientRecord(
-          "/clinical_notes",
-          clinicalNote.id,
+          `/clinical_notes/${clinicalNote.id}`,
           user.id,
           datasToPost,
           socket,

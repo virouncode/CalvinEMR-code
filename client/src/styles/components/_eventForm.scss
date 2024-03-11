@@ -1,8 +1,20 @@
 .event-form {
-    margin-top: 40px;
     padding: 10px;
     &--uneditable {
         pointer-events: none;
+    }
+    &__container {
+        margin-top: 40px;
+    }
+    &__err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin:0 auto 10px;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 6px;
+        text-align: center;
     }
     &__row {
         display: flex;

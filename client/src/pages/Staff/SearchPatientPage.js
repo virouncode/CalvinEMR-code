@@ -5,6 +5,7 @@ import useTitle from "../../hooks/useTitle";
 
 const SearchPatientPage = () => {
   useTitle("Search Patient");
+  console.log("search patient");
   return (
     <>
       <Helmet>

@@ -120,10 +120,8 @@ const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
     //Submission
     try {
       await putPatientRecord(
-        "/demographics",
-        demographicsInfos.id,
+        `/demographics/${demographicsInfos.id}`,
         user.id,
-
         datasToPut,
         socket,
         "DEMOGRAPHICS"

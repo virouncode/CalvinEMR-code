@@ -117,8 +117,7 @@ const ImmunizationItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/immunizations",
-        itemInfos.id,
+        `/immunizations/${itemInfos.id}`,
         user.id,
         datasToPut,
         socket,

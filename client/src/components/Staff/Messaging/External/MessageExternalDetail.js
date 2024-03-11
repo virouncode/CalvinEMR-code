@@ -272,7 +272,7 @@ const MessageExternalDetail = ({
               to={`/staff/patient-record/${
                 message.from_patient_id || message.to_patient_id
               }`}
-              target="_blank"
+              // target="_blank"
               className="message-detail__patient-link"
             >
               {message.from_patient_id

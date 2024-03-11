@@ -70,10 +70,8 @@ const PastHealthItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/past_health",
-        item.id,
+        `/past_health/${item.id}`,
         user.id,
-
         formDatas,
         socket,
         "PAST HEALTH"

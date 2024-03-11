@@ -52,7 +52,8 @@ const ImmunizationsPU = ({
   return (
     <>
       <h1 className="immunizations__title">
-        Patient immunizations <i className="fa-solid fa-syringe"></i>
+        Patient immunizations{" "}
+        <i className="fa-solid fa-syringe" style={{ marginRight: "10px" }}></i>
         <button onClick={handleClose}>Close</button>
       </h1>
       {errMsg && <div className="immunizations__err">{errMsg}</div>}

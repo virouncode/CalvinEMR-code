@@ -15,7 +15,6 @@ const useEvents = (
   sites,
   staffInfos
 ) => {
-  ;
   const { user } = useUserContext();
   const [events, setEvents] = useState([]);
   const [remainingStaff, setRemainingStaff] = useState([]);
@@ -42,6 +41,7 @@ const useEvents = (
           user.id
         );
         if (abortController.signal.aborted) return;
+        console.log("events", formattedEvents[0]);
         setEvents(formattedEvents[0]);
         setRemainingStaff(formattedEvents[1]);
       } catch (err) {

@@ -87,9 +87,9 @@ const ClinicalNotesCardHeader = ({
                     }/${toPatientName(demographicsInfos)}/${
                       demographicsInfos.HealthCard?.Number
                     }/${clinicalNote.date_created}`}
-                    target="_blank"
+                    // target="_blank"
                     rel="noreferrer"
-                    style={{ color: "#FEFEFE" }}
+                    // style={{ fontWeight: "bold" }}
                   >
                     Bill
                   </a>

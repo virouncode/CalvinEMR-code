@@ -25,7 +25,6 @@ const PersonalHistoryPU = ({
   setPopUpVisible,
 }) => {
   //HOOKS
-  ;
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -153,10 +152,8 @@ const PersonalHistoryPU = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/personal_history",
-        topicDatas[0].id,
+        `/personal_history/${topicDatas[0].id}`,
         user.id,
-
         datasToPut,
         socket,
         "PERSONAL HISTORY"

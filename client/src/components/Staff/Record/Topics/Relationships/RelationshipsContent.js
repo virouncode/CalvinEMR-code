@@ -17,7 +17,7 @@ const RelationshipsContent = ({ topicDatas, loading, errMsg }) => {
                 <NavLink
                   to={`/staff/patient-record/${item.relation_id}`}
                   className="topic-content__link"
-                  target="_blank"
+                  // target="_blank"
                 >
                   {toPatientName(item.relation_infos)}
                 </NavLink>

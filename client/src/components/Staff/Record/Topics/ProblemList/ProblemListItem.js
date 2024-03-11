@@ -68,10 +68,8 @@ const ProblemListItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/problemlist",
-        item.id,
+        `/problemlist/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "PROBLEM LIST"

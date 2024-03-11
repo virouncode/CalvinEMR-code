@@ -71,13 +71,7 @@ const RelationshipItem = ({
       await xanoDelete(`/relationships/${inverseRelationToDeleteId}`, "staff");
 
       //Put the relationship
-      await putPatientRecord(
-        "/relationships",
-        item.id,
-        user.id,
-
-        itemInfos
-      );
+      await putPatientRecord(`/relationships/${item.id}`, user.id, itemInfos);
       //Emit socket apart to add relation_infos
       socket.emit("message", {
         route: "RELATIONSHIPS",

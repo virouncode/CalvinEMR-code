@@ -45,10 +45,8 @@ const ReportsInboxItem = ({
       ];
 
       await putPatientRecord(
-        "/reports",
-        item.id,
+        `/reports/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "REPORTS"
@@ -102,7 +100,7 @@ const ReportsInboxItem = ({
         <NavLink
           className="reports__link"
           to={`/staff/patient-record/${item.patient_id}`}
-          target="_blank"
+          // target="_blank"
         >
           {" "}
           {toPatientName(item.patient_infos)}

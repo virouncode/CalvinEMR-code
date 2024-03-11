@@ -71,7 +71,7 @@ export const parseToEvents = (
               )
           : parseToEvent(
               appointment,
-              "#6490D2",
+              "#93B5E9",
               "#3D375A",
               isSecretary,
               userId,

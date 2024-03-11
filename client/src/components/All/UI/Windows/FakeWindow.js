@@ -127,7 +127,7 @@ const FakeWindow = ({
             }}
             className="window-title-close"
           >
-            X
+            <i class="fa-regular fa-rectangle-xmark"></i>
           </div>
         )}
       </div>

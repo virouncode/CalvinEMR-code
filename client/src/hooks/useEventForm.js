@@ -1,49 +1,17 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
 
-const initialState = {
-  formDatas: null,
-  tempFormDatas: null,
-  isLoading: false,
-  errMsg: null,
-};
-
-const httpReducer = (state, action) => {
-  switch (action.type) {
-    case "FETCH_START":
-      return {
-        ...state,
-        isLoading: state.formDatas ? false : true,
-        errMsg: null,
-      };
-    case "FETCH_ERROR":
-      return {
-        formDatas: null,
-        tempFormDatas: null,
-        isLoading: false,
-        errMsg: action.payload,
-      };
-    case "FETCH_SUCCESS":
-      return {
-        formDatas: action.payload,
-        tempFormDatas: action.payload,
-        isLoading: false,
-        errMsg: null,
-      };
-    case "SET_TEMPFORMDATAS":
-      return { ...state, tempFormDatas: action.payload };
-    default:
-      return initialState;
-  }
-};
-
 export const useEventForm = (eventId) => {
-  const [httpState, dispatch] = useReducer(httpReducer, initialState);
+  const [formDatas, setFormDatas] = useState(null);
+  const [tempFormDatas, setTempFormDatas] = useState(null);
+  const [loadingEvent, setLoadingEvent] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+
   const fetchEventFormDatas = useCallback(
     async (abortController) => {
       try {
-        dispatch({ type: "FETCH_START" });
+        setLoadingEvent(true);
         const response = await xanoGet(
           `/appointments/${eventId}`,
           "staff",
@@ -51,22 +19,19 @@ export const useEventForm = (eventId) => {
           abortController
         );
         if (abortController.signal.aborted) return;
-        dispatch({ type: "FETCH_SUCCESS", payload: response.data });
+        setLoadingEvent(false);
+        setFormDatas(response.data);
+        setTempFormDatas(response.data);
       } catch (err) {
+        setLoadingEvent(false);
         if (err.name !== "CanceledError") {
-          dispatch({
-            type: "FETCH_ERROR",
-            payload: `Error: unable to fetch event datas: ${err.message}`,
-          });
+          console.log(err.message);
+          setErrMsg(`Error: unable to fetch event datas: ${err.message}`);
         }
       }
     },
     [eventId]
   );
-
-  const setTempFormDatas = (newTempFormDatas) => {
-    dispatch({ type: "SET_TEMPFORMDATAS", payload: newTempFormDatas });
-  };
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -76,5 +41,14 @@ export const useEventForm = (eventId) => {
     };
   }, [fetchEventFormDatas]);
 
-  return [httpState, fetchEventFormDatas, setTempFormDatas];
+  return {
+    formDatas,
+    setFormDatas,
+    tempFormDatas,
+    setTempFormDatas,
+    loadingEvent,
+    setLoadingEvent,
+    errMsg,
+    setErrMsg,
+  };
 };

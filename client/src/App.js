@@ -44,7 +44,7 @@ const App = () => {
   useLocalStorageTracker();
   useAutoLogout(120); //autologout in min
   useLogoutForAll(); //log every tabs out if logout on one tab
-  useSocketConfig(true); //true for dev, false for prod
+  useSocketConfig(false); //true for dev, false for prod
   useStaffInfosSocket();
   useUserSocket();
   useUnreadExternalSocket(); //for staff and patient

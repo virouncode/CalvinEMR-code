@@ -195,9 +195,10 @@ p {
 }
 
 input[type="submit"] {
-    background: rgb(156,185,228);
-    background: linear-gradient(139deg, $blue 0%, $blue2 100%);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    // background: rgb(156,185,228);
+    // background: linear-gradient(139deg, $blue 0%, $blue2 100%);
+    // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
     color : $black;
     border: none;
     outline:none;
@@ -208,7 +209,7 @@ input[type="submit"] {
     cursor: pointer;
     white-space: nowrap;
     &:hover{
-      background: $blue2;
+      background: $grey;
     }
     &:disabled {
       opacity:0.2;
@@ -219,9 +220,10 @@ input[type="submit"] {
     }
 }
 button {
-  background: rgb(156,185,228);
-  background: linear-gradient(139deg, $blue 0%, $blue2 100%);
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  // background: rgb(156,185,228);
+  // background: linear-gradient(139deg, $blue 0%, $blue2 100%);
+  // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   color : $black;
   border: none;
   outline:none;
@@ -232,7 +234,7 @@ button {
   cursor: pointer;
   white-space: nowrap;
   &:hover{
-    background: $blue2;
+    background: $grey;
   }
   &:disabled {
     opacity:0.2;

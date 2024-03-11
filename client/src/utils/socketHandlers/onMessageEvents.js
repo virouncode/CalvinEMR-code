@@ -2,25 +2,25 @@ import { parseToEvent } from "../parseToEvents";
 var _ = require("lodash");
 
 const colorsPalette = [
-  { background: "#ffe119", text: "#21201e" },
-  { background: "#e6194b", text: "#FEFEFE" },
-  { background: "#3cb44b", text: "#FEFEFE" },
-  { background: "#f58231", text: "#FEFEFE" },
-  { background: "#911eb4", text: "#FEFEFE" },
-  { background: "#42d4f4", text: "#21201e" },
-  { background: "#f032e6", text: "#FEFEFE" },
-  { background: "#bfef45", text: "#21201e" },
-  { background: "#fabed4", text: "#21201e" },
-  { background: "#469990", text: "#FEFEFE" },
-  { background: "#dcbeff", text: "#21201e" },
-  { background: "#9a6324", text: "#FEFEFE" },
-  { background: "#fffac8", text: "#21201e" },
-  { background: "#800000", text: "#FEFEFE" },
-  { background: "#aaffc3", text: "#21201e" },
-  { background: "#808000", text: "#FEFEFE" },
-  { background: "#ffd8b1", text: "#21201e" },
-  { background: "#000075", text: "#FEFEFE" },
-  { background: "#808080", text: "#FEFEFE" },
+  { background: "#ffe119", text: "#3D375A" },
+  { background: "#e6194b", text: "#3D375A" },
+  { background: "#3cb44b", text: "#3D375A" },
+  { background: "#f58231", text: "#3D375A" },
+  { background: "#911eb4", text: "#3D375A" },
+  { background: "#42d4f4", text: "#3D375A" },
+  { background: "#f032e6", text: "#3D375A" },
+  { background: "#bfef45", text: "#3D375A" },
+  { background: "#fabed4", text: "#3D375A" },
+  { background: "#469990", text: "#3D375A" },
+  { background: "#dcbeff", text: "#3D375A" },
+  { background: "#9a6324", text: "#3D375A" },
+  { background: "#fffac8", text: "#3D375A" },
+  { background: "#800000", text: "#3D375A" },
+  { background: "#aaffc3", text: "#3D375A" },
+  { background: "#808000", text: "#3D375A" },
+  { background: "#ffd8b1", text: "#3D375A" },
+  { background: "#000075", text: "#3D375A" },
+  { background: "#808080", text: "#3D375A" },
 ];
 
 export const onMessageEvents = (
@@ -57,7 +57,7 @@ export const onMessageEvents = (
             ? parseToEvent(
                 message.content.data,
                 "#bfbfbf",
-                "#FEFEFE",
+                "#3D375A",
                 isSecretary,
                 userId,
                 rooms
@@ -76,8 +76,8 @@ export const onMessageEvents = (
               )
           : parseToEvent(
               message.content.data,
-              "#6490D2",
-              "#FEFEFE",
+              "#93B5E9",
+              "#3D375A",
               isSecretary,
               userId,
               rooms
@@ -91,7 +91,7 @@ export const onMessageEvents = (
             ? parseToEvent(
                 message.content.data,
                 "#bfbfbf",
-                "#FEFEFE",
+                "#3D375A",
                 isSecretary,
                 userId,
                 rooms
@@ -110,8 +110,8 @@ export const onMessageEvents = (
               )
           : parseToEvent(
               message.content.data,
-              "#6490D2",
-              "#FEFEFE",
+              "#93B5E9",
+              "#3D375A",
               isSecretary,
               userId,
               rooms

@@ -16,6 +16,8 @@ const CalendarOptions = ({
   setDefaultDurationHours,
   defaultDurationMin,
   setDefaultDurationMin,
+  editAvailabilityVisible,
+  setEditAvailabilityVisible,
 }) => {
   return (
     <div className="calendar__options">
@@ -34,6 +36,8 @@ const CalendarOptions = ({
         setDefaultDurationHours={setDefaultDurationHours}
         defaultDurationMin={defaultDurationMin}
         setDefaultDurationMin={setDefaultDurationMin}
+        editAvailabilityVisible={editAvailabilityVisible}
+        setEditAvailabilityVisible={setEditAvailabilityVisible}
       />
     </div>
   );

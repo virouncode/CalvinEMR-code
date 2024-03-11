@@ -59,10 +59,8 @@ const ReminderItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/reminders",
-        item.id,
+        `/reminders/${item.id}`,
         user.id,
-
         formDatas,
         socket,
         "REMINDERS"

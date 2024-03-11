@@ -7,7 +7,7 @@ const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
       <NavLink
         to={`/staff/patient-record/${guest.patient_id}`}
         className="guest-patient-item"
-        target="_blank"
+        // target="_blank"
       >
         {guest.Names.LegalName.FirstName.Part}{" "}
         {guest.Names.LegalName.OtherName?.[0]?.Part}{" "}

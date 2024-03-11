@@ -71,10 +71,8 @@ const AllergyItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/allergies",
-        item.id,
+        `/allergies/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "ALLERGIES & ADVERSE REACTIONS"

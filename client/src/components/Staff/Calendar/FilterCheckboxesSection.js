@@ -1,8 +1,8 @@
 import React from "react";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../utils/categoryToTitle";
 import FilterStaffItem from "./FilterStaffItem";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 
 const FilterCheckboxesSection = ({
   isCategoryChecked,
@@ -43,7 +43,7 @@ const FilterCheckboxesSection = ({
             color={
               staff.id !== user.id
                 ? remainingStaff.find(({ id }) => id === staff.id)?.color
-                : "#6490D2"
+                : "#93B5E9"
             }
           />
         ))}

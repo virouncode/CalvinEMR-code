@@ -85,9 +85,7 @@ p {
 }
 
 input[type=submit] {
-  background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   color: #3D375A;
   border: none;
   outline: none;
@@ -99,7 +97,7 @@ input[type=submit] {
   white-space: nowrap;
 }
 input[type=submit]:hover {
-  background: #6492d8;
+  background: #cecdcd;
 }
 input[type=submit]:disabled {
   opacity: 0.2;
@@ -110,9 +108,7 @@ input[type=submit]:active {
 }
 
 button {
-  background: rgb(156, 185, 228);
-  background: linear-gradient(139deg, #93b5e9 0%, #6492d8 100%);
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   color: #3D375A;
   border: none;
   outline: none;
@@ -124,7 +120,7 @@ button {
   white-space: nowrap;
 }
 button:hover {
-  background: #6492d8;
+  background: #cecdcd;
 }
 button:disabled {
   opacity: 0.2;
@@ -11095,9 +11091,6 @@ readers do not read off random characters that represent icons */
 .calendar__display .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard .fc-view-harness.fc-view-harness-active {
   font-size: 0.75rem;
 }
-.calendar__display .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard .fc-view-harness.fc-view-harness-active .fc-scrollgrid.fc-scrollgrid-liquid .fc-event {
-  opacity: 0.65;
-}
 .calendar__display .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard .fc-view-harness.fc-view-harness-active .fc-scrollgrid.fc-scrollgrid-liquid .fc-event-main {
   overflow: hidden;
 }
@@ -11106,7 +11099,6 @@ readers do not read off random characters that represent icons */
   font-size: 0.7rem;
   max-height: 15px;
   overflow: hidden;
-  opacity: 0.65;
 }
 .calendar__patient-link {
   cursor: pointer;
@@ -11241,11 +11233,23 @@ readers do not read off random characters that represent icons */
 }
 
 .event-form {
-  margin-top: 40px;
   padding: 10px;
 }
 .event-form--uneditable {
   pointer-events: none;
+}
+.event-form__container {
+  margin-top: 40px;
+}
+.event-form__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 0 auto 10px;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
 }
 .event-form__row {
   display: flex;
@@ -16337,7 +16341,7 @@ readers do not read off random characters that represent icons */
   border-radius: 8px 8px 0 0;
   position: fixed;
   height: 40px;
-  color: #3D375A;
+  color: #FEFEFE;
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -16348,12 +16352,12 @@ readers do not read off random characters that represent icons */
 }
 .window-title-close {
   cursor: pointer;
-  border: solid 1px #3D375A;
   height: 20px;
   width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.2rem;
 }
 
 .resize-handle {

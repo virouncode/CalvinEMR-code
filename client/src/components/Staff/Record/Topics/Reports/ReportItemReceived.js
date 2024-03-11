@@ -70,10 +70,8 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       ];
       setProgress(true);
       await putPatientRecord(
-        "/reports",
-        item.id,
+        `/reports/${item.id}`,
         user.id,
-
         datasToPut,
         socket,
         "REPORTS RECEIVED"

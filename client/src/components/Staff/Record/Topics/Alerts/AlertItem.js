@@ -60,10 +60,8 @@ const AlertItem = ({
     try {
       setProgress(true);
       await putPatientRecord(
-        "/alerts",
-        item.id,
+        `/alerts/${item.id}`,
         user.id,
-
         formDatas,
         socket,
         "ALERTS & SPECIAL NEEDS"

@@ -13,12 +13,14 @@ const useCalendarShortcuts = (
   eventCounter,
   formVisible,
   setFormVisible,
-  setCalendarSelectable
+  setCalendarSelectable,
+  editAvailabilityVisible
 ) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   useEffect(() => {
     const handleKeyboardShortcut = async (event) => {
+      if (editAvailabilityVisible || formVisible) return;
       if (event.keyCode === 37 && event.shiftKey) {
         //arrow left
         fcRef.current.calendar.prev();
@@ -32,8 +34,7 @@ const useCalendarShortcuts = (
         currentEvent.current &&
         (currentEvent.current.extendedProps.host === user.id ||
           user.title === "Secretary") &&
-        (event.key === "Backspace" || event.key === "Delete") &&
-        !formVisible
+        (event.key === "Backspace" || event.key === "Delete")
       ) {
         //backspace
         if (
@@ -107,6 +108,7 @@ const useCalendarShortcuts = (
     socket,
     user.id,
     user.title,
+    editAvailabilityVisible,
   ]);
 };
 

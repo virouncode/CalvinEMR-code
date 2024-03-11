@@ -34,7 +34,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               Calendar
             </NavLink>
@@ -47,7 +46,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               Patients
             </NavLink>
@@ -60,7 +58,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               New Patient
             </NavLink>
@@ -73,7 +70,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               Inbox
             </NavLink>
@@ -86,7 +82,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               {"Messages" + (user.unreadNbr ? ` (${user.unreadNbr})` : "")}
             </NavLink>
@@ -99,7 +94,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               Reference
             </NavLink>
@@ -112,7 +106,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               CalvinAI
             </NavLink>
@@ -125,7 +118,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               Billings
             </NavLink>
@@ -138,7 +130,6 @@ const StaffHeader = () => {
                   ? "header__link header__link--active"
                   : "header__link"
               }
-              target="_blank"
             >
               My Account
             </NavLink>

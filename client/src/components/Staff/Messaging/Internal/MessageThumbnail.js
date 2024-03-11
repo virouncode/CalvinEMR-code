@@ -180,7 +180,7 @@ const MessageThumbnail = ({
           <NavLink
             to={`/staff/patient-record/${message.related_patient_id}`}
             className="message-thumbnail__patient-link"
-            target="_blank"
+            // target="_blank"
           >
             {toPatientName(message.patient_infos)}
           </NavLink>
