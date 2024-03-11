@@ -97,7 +97,7 @@ const PatientTopicDoctors = ({
           handleTriangleClick={handleTriangleClick}
           handlePopUpClick={handlePopUpClick}
           contentsVisible={contentsVisible}
-          popUpButton={true}
+          popUpButton="popUp"
         />
       </div>
       <div

@@ -398,6 +398,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            font-size: 0.8rem;
         }
     }
     &__subject{
@@ -408,6 +409,7 @@
         input {
             outline: none;
             width: 92%;
+            font-size: 0.8rem;
         }
     }
     &__patient{
@@ -422,7 +424,9 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            font-size: 0.8rem;
         }
+
     }
     &__attach{
         border-bottom: solid 0.3px $grey;
@@ -432,6 +436,7 @@
         flex-wrap: wrap;
         padding-top: 5px;
         padding-bottom: 5px;
+        font-size: 0.8rem;
         i {
             cursor: pointer;
             margin-left: 5px;
@@ -499,6 +504,7 @@
         input {
             outline: none;
             width: 92%;
+            font-size: 0.8rem;
         }
     }
     &__patient {
@@ -509,6 +515,7 @@
         input {
             outline: none;
             width: 92%;
+            font-size: 0.8rem;
         }
     }
     &__body {
@@ -545,6 +552,7 @@
         flex-wrap: wrap;
         padding-top: 10px;
         padding-bottom: 10px;
+        font-size: 0.8rem;
         i {
             cursor: pointer;
             margin-left: 5px;
@@ -564,7 +572,6 @@
         margin : 20px auto ;
         font-size: 0.8rem;
         padding : 5px 10px;
-
     }
     &__form {
         min-height: 250px;
@@ -587,6 +594,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            font-size: 0.8rem;
         }
     }
     &__subject{
@@ -594,12 +602,18 @@
         height: 30px;
         display: flex;
         align-items: center;
+        input {
+            font-size: 0.8rem;
+    }
     }
     &__patient{
         border-bottom: solid 0.3px $grey;
         height: 30px;
         display: flex;
         align-items: center;
+        input { 
+            font-size: 0.8rem;
+        }
     }
     &__body {
         width: 95%;
@@ -639,6 +653,7 @@
             cursor: pointer;
             margin-left: 5px;
         }
+        font-size: 0.8rem;
     }
 }
 .contacts {

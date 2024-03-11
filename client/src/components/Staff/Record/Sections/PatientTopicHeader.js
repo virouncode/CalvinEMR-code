@@ -1,4 +1,5 @@
 import React from "react";
+import PaperPlaneButton from "../Buttons/PaperPlaneButton";
 import PopUpButton from "../Buttons/PopUpButton";
 import TriangleButton from "../Buttons/TriangleButton";
 
@@ -7,7 +8,7 @@ const PatientTopicHeader = ({
   handleTriangleClick,
   handlePopUpClick,
   contentsVisible,
-  popUpButton = true,
+  popUpButton,
 }) => {
   return (
     <>
@@ -17,8 +18,10 @@ const PatientTopicHeader = ({
         color="#FEFEFE"
       />
       {topic}
-      {popUpButton ? (
+      {popUpButton === "popUp" ? (
         <PopUpButton handlePopUpClick={handlePopUpClick} />
+      ) : popUpButton === "paperPlane" ? (
+        <PaperPlaneButton handlePopUpClick={handlePopUpClick} />
       ) : (
         <div></div>
       )}

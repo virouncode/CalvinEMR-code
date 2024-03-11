@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
+import { toPatientName } from "../../../../utils/toPatientName";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import NewMessageExternal from "../../Messaging/External/NewMessageExternal";
+import NewMessage from "../../Messaging/Internal/NewMessage";
 import AlertsPU from "../Popups/AlertsPU";
 import AllergiesPU from "../Popups/AllergiesPU";
 import AppointmentsPU from "../Popups/AppointmentsPU";
@@ -28,6 +31,7 @@ import EformsContent from "../Topics/Eforms/EformsContent";
 import FamHistoryContent from "../Topics/Family/FamHistoryContent";
 import ImmunizationsContent from "../Topics/Immunizations/ImmunizationsContent";
 import LabResultsContent from "../Topics/LabResults/LabResultsContent";
+import LabelsContent from "../Topics/Labels/LabelsContent";
 import MedicationsContent from "../Topics/Medications/MedicationsContent";
 import MessagesContent from "../Topics/MessagesAboutPatient/MessagesContent";
 import MessagesExternalContent from "../Topics/MessagesWithPatient/MessagesExternalContent";
@@ -101,8 +105,10 @@ const PatientTopic = ({
           popUpButton={
             topic === "MESSAGES WITH PATIENT" ||
             topic === "MESSAGES ABOUT PATIENT"
-              ? false
-              : true
+              ? "paperPlane"
+              : topic === "LABELS"
+              ? ""
+              : "popUp"
           }
         />
       </div>
@@ -668,6 +674,15 @@ const PatientTopic = ({
           />
         )}
         {/*******************/}
+        {/* LABELS */}
+        {topic === "LABELS" && (
+          <LabelsContent
+            demographicsInfos={demographicsInfos}
+            loadingPatient={loadingPatient}
+            errPatient={errPatient}
+          />
+        )}
+        {/*******************/}
         {/* IMMUNIZATIONS */}
         {topic === "IMMUNIZATIONS" && (
           <ImmunizationsContent loading={loading} errMsg={errMsg} />
@@ -746,6 +761,25 @@ const PatientTopic = ({
             errMsg={errMsg}
           />
         )}
+        {topic === "MESSAGES ABOUT PATIENT" && popUpVisible && (
+          <FakeWindow
+            title="NEW MESSAGE"
+            width={1000}
+            height={600}
+            x={(window.innerWidth - 1000) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color={"#94bae8"}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <NewMessage
+              setNewVisible={setPopUpVisible}
+              initialPatient={{
+                id: patientId,
+                name: toPatientName(demographicsInfos),
+              }}
+            />
+          </FakeWindow>
+        )}
         {/*******************/}
         {/* MESSAGES WITH PATIENT */}
         {topic === "MESSAGES WITH PATIENT" && (
@@ -754,6 +788,25 @@ const PatientTopic = ({
             loading={loading}
             errMsg={errMsg}
           />
+        )}
+        {topic === "MESSAGES WITH PATIENT" && popUpVisible && (
+          <FakeWindow
+            title="NEW MESSAGE"
+            width={1000}
+            height={600}
+            x={(window.innerWidth - 1000) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color={"#94bae8"}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <NewMessageExternal
+              setNewVisible={setPopUpVisible}
+              initialRecipient={{
+                id: patientId,
+                name: toPatientName(demographicsInfos),
+              }}
+            />
+          </FakeWindow>
         )}
         {/*******************/}
       </div>

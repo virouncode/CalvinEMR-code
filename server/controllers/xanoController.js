@@ -42,6 +42,7 @@ const getXano = async (req, res) => {
     }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
+    console.log(response);
     if (typeof response.data === "number") {
       res.status(response.status).send(response.data.toString());
     } else {

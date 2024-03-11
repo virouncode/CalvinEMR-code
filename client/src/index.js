@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import { AdminsInfosProvider } from "./context/AdminsInfosProvider";
 import { AuthProvider } from "./context/AuthProvider";
+import { ClinicProvider } from "./context/ClinicProvider";
 import { SocketProvider } from "./context/SocketProvider";
 import { StaffInfosProvider } from "./context/StaffInfosProvider";
 import { TitleProvider } from "./context/TitleProvider";
@@ -22,9 +23,11 @@ root.render(
           <StaffInfosProvider>
             <AdminsInfosProvider>
               <TitleProvider>
-                <Routes>
-                  <Route path="/*" element={<App />} />
-                </Routes>
+                <ClinicProvider>
+                  <Routes>
+                    <Route path="/*" element={<App />} />
+                  </Routes>
+                </ClinicProvider>
               </TitleProvider>
             </AdminsInfosProvider>
           </StaffInfosProvider>

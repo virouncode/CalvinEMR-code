@@ -12,6 +12,7 @@ const useFetchDatas = (
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const finalURL = queryParam ? `${url}?${queryParam}=${queryValue}` : url;
+  console.log("userType", userType);
 
   useEffect(() => {
     if (!url) return;

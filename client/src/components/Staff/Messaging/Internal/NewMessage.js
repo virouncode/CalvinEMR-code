@@ -13,7 +13,10 @@ import Contacts from "../Contacts";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
-const NewMessage = ({ setNewVisible }) => {
+const NewMessage = ({
+  setNewVisible,
+  initialPatient = { id: 0, name: "" },
+}) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
@@ -22,7 +25,7 @@ const NewMessage = ({ setNewVisible }) => {
   const [categories, setCategories] = useState([]);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-  const [patient, setPatient] = useState({ id: 0, name: "" });
+  const [patient, setPatient] = useState(initialPatient);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [progress, setProgress] = useState(false);
 

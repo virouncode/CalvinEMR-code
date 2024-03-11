@@ -278,7 +278,16 @@ const PatientMenuRight = ({
         pagingReportsSent={pagingReportsSent}
         setPagingReportsSent={setPagingReportsSent}
       />
-
+      <PatientTopic
+        textColor="#FEFEFE"
+        backgroundColor="#e3afce"
+        topic="LABELS"
+        patientName={toPatientName(demographicsInfos)}
+        patientId={patientId}
+        contentsVisible={contentsVisible}
+        side="right"
+        demographicsInfos={demographicsInfos}
+      />
       <PatientTopic
         textColor="#FEFEFE"
         backgroundColor="#21201e"

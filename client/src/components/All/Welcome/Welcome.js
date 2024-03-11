@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
+import useClinicContext from "../../../hooks/useClinicContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { toWelcomeName } from "../../../utils/toWelcomeName";
@@ -8,6 +9,7 @@ const Welcome = ({ title }) => {
   //=================== STATES =======================//
   const [helloMessage, setHelloMessage] = useState("");
   const { user } = useUserContext();
+  const { clinic } = useClinicContext();
   const { staffInfos } = useStaffInfosContext();
   const { adminsInfos } = useAdminsInfosContext();
 
@@ -34,7 +36,7 @@ const Welcome = ({ title }) => {
   return (
     user.id && (
       <section className="welcome-section">
-        <h2 className="welcome-section__clinic">New Life Fertility Center</h2>{" "}
+        <h2 className="welcome-section__clinic">{clinic.name}</h2>{" "}
         {/* To customize for each clinic */}
         <h2 className="welcome-section__title">{title}</h2>
         <p className="welcome-section__message">

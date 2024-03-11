@@ -4,6 +4,7 @@ import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPostAuth from "../../../api/xanoCRUD/xanoPostAuth";
 import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
 import useAuthContext from "../../../hooks/useAuthContext";
+import useClinicContext from "../../../hooks/useClinicContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { toPatientName } from "../../../utils/toPatientName";
@@ -16,6 +17,7 @@ const LoginForm = () => {
   //HOOKS
   const { setAuth } = useAuthContext();
   const { setUser } = useUserContext();
+  const { setClinic } = useClinicContext();
   const { setAdminsInfos } = useAdminsInfosContext();
   const { setStaffInfos } = useStaffInfosContext();
   const navigate = useNavigate();
@@ -82,6 +84,11 @@ const LoginForm = () => {
         });
         setAuth({ email });
         localStorage.setItem("auth", JSON.stringify({ email }));
+
+        //================ CLINIC =============//
+        const clinic = (await xanoGet("/clinic/1", "staff")).data;
+        setClinic(clinic);
+        localStorage.setItem("clinic", JSON.stringify(clinic));
 
         //================ USER INFOS ===================//
 
@@ -160,6 +167,11 @@ const LoginForm = () => {
         setAuth({ email });
         localStorage.setItem("auth", JSON.stringify({ email }));
 
+        //================ CLINIC =============//
+        const clinic = (await xanoGet("/clinic/1", "patient")).data;
+        setClinic(clinic);
+        localStorage.setItem("clinic", JSON.stringify(clinic));
+
         //================ USER INFOS ===================//
 
         const user = (await xanoGet(USERINFO_URL, "patient")).data;
@@ -229,7 +241,12 @@ const LoginForm = () => {
         setAuth({ email });
         localStorage.setItem("auth", JSON.stringify({ email }));
 
-        //=============== AUTH =================//
+        //================ CLINIC =============//
+        const clinic = (await xanoGet("/clinic/1", "admin")).data;
+        setClinic(clinic);
+        localStorage.setItem("clinic", JSON.stringify(clinic));
+
+        //=============== USER =================//
         const user = (await xanoGet(USERINFO_URL, "admin")).data;
         setUser(user);
         localStorage.setItem("user", JSON.stringify(user));

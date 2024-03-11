@@ -11,11 +11,14 @@ import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
 
-const NewMessageExternal = ({ setNewVisible }) => {
+const NewMessageExternal = ({
+  setNewVisible,
+  initialRecipient = { id: 0, name: "" },
+}) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [attachments, setAttachments] = useState([]);
-  const [recipient, setRecipient] = useState({ id: 0, name: "" });
+  const [recipient, setRecipient] = useState(initialRecipient);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);

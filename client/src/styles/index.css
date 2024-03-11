@@ -14824,6 +14824,7 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 0.8rem;
 }
 .new-message__subject {
   border-bottom: solid 0.3px #cecdcd;
@@ -14834,6 +14835,7 @@ readers do not read off random characters that represent icons */
 .new-message__subject input {
   outline: none;
   width: 92%;
+  font-size: 0.8rem;
 }
 .new-message__patient {
   border-bottom: solid 0.3px #cecdcd;
@@ -14848,6 +14850,7 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 0.8rem;
 }
 .new-message__attach {
   border-bottom: solid 0.3px #cecdcd;
@@ -14857,6 +14860,7 @@ readers do not read off random characters that represent icons */
   flex-wrap: wrap;
   padding-top: 5px;
   padding-bottom: 5px;
+  font-size: 0.8rem;
 }
 .new-message__attach i {
   cursor: pointer;
@@ -14924,6 +14928,7 @@ readers do not read off random characters that represent icons */
 .reply-message__subject input {
   outline: none;
   width: 92%;
+  font-size: 0.8rem;
 }
 .reply-message__patient {
   border-bottom: solid 0.3px #cecdcd;
@@ -14934,6 +14939,7 @@ readers do not read off random characters that represent icons */
 .reply-message__patient input {
   outline: none;
   width: 92%;
+  font-size: 0.8rem;
 }
 .reply-message__body {
   width: 95%;
@@ -14969,6 +14975,7 @@ readers do not read off random characters that represent icons */
   flex-wrap: wrap;
   padding-top: 10px;
   padding-bottom: 10px;
+  font-size: 0.8rem;
 }
 .reply-message__attach i {
   cursor: pointer;
@@ -15012,6 +15019,7 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 0.8rem;
 }
 .forward-message__subject {
   border-bottom: solid 0.3px #cecdcd;
@@ -15019,11 +15027,17 @@ readers do not read off random characters that represent icons */
   display: flex;
   align-items: center;
 }
+.forward-message__subject input {
+  font-size: 0.8rem;
+}
 .forward-message__patient {
   border-bottom: solid 0.3px #cecdcd;
   height: 30px;
   display: flex;
   align-items: center;
+}
+.forward-message__patient input {
+  font-size: 0.8rem;
 }
 .forward-message__body {
   width: 95%;
@@ -15059,6 +15073,7 @@ readers do not read off random characters that represent icons */
   flex-wrap: wrap;
   padding-top: 5px;
   padding-bottom: 5px;
+  font-size: 0.8rem;
 }
 .forward-message__attach i {
   cursor: pointer;
@@ -17631,4 +17646,15 @@ readers do not read off random characters that represent icons */
 }
 .prescriptions__btn-container button {
   margin-left: 5px;
+}
+
+.labels-content__item {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media print {
+  .labels-content__print-btn, .labels-content__select {
+    display: none !important;
+  }
 }/*# sourceMappingURL=index.css.map */
