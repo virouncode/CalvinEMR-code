@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetchMessagesExternal from "../../../../hooks/useFetchMessagesExternal";
 import useMessagesExternalSocket from "../../../../hooks/useMessagesExternalSocket";
 import useUserContext from "../../../../hooks/useUserContext";
+import TodosBox from "../Internal/TodosBox";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesExternalBox from "./MessagesExternalBox";
 import MessagesExternalToolBar from "./MessagesExternalToolbar";
@@ -18,6 +19,7 @@ const MessagesExternal = () => {
   const [currentMsgId, setCurrentMsgId] = useState(0);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
+  const [newTodoVisible, setNewTodoVisible] = useState(false);
 
   const [paging, setPaging] = useState({
     page: 1,
@@ -74,23 +76,31 @@ const MessagesExternal = () => {
           setPaging={setPaging}
           setMessages={setMessages}
         />
-        <MessagesExternalBox
-          section={section}
-          newVisible={newVisible}
-          setNewVisible={setNewVisible}
-          msgsSelectedIds={msgsSelectedIds}
-          setMsgsSelectedIds={setMsgsSelectedIds}
-          currentMsgId={currentMsgId}
-          setCurrentMsgId={setCurrentMsgId}
-          messages={messages}
-          loading={loading}
-          errMsg={errMsg}
-          hasMore={hasMore}
-          setPaging={setPaging}
-          popUpVisible={popUpVisible}
-          setPopUpVisible={setPopUpVisible}
-          search={search}
-        />
+        {section === "To do list" ? (
+          <TodosBox
+            search={search}
+            newTodoVisible={newTodoVisible}
+            setNewTodoVisible={setNewTodoVisible}
+          />
+        ) : (
+          <MessagesExternalBox
+            section={section}
+            newVisible={newVisible}
+            setNewVisible={setNewVisible}
+            msgsSelectedIds={msgsSelectedIds}
+            setMsgsSelectedIds={setMsgsSelectedIds}
+            currentMsgId={currentMsgId}
+            setCurrentMsgId={setCurrentMsgId}
+            messages={messages}
+            loading={loading}
+            errMsg={errMsg}
+            hasMore={hasMore}
+            setPaging={setPaging}
+            popUpVisible={popUpVisible}
+            setPopUpVisible={setPopUpVisible}
+            search={search}
+          />
+        )}
       </div>
     </div>
   );

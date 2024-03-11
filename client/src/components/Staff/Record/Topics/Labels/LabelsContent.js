@@ -13,7 +13,7 @@ const LabelsContent = ({ demographicsInfos }) => {
     setLabelVisible((v) => !v);
   };
   const handleClickMdLabel = () => {
-    setChoosenLabel("assigned md");
+    setChoosenLabel("MD");
     setLabelVisible((v) => !v);
   };
   const handleClickClinicLabel = () => {
@@ -58,7 +58,7 @@ const LabelsContent = ({ demographicsInfos }) => {
           {choosenLabel === "patient" && (
             <PatientLabel demographicsInfos={demographicsInfos} />
           )}
-          {choosenLabel === "assigned md" && (
+          {choosenLabel === "MD" && (
             <MdLabel demographicsInfos={demographicsInfos} />
           )}
           {choosenLabel === "clinic" && (

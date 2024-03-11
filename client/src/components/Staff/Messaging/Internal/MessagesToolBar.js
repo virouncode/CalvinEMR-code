@@ -23,6 +23,8 @@ const MessagesToolBar = ({
   setSelectAllVisible,
   paging,
   setPaging,
+  newTodoVisible,
+  setNewTodoVisible,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -32,13 +34,11 @@ const MessagesToolBar = ({
     setPaging({ ...paging, page: 1 });
   };
   const handleClickNew = (e) => {
-    if (newVisible) {
-      alert(
-        "You already opened a New Message window, please send your message or close the window"
-      );
-      return;
+    if (section === "To do list") {
+      setNewTodoVisible(true);
+    } else {
+      setNewVisible(true);
     }
-    setNewVisible(true);
   };
 
   const handleSelectAll = () => {
@@ -157,7 +157,15 @@ const MessagesToolBar = ({
         id="search"
       />
       <div className="messages-toolbar__btns">
-        <button onClick={handleClickNew}>New</button>
+        <button
+          onClick={handleClickNew}
+          disabled={
+            (section === "To do list" && newTodoVisible) ||
+            (section !== "To do list" && newVisible)
+          }
+        >
+          New
+        </button>
         {section === "Deleted messages" && msgsSelectedIds.length !== 0 && (
           <button onClick={handleClickUndelete}>Undelete</button>
         )}
@@ -170,6 +178,7 @@ const MessagesToolBar = ({
             <button onClick={handleDeleteSelected}>Delete Selected</button>
           )}
         {currentMsgId === 0 &&
+          section !== "To do list" &&
           (selectAllVisible ? (
             <button onClick={handleSelectAll}>Select All</button>
           ) : (

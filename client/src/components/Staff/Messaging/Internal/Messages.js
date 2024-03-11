@@ -6,6 +6,7 @@ import useUserContext from "../../../../hooks/useUserContext";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesBox from "./MessagesBox";
 import MessagesToolBar from "./MessagesToolBar";
+import TodosBox from "./TodosBox";
 
 const Messages = () => {
   //HOOKS
@@ -18,6 +19,7 @@ const Messages = () => {
   const [currentMsgId, setCurrentMsgId] = useState(0);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAllVisible, setSelectAllVisible] = useState(true);
+  const [newTodoVisible, setNewTodoVisible] = useState(false);
 
   const [paging, setPaging] = useState({
     page: 1,
@@ -31,6 +33,7 @@ const Messages = () => {
     section,
     user.id
   );
+
   const navigate = useNavigate();
   useMessagesSocket(messages, setMessages, section);
 
@@ -59,6 +62,8 @@ const Messages = () => {
         setSelectAllVisible={setSelectAllVisible}
         paging={paging}
         setPaging={setPaging}
+        newTodoVisible={newTodoVisible}
+        setNewTodoVisible={setNewTodoVisible}
       />
       <div className="messages-content">
         <MessagesLeftBar
@@ -72,24 +77,32 @@ const Messages = () => {
           setPaging={setPaging}
           setMessages={setMessages}
         />
-        <MessagesBox
-          section={section}
-          newVisible={newVisible}
-          setNewVisible={setNewVisible}
-          setSection={setSection}
-          msgsSelectedIds={msgsSelectedIds}
-          setMsgsSelectedIds={setMsgsSelectedIds}
-          currentMsgId={currentMsgId}
-          setCurrentMsgId={setCurrentMsgId}
-          messages={messages}
-          loading={loading}
-          errMsg={errMsg}
-          hasMore={hasMore}
-          setPaging={setPaging}
-          popUpVisible={popUpVisible}
-          setPopUpVisible={setPopUpVisible}
-          search={search}
-        />
+        {section === "To do list" ? (
+          <TodosBox
+            search={search}
+            newTodoVisible={newTodoVisible}
+            setNewTodoVisible={setNewTodoVisible}
+          />
+        ) : (
+          <MessagesBox
+            section={section}
+            newVisible={newVisible}
+            setNewVisible={setNewVisible}
+            setSection={setSection}
+            msgsSelectedIds={msgsSelectedIds}
+            setMsgsSelectedIds={setMsgsSelectedIds}
+            currentMsgId={currentMsgId}
+            setCurrentMsgId={setCurrentMsgId}
+            messages={messages}
+            loading={loading}
+            errMsg={errMsg}
+            hasMore={hasMore}
+            setPaging={setPaging}
+            popUpVisible={popUpVisible}
+            setPopUpVisible={setPopUpVisible}
+            search={search}
+          />
+        )}
       </div>
     </div>
   );

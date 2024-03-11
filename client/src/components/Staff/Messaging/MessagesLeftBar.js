@@ -12,6 +12,15 @@ const MessagesLeftBar = ({
   setPaging,
   setMessages,
 }) => {
+  const { user } = useUserContext();
+
+  const handleClickToDo = (e) => {
+    const name = e.target.id;
+    setSection(name);
+    setCurrentMsgId(0);
+    setMsgsSelectedIds([]);
+    setSelectAllVisible(true);
+  };
   const handleClickSection = (e) => {
     const name = e.target.id;
     setSection(name);
@@ -25,8 +34,6 @@ const MessagesLeftBar = ({
     section === id
       ? "messages-content__category messages-content__category--active"
       : "messages-content__category";
-
-  const { user } = useUserContext();
 
   return (
     <div className="messages-content__leftbar">
@@ -58,6 +65,15 @@ const MessagesLeftBar = ({
         >
           Deleted messages
         </li>
+        {user.access_level === "Staff" && (
+          <li
+            className={isActive("To do list")}
+            id="To do list"
+            onClick={handleClickToDo}
+          >
+            To do list
+          </li>
+        )}
       </ul>
     </div>
   );

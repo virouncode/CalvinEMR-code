@@ -20,7 +20,6 @@ import {
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressSmallWhite from "../../../All/UI/Progress/CircularProgressSmallWhite";
 import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessageExternal from "../External/MessageExternal";
@@ -282,12 +281,9 @@ const MessageDetail = ({
                 <button
                   onClick={handleAddToClinicalNotes}
                   style={{ width: "230px" }}
+                  disabled={posting}
                 >
-                  {posting ? (
-                    <CircularProgressSmallWhite />
-                  ) : (
-                    "Add message to patient clinical notes"
-                  )}
+                  Add message to patient clinical notes
                 </button>
               </>
             ) : null}

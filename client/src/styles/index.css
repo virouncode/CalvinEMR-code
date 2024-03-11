@@ -15181,6 +15181,31 @@ readers do not read off random characters that represent icons */
   margin-right: 10px;
 }
 
+.todos__box {
+  background-color: #FEFEFE;
+  width: 90%;
+  height: 100%;
+  overflow: scroll;
+  position: relative;
+  border-radius: 0 0 6px 0;
+}
+.todos__box p {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.todos-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 0 auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+  margin: 0 auto 20px;
+}
+
 .relationships__title {
   font-size: 1.2rem;
   margin-top: 60px;

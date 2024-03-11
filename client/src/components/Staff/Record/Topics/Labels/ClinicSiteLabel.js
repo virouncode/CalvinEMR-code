@@ -74,27 +74,29 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
         />
       </div>
 
-      {!isObjectEmpty(site) && (
-        <div style={LABEL_STYLE}>
-          <p style={TITLE_STYLE}>{clinic.name}</p>
-          <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>SITE: {site.name}</span>
-          </p>
-          <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>
-              ADDRESS: {site.address}, {site.city}, {site.province_state},{" "}
-              {site.postal_code || site.zipCode}
-            </span>
-          </p>
-          <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>PHONE: {site.phone}</span>
-            <span style={SPAN_STYLE}>FAX: {site.fax}</span>
-          </p>
-          <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>EMAIL: {site.email}</span>
-          </p>
-        </div>
-      )}
+      {!isObjectEmpty(site) &&
+        !isObjectEmpty(assignedMd) &&
+        sites.length > 0 && (
+          <div style={LABEL_STYLE}>
+            <p style={TITLE_STYLE}>{clinic.name}</p>
+            <p style={LINE_STYLE}>
+              <span style={SPAN_STYLE}>SITE: {site.name}</span>
+            </p>
+            <p style={LINE_STYLE}>
+              <span style={SPAN_STYLE}>
+                ADDRESS: {site.address}, {site.city}, {site.province_state},{" "}
+                {site.postal_code || site.zipCode}
+              </span>
+            </p>
+            <p style={LINE_STYLE}>
+              <span style={SPAN_STYLE}>PHONE: {site.phone}</span>
+              <span style={SPAN_STYLE}>FAX: {site.fax}</span>
+            </p>
+            <p style={LINE_STYLE}>
+              <span style={SPAN_STYLE}>EMAIL: {site.email}</span>
+            </p>
+          </div>
+        )}
       <div>
         <button onClick={handlePrint} className="labels-content__print-btn">
           Print

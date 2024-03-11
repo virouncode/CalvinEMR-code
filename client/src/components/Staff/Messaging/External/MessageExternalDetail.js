@@ -19,7 +19,6 @@ import {
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressSmallWhite from "../../../All/UI/Progress/CircularProgressSmallWhite";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessagesAttachments from "../MessagesAttachments";
 import ForwardMessageExternal from "./ForwardMessageExternal";
@@ -279,12 +278,8 @@ const MessageExternalDetail = ({
                 ? toPatientName(message.from_patient_infos)
                 : toPatientName(message.to_patient_infos)}
             </NavLink>
-            <button onClick={handleAddToClinicalNotes}>
-              {posting ? (
-                <CircularProgressSmallWhite />
-              ) : (
-                "Add message to patient clinical notes"
-              )}
+            <button onClick={handleAddToClinicalNotes} disabled={posting}>
+              Add message to patient clinical notes
             </button>
           </div>
           {section !== "Deleted messages" && (

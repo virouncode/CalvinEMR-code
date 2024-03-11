@@ -9,7 +9,7 @@ import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { toPatientName } from "../../../utils/toPatientName";
 import { userSchema } from "../../../validation/userValidation";
-import CircularProgressSmallWhite from "../UI/Progress/CircularProgressSmallWhite";
+import CircularProgressSmallBlack from "../UI/Progress/CircularProgressSmallBlack";
 const LOGIN_URL = "/auth/login";
 const USERINFO_URL = "/auth/me";
 
@@ -352,7 +352,7 @@ const LoginForm = () => {
         </div>
         <div className="login-form__btn-container">
           <button>
-            {loading ? <CircularProgressSmallWhite /> : "Sign In"}
+            {loading ? <CircularProgressSmallBlack /> : "Sign In"}
           </button>
         </div>
       </form>

@@ -760,3 +760,56 @@
         }
     }
 }
+
+.todos {
+    &__box {
+        background-color: $white;
+        width: 90%;
+        height: 100%; 
+        overflow:scroll;
+        position:relative;
+        border-radius: 0 0 6px 0;
+        p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    }
+    &-err {
+        padding : 10px 20px;
+        font-size: 0.9rem;
+        width : 100%;
+        margin:0 auto;
+        color : red;
+        background-color:rgba(255, 0, 0, 0.403);
+        border-radius: 6px;
+        text-align: center;
+        margin:0 auto 20px;
+    }
+    &__item {
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 35px;
+        border-bottom: solid 0.5px $grey;
+        padding: 0 5px;
+    }
+    &__item-content {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="text"] {
+            width:95%
+        }
+    }
+    &__btn-container {
+        button {
+            margin-right: 5px;
+        }
+    }
+    
+}

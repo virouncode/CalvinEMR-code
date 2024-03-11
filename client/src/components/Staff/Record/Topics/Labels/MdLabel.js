@@ -16,6 +16,8 @@ const MdLabel = ({ demographicsInfos }) => {
   };
   const [site, setSite] = useState({});
   const [sites] = useFetchDatas("/sites", user.access_level.toLowerCase());
+  const [mdId, setMdId] = useState(user.id);
+  const [md, setMd] = useState(user);
 
   useEffect(() => {
     if (sites.length === 0) return;
@@ -59,20 +61,49 @@ const MdLabel = ({ demographicsInfos }) => {
     const value = parseInt(e.target.value);
     setSite(sites.find(({ id }) => id === value));
   };
+  const handleChangeMd = (e) => {
+    const value = parseInt(e.target.value);
+    setMdId(value);
+    setMd(staffInfos.find(({ id }) => id === value));
+  };
 
   return (
     <div style={LABEL_CONTAINER}>
       <div className="labels-content__select" style={SELECT_STYLE}>
+        <label
+          style={{
+            fontWeight: "bold",
+            fontSize: "0.8rem",
+            marginRight: "10px",
+          }}
+        >
+          Practitioner{" "}
+        </label>
+        <select
+          style={{
+            marginRight: "10px",
+          }}
+          value={mdId}
+          onChange={handleChangeMd}
+        >
+          {staffInfos
+            .filter(({ title }) => title === "Doctor")
+            .map((staff) => (
+              <option value={staff.id} key={staff.id}>
+                {staffIdToTitleAndName(staffInfos, staff.id)}
+              </option>
+            ))}
+        </select>
         <SelectSite
           handleSiteChange={handleSiteChange}
           sites={sites}
           value={site.id}
         />
       </div>
-      {!isObjectEmpty(site) && (
+      {!isObjectEmpty(site) && sites.length > 0 && (
         <div style={LABEL_STYLE}>
           <p style={TITLE_STYLE}>
-            {staffIdToTitleAndName(staffInfos, user.id, false)}
+            {staffIdToTitleAndName(staffInfos, md.id, false).toUpperCase()}
           </p>
           <p style={LINE_STYLE}>CLINIC: {clinic.name}</p>
           <p style={LINE_STYLE}>
@@ -92,8 +123,8 @@ const MdLabel = ({ demographicsInfos }) => {
             <span style={SPAN_STYLE}>EMAIL: {site.email}</span>
           </p>
           <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>CPSO: {user.licence_nbr}</span>
-            <span style={SPAN_STYLE}>OHIP: {user.ohip_billig_nbr}</span>
+            <span style={SPAN_STYLE}>CPSO: {md.licence_nbr}</span>
+            <span style={SPAN_STYLE}>OHIP: {md.ohip_billing_nbr}</span>
           </p>
         </div>
       )}
