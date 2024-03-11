@@ -175,8 +175,7 @@ const DemographicsContent = ({
                 <label>Assigned clinic physician: </label>
                 {staffIdToTitleAndName(
                   staffInfos,
-                  demographicsInfos.assigned_staff_id,
-                  true
+                  demographicsInfos.assigned_staff_id
                 )}
               </p>
               <p>

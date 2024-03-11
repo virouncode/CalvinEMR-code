@@ -467,7 +467,7 @@ const AppointmentForm = ({
             hostId={formDatas.host_id}
           />
         ) : (
-          <p>{staffIdToTitleAndName(staffInfos, user.id, true)}</p>
+          <p>{staffIdToTitleAndName(staffInfos, user.id)}</p>
         )}
       </td>
       <td>
@@ -568,7 +568,7 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

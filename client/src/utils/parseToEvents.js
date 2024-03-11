@@ -1,4 +1,4 @@
-import { toHostName } from "./toHostName";
+import { staffIdToTitleAndName } from "./staffIdToTitleAndName";
 var _ = require("lodash");
 
 const colorsPalette = [
@@ -51,7 +51,8 @@ export const parseToEvents = (
                 "#3D375A",
                 isSecretary,
                 userId,
-                sites?.find(({ id }) => id === appointment.site_id)?.rooms
+                sites?.find(({ id }) => id === appointment.site_id)?.rooms,
+                staffInfos
               ) //grey
             : parseToEvent(
                 appointment,
@@ -67,7 +68,8 @@ export const parseToEvents = (
                 ].textColor,
                 isSecretary,
                 userId,
-                sites?.find(({ id }) => id === appointment.site_id)?.rooms
+                sites?.find(({ id }) => id === appointment.site_id)?.rooms,
+                staffInfos
               )
           : parseToEvent(
               appointment,
@@ -75,7 +77,8 @@ export const parseToEvents = (
               "#3D375A",
               isSecretary,
               userId,
-              sites?.find(({ id }) => id === appointment.site_id)?.rooms
+              sites?.find(({ id }) => id === appointment.site_id)?.rooms,
+              staffInfos
             ) //blue
     ),
     remainingStaffObjects,
@@ -88,8 +91,10 @@ export const parseToEvent = (
   textColor,
   isSecretary,
   userId,
-  rooms
+  rooms,
+  staffInfos
 ) => {
+  console.log("hostInfos", appointment.host_infos);
   return {
     id: appointment.id.toString(),
     start: new Date(appointment.start),
@@ -105,7 +110,7 @@ export const parseToEvent = (
     extendedProps: {
       host: appointment.host_id,
       hostName: appointment.host_infos
-        ? toHostName(appointment.host_infos)
+        ? staffIdToTitleAndName(staffInfos, appointment.host_infos.id)
         : "",
       hostFirstName: appointment.host_infos
         ? appointment.host_infos.first_name

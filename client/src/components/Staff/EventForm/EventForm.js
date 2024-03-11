@@ -119,7 +119,7 @@ const EventForm = ({
     currentEvent.current.setExtendedProp("host", value);
     currentEvent.current.setExtendedProp(
       "hostName",
-      staffIdToTitleAndName(staffInfos, value, true)
+      staffIdToTitleAndName(staffInfos, value)
     );
     if (value === user.id) {
       currentEvent.current.setProp("color", "#93B5E9");
@@ -412,11 +412,10 @@ const EventForm = ({
 
   const handleCancel = async (e) => {
     e.preventDefault();
-
     currentEvent.current.setExtendedProp("host", formDatas.host_id);
     currentEvent.current.setExtendedProp(
       "hostName",
-      staffIdToTitleAndName(staffInfos, formDatas.host_id, true)
+      staffIdToTitleAndName(staffInfos, formDatas.host_id)
     );
     currentEvent.current.setExtendedProp(
       "purpose",
@@ -603,11 +602,7 @@ const EventForm = ({
                   />
                 ) : (
                   <p>
-                    {staffIdToTitleAndName(
-                      staffInfos,
-                      tempFormDatas.host_id,
-                      true
-                    )}
+                    {staffIdToTitleAndName(staffInfos, tempFormDatas.host_id)}
                   </p>
                 )}
               </div>

@@ -21,8 +21,8 @@ const ClinicalNotesTemplatesList = ({
       {templates.map((template) => (
         <option key={template.id} value={template.id}>
           {template.name}{" "}
-          {staffIdToTitleAndName(staffInfos, template.author_id, true)
-            ? `(${staffIdToTitleAndName(staffInfos, template.author_id, true)})`
+          {staffIdToTitleAndName(staffInfos, template.author_id)
+            ? `(${staffIdToTitleAndName(staffInfos, template.author_id)})`
             : ""}
         </option>
       ))}

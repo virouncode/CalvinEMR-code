@@ -6,7 +6,7 @@ import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import { categoryToTitle } from "../../../../utils/categoryToTitle";
-import formatName from "../../../../utils/formatName";
+import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import Contacts from "../Contacts";
@@ -255,11 +255,7 @@ const ForwardMessage = ({
             placeholder="Recipients"
             value={staffInfos
               .filter(({ id }) => recipientsIds.includes(id))
-              .map(
-                (staff) =>
-                  (staff.title === "Doctor" ? "Dr. " : "") +
-                  formatName(staff.full_name)
-              )
+              .map((staff) => staffIdToTitleAndName(staffInfos, staff.id))
               .join(", ")}
             readOnly
           />

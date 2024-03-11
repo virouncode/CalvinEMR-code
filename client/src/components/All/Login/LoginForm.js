@@ -162,27 +162,26 @@ const LoginForm = () => {
 
         //================ USER INFOS ===================//
 
-        const user = await xanoGet(USERINFO_URL, "patient");
+        const user = (await xanoGet(USERINFO_URL, "patient")).data;
         if (user.account_status === "Suspended") {
           navigate("/suspended");
           return;
         }
 
         //================ USER DEMOGRAPHICS =============//
-        const demographics = await xanoGet(
-          `/demographics_of_patient`,
-          "patient",
-          { patient_id: user.id }
-        );
+        const demographics = (
+          await xanoGet(`/demographics_of_patient`, "patient", {
+            patient_id: user.id,
+          })
+        ).data;
+        console.log("demographics", demographics);
 
         //================ USER UNREAD MESSAGES =============//
-        const unreadNbr = await xanoGet(
-          `/unread_messages_of_patient`,
-          "patient",
-          {
+        const unreadNbr = (
+          await xanoGet(`/unread_messages_of_patient`, "patient", {
             patient_id: user.id,
-          }
-        );
+          })
+        ).data;
         setUser({
           ...user,
           full_name: toPatientName(demographics),
@@ -193,16 +192,16 @@ const LoginForm = () => {
           "user",
           JSON.stringify({
             ...user,
+            full_name: toPatientName(demographics),
             demographics,
             unreadNbr,
           })
         );
 
         //================== STAFF INFOS ====================//
-        const staffInfos = await xanoGet("/staff", "patient");
+        const staffInfos = (await xanoGet("/staff", "patient")).data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
-
         setLoading(false);
         navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
       } catch (err) {
@@ -231,20 +230,17 @@ const LoginForm = () => {
         localStorage.setItem("auth", JSON.stringify({ email }));
 
         //=============== AUTH =================//
-        const response2 = await xanoGet(USERINFO_URL, "admin");
-        const user = response2?.data;
+        const user = (await xanoGet(USERINFO_URL, "admin")).data;
         setUser(user);
         localStorage.setItem("user", JSON.stringify(user));
 
         //=============== STAFF INFOS =================//
-        const response3 = await xanoGet("/staff", "admin");
-        const staffInfos = response3.data;
+        const staffInfos = (await xanoGet("/staff", "admin")).data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
 
         //=============== ADMIN INFOS =================//
-        const response4 = await xanoGet("/admins", "admin");
-        const adminsInfos = response4.data;
+        const adminsInfos = (await xanoGet("/admins", "admin")).data;
         setAdminsInfos(adminsInfos);
         localStorage.setItem("adminsInfos", JSON.stringify(adminsInfos));
 

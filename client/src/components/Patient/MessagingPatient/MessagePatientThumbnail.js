@@ -38,7 +38,7 @@ const MessagePatientThumbnail = ({
         delete datasToPut.to_patient_infos; //From Add-On
         delete datasToPut.from_patient_infos; //From Add-On
         const response = await xanoPut(
-          `/messages_external${message.id}`,
+          `/messages_external/${message.id}`,
           "patient",
           datasToPut
         );
@@ -172,9 +172,9 @@ const MessagePatientThumbnail = ({
           {section !== "Sent messages" //messages reçus ou effacés
             ? message.from_patient_id //le from est un patient ou un staff
               ? toPatientName(message.from_patient_infos)
-              : staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+              : staffIdToTitleAndName(staffInfos, message.from_staff_id)
             : /*messages envoyés, le "To" est un staff*/
-              staffIdToTitleAndName(staffInfos, message.to_staff_id, true)}
+              staffIdToTitleAndName(staffInfos, message.to_staff_id)}
         </div>
         <div className="message-thumbnail__sample">
           <span>{message.subject}</span> - {message.body}{" "}

@@ -15,7 +15,7 @@ const MessageExternal = ({ message, index }) => {
         <div className="message__author">
           From:{" "}
           {message.from_staff_id
-            ? staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+            ? staffIdToTitleAndName(staffInfos, message.from_staff_id)
             : toPatientName(message.from_patient_infos)}
         </div>
         <div className="message__date">
@@ -25,7 +25,7 @@ const MessageExternal = ({ message, index }) => {
       <div className="message__subtitle">
         to:{" "}
         {message.to_staff_id
-          ? staffIdToTitleAndName(staffInfos, message.to_staff_id, true)
+          ? staffIdToTitleAndName(staffInfos, message.to_staff_id)
           : toPatientName(message.to_patient_infos)}
       </div>
       <div className="message__body">{message.body}</div>

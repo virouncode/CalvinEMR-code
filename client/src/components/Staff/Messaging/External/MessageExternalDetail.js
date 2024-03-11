@@ -139,7 +139,7 @@ const MessageExternalDetail = ({
           file: fileToUpload.data,
           alias: `Message from: ${
             message.from_staff_id
-              ? staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+              ? staffIdToTitleAndName(staffInfos, message.from_staff_id)
               : toPatientName(message.from_patient_infos)
           } (${toLocalDateAndTimeWithSeconds(new Date(message.date_created))})`,
           date_created: Date.now(),
@@ -167,7 +167,7 @@ const MessageExternalDetail = ({
           subject: `Message from: ${
             message.from_patient_id
               ? toPatientName(message.from_patient_infos)
-              : staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+              : staffIdToTitleAndName(staffInfos, message.from_staff_id)
           } (${toLocalDateAndTimeWithSeconds(new Date(message.date_created))})`,
           MyClinicalNotesContent: "See attachment",
           ParticipatingProviders: [

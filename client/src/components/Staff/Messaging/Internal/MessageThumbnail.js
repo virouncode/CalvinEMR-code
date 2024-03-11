@@ -162,7 +162,7 @@ const MessageThumbnail = ({
       <div onClick={handleMsgClick} className="message-thumbnail__link">
         <div className="message-thumbnail__author">
           {section !== "Sent messages"
-            ? staffIdToTitleAndName(staffInfos, message.from_id, true)
+            ? staffIdToTitleAndName(staffInfos, message.from_id)
             : staffIdListToTitleAndName(staffInfos, message.to_staff_ids)}
         </div>
         <div className="message-thumbnail__sample">

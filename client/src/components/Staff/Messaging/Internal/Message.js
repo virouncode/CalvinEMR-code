@@ -13,7 +13,7 @@ const Message = ({ message, index }) => {
     >
       <div className="message__title">
         <div className="message__author">
-          From: {staffIdToTitleAndName(staffInfos, message.from_id, true)}
+          From: {staffIdToTitleAndName(staffInfos, message.from_id)}
         </div>
         <div className="message__date">
           <div>{toLocalDateAndTime(message.date_created)}</div>
@@ -23,12 +23,10 @@ const Message = ({ message, index }) => {
         to:{" "}
         {message.type === "Internal"
           ? message.to_staff_ids
-              .map((staff_id) =>
-                staffIdToTitleAndName(staffInfos, staff_id, true)
-              )
+              .map((staff_id) => staffIdToTitleAndName(staffInfos, staff_id))
               .join(", ")
           : message.to_staff_id
-          ? staffIdToTitleAndName(staffInfos, message.to_staff_id, true)
+          ? staffIdToTitleAndName(staffInfos, message.to_staff_id)
           : toPatientName(message.to_patient_infos)}
       </div>
       <div className="message__body">{message.body}</div>

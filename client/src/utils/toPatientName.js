@@ -1,11 +1,19 @@
-export const toPatientName = (patientInfos) => {
+export const toPatientName = (patientInfos, formatted = true) => {
   if (!patientInfos) return "";
   const firstName = patientInfos.Names?.LegalName?.FirstName?.Part || "";
-  const lastName = ` ${patientInfos.Names?.LegalName?.LastName?.Part || ""}`;
+  const lastName = `${patientInfos.Names?.LegalName?.LastName?.Part || ""}`;
   const middleName = patientInfos.Names?.LegalName?.OtherName?.[0]?.Part
     ? ` ${patientInfos.Names?.LegalName?.OtherName?.[0]?.Part}`
     : "";
-  return firstName + middleName + lastName;
+  const title =
+    patientInfos.Gender === "M"
+      ? "Mr. "
+      : patientInfos.Gender === "F"
+      ? "Mrs. "
+      : "";
+  return formatted
+    ? title + lastName + ", " + firstName + middleName
+    : title + firstName + middleName + " " + lastName;
 };
 
 export const toPatientFirstName = (patientInfos) => {

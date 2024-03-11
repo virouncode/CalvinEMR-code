@@ -174,7 +174,7 @@ const MessageExternalThumbnail = ({
           {section !== "Sent messages" //messages reçus ou effacés
             ? message.from_patient_id //le "From" est un patient
               ? toPatientName(message.from_patient_infos)
-              : staffIdToTitleAndName(staffInfos, message.from_staff_id, true)
+              : staffIdToTitleAndName(staffInfos, message.from_staff_id)
             : /*messages envoyés, le "To" est forcément un patient*/
               toPatientName(message.to_patient_infos)}
         </div>

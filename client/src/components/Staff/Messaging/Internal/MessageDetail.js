@@ -138,8 +138,7 @@ const MessageDetail = ({
           file: fileToUpload.data,
           alias: `Message from: ${staffIdToTitleAndName(
             staffInfos,
-            message.from_id,
-            true
+            message.from_id
           )} (${toLocalDateAndTimeWithSeconds(
             new Date(message.date_created)
           )})`,
@@ -167,8 +166,7 @@ const MessageDetail = ({
           patient_id: message.related_patient_id,
           subject: `Message from ${staffIdToTitleAndName(
             staffInfos,
-            message.from_id,
-            true
+            message.from_id
           )} (${toLocalDateAndTimeWithSeconds(
             new Date(message.date_created)
           )})`,

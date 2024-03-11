@@ -162,7 +162,7 @@ const ReplyMessagePatient = ({
       <div className="reply-message__title">
         <p>
           <strong>To: </strong>
-          {staffIdToTitleAndName(staffInfos, message.from_staff_id, true)}
+          {staffIdToTitleAndName(staffInfos, message.from_staff_id)}
         </p>
       </div>
       <div className="reply-message__subject">

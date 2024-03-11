@@ -230,7 +230,7 @@ const PharmacyForm = ({
         />
       </td>
       <td>
-        <em>{staffIdToTitleAndName(staffInfos, user.id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
         <em>{toLocalDate(Date.now())}</em>

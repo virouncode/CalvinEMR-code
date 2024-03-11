@@ -1,5 +1,6 @@
 import React from "react";
-import formatName from "../../../utils/formatName";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
 const ReportsInboxPracticiansListItemForward = ({
   info,
@@ -7,6 +8,7 @@ const ReportsInboxPracticiansListItemForward = ({
   isPracticianChecked,
   categoryName,
 }) => {
+  const { staffInfos } = useStaffInfosContext();
   return (
     <li className="practicians-forward__list-item">
       <input
@@ -16,7 +18,9 @@ const ReportsInboxPracticiansListItemForward = ({
         checked={isPracticianChecked(info.id)}
         name={categoryName}
       />
-      <label htmlFor={info.id}>{formatName(info.full_name)}</label>
+      <label htmlFor={info.id}>
+        {staffIdToTitleAndName(staffInfos, info.id)}
+      </label>
     </li>
   );
 };

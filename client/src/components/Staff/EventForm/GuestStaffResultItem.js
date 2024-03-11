@@ -1,10 +1,13 @@
 import React from "react";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
 const GuestStaffResultItem = ({ guest, handleAddGuest }) => {
+  const { staffInfos } = useStaffInfosContext();
   return (
     <li key={guest.id} data-key={guest.id} data-type="staff">
       <span>
-        {guest.full_name} ({guest.title})
+        {staffIdToTitleAndName(staffInfos, guest.id, false)} ({guest.title})
       </span>
       <i
         style={{ marginLeft: "10px", cursor: "pointer" }}

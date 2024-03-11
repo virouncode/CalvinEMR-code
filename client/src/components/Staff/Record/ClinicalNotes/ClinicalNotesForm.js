@@ -235,9 +235,10 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
     if (value !== -1 && value !== -2) {
       setFormDatas({
         ...formDatas,
-        MyClinicalNotesContent: templates.find(
-          ({ id }) => id === parseInt(value)
-        ).body,
+        MyClinicalNotesContent:
+          formDatas.MyClinicalNotesContent +
+          (formDatas.MyClinicalNotesContent ? "\n\n" : "") +
+          templates.find(({ id }) => id === parseInt(value)).body,
       });
     } else if (value === -1) {
       setNewTemplateVisible(true);
@@ -258,7 +259,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
           <div className="clinical-notes__form-row">
             <p>
               <strong>From: </strong>
-              {staffIdToTitleAndName(staffInfos, user.id, true)}
+              {staffIdToTitleAndName(staffInfos, user.id)}
             </p>
             <div className="clinical-notes__form-template">
               <label>

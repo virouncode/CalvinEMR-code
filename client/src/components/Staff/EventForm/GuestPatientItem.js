@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { toPatientName } from "../../../utils/toPatientName";
 
 const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
   return (
@@ -9,16 +10,15 @@ const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
         className="guest-patient-item"
         // target="_blank"
       >
-        {guest.Names.LegalName.FirstName.Part}{" "}
-        {guest.Names.LegalName.OtherName?.[0]?.Part}{" "}
-        {guest.Names.LegalName.LastName.Part} (Patient){" "}
+        {toPatientName(guest)}
       </NavLink>
       <span data-key={guest.patient_id} data-type="patient">
         <i
           className="fa-solid fa-trash"
           onClick={handleRemoveGuest}
-          style={{ cursor: "pointer" }}
-        />
+          style={{ cursor: "pointer", marginLeft: "5px" }}
+        />{" "}
+        /
       </span>{" "}
     </>
   );

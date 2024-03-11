@@ -11389,6 +11389,7 @@ readers do not read off random characters that represent icons */
   margin-left: 5px;
 }
 .event-form__item .guests-list {
+  font-size: 0.7rem;
   padding: 0;
 }
 

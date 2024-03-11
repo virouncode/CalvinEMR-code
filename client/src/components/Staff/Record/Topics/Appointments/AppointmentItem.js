@@ -548,7 +548,7 @@ const AppointmentItem = ({
               hostId={itemInfos.host_id}
             />
           ) : (
-            <p>{staffIdToTitleAndName(staffInfos, item.host_id, true)}</p>
+            <p>{staffIdToTitleAndName(staffInfos, item.host_id)}</p>
           )}
         </td>
         <td>

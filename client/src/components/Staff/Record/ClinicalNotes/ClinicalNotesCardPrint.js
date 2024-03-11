@@ -33,8 +33,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
               staffInfos,
               isUpdated(clinicalNote)
                 ? getLastUpdate(clinicalNote).updated_by_id
-                : clinicalNote.created_by_id,
-              true
+                : clinicalNote.created_by_id
             )}
           </p>
           <p style={{ margin: "0", fontSize: "0.7rem", padding: "0 5px" }}>
@@ -78,8 +77,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
               Updated by{" "}
               {staffIdToTitleAndName(
                 staffInfos,
-                getLastUpdate(clinicalNote).updated_by_id,
-                true
+                getLastUpdate(clinicalNote).updated_by_id
               )}{" "}
               on{" "}
               {toLocalDateAndTimeWithSeconds(
@@ -89,12 +87,8 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           ) : null}
           <p style={{ padding: "0", margin: "0" }}>
             Created by{" "}
-            {staffIdToTitleAndName(
-              staffInfos,
-              clinicalNote.created_by_id,
-              true
-            )}{" "}
-            on {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
+            {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
+            {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
           </p>
         </div>
       </div>

@@ -253,12 +253,8 @@ const ClinicalNotesCard = ({
           <div className="clinical-notes__card-sign">
             <p style={{ padding: "0 10px" }}>
               Created by{" "}
-              {staffIdToTitleAndName(
-                staffInfos,
-                clinicalNote.created_by_id,
-                true
-              )}{" "}
-              on {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
+              {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
+              {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
             </p>
             {clinicalNote.date_updated && (
               <p style={{ padding: "0 10px" }}>

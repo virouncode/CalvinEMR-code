@@ -37,11 +37,7 @@ const ClinicalNotesCardHeader = ({
           />
           <p>
             <strong>From: </strong>
-            {staffIdToTitleAndName(
-              staffInfos,
-              clinicalNote.created_by_id,
-              true
-            )}
+            {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)}
             {` ${toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}`}
           </p>
         </div>

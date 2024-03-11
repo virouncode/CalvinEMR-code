@@ -173,9 +173,7 @@ const NewMessagePatient = ({ setNewVisible }) => {
             type="text"
             placeholder="Staff member"
             value={
-              recipientId
-                ? staffIdToTitleAndName(staffInfos, recipientId, true)
-                : ""
+              recipientId ? staffIdToTitleAndName(staffInfos, recipientId) : ""
             }
             readOnly
           />

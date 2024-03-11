@@ -53,7 +53,8 @@ const StaffAccounts = () => {
           <FakeWindow
             title={`EDIT ${staffIdToTitleAndName(
               staffInfos,
-              selectedStaffId
+              selectedStaffId,
+              false
             ).toUpperCase()} Account`}
             width={1000}
             height={550}

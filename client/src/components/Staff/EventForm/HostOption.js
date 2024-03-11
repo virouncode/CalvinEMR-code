@@ -6,7 +6,7 @@ const HostOption = ({ staff }) => {
   const { staffInfos } = useStaffInfosContext();
   return (
     <option value={staff.id} key={staff.id}>
-      {staffIdToTitleAndName(staffInfos, staff.id, true)} ({staff.title})
+      {staffIdToTitleAndName(staffInfos, staff.id)} ({staff.title})
     </option>
   );
 };

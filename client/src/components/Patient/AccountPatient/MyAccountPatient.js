@@ -249,8 +249,7 @@ const MyAccountPatient = () => {
                 <label>Assigned Clinic Practitioner*: </label>
                 {staffIdToTitleAndName(
                   staffInfos,
-                  user.demographics.assigned_staff_id,
-                  true
+                  user.demographics.assigned_staff_id
                 )}
               </div>
               <div className="patient-account__form-content-row">

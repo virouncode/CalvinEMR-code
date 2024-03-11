@@ -13,10 +13,9 @@ const SignCell = ({ item }) => {
           {isUpdated(item)
             ? staffIdToTitleAndName(
                 staffInfos,
-                getLastUpdate(item).updated_by_id,
-                true
+                getLastUpdate(item).updated_by_id
               )
-            : staffIdToTitleAndName(staffInfos, item.created_by_id, true)}
+            : staffIdToTitleAndName(staffInfos, item.created_by_id)}
         </em>
       </td>
       <td>

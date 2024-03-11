@@ -40,7 +40,7 @@ const AppointmentSlotItem = ({
         </p>
       </div>
       <p>Reason : {appointment.reason}</p>
-      <p>{staffIdToTitleAndName(staffInfos, appointment.host_id, true)}</p>
+      <p>{staffIdToTitleAndName(staffInfos, appointment.host_id)}</p>
     </div>
   );
 };

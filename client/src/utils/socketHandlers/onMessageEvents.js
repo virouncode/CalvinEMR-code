@@ -60,7 +60,8 @@ export const onMessageEvents = (
                 "#3D375A",
                 isSecretary,
                 userId,
-                rooms
+                rooms,
+                staffInfos
               ) //grey
             : parseToEvent(
                 message.content.data,
@@ -72,7 +73,8 @@ export const onMessageEvents = (
                 ).textColor,
                 isSecretary,
                 userId,
-                rooms
+                rooms,
+                staffInfos
               )
           : parseToEvent(
               message.content.data,
@@ -80,7 +82,8 @@ export const onMessageEvents = (
               "#3D375A",
               isSecretary,
               userId,
-              rooms
+              rooms,
+              staffInfos
             );
       setEvents([...events, newEvent]);
       break;
@@ -94,7 +97,8 @@ export const onMessageEvents = (
                 "#3D375A",
                 isSecretary,
                 userId,
-                rooms
+                rooms,
+                staffInfos
               ) //grey
             : parseToEvent(
                 message.content.data,
@@ -106,7 +110,8 @@ export const onMessageEvents = (
                 ).textColor,
                 isSecretary,
                 userId,
-                rooms
+                rooms,
+                staffInfos
               )
           : parseToEvent(
               message.content.data,
@@ -114,7 +119,8 @@ export const onMessageEvents = (
               "#3D375A",
               isSecretary,
               userId,
-              rooms
+              rooms,
+              staffInfos
             );
       setEvents(
         events.map((event) =>

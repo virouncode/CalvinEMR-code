@@ -17,14 +17,9 @@ const SignCellStaff = ({ item }) => {
             ? getLastUpdate(item).updated_by_user_type === "Staff"
               ? staffIdToTitleAndName(
                   staffInfos,
-                  getLastUpdate(item).updated_by_id,
-                  true
+                  getLastUpdate(item).updated_by_id
                 )
-              : adminIdToName(
-                  adminsInfos,
-                  getLastUpdate(item).updated_by_id,
-                  true
-                )
+              : adminIdToName(adminsInfos, getLastUpdate(item).updated_by_id)
             : adminIdToName(adminsInfos, item.created_by_id, true)}
         </em>
       </td>

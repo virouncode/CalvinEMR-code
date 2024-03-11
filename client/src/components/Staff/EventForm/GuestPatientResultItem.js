@@ -1,4 +1,5 @@
 import React from "react";
+import { toPatientName } from "../../../utils/toPatientName";
 
 const GuestPatientResultItem = ({
   guest,
@@ -12,11 +13,7 @@ const GuestPatientResultItem = ({
       data-type="patient"
       ref={lastPatientRef}
     >
-      <span>
-        {guest.Names.LegalName.FirstName.Part}{" "}
-        {guest.Names.LegalName.OtherName?.[0]?.Part}{" "}
-        {guest.Names.LegalName.LastName.Part}
-      </span>
+      <span>{toPatientName(guest)}</span>
       <i
         style={{ marginLeft: "10px", cursor: "pointer" }}
         className="fa-solid fa-user-plus"

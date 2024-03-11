@@ -175,11 +175,9 @@ const ReplyMessage = ({
           {allPersons
             ? [...new Set([...message.to_staff_ids, message.from_id])]
                 .filter((staffId) => staffId !== user.id)
-                .map((staffId) =>
-                  staffIdToTitleAndName(staffInfos, staffId, true)
-                )
-                .join(", ")
-            : staffIdToTitleAndName(staffInfos, message.from_id, true)}
+                .map((staffId) => staffIdToTitleAndName(staffInfos, staffId))
+                .join(" / ")
+            : staffIdToTitleAndName(staffInfos, message.from_id)}
         </p>
       </div>
       <div className="reply-message__subject">

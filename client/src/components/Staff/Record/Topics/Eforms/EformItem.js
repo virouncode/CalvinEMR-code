@@ -57,7 +57,7 @@ const EformItem = ({ item, lastItemRef = null }) => {
         {item.name}
       </td>
       <td>
-        <em>{staffIdToTitleAndName(staffInfos, item.created_by_id, true)}</em>
+        <em>{staffIdToTitleAndName(staffInfos, item.created_by_id)}</em>
       </td>
       <td>
         <em>{toLocalDate(item.date_created)}</em>

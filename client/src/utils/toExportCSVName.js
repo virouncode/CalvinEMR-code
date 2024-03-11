@@ -18,7 +18,7 @@ export const toExportCSVName = (
   if (accessLevel === "Admin" || userTitle === "Secretary") {
     name = "";
   } else {
-    name = `_${staffIdToTitleAndName(staffInfos, staffId)}`;
+    name = `_${staffIdToTitleAndName(staffInfos, staffId, false, false)}`;
   }
 
   return `Billings${name}${start}${end}${allCaption}.csv`;

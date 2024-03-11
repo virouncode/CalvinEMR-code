@@ -43,7 +43,6 @@ const EditGuests = ({
           staff_infos: {
             id: guestId,
             full_name: staffInfos.find(({ id }) => id === guestId).full_name,
-            title: staffInfos.find(({ id }) => id === guestId).title,
           },
         },
       ];
@@ -65,6 +64,9 @@ const EditGuests = ({
             Names: patientsDemographics.find(
               ({ patient_id }) => patient_id === guestId
             ).Names,
+            Gender: patientsDemographics.find(
+              ({ patient_id }) => patient_id === guestId
+            ).Gender,
           },
         },
       ];

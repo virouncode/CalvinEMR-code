@@ -329,8 +329,7 @@ const PersonalHistoryPU = ({
                   Updated by{" "}
                   {staffIdToTitleAndName(
                     staffInfos,
-                    getLastUpdate(topicDatas[0]).updated_by_id,
-                    true
+                    getLastUpdate(topicDatas[0]).updated_by_id
                   )}{" "}
                   on{" "}
                   {toLocalDateAndTime(
@@ -342,8 +341,7 @@ const PersonalHistoryPU = ({
                   Created by{" "}
                   {staffIdToTitleAndName(
                     staffInfos,
-                    topicDatas[0].created_by_id,
-                    true
+                    topicDatas[0].created_by_id
                   )}{" "}
                   on {toLocalDateAndTime(topicDatas[0].date_created)}
                 </em>

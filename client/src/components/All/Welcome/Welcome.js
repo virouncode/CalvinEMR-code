@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
+import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
+import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
+import { toWelcomeName } from "../../../utils/toWelcomeName";
 
 const Welcome = ({ title }) => {
   //=================== STATES =======================//
   const [helloMessage, setHelloMessage] = useState("");
   const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
+  const { adminsInfos } = useAdminsInfosContext();
 
   useEffect(() => {
     const displayHello = () => {
@@ -33,9 +38,7 @@ const Welcome = ({ title }) => {
         {/* To customize for each clinic */}
         <h2 className="welcome-section__title">{title}</h2>
         <p className="welcome-section__message">
-          {helloMessage}
-          {", "}
-          {user.full_name}
+          {helloMessage} {toWelcomeName(user, staffInfos, adminsInfos)}
         </p>
       </section>
     )

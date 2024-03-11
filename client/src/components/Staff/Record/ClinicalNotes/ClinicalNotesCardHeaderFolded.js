@@ -25,7 +25,7 @@ const ClinicalNotesCardHeaderFolded = ({
           <label>
             <strong>From: </strong>
           </label>
-          {staffIdToTitleAndName(staffInfos, tempFormDatas.created_by_id, true)}
+          {staffIdToTitleAndName(staffInfos, tempFormDatas.created_by_id)}
           {` ${toLocalDateAndTimeWithSeconds(tempFormDatas.date_created)}`}
           {" / "}
           <strong>Subject: </strong>

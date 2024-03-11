@@ -9,9 +9,7 @@ const ClinicalNoteOverviewCard = ({ clinicalNote, lastItemRef = null }) => {
     <div className="clinical-notes__overview-card" ref={lastItemRef}>
       <div className="clinical-notes__overview-card-row">
         <label>From:</label>
-        <p>
-          {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id, true)}
-        </p>
+        <p>{staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)}</p>
       </div>
       <div className="clinical-notes__overview-card-row">
         <label>Date:</label>

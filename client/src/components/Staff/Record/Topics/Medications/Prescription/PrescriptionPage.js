@@ -43,8 +43,8 @@ const PrescriptionPage = ({
             <>
               <div className="prescription__doctor-infos">
                 <p>
-                  {staffIdToTitleAndName(staffInfos, user.id)} (LIC.{" "}
-                  {user.licence_nbr})
+                  {staffIdToTitleAndName(staffInfos, user.id, false, false)}{" "}
+                  (LIC. {user.licence_nbr})
                 </p>
                 <p>{sites.find(({ id }) => id === siteSelectedId)?.name}</p>
                 <p>

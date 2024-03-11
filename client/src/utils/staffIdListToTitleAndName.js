@@ -1,14 +1,8 @@
-import formatName from "./formatName";
+import { staffIdToTitleAndName } from "./staffIdToTitleAndName";
 
 export const staffIdListToTitleAndName = (staffInfos, staffIdList) => {
   return staffIdList
-    .map(
-      (staffId) =>
-        (staffInfos.find(({ id }) => id === staffId).title === "Doctor"
-          ? "Dr. "
-          : "") +
-        formatName(staffInfos.find(({ id }) => id === staffId).full_name)
-    )
+    .map((staffId) => staffIdToTitleAndName(staffInfos, staffId))
     .join(", ");
 };
 

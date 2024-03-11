@@ -321,11 +321,7 @@ const BillingTableItem = ({
           </td>
           <td>
             <Tooltip
-              title={staffIdToTitleAndName(
-                staffInfos,
-                billing.provider_id,
-                true
-              )}
+              title={staffIdToTitleAndName(staffInfos, billing.provider_id)}
               placement="top-start"
               arrow
             >

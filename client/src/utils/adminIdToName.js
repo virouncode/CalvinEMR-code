@@ -1,10 +1,22 @@
-import formatName from "./formatName";
+import abreviateName from "./abreviateName";
 
-export const adminIdToName = (adminsInfos, adminId, format = false) => {
+export const adminIdToName = (
+  adminsInfos,
+  adminId,
+  abreviatted = false,
+  formatted = false
+) => {
   if (!adminId) return "";
-  if (format) {
-    return formatName(adminsInfos.find(({ id }) => id === adminId)?.full_name);
+  const firstName =
+    adminsInfos.find(({ id }) => id === adminId)?.first_name || "";
+  const lastName =
+    adminsInfos.find(({ id }) => id === adminId)?.last_name || "";
+  if (abreviatted) {
+    return abreviateName(
+      adminsInfos.find(({ id }) => id === adminId)?.full_name,
+      formatted
+    );
   } else {
-    return adminsInfos.find(({ id }) => id === adminId)?.full_name;
+    return formatted ? lastName + ", " + firstName : firstName + " " + lastName;
   }
 };

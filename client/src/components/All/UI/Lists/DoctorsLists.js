@@ -1,5 +1,4 @@
 import React from "react";
-import formatName from "../../../../utils/formatName";
 
 const DoctorsList = ({
   value,
@@ -27,7 +26,7 @@ const DoctorsList = ({
         .filter(({ title }) => title === "Doctor")
         .map((doctor) => (
           <option value={doctor.id} key={doctor.id}>
-            Dr. {formatName(doctor.full_name)}
+            Dr. {doctor.full_name}
           </option>
         ))}
     </select>

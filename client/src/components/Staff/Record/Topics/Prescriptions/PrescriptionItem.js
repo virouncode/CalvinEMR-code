@@ -18,11 +18,7 @@ const PrescriptionItem = ({ item, lastItemRef = null }) => {
       </td>
       <td>
         <em>
-          {staffIdToTitleAndName(
-            staffInfos,
-            item.attachment.created_by_id,
-            true
-          )}
+          {staffIdToTitleAndName(staffInfos, item.attachment.created_by_id)}
         </em>
       </td>
       <td>

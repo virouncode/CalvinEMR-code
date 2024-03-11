@@ -19,7 +19,7 @@ const ReportsInboxPracticiansListItem = ({
         name={categoryName}
       />
       <label htmlFor={info.id}>
-        {staffIdToTitleAndName(staffInfos, info.id, true)}
+        {staffIdToTitleAndName(staffInfos, info.id)}
       </label>
     </li>
   );

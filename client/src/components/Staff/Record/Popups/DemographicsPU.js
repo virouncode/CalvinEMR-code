@@ -1009,7 +1009,7 @@ const DemographicsPU = ({
                     handleChange={handleChange}
                   />
                 ) : (
-                  staffIdToTitleAndName(staffInfos, formDatas.assignedMd, true)
+                  staffIdToTitleAndName(staffInfos, formDatas.assignedMd)
                 )}
               </p>
               <p>
@@ -1251,8 +1251,7 @@ const DemographicsPU = ({
               Updated by{" "}
               {staffIdToTitleAndName(
                 staffInfos,
-                getLastUpdate(demographicsInfos).updated_by_id,
-                true
+                getLastUpdate(demographicsInfos).updated_by_id
               )}{" "}
               on{" "}
               {toLocalDateAndTime(
@@ -1264,8 +1263,7 @@ const DemographicsPU = ({
               Created by{" "}
               {staffIdToTitleAndName(
                 staffInfos,
-                demographicsInfos.created_by_id,
-                true
+                demographicsInfos.created_by_id
               )}{" "}
               on {toLocalDateAndTime(demographicsInfos.date_created)}
             </em>

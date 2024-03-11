@@ -218,7 +218,7 @@ const ImmunizationForm = ({
           autoComplete="off"
         />
       </td>
-      <td>{staffIdToTitleAndName(staffInfos, user.id, true)}</td>
+      <td>{staffIdToTitleAndName(staffInfos, user.id)}</td>
       <td>{toLocalDate(Date.now())}</td>
     </tr>
   );

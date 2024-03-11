@@ -6,6 +6,7 @@ import { sendEmail } from "../../../api/sendEmail";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useUserContext from "../../../hooks/useUserContext";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import { toPatientName } from "../../../utils/toPatientName";
 import SelectSite from "./SelectSite";
 import TemplatesRadio from "./TemplatesRadio";
 
@@ -61,7 +62,7 @@ const Invitation = ({
       );
       return;
     }
-    const hostName = staffIdToTitleAndName(staffInfos, hostId, true);
+    const hostName = staffIdToTitleAndName(staffInfos, hostId);
 
     let optionsDate = {
       weekday: "short",
@@ -107,12 +108,7 @@ const Invitation = ({
       );
     setProgress(true);
     for (const patientInfos of patientsGuestsInfos) {
-      const patientName =
-        patientInfos.Names.LegalName.FirstName.Part +
-        " " +
-        patientInfos.Names.LegalName.OtherName?.[0]?.Part +
-        " " +
-        patientInfos.Names.LegalName.LastName.Part;
+      const patientName = toPatientName(patientInfos);
       try {
         await sendEmail(
           "virounk@gmail.com", //to be changed to patientInfo.email

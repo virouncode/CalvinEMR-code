@@ -18,12 +18,12 @@ const AssignedPracticiansList = ({
         <option value="" disabled>
           Choose a practitioner...
         </option> */}
-      {staffIdToTitleAndName(staffInfos, assignedStaffId, true)}
+      {staffIdToTitleAndName(staffInfos, assignedStaffId)}
       {/* {assignedStaff.map((staff) => (
           <option key={staff.id} value={staff.id}>
             {staff.category === "Doctor"
-              ? staffIdToTitleAndName(staffInfos, staff.id, true)
-              : formatName(staffIdToName(staffInfos, staff.id)) +
+              ? staffIdToTitleAndName(staffInfos, staff.id, true, true)
+              : abreviateName(staffIdToName(staffInfos, staff.id)) +
                 `(${staff.category})`}
           </option>
         ))} */}

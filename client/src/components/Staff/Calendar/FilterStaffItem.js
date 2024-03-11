@@ -23,7 +23,7 @@ const FilterStaffItem = ({
         style={{ accentColor: color }}
       />
       <label htmlFor={staff.id}>
-        {staffIdToTitleAndName(staffInfos, staff.id, true)}
+        {staffIdToTitleAndName(staffInfos, staff.id)}
       </label>
     </li>
   );
