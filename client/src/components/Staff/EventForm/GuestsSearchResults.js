@@ -1,4 +1,5 @@
-import React, { useCallback, useRef } from "react";
+import React from "react";
+import useIntersection from "../../../hooks/useIntersection";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import GuestPatientResultItem from "./GuestPatientResultItem";
@@ -15,34 +16,7 @@ const GuestsSearchResults = ({
   staff_guests_ids,
 }) => {
   const { staffInfos } = useStaffInfosContext();
-  const lastPatientRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-      const options = {
-        root: rootRef.current,
-        rootMargin: "0px",
-        threshold: 1,
-      };
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          console.log("intersecting");
-          setPaging((prevPagination) => {
-            return { ...prevPagination, page: prevPagination.page + 1 };
-          });
-        }
-      }, options);
-      if (node) {
-        observer.current.observe(node);
-      }
-    },
-    [loading, hasMore, setPaging]
-  );
-
-  const rootRef = useRef(null);
-  const observer = useRef(null);
+  const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   return (
     <ul className="results" ref={rootRef}>
@@ -54,7 +28,7 @@ const GuestsSearchResults = ({
               key={guest.id}
               guest={guest}
               handleAddGuest={handleAddGuest}
-              lastPatientRef={lastPatientRef}
+              lastItemRef={lastItemRef}
             />
           ) : (
             <GuestPatientResultItem

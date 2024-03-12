@@ -20,7 +20,7 @@ const SignCellStaff = ({ item }) => {
                   getLastUpdate(item).updated_by_id
                 )
               : adminIdToName(adminsInfos, getLastUpdate(item).updated_by_id)
-            : adminIdToName(adminsInfos, item.created_by_id, true)}
+            : adminIdToName(adminsInfos, item.created_by_id)}
         </em>
       </td>
       <td>

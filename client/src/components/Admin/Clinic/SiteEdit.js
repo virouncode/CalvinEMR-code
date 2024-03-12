@@ -112,6 +112,7 @@ const SiteEdit = ({ infos, editVisible, setEditVisible }) => {
         ...formDatas.updates,
         { updated_by_id: user.id, date_updated: Date.now() },
       ],
+      email: formDatas.email.toLowerCase(),
     };
     //Validation
     if (formDatas.rooms.length === 0) {
@@ -235,6 +236,16 @@ const SiteEdit = ({ infos, editVisible, setEditVisible }) => {
               onChange={handleChange}
               name="fax"
               value={formDatas.fax}
+              autoComplete="off"
+            />
+          </div>
+          <div className="site-form__row">
+            <label>Email:</label>
+            <input
+              type="email"
+              onChange={handleChange}
+              name="email"
+              value={formDatas.email}
               autoComplete="off"
             />
           </div>

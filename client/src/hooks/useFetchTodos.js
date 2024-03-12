@@ -7,7 +7,6 @@ const useFetchTodos = (paging, search, staffId) => {
   const [hasMoreTodos, setHasMoreTodos] = useState(false);
   const [loadingTodos, setLoadingTodos] = useState(false);
   const [errMsgTodos, setErrMsgTodos] = useState("");
-  console.log("useFetchTodos");
   useEffect(() => {
     setTodos([]);
   }, [search]);

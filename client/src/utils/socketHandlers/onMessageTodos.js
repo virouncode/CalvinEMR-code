@@ -1,7 +1,5 @@
 export const onMessageTodos = (message, todos, setTodos, staffId) => {
   if (message.route !== "TODOS") return;
-  console.log(message);
-  console.log(todos);
   switch (message.action) {
     case "create":
       if (message.content.data.staff_id === staffId) {

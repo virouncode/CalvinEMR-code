@@ -67,10 +67,7 @@ const BillingTable = ({
               {loading && <LoadingRow colSpan="13" />}
             </tbody>
             <tfoot>
-              <tr
-                className="billing-table__item"
-                style={{ border: "solid 2px orange" }}
-              >
+              <tr className="billing-table__item">
                 <td colSpan="8" style={{ fontWeight: "bold", border: "none" }}>
                   Total fees
                 </td>

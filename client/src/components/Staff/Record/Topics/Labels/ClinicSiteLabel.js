@@ -78,7 +78,7 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
         !isObjectEmpty(assignedMd) &&
         sites.length > 0 && (
           <div style={LABEL_STYLE}>
-            <p style={TITLE_STYLE}>{clinic.name}</p>
+            <p style={TITLE_STYLE}>{clinic.name.toUpperCase()}</p>
             <p style={LINE_STYLE}>
               <span style={SPAN_STYLE}>SITE: {site.name}</span>
             </p>

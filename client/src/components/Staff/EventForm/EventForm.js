@@ -525,8 +525,6 @@ const EventForm = ({
         "staff",
         datasToPut
       );
-      console.log("put response", response.data);
-
       setHostsIds([...hostsIds, tempFormDatas.host_id]);
       socket.emit("message", {
         route: "EVENTS",

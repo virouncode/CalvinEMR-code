@@ -1,26 +1,22 @@
 import React, { useState } from "react";
 import useFetchDashboard from "../../../hooks/useFetchDashboard";
-import useFetchDatas from "../../../hooks/useFetchDatas";
 import DashboardCard from "./DashboardCard";
+import DashboardCardPatients from "./DashboardCardPatients";
+import DashboardCardStaff from "./DashboardCardStaff";
 import DashboardCardVisits from "./DashboardCardVisits";
 
 const Dashboard = () => {
-  const [sites] = useFetchDatas("/sites", "admin");
   const [rangeStartDobVisits, setRangeStartDobVisits] = useState(
     Date.parse(new Date(20, 0, 1))
   );
-  const [rangeEndDobVisits, setRangeEndDobVisits] = useState(Date.now());
   const {
     visits,
-    setVisits,
     rangeStartVisits,
     setRangeStartVisits,
     rangeEndVisits,
     setRangeEndVisits,
     loadingVisits,
-    setLoadingVisits,
     errVisits,
-    setErrVisits,
     billings,
     setBillings,
     rangeStartBillings,
@@ -31,30 +27,53 @@ const Dashboard = () => {
     setLoadingBillings,
     errBillings,
     setErrBillings,
+    sites,
+    loadingSites,
+    errSites,
+    patientsPerGender,
+    loadingPatientsPerGender,
+    errPatientsPerGender,
+    patientsPerAge,
+    loadingPatientsPerAge,
+    errPatientsPerAge,
   } = useFetchDashboard();
   return (
     <div className="dashboard">
       <div className="dashboard-row">
         <DashboardCardVisits
           visits={visits}
-          setVisits={setVisits}
           rangeStartVisits={rangeStartVisits}
           setRangeStartVisits={setRangeStartVisits}
           rangeEndVisits={rangeEndVisits}
           setRangeEndVisits={setRangeEndVisits}
           loadingVisits={loadingVisits}
-          setLoadingVisits={setLoadingVisits}
           errVisits={errVisits}
-          setErrVisits={setErrVisits}
           sites={sites}
         />
-        {/* <DashboardCard title="Staff"></DashboardCard>
-        <DashboardCard title="Appointments"></DashboardCard> */}
+      </div>
+      <div className="dashboard-row">
+        <DashboardCardStaff
+          sites={sites}
+          loadingSites={loadingSites}
+          errSites={errSites}
+        />
+      </div>
+      <div className="dashboard-row">
+        <DashboardCardPatients
+          sites={sites}
+          patientsPerGender={patientsPerGender}
+          loadingPatientsPerGender={loadingPatientsPerGender}
+          errPatientsPerGender={errPatientsPerGender}
+          patientsPerAge={patientsPerAge}
+          loadingPatientsPerAge={loadingPatientsPerAge}
+          errPatientsPerAge={errPatientsPerAge}
+        />
       </div>
       <div className="dashboard-row">
         <DashboardCard title="Billings"></DashboardCard>
+      </div>
+      <div className="dashboard-row">
         <DashboardCard title="Medications"></DashboardCard>
-        <DashboardCard title="Staff"></DashboardCard>
       </div>
     </div>
   );

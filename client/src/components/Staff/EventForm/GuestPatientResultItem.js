@@ -4,14 +4,14 @@ import { toPatientName } from "../../../utils/toPatientName";
 const GuestPatientResultItem = ({
   guest,
   handleAddGuest,
-  lastPatientRef = null,
+  lastItemRef = null,
 }) => {
   return (
     <li
       key={guest.patient_id}
       data-key={guest.patient_id}
       data-type="patient"
-      ref={lastPatientRef}
+      ref={lastItemRef}
     >
       <span>{toPatientName(guest)}</span>
       <i

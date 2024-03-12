@@ -42,7 +42,6 @@ const getXano = async (req, res) => {
     }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
-    console.log(response);
     if (typeof response.data === "number") {
       res.status(response.status).send(response.data.toString());
     } else {
@@ -109,7 +108,7 @@ const putXano = async (req, res) => {
       res.status(response.status).send(response.data);
     }
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(err.response?.status).send(err);
   }
 };
@@ -135,7 +134,7 @@ const deleteXano = async (req, res) => {
     const response = await axiosXanoInstance(config);
     res.status(response.status).send(response.data);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(err.response?.status).send(err);
   }
 };

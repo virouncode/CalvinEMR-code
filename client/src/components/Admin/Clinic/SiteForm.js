@@ -26,6 +26,7 @@ const SiteForm = ({ setAddVisible }) => {
     city: "",
     phone: "",
     fax: "",
+    email: "",
     logo: null,
     rooms: [],
   });
@@ -247,6 +248,16 @@ const SiteForm = ({ setAddVisible }) => {
               onChange={handleChange}
               name="fax"
               value={formDatas.fax}
+              autoComplete="off"
+            />
+          </div>
+          <div className="site-form__row">
+            <label>Email:</label>
+            <input
+              type="email"
+              onChange={handleChange}
+              name="email"
+              value={formDatas.email}
               autoComplete="off"
             />
           </div>

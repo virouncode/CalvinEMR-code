@@ -56,9 +56,9 @@ const Clinic = () => {
             .find(({ id }) => id === selectedSiteId)
             .name.toUpperCase()} Site`}
           width={1000}
-          height={550}
+          height={600}
           x={(window.innerWidth - 1000) / 2}
-          y={(window.innerHeight - 550) / 2}
+          y={(window.innerHeight - 600) / 2}
           color="#94bae8"
           setPopUpVisible={setEditVisible}
         >

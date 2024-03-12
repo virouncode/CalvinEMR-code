@@ -20,6 +20,7 @@ const SitesTable = ({ sites, loading, errMsg, handleEditClick }) => {
                 <th>Postal/Zip code</th>
                 <th>Phone</th>
                 <th>Fax</th>
+                <th>Email</th>
                 <th>Logo</th>
                 <th>Rooms list</th>
                 <th>Updated by</th>

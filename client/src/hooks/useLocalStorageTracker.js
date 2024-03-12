@@ -15,7 +15,6 @@ export const useLocalStorageTracker = () => {
   }, []);
 
   useEffect(() => {
-    console.log(localStorage.getItem("tabCounter"));
     if (
       !localStorage.getItem("tabCounter") ||
       isNaN(localStorage.getItem("tabCounter"))

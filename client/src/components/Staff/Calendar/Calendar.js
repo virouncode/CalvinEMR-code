@@ -91,7 +91,6 @@ const Calendar = () => {
   const eventCounter = useRef(0);
 
   useEffect(() => {
-    console.log("lastCurrentId", lastCurrentId.current);
     if (lastCurrentId.current) {
       currentEventElt.current = document.getElementsByClassName(
         `event-${lastCurrentId.current}`
@@ -164,7 +163,6 @@ const Calendar = () => {
       })
     ) {
       try {
-        console.log("eventId", currentEvent.current.id);
         await xanoDelete(
           `/appointments/${parseInt(currentEvent.current.id)}`,
           "staff"
@@ -525,7 +523,6 @@ const Calendar = () => {
     const view = info.view;
     if (currentEvent.current && currentEvent.current.id !== event.id) {
       //event selection change
-      console.log("event selection change");
       //change border and unselect previous event
       currentEventElt.current.style.border = "none";
       //Change current event, current event element and current view
@@ -535,7 +532,6 @@ const Calendar = () => {
       currentView.current = view;
       eventElt.style.border = "solid 1px red";
     } else if (currentEvent.current === null) {
-      console.log("new event selection");
       //first event selection
       currentEvent.current = event;
       lastCurrentId.current = event.id;
@@ -553,7 +549,6 @@ const Calendar = () => {
       setFormVisible(true);
       setCalendarSelectable(false);
     }
-    console.log("lastCurrentId after click", lastCurrentId.current);
   };
   // DATES SET
   const handleDatesSet = (info) => {

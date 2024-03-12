@@ -124,7 +124,7 @@
       min-width: 200px;
     }
   }
-  &__item {
+  &__item, &__item-footer {
     border-bottom:solid 1px $grey;
     td {
       text-align: center;
@@ -147,5 +147,11 @@
         margin-left: 5px;
       }
     }
+  }
+  tfoot {
+    position:sticky;
+    bottom: 0;
+    outline: solid 1.5px $orange;
+    background-color: $white;
   }
 }

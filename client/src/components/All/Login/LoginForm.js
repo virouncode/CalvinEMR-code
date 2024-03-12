@@ -186,7 +186,6 @@ const LoginForm = () => {
             patient_id: user.id,
           })
         ).data;
-        console.log("demographics", demographics);
 
         //================ USER UNREAD MESSAGES =============//
         const unreadNbr = (

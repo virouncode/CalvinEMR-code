@@ -1,8 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
+import { getLimitTimestampForAge } from "../utils/formatDates";
 
 const useFetchDashboard = () => {
-  const [visits, setVisits] = useState();
+  const [sites, setSites] = useState([]);
+  const [errSites, setErrSites] = useState("");
+  const [loadingSites, setLoadingSites] = useState(true);
+
+  const [patientsPerGender, setPatientsPerGender] = useState([]);
+  const [errPatientsPerGender, setErrPatientsPerGender] = useState("");
+  const [loadingPatientsPerGender, setLoadingPatientsPerGender] =
+    useState(false);
+
+  const [patientsPerAge, setPatientsPerAge] = useState([]);
+  const [errPatientsPerAge, setErrPatientsPerAge] = useState("");
+  const [loadingPatientsPerAge, setLoadingPatientsPerAge] = useState(true);
+
+  const [visits, setVisits] = useState([]);
   const [rangeStartVisits, setRangeStartVisits] = useState(
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
   );
@@ -10,9 +24,9 @@ const useFetchDashboard = () => {
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
   );
   const [errVisits, setErrVisits] = useState("");
-  const [loadingVisits, setLoadingVisits] = useState("");
+  const [loadingVisits, setLoadingVisits] = useState(true);
 
-  const [billings, setBillings] = useState();
+  const [billings, setBillings] = useState([]);
   const [rangeStartBillings, setRangeStartBillings] = useState(
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
   );
@@ -20,7 +34,7 @@ const useFetchDashboard = () => {
     Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
   );
   const [errBillings, setErrBillings] = useState("");
-  const [loadingBillings, setLoadingBillings] = useState("");
+  const [loadingBillings, setLoadingBillings] = useState(true);
 
   // const [medications, setMedications] = useState();
   // const [rangeStartMedications, setRangeStartMedications] = useState(
@@ -31,6 +45,142 @@ const useFetchDashboard = () => {
   // );
   // const [errMedications, setErrMedications] = useState("");
   // const [loadingMedications, setLoadingMedications] = useState("");
+  const fetchSites = useCallback(async (abortController) => {
+    try {
+      setLoadingSites(true);
+      const response = await xanoGet(`/sites`, "admin", null, abortController);
+      if (abortController.signal.aborted) return;
+      setSites(response.data);
+      setLoadingSites(false);
+    } catch (err) {
+      setLoadingSites(false);
+      setErrSites(`Unable to fetch sites:${err.message}`);
+    }
+  }, []);
+
+  const fetchPatientsPerGender = useCallback(
+    async (abortController) => {
+      try {
+        setLoadingPatientsPerGender(true);
+        const genders = ["M", "F", "O"];
+        let totals = [];
+        for (const site of sites) {
+          let totalsForSite = {};
+          for (let i = 0; i < genders.length; i++) {
+            const response = await xanoGet(
+              "/dashboard/patients_gender_site",
+              "admin",
+              { site_id: site.id, gender: genders[i] },
+              abortController
+            );
+            totalsForSite[genders[i]] = response.data;
+          }
+          totals = [...totals, totalsForSite];
+        }
+        const totalMale = totals.reduce((acc, current) => {
+          return acc + current["M"];
+        }, 0);
+        const totalFemale = totals.reduce((acc, current) => {
+          return acc + current["F"];
+        }, 0);
+        const totalOther = totals.reduce((acc, current) => {
+          return acc + current["O"];
+        }, 0);
+        if (abortController.signal.aborted) return;
+        setPatientsPerGender([
+          ...totals,
+          { M: totalMale, F: totalFemale, O: totalOther },
+        ]);
+        setLoadingPatientsPerGender(false);
+      } catch (err) {
+        setErrPatientsPerGender(
+          `Unable to fetch patients per gender : ${err.message}`
+        );
+        setLoadingPatientsPerGender(false);
+      }
+    },
+    [sites]
+  );
+
+  const fetchPatientsPerAge = useCallback(
+    async (abortController) => {
+      try {
+        setLoadingPatientsPerAge(true);
+        let totals = [];
+        for (const site of sites) {
+          let totalsForSite = {};
+          //<18
+          totalsForSite.under18 = (
+            await xanoGet("/dashboard/patients_under_age_site", "admin", {
+              site_id: site.id,
+              dob_limit: getLimitTimestampForAge(18),
+            })
+          ).data;
+          //18-35
+          totalsForSite.from18to35 = (
+            await xanoGet("/dashboard/patients_age_range_site", "admin", {
+              site_id: site.id,
+              dob_start: getLimitTimestampForAge(35),
+              dob_end: getLimitTimestampForAge(18),
+            })
+          ).data;
+          //36-50
+          totalsForSite.from36to50 = (
+            await xanoGet("/dashboard/patients_age_range_site", "admin", {
+              site_id: site.id,
+              dob_start: getLimitTimestampForAge(50),
+              dob_end: getLimitTimestampForAge(36),
+            })
+          ).data;
+          //51-70
+          totalsForSite.from51to70 = (
+            await xanoGet("/dashboard/patients_age_range_site", "admin", {
+              site_id: site.id,
+              dob_start: getLimitTimestampForAge(70),
+              dob_end: getLimitTimestampForAge(51),
+            })
+          ).data;
+          //>70
+          totalsForSite.over70 = (
+            await xanoGet("/dashboard/patients_over_age_site", "admin", {
+              site_id: site.id,
+              dob_limit: getLimitTimestampForAge(70),
+            })
+          ).data;
+          totals = [...totals, totalsForSite];
+        }
+        totals = [
+          ...totals,
+          {
+            under18: totals.reduce((acc, current) => {
+              return acc + current.under18;
+            }, 0),
+            from18to35: totals.reduce((acc, current) => {
+              return acc + current.from18to35;
+            }, 0),
+            from36to50: totals.reduce((acc, current) => {
+              return acc + current.from36to50;
+            }, 0),
+            from51to70: totals.reduce((acc, current) => {
+              return acc + current.from51to70;
+            }, 0),
+            over70: totals.reduce((acc, current) => {
+              return acc + current.over70;
+            }, 0),
+          },
+        ];
+        if (abortController.signal.aborted) return;
+        setPatientsPerAge(totals);
+        setLoadingPatientsPerAge(false);
+      } catch (err) {
+        setErrPatientsPerAge(
+          `Unable to fetch patients per age: ${err.message}`
+        );
+        setLoadingPatientsPerAge(false);
+      }
+    },
+    [sites]
+  );
 
   const fetchDatas = useCallback(
     async (
@@ -66,6 +216,12 @@ const useFetchDashboard = () => {
 
   useEffect(() => {
     const abortController = new AbortController();
+    fetchSites(abortController);
+  }, [fetchSites]);
+
+  useEffect(() => {
+    if (!sites || sites?.length === 0) return;
+    const abortController = new AbortController();
     const fetchDashboard = async () => {
       await fetchDatas(
         rangeStartVisits,
@@ -76,6 +232,8 @@ const useFetchDashboard = () => {
         "visits_in_range",
         abortController
       );
+      await fetchPatientsPerGender(abortController);
+      await fetchPatientsPerAge(abortController);
       await fetchDatas(
         rangeStartBillings,
         rangeEndBillings,
@@ -85,6 +243,7 @@ const useFetchDashboard = () => {
         "billings_in_range",
         abortController
       );
+
       // await fetchDatas(
       //   rangeStartMedications,
       //   rangeEndMedications,
@@ -99,25 +258,23 @@ const useFetchDashboard = () => {
     return () => abortController.abort();
   }, [
     fetchDatas,
+    fetchPatientsPerAge,
+    fetchPatientsPerGender,
     rangeEndBillings,
-    // rangeEndMedications,
     rangeEndVisits,
     rangeStartBillings,
-    // rangeStartMedications,
     rangeStartVisits,
+    sites,
   ]);
 
   return {
     visits,
-    setVisits,
     rangeStartVisits,
     setRangeStartVisits,
     rangeEndVisits,
     setRangeEndVisits,
     loadingVisits,
-    setLoadingVisits,
     errVisits,
-    setErrVisits,
     billings,
     setBillings,
     rangeStartBillings,
@@ -128,6 +285,15 @@ const useFetchDashboard = () => {
     setLoadingBillings,
     errBillings,
     setErrBillings,
+    sites,
+    loadingSites,
+    errSites,
+    patientsPerGender,
+    loadingPatientsPerGender,
+    errPatientsPerGender,
+    patientsPerAge,
+    loadingPatientsPerAge,
+    errPatientsPerAge,
   };
 };
 

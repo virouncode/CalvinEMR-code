@@ -18,8 +18,6 @@ const postWriteXML = async (req, res) => {
       reportsFiles,
     } = req.body;
 
-    console.log(req.body);
-
     //Names
     const exportFolderName = `CalvinEMR_Export_${dateOfExport}`;
     const folderName = `${doctorFirstName}_${doctorLastName}_${doctorOHIP}`;

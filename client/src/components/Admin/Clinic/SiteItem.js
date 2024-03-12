@@ -28,6 +28,7 @@ const SiteItem = ({ site, handleEditClick }) => {
         <td>{site.postal_code || site.zip_code || ""}</td>
         <td>{site.phone || ""}</td>
         <td>{site.fax || ""}</td>
+        <td>{site.email || ""}</td>
         <td
           style={{
             cursor: "pointer",

@@ -25,7 +25,6 @@ export const useEventForm = (eventId) => {
       } catch (err) {
         setLoadingEvent(false);
         if (err.name !== "CanceledError") {
-          console.log(err.message);
           setErrMsg(`Error: unable to fetch event datas: ${err.message}`);
         }
       }

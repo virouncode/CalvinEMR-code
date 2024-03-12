@@ -166,7 +166,6 @@ const MigrationExport = () => {
         autoClose: 5000,
       });
     } catch (err) {
-      console.log(err.message);
       setProgress(false);
       toast.error(`EMR export fail, please contact CalvinEMR: ${err.message}`, {
         containerId: "A",

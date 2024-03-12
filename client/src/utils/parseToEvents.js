@@ -94,7 +94,6 @@ export const parseToEvent = (
   rooms,
   staffInfos
 ) => {
-  console.log("hostInfos", appointment.host_infos);
   return {
     id: appointment.id.toString(),
     start: new Date(appointment.start),

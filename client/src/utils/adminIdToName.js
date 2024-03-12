@@ -3,8 +3,8 @@ import abreviateName from "./abreviateName";
 export const adminIdToName = (
   adminsInfos,
   adminId,
-  abreviatted = false,
-  formatted = false
+  abreviatted = true,
+  formatted = true
 ) => {
   if (!adminId) return "";
   const firstName =
