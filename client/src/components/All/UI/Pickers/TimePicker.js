@@ -18,7 +18,7 @@ const TimePicker = ({
       <select
         className="time-picker-hours"
         onChange={handleChange}
-        value={toLocalHours(dateTimeValue, true)}
+        value={toLocalHours(dateTimeValue)}
         ref={passingRefHour}
         name="hour"
         disabled={readOnly}

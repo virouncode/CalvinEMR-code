@@ -386,7 +386,7 @@ const AppointmentForm = ({
       AppointmentPurpose: firstLetterOfFirstWordUpper(
         formDatas.AppointmentPurpose
       ),
-      AppointmentTime: toLocalTimeWithSeconds(formDatas.start),
+      AppointmentTime: toLocalTimeWithSeconds(formDatas.start, false),
       AppointmentDate: toLocalDate(formDatas.start),
       Provider: {
         Name: {

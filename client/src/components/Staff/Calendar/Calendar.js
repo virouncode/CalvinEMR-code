@@ -559,8 +559,8 @@ const Calendar = () => {
   };
   // DATES SET
   const handleDatesSet = (info) => {
-    setRangeStart(Date.parse(info.startStr));
-    setRangeEnd(Date.parse(info.endStr));
+    setRangeStart(info.start.getTime());
+    setRangeEnd(info.end.getTime());
     if (currentEventElt.current) {
       currentEventElt.current.style.border = "none";
     }
@@ -572,13 +572,12 @@ const Calendar = () => {
   // //DATE SELECT
   const handleDateSelect = async (info) => {
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
-    console.log(info.startStr);
-    const startDate = Date.parse(info.startStr); //local timestamp
+    const startDate = info.start.getTime(); //local timestamp
     const defaultDuration =
       defaultDurationHours * 3600000 + defaultDurationMin * 60000;
     const endDate =
-      Date.parse(info.endStr) > startDate + defaultDuration
-        ? Date.parse(info.endStr)
+      info.end.getTime() > startDate + defaultDuration
+        ? info.end.getTime()
         : startDate + defaultDuration; //local timestamp
 
     const startAllDay = new Date(startDate).setHours(0, 0, 0, 0);
@@ -765,15 +764,17 @@ const Calendar = () => {
     }
   };
   const handleDrop = async (info) => {
+    console.log("drop");
     const event = info.event;
     const eventElt = info.el;
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
     info.el.style.border = "solid 1px red";
+    console.log("border ok");
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
-    const startDate = Date.parse(event.startStr);
-    const endDate = Date.parse(event.endStr);
+    const startDate = event.start.getTime();
+    const endDate = event.end.getTime();
     let availableRooms;
     try {
       availableRooms = await getAvailableRooms(
@@ -909,7 +910,10 @@ const Calendar = () => {
             });
         }
       } else {
+        info.el.style.border = "solid 1px red"; //because of a bug...
         info.revert();
+        console.log("revert");
+        console.log(info.el);
       }
     }
   };
@@ -922,13 +926,13 @@ const Calendar = () => {
     const eventElt = info.el;
 
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
-    info.el.style.border = "solod 1px red";
+    info.el.style.border = "solid 1px red";
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
 
-    const startDate = Date.parse(event.startStr);
-    const endDate = Date.parse(event.endStr);
+    const startDate = event.start.getTime();
+    const endDate = event.end.getTime();
 
     //same as a drop
     let availableRooms;

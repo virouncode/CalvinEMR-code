@@ -79,8 +79,8 @@ const EventForm = ({
   );
   const [availableRooms, setAvailableRooms] = useAvailableRooms(
     parseInt(currentEvent.current.id),
-    Date.parse(currentEvent.current.start),
-    Date.parse(currentEvent.current.end),
+    currentEvent.current.start.getTime(),
+    currentEvent.current.end.getTime(),
     sites,
     currentEvent.current.extendedProps.siteId
   );
@@ -182,12 +182,12 @@ const EventForm = ({
   };
 
   const handleStartChange = async (selectedDates, dateStr, instance) => {
+    //dateStr is in ISOString format Z but takes local time zone UTC offset
     if (selectedDates.length === 0) return; //if the flatpickr is cleared
-    const date = Date.parse(selectedDates[0]);
+    const date = selectedDates[0].getTime();
     const endPicker = fpEnd.current.flatpickr;
 
-    const rangeEnd =
-      selectedDates[0] > new Date(tempFormDatas.end) ? date : tempFormDatas.end;
+    const rangeEnd = date > tempFormDatas.end ? date : tempFormDatas.end;
     let hypotheticAvailableRooms;
 
     try {
@@ -220,7 +220,7 @@ const EventForm = ({
       currentEvent.current.setStart(date);
       previousStart.current = date;
       endPicker.config.minDate = date;
-      if (selectedDates[0] > new Date(tempFormDatas.end)) {
+      if (date > tempFormDatas.end) {
         //Change event end on calendar
         currentEvent.current.setEnd(date);
         endPicker.setDate(date); //Change flatpickr end
@@ -246,7 +246,7 @@ const EventForm = ({
 
   const handleEndChange = async (selectedDates, dateStr, instance) => {
     if (selectedDates.length === 0) return; //if the flatpickr is cleared
-    const date = Date.parse(selectedDates[0]); //remove ms for compareValues
+    const date = selectedDates[0].getTime();
     let hypotheticAvailableRooms;
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
@@ -273,14 +273,17 @@ const EventForm = ({
           )} will be occupied at this time slot, change end time anyway ?`,
         })))
     ) {
-      currentEvent.current.setEnd(date); //re-render
+      //Change event end on calendar
+      currentEvent.current.setEnd(date);
       previousEnd.current = date;
+      //Update form datas
       setTempFormDatas({
         ...tempFormDatas,
         end: date,
         Duration: Math.floor((date - tempFormDatas.start) / (1000 * 60)),
       });
     } else {
+      //Put instance back to previous end if user cancel
       instance.setDate(previousEnd.current);
     }
   };
@@ -348,7 +351,7 @@ const EventForm = ({
           )} will be occupied at this time slot, change end time anyway ?`,
         })))
     ) {
-      //change event on calendar
+      //change event end on calendar
       currentEvent.current.setEnd(
         tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
       );
@@ -470,8 +473,7 @@ const EventForm = ({
     }
     setProgress(true);
     const startAllDay = new Date(tempFormDatas.start).setHours(0, 0, 0, 0);
-    let endAllDay = new Date(startAllDay);
-    endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
+    const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     const datasToPut = {
       host_id: tempFormDatas.host_id,
@@ -492,8 +494,8 @@ const EventForm = ({
         { updated_by_id: user.id, date_updated: Date.now() },
       ],
       AppointmentTime: tempFormDatas.all_day
-        ? toLocalTimeWithSeconds(startAllDay)
-        : toLocalTimeWithSeconds(tempFormDatas.start),
+        ? toLocalTimeWithSeconds(startAllDay, false)
+        : toLocalTimeWithSeconds(tempFormDatas.start, false),
       Duration: tempFormDatas.Duration,
       AppointmentStatus: tempFormDatas.AppointmentStatus,
       AppointmentDate: tempFormDatas.all_day

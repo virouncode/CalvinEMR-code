@@ -396,7 +396,7 @@ const AppointmentItem = ({
     const datasToPut = {
       ...itemInfos,
       AppointmentPurpose: firstLetterUpper(itemInfos.AppointmentPurpose),
-      AppointmentTime: toLocalTimeWithSeconds(itemInfos.start),
+      AppointmentTime: toLocalTimeWithSeconds(itemInfos.start, false),
       AppointmentDate: toLocalDate(itemInfos.start),
       Provider: {
         Name: {
