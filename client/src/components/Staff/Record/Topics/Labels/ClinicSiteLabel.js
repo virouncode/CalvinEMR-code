@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import useClinicContext from "../../../../../hooks/useClinicContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import useUserContext from "../../../../../hooks/useUserContext";
+import { copyToClipboard } from "../../../../../utils/copyToClipboard";
 import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
 import SelectSite from "../../../EventForm/SelectSite";
 
-const ClinicSiteLabel = ({ demographicsInfos }) => {
+const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {
   const { user } = useUserContext();
   const { clinic } = useClinicContext();
   const handlePrint = (e) => {
@@ -18,8 +20,9 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
     null,
     true
   );
-  const [site, setSite] = useState({});
+  const [site, setSite] = useState({ id: 0 });
   const [sites] = useFetchDatas("/sites", user.access_level.toLowerCase());
+  const labelRef = useRef(null);
 
   useEffect(() => {
     if (sites.length === 0) return;
@@ -59,9 +62,21 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
     fontFamily: "Arial, sans-serif",
     fontSize: "0.8rem",
   };
+  const BTN_STYLE = {
+    marginRight: "5px",
+  };
   const handleSiteChange = (e) => {
     const value = parseInt(e.target.value);
     setSite(sites.find(({ id }) => id === value));
+  };
+
+  const handleCopy = async () => {
+    try {
+      await copyToClipboard(windowRef.current, labelRef.current);
+      toast.success("Copied !", { containerId: "A" });
+    } catch (err) {
+      toast.error(`Unable to copy label: ${err.message}`, { containerId: "A" });
+    }
   };
 
   return (
@@ -70,20 +85,20 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
         <SelectSite
           handleSiteChange={handleSiteChange}
           sites={sites}
-          value={site.id}
+          value={site?.id}
         />
       </div>
 
       {!isObjectEmpty(site) &&
         !isObjectEmpty(assignedMd) &&
         sites.length > 0 && (
-          <div style={LABEL_STYLE}>
+          <div style={LABEL_STYLE} ref={labelRef}>
             <p style={TITLE_STYLE}>{clinic.name.toUpperCase()}</p>
             <p style={LINE_STYLE}>
-              <span style={SPAN_STYLE}>SITE: {site.name}</span>
+              <span>SITE: {site.name}</span>
             </p>
             <p style={LINE_STYLE}>
-              <span style={SPAN_STYLE}>
+              <span>
                 ADDRESS: {site.address}, {site.city}, {site.province_state},{" "}
                 {site.postal_code || site.zipCode}
               </span>
@@ -93,13 +108,20 @@ const ClinicSiteLabel = ({ demographicsInfos }) => {
               <span style={SPAN_STYLE}>FAX: {site.fax}</span>
             </p>
             <p style={LINE_STYLE}>
-              <span style={SPAN_STYLE}>EMAIL: {site.email}</span>
+              <span>EMAIL: {site.email}</span>
             </p>
           </div>
         )}
       <div>
-        <button onClick={handlePrint} className="labels-content__print-btn">
+        <button
+          style={BTN_STYLE}
+          onClick={handlePrint}
+          className="labels-content__print-btn"
+        >
           Print
+        </button>
+        <button onClick={handleCopy} className="labels-content__print-btn">
+          Copy to clipboard
         </button>
       </div>
     </div>

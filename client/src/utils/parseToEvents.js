@@ -96,8 +96,8 @@ export const parseToEvent = (
 ) => {
   return {
     id: appointment.id.toString(),
-    start: new Date(appointment.start),
-    end: new Date(appointment.end),
+    start: appointment.start,
+    end: appointment.end,
     color: color,
     textColor: textColor,
     display: "block",

@@ -12,6 +12,7 @@
 }
 .dashboard-card {
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  border: solid 1px $grey;
   border-radius: 6px;
   background-color: $white;
   padding: 10px;
@@ -23,7 +24,7 @@
     font-weight: bold;
   }
   &__title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     text-align: center;
     font-weight: bold;
   }

@@ -7,7 +7,7 @@ import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import {
-  fromLocalToISOStringNoMs,
+  fromLocalComponentsToTimestamp,
   toLocalDate,
   toLocalTimeWithSeconds,
 } from "../../../../../utils/formatDates";
@@ -143,14 +143,12 @@ const AppointmentForm = ({
       return;
     }
 
-    let value = fromLocalToISOStringNoMs(
+    let value = fromLocalComponentsToTimestamp(
       dateValue,
       hourValue,
       minValue,
       ampmValue
     );
-
-    value = Date.parse(new Date(value));
 
     const rangeEnd =
       new Date(value) > new Date(formDatas.end) ? value : formDatas.end;
@@ -261,14 +259,12 @@ const AppointmentForm = ({
       return;
     }
 
-    let value = fromLocalToISOStringNoMs(
+    let value = fromLocalComponentsToTimestamp(
       dateValue,
       hourValue,
       minValue,
       ampmValue
     );
-
-    value = Date.parse(new Date(value));
 
     let hypotheticAvailableRooms;
     try {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import ClinicSiteLabel from "./ClinicSiteLabel";
 import MdLabel from "./MdLabel";
@@ -7,6 +7,7 @@ import PatientLabel from "./PatientLabel";
 const LabelsContent = ({ demographicsInfos }) => {
   const [labelVisible, setLabelVisible] = useState(false);
   const [choosenLabel, setChoosenLabel] = useState("");
+  const windowRef = useRef(null);
 
   const handleClickPatientLabel = () => {
     setChoosenLabel("patient");
@@ -41,6 +42,7 @@ const LabelsContent = ({ demographicsInfos }) => {
       </div>
       {labelVisible && (
         <NewWindow
+          ref={windowRef}
           title={`Print ${choosenLabel} label`}
           features={{
             toolbar: "no",
@@ -56,13 +58,22 @@ const LabelsContent = ({ demographicsInfos }) => {
           onUnload={() => setLabelVisible(false)}
         >
           {choosenLabel === "patient" && (
-            <PatientLabel demographicsInfos={demographicsInfos} />
+            <PatientLabel
+              demographicsInfos={demographicsInfos}
+              windowRef={windowRef}
+            />
           )}
           {choosenLabel === "MD" && (
-            <MdLabel demographicsInfos={demographicsInfos} />
+            <MdLabel
+              demographicsInfos={demographicsInfos}
+              windowRef={windowRef}
+            />
           )}
           {choosenLabel === "clinic" && (
-            <ClinicSiteLabel demographicsInfos={demographicsInfos} />
+            <ClinicSiteLabel
+              demographicsInfos={demographicsInfos}
+              windowRef={windowRef}
+            />
           )}
         </NewWindow>
       )}

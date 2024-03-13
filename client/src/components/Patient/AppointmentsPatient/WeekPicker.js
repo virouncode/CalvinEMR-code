@@ -11,9 +11,7 @@ const WeekPicker = ({
     <div className="new-appointments__content-weekpicker">
       <button
         onClick={handleClickPrevious}
-        disabled={
-          rangeStart === Date.parse(getWeekRange(new Date().getDay())[0])
-        }
+        disabled={rangeStart === getWeekRange(new Date().getDay())[0]}
       >
         <i className="fa-solid fa-arrow-left"></i>
       </button>

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
+import { toast } from "react-toastify";
+import useClinicContext from "../../../../../hooks/useClinicContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
+import { copyToClipboard } from "../../../../../utils/copyToClipboard";
 import { toLocalDate } from "../../../../../utils/formatDates";
 import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../../utils/toPatientName";
 
-const PatientLabel = ({ demographicsInfos }) => {
+const PatientLabel = ({ demographicsInfos, windowRef }) => {
   const { staffInfos } = useStaffInfosContext();
-  const handlePrint = (e) => {
-    e.nativeEvent.view.print();
-  };
+  const { clinic } = useClinicContext();
+  const labelRef = useRef(null);
   const [assignedMd, setAssignedMd] = useFetchDatas(
     `/staff/${demographicsInfos.assigned_staff_id}`,
     "staff",
@@ -34,13 +36,13 @@ const PatientLabel = ({ demographicsInfos }) => {
     marginBottom: "20px",
   };
   const TITLE_STYLE = {
-    fontSize: "1.2rem",
+    fontSize: "1.1rem",
     fontWeight: "bold",
     textDecoration: "underline",
     padding: "0px 10px",
   };
   const LINE_STYLE = {
-    fontSize: "0.9rem",
+    fontSize: "0.8rem",
     padding: "0px 10px",
   };
   const SPAN_STYLE = {
@@ -51,9 +53,25 @@ const PatientLabel = ({ demographicsInfos }) => {
     padding: "0px 10px",
   };
 
+  const BTN_STYLE = {
+    marginRight: "5px",
+  };
+
+  const handlePrint = (e) => {
+    e.nativeEvent.view.print();
+  };
+  const handleCopy = async () => {
+    try {
+      await copyToClipboard(windowRef.current, labelRef.current);
+      toast.success("Copied !", { containerId: "A" });
+    } catch (err) {
+      toast.error(`Unable to copy label: ${err.message}`, { containerId: "A" });
+    }
+  };
+
   return (
     <div style={LABEL_CONTAINER}>
-      <div style={LABEL_STYLE}>
+      <div style={LABEL_STYLE} ref={labelRef}>
         <p style={TITLE_STYLE}>
           {toPatientName(demographicsInfos).toUpperCase()}
         </p>
@@ -127,8 +145,8 @@ const PatientLabel = ({ demographicsInfos }) => {
         <p style={SMALL_LINE_STYLE}>
           {!isObjectEmpty(assignedMd) && (
             <span style={SPAN_STYLE}>
-              {assignedMd.site_infos.name}, {assignedMd.site_infos.address},{" "}
-              {assignedMd.site_infos.city},{" "}
+              {clinic.name}, {assignedMd.site_infos.name},{" "}
+              {assignedMd.site_infos.address}, {assignedMd.site_infos.city},{" "}
               {assignedMd.site_infos.province_state},{" "}
               {assignedMd.site_infos.postal_code ||
                 assignedMd.site_infos.zip_code}
@@ -137,8 +155,15 @@ const PatientLabel = ({ demographicsInfos }) => {
         </p>
       </div>
       <div>
-        <button onClick={handlePrint} className="labels-content__print-btn">
+        <button
+          style={BTN_STYLE}
+          onClick={handlePrint}
+          className="labels-content__print-btn"
+        >
           Print
+        </button>
+        <button onClick={handleCopy} className="labels-content__print-btn">
+          Copy to clipboard
         </button>
       </div>
     </div>

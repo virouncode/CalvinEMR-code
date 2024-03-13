@@ -19,22 +19,22 @@ const useCalendarShortcuts = (
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   useEffect(() => {
-    const handleKeyboardShortcut = async (event) => {
+    const handleKeyboardShortcut = async (e) => {
       if (editAvailabilityVisible || formVisible) return;
-      if (event.keyCode === 37 && event.shiftKey) {
+      if (e.keyCode === 37 && e.shiftKey) {
         //arrow left
         fcRef.current.calendar.prev();
-      } else if (event.keyCode === 39 && event.shiftKey) {
+      } else if (e.keyCode === 39 && e.shiftKey) {
         //arrow right
         fcRef.current.calendar.next();
-      } else if (event.keyCode === 84 && event.shiftKey) {
+      } else if (e.keyCode === 84 && e.shiftKey) {
         //T
         fcRef.current.calendar.today();
       } else if (
         currentEvent.current &&
         (currentEvent.current.extendedProps.host === user.id ||
           user.title === "Secretary") &&
-        (event.key === "Backspace" || event.key === "Delete")
+        (e.key === "Backspace" || e.key === "Delete")
       ) {
         //backspace
         if (
@@ -68,7 +68,7 @@ const useCalendarShortcuts = (
             });
           }
         }
-      } else if (event.keyCode === 40 && event.shiftKey) {
+      } else if (e.keyCode === 40 && e.shiftKey) {
         const eventsList = document.getElementsByClassName("fc-event");
         eventCounter.current += 1;
         eventsList[eventCounter.current % eventsList.length].click();
@@ -77,7 +77,7 @@ const useCalendarShortcuts = (
           block: "center",
           inline: "nearest",
         });
-      } else if (event.keyCode === 38 && event.shiftKey) {
+      } else if (e.keyCode === 38 && e.shiftKey) {
         const eventsList = document.getElementsByClassName("fc-event");
         eventCounter.current - 1 < 0
           ? (eventCounter.current = eventsList.length - 1)

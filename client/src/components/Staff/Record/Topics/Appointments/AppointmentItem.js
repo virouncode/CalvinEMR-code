@@ -14,7 +14,7 @@ import {
   firstLetterUpper,
 } from "../../../../../utils/firstLetterUpper";
 import {
-  fromLocalToISOStringNoMs,
+  fromLocalComponentsToTimestamp,
   toLocalAMPM,
   toLocalDate,
   toLocalHours,
@@ -172,14 +172,13 @@ const AppointmentItem = ({
       return;
     }
 
-    let value = fromLocalToISOStringNoMs(
+    let value = fromLocalComponentsToTimestamp(
       dateValue,
       hourValue,
       minValue,
       ampmValue
     );
 
-    value = Date.parse(new Date(value));
     const rangeEnd =
       new Date(value) > new Date(itemInfos.end) ? value : itemInfos.end;
 
@@ -280,14 +279,12 @@ const AppointmentItem = ({
       return;
     }
 
-    let value = fromLocalToISOStringNoMs(
+    let value = fromLocalComponentsToTimestamp(
       dateValue,
       hourValue,
       minValue,
       ampmValue
     );
-
-    value = Date.parse(new Date(value));
 
     let hypotheticAvailableRooms;
     try {

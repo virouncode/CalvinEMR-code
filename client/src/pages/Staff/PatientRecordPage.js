@@ -10,7 +10,6 @@ import { toPatientName } from "../../utils/toPatientName";
 
 const PatientRecordPage = () => {
   const { id } = useParams();
-  ;
   const [demographicsInfos, setDemographicsInfos, loading, err] = useFetchDatas(
     `/demographics/${parseInt(id)}`,
     "staff",
@@ -25,6 +24,7 @@ const PatientRecordPage = () => {
     demographicsInfos && (
       <>
         <Helmet>
+          {console.log(demographicsInfos.DateOfBirth)}
           <title>{`EMR: ${toPatientName(demographicsInfos)}`}</title>
         </Helmet>
         <section className="patient-record-section">

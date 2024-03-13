@@ -32,6 +32,7 @@ export const onMessageEvents = (
   isSecretary,
   sites
 ) => {
+  console.log("message", message);
   if (message.route !== "EVENTS") return;
   let rooms;
   let remainingStaffObjects;

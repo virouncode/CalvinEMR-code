@@ -47,6 +47,7 @@ const DashboardCardVisits = ({
 
   const handleChangeStart = (e) => {
     const value = e.target.value;
+    console.log(value);
     setRangeStartVisits(value === "" ? null : Date.parse(new Date(value)));
   };
   const handleChangeEnd = (e) => {

@@ -89,12 +89,16 @@ const Calendar = () => {
   const currentView = useRef(null);
   const lastCurrentId = useRef("");
   const eventCounter = useRef(0);
+  console.log("events", events);
 
   useEffect(() => {
     if (lastCurrentId.current) {
       currentEventElt.current = document.getElementsByClassName(
         `event-${lastCurrentId.current}`
       )[0];
+      currentEvent.current = events.find(
+        ({ id }) => id === lastCurrentId.current
+      );
       if (
         document.getElementsByClassName(`event-${lastCurrentId.current}`)[0]
       ) {
@@ -522,6 +526,7 @@ const Calendar = () => {
     const event = info.event;
     const view = info.view;
     if (currentEvent.current && currentEvent.current.id !== event.id) {
+      console.log("Bingo");
       //event selection change
       //change border and unselect previous event
       currentEventElt.current.style.border = "none";
@@ -532,6 +537,7 @@ const Calendar = () => {
       currentView.current = view;
       eventElt.style.border = "solid 1px red";
     } else if (currentEvent.current === null) {
+      console.log("Bingo2");
       //first event selection
       currentEvent.current = event;
       lastCurrentId.current = event.id;
@@ -540,6 +546,7 @@ const Calendar = () => {
       eventElt.style.border = "solid 1px red";
     } else {
       //click on already selected event
+      console.log("Bingo3");
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
@@ -565,21 +572,21 @@ const Calendar = () => {
   // //DATE SELECT
   const handleDateSelect = async (info) => {
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
-    const startDate = Date.parse(info.startStr);
+    console.log(info.startStr);
+    const startDate = Date.parse(info.startStr); //local timestamp
     const defaultDuration =
       defaultDurationHours * 3600000 + defaultDurationMin * 60000;
     const endDate =
       Date.parse(info.endStr) > startDate + defaultDuration
         ? Date.parse(info.endStr)
-        : startDate + defaultDuration;
+        : startDate + defaultDuration; //local timestamp
 
-    const startAllDay = new Date(new Date(startDate).setHours(0, 0, 0, 0));
-    let endAllDay = new Date(startAllDay);
-    endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
+    const startAllDay = new Date(startDate).setHours(0, 0, 0, 0);
+    const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     let newEvent = {
-      start: info.allDay ? startAllDay : new Date(startDate),
-      end: info.allDay ? endAllDay : new Date(endDate),
+      start: info.allDay ? startAllDay : startDate,
+      end: info.allDay ? endAllDay : endDate,
       color: user.title === "Secretary" ? "#bfbfbf" : "#93B5E9",
       textColor: "#3D375A",
       allDay: info.allDay,
@@ -635,15 +642,15 @@ const Calendar = () => {
 
         const datasToPost = {
           host_id: newEvent.extendedProps.host,
-          start: Date.parse(newEvent.start),
-          end: Date.parse(newEvent.end),
+          start: newEvent.start, //local timestamp
+          end: newEvent.end, //local timestamp
           patients_guests_ids: [],
           staff_guests_ids: [],
           room_id: newEvent.extendedProps.roomId,
           all_day: newEvent.allDay,
           date_created: Date.now(),
           created_by_id: user.id,
-          AppointmentTime: toLocalTimeWithSeconds(newEvent.start),
+          AppointmentTime: toLocalTimeWithSeconds(newEvent.start, false),
           Duration: newEvent.extendedProps.duration,
           AppointmentStatus: newEvent.extendedProps.status,
           AppointmentDate: toLocalDate(newEvent.start),
@@ -696,15 +703,15 @@ const Calendar = () => {
       fcRef.current.calendar.unselect();
       const datasToPost = {
         host_id: newEvent.extendedProps.host,
-        start: Date.parse(newEvent.start),
-        end: Date.parse(newEvent.end),
+        start: newEvent.start,
+        end: newEvent.end,
         patients_guests_ids: [],
         staff_guests_ids: [],
         room_id: newEvent.extendedProps.roomId,
         all_day: newEvent.allDay,
         date_created: Date.now(),
         created_by_id: user.id,
-        AppointmentTime: toLocalTimeWithSeconds(newEvent.start),
+        AppointmentTime: toLocalTimeWithSeconds(newEvent.start, false),
         Duration: newEvent.extendedProps.duration,
         AppointmentStatus: newEvent.extendedProps.status,
         AppointmentDate: toLocalDate(newEvent.start),
@@ -765,8 +772,8 @@ const Calendar = () => {
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
-    const startDate = Date.parse(event.start);
-    const endDate = Date.parse(event.end);
+    const startDate = Date.parse(event.startStr);
+    const endDate = Date.parse(event.endStr);
     let availableRooms;
     try {
       availableRooms = await getAvailableRooms(
@@ -782,8 +789,8 @@ const Calendar = () => {
       });
       return;
     }
-    const startAllDay = event.start.setHours(0, 0, 0, 0);
-    const endAllDay = event.end.setHours(0, 0, 0, 0);
+    const startAllDay = new Date(startDate).setHours(0, 0, 0, 0);
+    const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     let datasToPut = {
       host_id: event.extendedProps.host,
@@ -802,16 +809,12 @@ const Calendar = () => {
         ...event.extendedProps.updates,
         { updated_by_id: user.id, date_updated: Date.now() },
       ],
-      AppointmentTime: event.allDay
-        ? toLocalTimeWithSeconds(startAllDay)
-        : toLocalTimeWithSeconds(startDate),
+      AppointmentTime: toLocalTimeWithSeconds(event.start, false),
       Duration: event.allDay
         ? 1440
         : Math.floor((endDate - startDate) / (1000 * 60)),
       AppointmentStatus: event.extendedProps.status,
-      AppointmentDate: event.allDay
-        ? toLocalDate(startAllDay)
-        : toLocalDate(startDate),
+      AppointmentDate: toLocalDate(event.start),
       Provider: {
         Name: {
           FirstName: event.extendedProps.hostFirstName,
@@ -844,6 +847,7 @@ const Calendar = () => {
             "staff",
             datasToPut
           );
+          console.log("response", response.data);
           socket.emit("message", {
             route: "EVENTS",
             action: "update",
@@ -883,16 +887,20 @@ const Calendar = () => {
         event.setResources([newRoomId]);
         datasToPut.room_id = newRoomId;
         try {
-          await xanoPut(`/appointments/${event.id}`, "staff", datasToPut);
+          const response = await xanoPut(
+            `/appointments/${event.id}`,
+            "staff",
+            datasToPut
+          );
           socket.emit("message", {
             route: "EVENTS",
             action: "update",
-            content: { id: event.id, data: { id: event.id, ...datasToPut } },
+            content: { id: event.id, data: response.data },
           });
           socket.emit("message", {
             route: "APPOINTMENTS",
             action: "update",
-            content: { id: event.id, data: { id: event.id, ...datasToPut } },
+            content: { id: event.id, data: response.data },
           });
         } catch (err) {
           if (err.name !== "CanceledError")
@@ -919,8 +927,8 @@ const Calendar = () => {
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
 
-    const startDate = Date.parse(event.start);
-    const endDate = Date.parse(event.end);
+    const startDate = Date.parse(event.startStr);
+    const endDate = Date.parse(event.endStr);
 
     //same as a drop
     let availableRooms;
@@ -933,13 +941,11 @@ const Calendar = () => {
         timelineVisible ? timelineSiteId : user.site_id
       );
     } catch (err) {
-      toast.error(`Error: unable to save appointment: ${err.message}`, {
+      toast.error(`Error: unable to get available rooms: ${err.message}`, {
         containerId: "A",
       });
       return;
     }
-    const startAllDay = event.start.setHours(0, 0, 0, 0);
-    const endAllDay = event.end.setHours(0, 0, 0, 0);
 
     if (
       event.extendedProps.roomId === "z" ||
@@ -955,8 +961,8 @@ const Calendar = () => {
     ) {
       let datasToPut = {
         host_id: event.extendedProps.host,
-        start: event.allDay ? startAllDay : startDate,
-        end: event.allDay ? endAllDay : endDate,
+        start: startDate,
+        end: endDate,
         patients_guests_ids: event.extendedProps.patientsGuestsIds.map(
           ({ patient_infos }) => patient_infos.patient_id
         ),
@@ -971,16 +977,12 @@ const Calendar = () => {
           ...event.extendedProps.updates,
           { updated_by_id: user.id, date_updated: Date.now() },
         ],
-        AppointmentTime: event.allDay
-          ? toLocalTimeWithSeconds(startAllDay)
-          : toLocalTimeWithSeconds(startDate),
+        AppointmentTime: toLocalTimeWithSeconds(event.start, false),
         Duration: event.allDay
           ? 1440
           : Math.floor((endDate - startDate) / (1000 * 60)),
         AppointmentStatus: event.extendedProps.status,
-        AppointmentDate: event.allDay
-          ? toLocalDate(startAllDay)
-          : toLocalDate(startDate),
+        AppointmentDate: toLocalDate(event.start),
         Provider: {
           Name: {
             FirstName: event.extendedProps.hostFirstName,

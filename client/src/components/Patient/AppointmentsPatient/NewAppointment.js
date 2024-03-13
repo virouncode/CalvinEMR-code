@@ -37,10 +37,10 @@ const NewAppointment = () => {
   const { staffInfos } = useStaffInfosContext();
   const [appointmentsInRange, setAppointmentsInRange] = useState(null);
   const [rangeStart, setRangeStart] = useState(
-    Date.parse(getWeekRange(new Date().getDay())[0])
+    getWeekRange(new Date().getDay())[0]
   );
   const [rangeEnd, setRangeEnd] = useState(
-    Date.parse(getWeekRange(new Date().getDay())[1])
+    getWeekRange(new Date().getDay())[1]
   );
   const [appointmentSelected, setAppointmentSelected] = useState({});
   const [requestSent, setRequestSent] = useState(false);
