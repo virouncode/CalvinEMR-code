@@ -48,8 +48,6 @@ const MessageExternalDetail = ({
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
 
-  console.log("prout");
-
   useEffect(() => {
     if (!message) return;
     setPreviousMsgs(

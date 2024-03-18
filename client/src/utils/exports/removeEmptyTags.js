@@ -12,7 +12,6 @@ export const removeEmptyTags = (xmlString) => {
       );
       return xmlString; // Return the original XML string
     }
-
     // Function to check if an element is empty
     function isEmpty(element) {
       return (
@@ -24,7 +23,6 @@ export const removeEmptyTags = (xmlString) => {
         )
       );
     }
-
     // Recursive function to traverse and remove empty tags
     function removeEmptyTagsRecursive(element) {
       let children = element.childNodes;
@@ -41,10 +39,8 @@ export const removeEmptyTags = (xmlString) => {
         }
       }
     }
-
     // Call the recursive function to remove empty tags
     removeEmptyTagsRecursive(xmlDoc.documentElement);
-
     // Return the modified XML string
     return new XMLSerializer().serializeToString(xmlDoc);
   } catch (error) {

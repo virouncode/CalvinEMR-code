@@ -1,6 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var os = require("os");
+var { DateTime } = require("luxon");
 
 const postWriteXML = async (req, res) => {
   try {
@@ -43,10 +44,10 @@ const postWriteXML = async (req, res) => {
     }
 
     //Create ReadMe text
-    const currentDateTime = DateTime.local({ zone: timezone });
+    const currentDateTime = DateTime.local({ zone: "America/Toronto" });
     // Formater la date et l'heure dans le format désiré avec le fuseau horaire inclus
     const formattedDateTime = currentDateTime.toLocaleString({
-      locale,
+      locale: "en-CA",
       month: "long",
       day: "2-digit",
       year: "numeric",

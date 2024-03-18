@@ -129,11 +129,9 @@ const Calendar = () => {
     //offset UTC local
     const now = DateTime.now();
     const offsetLocal = now.offset;
-    console.log(offsetLocal);
 
     //offset UTC de Toronto
     const offsetToronto = DateTime.local({ zone: "America/Toronto" }).offset;
-    console.log(offsetToronto);
 
     const midnightUTC = DateTime.fromISO(dateStr, { zone: "utc" })
       .plus({ minutes: offsetLocal })

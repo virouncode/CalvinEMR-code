@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { exportPatientEMR } from "../../../utils/exports/exportsXML.";
+import { exportPatientEMR } from "../../../utils/exports/exportsXML";
 import { recordCategories } from "../../../utils/exports/recordCategories";
 
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
@@ -121,7 +121,7 @@ const MigrationExport = () => {
       return;
     }
     setProgress(true);
-    const dateOfExport = nowTZ().toFormat("yyyy-LL-dd_hh-MM-a");
+    const dateOfExport = nowTZ().toFormat("yyyy-LL-dd_hh_MMa");
     try {
       for (let patientId of checkedPatientsIds) {
         const patientInfos = patientsDemographics.find(

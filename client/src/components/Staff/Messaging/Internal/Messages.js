@@ -45,7 +45,6 @@ const Messages = () => {
 
   return (
     <div className="messages-container">
-      {console.log("messages after fetch", messages)}
       <MessagesToolBar
         search={search}
         setSearch={setSearch}

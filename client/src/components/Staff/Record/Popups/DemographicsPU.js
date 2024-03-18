@@ -426,7 +426,7 @@ const DemographicsPU = ({
         {
           extension: formDatas.homephoneExt,
           phoneNumber: formDatas.homephone,
-          _phoneNumberType: "H",
+          _phoneNumberType: "R",
         },
         {
           extension: formDatas.workphoneExt,

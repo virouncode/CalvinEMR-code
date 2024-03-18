@@ -9,11 +9,6 @@ const optionsDate = {
   day: "numeric",
 };
 
-const optionsTime = {
-  hour: "2-digit",
-  minute: "2-digit",
-};
-
 const AppointmentSlotItem = ({
   appointment,
   staffInfos,

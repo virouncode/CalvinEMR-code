@@ -29,8 +29,8 @@ const NewAppointment = () => {
   const { staffInfos } = useStaffInfosContext();
   const [appointmentsInRange, setAppointmentsInRange] = useState(null);
   const [rangeStart, setRangeStart] = useState(
-    nowTZ().startOf("day").toMillis()
-  );
+    nowTZ().plus({ days: 1 }).startOf("day").toMillis()
+  ); //tomorrow midnight
   const [rangeEnd, setRangeEnd] = useState(
     nowTZ().plus({ weeks: 1 }).startOf("day").toMillis()
   );
@@ -79,16 +79,28 @@ const NewAppointment = () => {
 
   const handleClickNext = async () => {
     setRangeStart((rs) =>
-      DateTime.fromMillis(rs).plus({ weeks: 1 }).toMillis()
+      DateTime.fromMillis(rs, { zone: "America/Toronto" })
+        .plus({ weeks: 1 })
+        .toMillis()
     );
-    setRangeEnd((re) => DateTime.fromMillis(re).plus({ weeks: 1 }).toMillis());
+    setRangeEnd((re) =>
+      DateTime.fromMillis(re, { zone: "America/Toronto" })
+        .plus({ weeks: 1 })
+        .toMillis()
+    );
     setAppointmentSelected({});
   };
   const handleClickPrevious = () => {
     setRangeStart((rs) =>
-      DateTime.fromMillis(rs).minus({ weeks: 1 }).toMillis()
+      DateTime.fromMillis(rs, { zone: "America/Toronto" })
+        .minus({ weeks: 1 })
+        .toMillis()
     );
-    setRangeEnd((re) => DateTime.fromMillis(re).minus({ weeks: 1 }).toMillis());
+    setRangeEnd((re) =>
+      DateTime.fromMillis(re, { zone: "America/Toronto" })
+        .minus({ weeks: 1 })
+        .toMillis()
+    );
     setAppointmentSelected({});
   };
 

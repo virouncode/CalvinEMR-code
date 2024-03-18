@@ -333,8 +333,6 @@ export const getWeekRange = (
     startOfWeek = startOfWeek.plus({ weeks: 1 });
   }
   const endOfWeek = startOfWeek.plus({ weeks: 1 });
-  console.log(startOfWeek.toJSDate());
-  console.log(endOfWeek.toJSDate());
 
   return [startOfWeek.toMillis(), endOfWeek.toMillis()];
 };

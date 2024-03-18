@@ -127,7 +127,7 @@ const PatientLabel = ({ demographicsInfos, windowRef }) => {
               ({ _phoneNumberType }) => _phoneNumberType === "C"
             )?.phoneNumber ||
               demographicsInfos.PhoneNumber?.find(
-                ({ _phoneNumberType }) => _phoneNumberType === "H"
+                ({ _phoneNumberType }) => _phoneNumberType === "R"
               )?.phoneNumber ||
               ""}
           </span>

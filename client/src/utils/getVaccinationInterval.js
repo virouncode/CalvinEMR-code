@@ -9,7 +9,6 @@ export const getVaccinationInterval = (
   let rangeStart = nowTZ();
   let rangeEnd = nowTZ();
   const dob = DateTime.fromMillis(patientDob, { zone: timezone });
-  console.log(dob);
 
   switch (age) {
     case "2 Months": {
@@ -70,8 +69,6 @@ export const getVaccinationInterval = (
     default:
       break;
   }
-  console.log(patientDob);
-  console.log(age);
 
   return {
     rangeStart: rangeStart ? rangeStart.toMillis() : 0,
