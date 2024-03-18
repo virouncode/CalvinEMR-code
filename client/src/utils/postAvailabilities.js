@@ -1,10 +1,11 @@
 import xanoPost from "../api/xanoCRUD/xanoPost";
+import { nowTZTimestamp } from "./formatDates";
 
 export const postAvailabilities = async (staff_ids) => {
   for (let staffId of staff_ids) {
     await xanoPost("/availability", "staff", {
       staff_id: staffId,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
       schedule_morning: {
         monday: [
           { hours: "07", min: "00", ampm: "AM" },

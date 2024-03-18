@@ -24,7 +24,6 @@ const MessagesBox = ({
 }) => {
   //INTERSECTION OBSERVER
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
-
   return (
     <>
       <div className="messages-content__box" ref={rootRef}>

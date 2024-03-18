@@ -6,7 +6,10 @@ import useFetchPatients from "../../../../../hooks/useFetchPatients";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { toInverseRelation } from "../../../../../utils/toInverseRelation";
 import { relationshipSchema } from "../../../../../validation/relationshipValidation";
@@ -175,7 +178,7 @@ const RelationshipForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

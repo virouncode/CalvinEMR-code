@@ -3,10 +3,6 @@ import GuestPatientItem from "./GuestPatientItem";
 import GuestStaffItem from "./GuestStaffItem";
 
 const GuestsList = ({ tempFormDatas, handleRemoveGuest }) => {
-  console.log(
-    tempFormDatas.patients_guests_ids,
-    tempFormDatas.staff_guests_ids
-  );
   return (
     tempFormDatas && (
       <p className="guests-list">

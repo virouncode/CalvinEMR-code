@@ -1,4 +1,5 @@
 import interaction from "@fullcalendar/interaction";
+import luxonPlugin from "@fullcalendar/luxon3";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGrid from "@fullcalendar/resource-timegrid";
 
@@ -20,7 +21,8 @@ const TimelineView = ({
 }) => {
   return (
     <FullCalendar
-      plugins={[resourceTimeGrid, interaction]}
+      plugins={[resourceTimeGrid, interaction, luxonPlugin]}
+      timeZone="America/Toronto"
       //===================Design=====================//
       headerToolbar={{
         start: "title",

@@ -1,5 +1,5 @@
 import React from "react";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
@@ -17,7 +17,7 @@ const EformsContent = ({ topicDatas, loading, errMsg }) => {
                 onClick={() => showDocument(item.file.url, item.file.mime)}
                 className="topic-content__link"
               >
-                - {item.name} ({toLocalDate(item.date_created)})
+                - {item.name} ({timestampToDateISOTZ(item.date_created)})
               </li>
             ))}
             <li>...</li>

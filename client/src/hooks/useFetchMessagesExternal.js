@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import xanoGet from "../api/xanoCRUD/xanoGet";
 import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
 
@@ -6,14 +7,15 @@ const useFetchMessagesExternal = (
   paging,
   search,
   sectionName,
+  messageId,
   section,
-  staffId,
-  userType
+  staffId
 ) => {
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMessages([]);
@@ -35,16 +37,37 @@ const useFetchMessagesExternal = (
           },
           abortController
         );
-
         if (abortController.signal.aborted) return;
-        setMessages((prevDatas) => {
-          return filterAndSortExternalMessages(
-            sectionName || section,
-            [...prevDatas, ...response.data.items],
-            userType,
-            staffId
-          );
-        });
+        if (
+          messageId &&
+          !response.data.items.find(({ id }) => id === messageId)
+        ) {
+          const missingMessage = (
+            await xanoGet(
+              `/messages_external/${messageId}`,
+              "staff",
+              null,
+              abortController
+            )
+          ).data;
+          setMessages((prevDatas) => {
+            return filterAndSortExternalMessages(
+              section,
+              [...prevDatas, ...response.data.items, missingMessage],
+              staffId
+            );
+          });
+          navigate("/staff/messages");
+        } else {
+          setMessages((prevDatas) => {
+            return filterAndSortExternalMessages(
+              sectionName || section,
+              [...prevDatas, ...response.data.items],
+              "staff",
+              staffId
+            );
+          });
+        }
         setHasMore(response.data.items.length > 0);
         setLoading(false);
       } catch (err) {
@@ -59,7 +82,7 @@ const useFetchMessagesExternal = (
     return () => {
       abortController.abort();
     };
-  }, [paging, search, section, sectionName, staffId, userType]);
+  }, [messageId, navigate, paging, search, section, sectionName, staffId]);
 
   return {
     messages,

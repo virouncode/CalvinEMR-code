@@ -1,6 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { toLocalDateAndTime } from "../../../../utils/formatDates";
+import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 
@@ -16,7 +16,7 @@ const Message = ({ message, index }) => {
           From: {staffIdToTitleAndName(staffInfos, message.from_id)}
         </div>
         <div className="message__date">
-          <div>{toLocalDateAndTime(message.date_created)}</div>
+          <div>{timestampToDateTimeStrTZ(message.date_created)}</div>
         </div>
       </div>
       <div className="message__subtitle">

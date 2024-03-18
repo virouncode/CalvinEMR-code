@@ -8,7 +8,11 @@ import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { riskSchema } from "../../../../../validation/riskValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -38,7 +42,7 @@ const RiskItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "StartDate" || name === "EndDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -189,28 +193,28 @@ const RiskItem = ({
           {editVisible ? (
             <input
               type="date"
-              max={toLocalDate(Date.now())}
-              value={toLocalDate(itemInfos.StartDate)}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
+              value={timestampToDateISOTZ(itemInfos.StartDate)}
               onChange={handleChange}
               name="StartDate"
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.StartDate)
+            timestampToDateISOTZ(itemInfos.StartDate)
           )}
         </td>
         <td>
           {editVisible ? (
             <input
               type="date"
-              max={toLocalDate(Date.now())}
-              value={toLocalDate(itemInfos.EndDate)}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
+              value={timestampToDateISOTZ(itemInfos.EndDate)}
               onChange={handleChange}
               name="EndDate"
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.EndDate)
+            timestampToDateISOTZ(itemInfos.EndDate)
           )}
         </td>
         <td>

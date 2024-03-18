@@ -2,7 +2,10 @@ import React, { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { toExportCSVName } from "../../../utils/toExportCSVName";
 
 const BillingFilter = ({
@@ -42,8 +45,8 @@ const BillingFilter = ({
   const handleCheckAll = (e) => {
     if (e.target.checked) {
       setAll(true);
-      setRangeStart(Date.parse(new Date("1970-01-01")));
-      setRangeEnd(Date.parse(new Date("3000-01-01")));
+      setRangeStart(dateISOToTimestampTZ("1970-01-01"));
+      setRangeEnd(dateISOToTimestampTZ("3000-01-01"));
       setPaging({ ...paging, page: 1 });
     } else {
       setAll(false);
@@ -61,15 +64,15 @@ const BillingFilter = ({
       if (value === "") {
         value = "1970-01-01";
       }
-      initialRangeStart.current = Date.parse(new Date(value));
-      setRangeStart(Date.parse(new Date(value)));
+      initialRangeStart.current = dateISOToTimestampTZ(value);
+      setRangeStart(dateISOToTimestampTZ(value));
     }
     if (name === "date_end") {
       if (value === "") {
         value = "3000-01-01";
       }
-      initialRangeEnd.current = Date.parse(new Date(value));
-      setRangeEnd(Date.parse(new Date(value)));
+      initialRangeEnd.current = dateISOToTimestampTZ(value);
+      setRangeEnd(dateISOToTimestampTZ(value));
     }
   };
 
@@ -81,7 +84,7 @@ const BillingFilter = ({
           <label htmlFor="">From</label>
           <input
             type="date"
-            value={toLocalDate(rangeStart)}
+            value={timestampToDateISOTZ(rangeStart, "America/Toronto")}
             name="date_start"
             onChange={handleDateChange}
             disabled={all}
@@ -91,7 +94,7 @@ const BillingFilter = ({
           <label htmlFor="">To</label>
           <input
             type="date"
-            value={toLocalDate(rangeEnd)}
+            value={timestampToDateISOTZ(rangeEnd, "America/Toronto")}
             name="date_end"
             onChange={handleDateChange}
             disabled={all}

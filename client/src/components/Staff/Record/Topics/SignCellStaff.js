@@ -2,7 +2,7 @@ import React from "react";
 import useAdminsInfosContext from "../../../../hooks/useAdminsInfosContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { adminIdToName } from "../../../../utils/adminIdToName";
-import { toLocalDate } from "../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 
@@ -26,8 +26,11 @@ const SignCellStaff = ({ item }) => {
       <td>
         <em>
           {isUpdated(item)
-            ? toLocalDate(getLastUpdate(item).date_updated)
-            : toLocalDate(item.date_created)}
+            ? timestampToDateISOTZ(
+                getLastUpdate(item).date_updated,
+                "America/Toronto"
+              )
+            : timestampToDateISOTZ(item.date_created, "America/Toronto")}
         </em>
       </td>
     </>

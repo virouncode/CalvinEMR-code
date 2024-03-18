@@ -5,8 +5,7 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../datas/codesTables";
-import { toLocalDate } from "../../../../utils/formatDates";
-import { getAge } from "../../../../utils/getAge";
+import { getAgeTZ, timestampToDateISOTZ } from "../../../../utils/formatDates";
 
 const PatientResultItem = ({ patient, lastPatientRef }) => {
   return (
@@ -24,8 +23,8 @@ const PatientResultItem = ({ patient, lastPatientRef }) => {
       </td>
       <td>{patient.Names.LegalName.FirstName.Part || ""}</td>
       <td>{patient.Names.LegalName.OtherName?.[0]?.Part || ""}</td>
-      <td>{toLocalDate(patient.DateOfBirth)}</td>
-      <td>{getAge(toLocalDate(patient.DateOfBirth))}</td>
+      <td>{timestampToDateISOTZ(patient.DateOfBirth)}</td>
+      <td>{getAgeTZ(patient.DateOfBirth)}</td>
       <td>{patient.ChartNumber}</td>
       <td>{patient.Email}</td>
       <td>

@@ -43,7 +43,19 @@ const postWriteXML = async (req, res) => {
     }
 
     //Create ReadMe text
-    const readMeContent = `This EMR export from CalvinEMR software was performed by ${authorName} on ${new Date().toUTCString()}`;
+    const currentDateTime = DateTime.local({ zone: timezone });
+    // Formater la date et l'heure dans le format désiré avec le fuseau horaire inclus
+    const formattedDateTime = currentDateTime.toLocaleString({
+      locale,
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+    });
+    const readMeContent = `This EMR export from CalvinEMR software was performed by ${authorName} on ${formattedDateTime}`;
     const readMePath = path.join(folderPath, "README.md");
 
     //Write file asynchronously

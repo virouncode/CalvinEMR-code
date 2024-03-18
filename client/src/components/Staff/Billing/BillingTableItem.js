@@ -10,7 +10,11 @@ import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
 import { toSiteName } from "../../../utils/toSiteName";
@@ -64,7 +68,7 @@ const BillingTableItem = ({
     setErrMsgPost("");
     const name = e.target.name;
     let value = e.target.value;
-    if (name === "date") value = Date.parse(new Date(value));
+    if (name === "date") value = dateISOToTimestampTZ(value);
     setItemInfos({ ...itemInfos, [name]: value });
   };
 
@@ -105,7 +109,7 @@ const BillingTableItem = ({
     setProgress(true);
     const datasToPost = {
       date: itemInfos.date,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
       provider_id: billing.provider_id,
       referrer_ohip_billing_nbr: parseInt(itemInfos.referrer_ohip_billing_nbr),
       patient_id: itemInfos.patient_id,
@@ -195,7 +199,7 @@ const BillingTableItem = ({
         ...billing.updates,
         {
           updated_by_id: user.id,
-          date_updated: Date.now(),
+          date_updated: nowTZTimestamp(),
           updated_by_user_type: "Staff",
         },
       ],
@@ -294,12 +298,15 @@ const BillingTableItem = ({
             {editVisible ? (
               <input
                 type="date"
-                value={toLocalDate(itemInfos.date)}
+                value={timestampToDateISOTZ(
+                  itemInfos.date,
+                  timestampToDateISOTZ
+                )}
                 name="date"
                 onChange={handleChange}
               />
             ) : (
-              toLocalDate(itemInfos.date)
+              timestampToDateISOTZ(itemInfos.date, timestampToDateISOTZ)
             )}
           </td>
           <td>

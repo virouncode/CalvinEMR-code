@@ -1,17 +1,14 @@
 import React from "react";
-import { getWeekRange } from "../../../utils/formatDates";
+import { nowTZ } from "../../../utils/formatDates";
 
-const WeekPicker = ({
-  handleClickNext,
-  handleClickPrevious,
-  rangeStart,
-  rangeEnd,
-}) => {
+const WeekPicker = ({ handleClickNext, handleClickPrevious, rangeStart }) => {
   return (
     <div className="new-appointments__content-weekpicker">
       <button
         onClick={handleClickPrevious}
-        disabled={rangeStart === getWeekRange(new Date().getDay())[0]}
+        disabled={
+          rangeStart === nowTZ().plus({ days: 1 }).startOf("day").toMillis()
+        }
       >
         <i className="fa-solid fa-arrow-left"></i>
       </button>

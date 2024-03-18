@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { AMPMto24 } from "./formatDates";
 
 export const getAppointmentProposal = (
@@ -12,55 +13,59 @@ export const getAppointmentProposal = (
 ) => {
   //Morning
   const availabilityMorning = availability.schedule_morning[day];
-  const startMorning = new Date(rangeStart);
-  startMorning.setDate(startMorning.getDate() + delta);
-  startMorning.setHours(
-    AMPMto24(
-      parseInt(availabilityMorning[0].hours),
-      availabilityMorning[0].ampm
-    ),
-    parseInt(availabilityMorning[0].min),
-    0
-  );
-  let startMorningMs = Date.parse(startMorning);
+  let startMorningMs = DateTime.fromMillis(rangeStart, {
+    zone: "America/Toronto",
+  })
+    .plus({
+      days: delta,
+      hours: AMPMto24(
+        parseInt(availabilityMorning[0].hours),
+        availabilityMorning[0].ampm
+      ),
+      minutes: parseInt(availabilityMorning[0].min),
+    })
+    .toMillis();
 
-  const endMorning = new Date(rangeStart);
-  endMorning.setDate(endMorning.getDate() + delta);
-  endMorning.setHours(
-    AMPMto24(
-      parseInt(availabilityMorning[1].hours),
-      availabilityMorning[1].ampm
-    ),
-    parseInt(availabilityMorning[1].min),
-    0
-  );
-  const endMorningMs = Date.parse(endMorning);
+  let endMorningMs = DateTime.fromMillis(rangeStart, {
+    zone: "America/Toronto",
+  })
+    .plus({
+      days: delta,
+      hours: AMPMto24(
+        parseInt(availabilityMorning[1].hours),
+        availabilityMorning[1].ampm
+      ),
+      minutes: parseInt(availabilityMorning[1].min),
+    })
+    .toMillis();
 
   //Afternoon
   const availabilityAfternoon = availability.schedule_afternoon[day];
-  const startAfternoon = new Date(rangeStart);
-  startAfternoon.setDate(startAfternoon.getDate() + delta);
-  startAfternoon.setHours(
-    AMPMto24(
-      parseInt(availabilityAfternoon[0].hours),
-      availabilityAfternoon[0].ampm
-    ),
-    parseInt(availabilityAfternoon[0].min),
-    0
-  );
-  let startAfternoonMs = Date.parse(startAfternoon);
+  let startAfternoonMs = DateTime.fromMillis(rangeStart, {
+    zone: "America/Toronto",
+  })
+    .plus({
+      days: delta,
+      hours: AMPMto24(
+        parseInt(availabilityAfternoon[0].hours),
+        availabilityAfternoon[0].ampm
+      ),
+      minutes: parseInt(availabilityAfternoon[0].min),
+    })
+    .toMillis();
 
-  const endAfternoon = new Date(rangeStart);
-  endAfternoon.setDate(endAfternoon.getDate() + delta);
-  endAfternoon.setHours(
-    AMPMto24(
-      parseInt(availabilityAfternoon[1].hours),
-      availabilityAfternoon[1].ampm
-    ),
-    parseInt(availabilityAfternoon[1].min),
-    0
-  );
-  const endAfternoonMs = Date.parse(endAfternoon);
+  let endAfternoonMs = DateTime.fromMillis(rangeStart, {
+    zone: "America/Toronto",
+  })
+    .plus({
+      days: delta,
+      hours: AMPMto24(
+        parseInt(availabilityAfternoon[1].hours),
+        availabilityMorning[1].ampm
+      ),
+      minutes: parseInt(availabilityAfternoon[1].min),
+    })
+    .toMillis();
 
   while (
     appointmentsInRange
@@ -124,7 +129,9 @@ export const getAppointmentProposal = (
         id: id,
         host_id: practicianSelectedId,
         start: startAfternoonMs,
-        startDate: new Date(startAfternoonMs),
+        startDate: DateTime.fromMillis(startAfternoonMs, {
+          zone: "America/Toronto",
+        }),
         end: startAfternoonMs + defaulDurationMs,
         reason: "Appointment",
         all_day: false,
@@ -134,7 +141,9 @@ export const getAppointmentProposal = (
       id: id,
       host_id: practicianSelectedId,
       start: startMorningMs,
-      startDate: new Date(startMorningMs),
+      startDate: DateTime.fromMillis(startMorningMs, {
+        zone: "America/Toronto",
+      }),
       end: startMorningMs + defaulDurationMs,
       reason: "Appointment",
       all_day: false,

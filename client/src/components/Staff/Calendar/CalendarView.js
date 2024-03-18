@@ -1,6 +1,7 @@
 import dayGrid from "@fullcalendar/daygrid";
 import interaction from "@fullcalendar/interaction";
 import list from "@fullcalendar/list";
+import luxonPlugin from "@fullcalendar/luxon3";
 import multimonth from "@fullcalendar/multimonth";
 import FullCalendar from "@fullcalendar/react";
 import timeGrid from "@fullcalendar/timegrid";
@@ -23,7 +24,8 @@ const CalendarView = ({
 }) => {
   return (
     <FullCalendar
-      plugins={[dayGrid, timeGrid, list, multimonth, interaction]}
+      plugins={[dayGrid, timeGrid, list, multimonth, interaction, luxonPlugin]}
+      timeZone="America/Toronto"
       //===================Design=====================//
       headerToolbar={{
         start: "title",

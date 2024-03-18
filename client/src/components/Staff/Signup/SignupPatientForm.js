@@ -17,7 +17,11 @@ import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { createChartNbr } from "../../../utils/createChartNbr";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { generatePassword } from "../../../utils/generatePassword";
 import { toInverseRelation } from "../../../utils/toInverseRelation";
 import { toPatientName } from "../../../utils/toPatientName";
@@ -178,7 +182,7 @@ const SignupPatientForm = () => {
       access_level: "Patient",
       account_status: "Active",
       created_by_id: user.id,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
     };
     let patientId;
     try {
@@ -202,7 +206,7 @@ const SignupPatientForm = () => {
 
     const demographicsToPost = {
       ChartNumber: createChartNbr(
-        Date.parse(new Date(formDatas.dob)),
+        dateISOToTimestampTZ(formDatas.dob),
         toCodeTableName(genderCT, formDatas.gender),
         patientId
       ),
@@ -244,11 +248,11 @@ const SignupPatientForm = () => {
         LastNameSuffix: formDatas.suffix,
       },
       Gender: formDatas.gender,
-      DateOfBirth: Date.parse(new Date(formDatas.dob)),
+      DateOfBirth: dateISOToTimestampTZ(formDatas.dob),
       HealthCard: {
         Number: formDatas.healthNbr,
         Version: formDatas.healthVersion,
-        ExpiryDate: Date.parse(new Date(formDatas.healthExpiry)),
+        ExpiryDate: dateISOToTimestampTZ(formDatas.healthExpiry),
         ProvinceCode: formDatas.healthProvince,
       },
       SIN: formDatas.sin,
@@ -307,7 +311,7 @@ const SignupPatientForm = () => {
         delete relationship.id;
         relationship.patient_id = patientId;
         relationship.created_by_id = user.id;
-        relationship.date_created = Date.now();
+        relationship.date_created = nowTZTimestamp();
       });
       relationshipsToPost.forEach(async (relationship) => {
         const response = await xanoPost(
@@ -328,7 +332,7 @@ const SignupPatientForm = () => {
         item.patient_id = item.relation_id;
         item.relationship = toInverseRelation(item.relationship, gender);
         item.relation_id = patientId;
-        item.date_created = Date.now();
+        item.date_created = nowTZTimestamp();
         item.created_by_id = user.id;
       });
       inverseRelationsToPost = inverseRelationsToPost.filter(
@@ -492,7 +496,7 @@ const SignupPatientForm = () => {
               value={formDatas.dob}
               onChange={handleChange}
               name="dob"
-              max={toLocalDate(Date.now())}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
             />
           </div>
           <div className="signup-patient__row">

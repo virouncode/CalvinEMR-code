@@ -6,6 +6,7 @@ import { sendEmail } from "../../../../api/sendEmail";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/formatDates";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
@@ -81,7 +82,7 @@ const NewMessageExternal = ({
         subject: subject,
         body: body,
         attachments_ids: attach_ids,
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
       };
       const response = await xanoPost(
         "/messages_external",
@@ -174,7 +175,7 @@ Powered by Calvin EMR`,
             {
               file: response.data,
               alias: file.name,
-              date_created: Date.now(),
+              date_created: nowTZTimestamp(),
               created_by_id: user.id,
               created_by_user_type: "staff",
             },

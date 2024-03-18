@@ -1,3 +1,5 @@
+import { nowTZTimestamp } from "../formatDates";
+
 export const toJsDemographics = (jsObj) => {
   const jsNames = {
     LastNameSuffix: jsObj.Names?.LastNameSuffix ?? "",
@@ -297,7 +299,7 @@ export const toJsDemographics = (jsObj) => {
     //19 keys
     patient_id: "", //to be determined when posting patient
     created_by_id: "", // to be with admin id when it will be pris en compte
-    date_created: Date.now(),
+    date_created: nowTZTimestamp(),
     Names: jsNames,
     DateOfBirth: jsDob,
     ChartNumber: "", //to be determined when posting patient

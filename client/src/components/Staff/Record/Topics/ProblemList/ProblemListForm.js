@@ -6,7 +6,10 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { problemListSchema } from "../../../../../validation/problemListValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -40,7 +43,7 @@ const ProblemListForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "OnsetDate" || name === "ResolutionDate") {
-      value = value ? Date.parse(new Date()) : null;
+      value = value ? Date.dateStrToTimestaampTZ(value) : null;
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -145,7 +148,7 @@ const ProblemListForm = ({
         <input
           name="OnsetDate"
           type="date"
-          value={toLocalDate(formDatas.OnsetDate)}
+          value={timestampToDateISOTZ(formDatas.OnsetDate)}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -162,7 +165,7 @@ const ProblemListForm = ({
         <input
           name="ResolutionDate"
           type="date"
-          value={toLocalDate(formDatas.ResolutionDate)}
+          value={timestampToDateISOTZ(formDatas.ResolutionDate)}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -180,7 +183,7 @@ const ProblemListForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

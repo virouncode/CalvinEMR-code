@@ -6,7 +6,10 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { pharmacySchema } from "../../../../../validation/pharmacyValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -233,7 +236,7 @@ const PharmacyForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

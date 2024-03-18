@@ -7,6 +7,8 @@ export const useEventForm = (eventId) => {
   const [tempFormDatas, setTempFormDatas] = useState(null);
   const [loadingEvent, setLoadingEvent] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [previousStart, setPreviousStart] = useState(null);
+  const [previousEnd, setPreviousEnd] = useState(null);
 
   const fetchEventFormDatas = useCallback(
     async (abortController) => {
@@ -22,6 +24,8 @@ export const useEventForm = (eventId) => {
         setLoadingEvent(false);
         setFormDatas(response.data);
         setTempFormDatas(response.data);
+        setPreviousStart(response.data.start);
+        setPreviousEnd(response.data.end);
       } catch (err) {
         setLoadingEvent(false);
         if (err.name !== "CanceledError") {
@@ -45,6 +49,10 @@ export const useEventForm = (eventId) => {
     setFormDatas,
     tempFormDatas,
     setTempFormDatas,
+    previousStart,
+    setPreviousStart,
+    previousEnd,
+    setPreviousEnd,
     loadingEvent,
     setLoadingEvent,
     errMsg,

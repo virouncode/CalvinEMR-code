@@ -1,4 +1,4 @@
-import { toLocalDate } from "./formatDates";
+import { timestampToDateISOTZ } from "./formatDates";
 
 var _ = require("lodash");
 
@@ -23,7 +23,7 @@ var _ = require("lodash");
 //         //et la valeur est nulle
 //         delete obj[key]; //on retire la clé
 //       } else if (key.includes("Date") || key.includes("date")) {
-//         obj[key] = toLocalDate(obj[key]);
+//         obj[key] = timestampToDateISOTZ(obj[key]);
 //       }
 //     } else if (isObject(obj[key])) {
 //       //si la clé est un objet
@@ -44,7 +44,7 @@ export const cleanObject = (objet) => {
       if (!objet[cle]) {
         delete objet[cle];
       } else if (cle.includes("Date") || cle.includes("date")) {
-        objet[cle] = toLocalDate(objet[cle]);
+        objet[cle] = timestampToDateISOTZ(objet[cle]);
       } else if (typeof objet[cle] === "object") {
         cleanObject(objet[cle]);
         if (Object.keys(objet[cle]).length === 0) {

@@ -21,8 +21,13 @@ import useUserContext from "../../../../hooks/useUserContext";
 import { emergencyContactCaption } from "../../../../utils/emergencyContactCaption";
 import { enrolmentCaption } from "../../../../utils/enrolmentCaption";
 import { firstLetterUpper } from "../../../../utils/firstLetterUpper";
-import { toLocalDate, toLocalDateAndTime } from "../../../../utils/formatDates";
-import { getAge } from "../../../../utils/getAge";
+import {
+  dateISOToTimestampTZ,
+  getAgeTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+  timestampToDateTimeSecondsStrTZ,
+} from "../../../../utils/formatDates";
 import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
 import { primaryPhysicianCaption } from "../../../../utils/primaryPhysicianCaption";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
@@ -92,11 +97,14 @@ const DemographicsPU = ({
       nickName:
         demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0]?.Part || "",
       chart: demographicsInfos.ChartNumber || "",
-      dob: toLocalDate(demographicsInfos.DateOfBirth),
-      age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),
+      dob: timestampToDateISOTZ(demographicsInfos.DateOfBirth),
+      age: getAgeTZ(demographicsInfos.DateOfBirth),
       healthNbr: demographicsInfos.HealthCard?.Number || "",
       healthVersion: demographicsInfos.HealthCard?.Version || "",
-      healthExpiry: toLocalDate(demographicsInfos.HealthCard?.ExpiryDate),
+      healthExpiry: timestampToDateISOTZ(
+        demographicsInfos.HealthCard?.ExpiryDate,
+        "America/Toronto"
+      ),
       healthProvince: demographicsInfos.HealthCard?.ProvinceCode || "",
       gender: demographicsInfos.Gender || "",
       sin: demographicsInfos.SIN || "",
@@ -185,9 +193,6 @@ const DemographicsPU = ({
         : setFormDatas({ ...formDatas, zipCode: value });
       return;
     }
-    if (name === "dob" || name === "healthExpiry") {
-      value = value === "" ? null : Date.parse(new Date(value));
-    }
     setFormDatas({ ...formDatas, [name]: value });
   };
   const handleAvatarChange = async (e) => {
@@ -248,11 +253,14 @@ const DemographicsPU = ({
       nickName:
         demographicsInfos.Names?.OtherNames?.[0]?.OtherName?.[0]?.Part || "",
       chart: demographicsInfos.ChartNumber || "",
-      dob: toLocalDate(demographicsInfos.DateOfBirth),
-      age: getAge(toLocalDate(demographicsInfos.DateOfBirth)),
+      dob: timestampToDateISOTZ(demographicsInfos.DateOfBirth),
+      age: getAgeTZ(demographicsInfos.DateOfBirth),
       healthNbr: demographicsInfos.HealthCard?.Number || "",
       healthVersion: demographicsInfos.HealthCard?.Version || "",
-      healthExpiry: toLocalDate(demographicsInfos.HealthCard?.ExpiryDate),
+      healthExpiry: timestampToDateISOTZ(
+        demographicsInfos.HealthCard?.ExpiryDate,
+        "America/Toronto"
+      ),
       healthProvince: demographicsInfos.HealthCard?.ProvinceCode || "",
       gender: demographicsInfos.Gender || "",
       sin: demographicsInfos.SIN || "",
@@ -382,11 +390,11 @@ const DemographicsPU = ({
         ],
         LastNameSuffix: formDatas.suffix,
       },
-      DateOfBirth: Date.parse(new Date(formDatas.dob)),
+      DateOfBirth: dateISOToTimestampTZ(formDatas.dob),
       HealthCard: {
         Number: formDatas.healthNbr,
         Version: formDatas.healthVersion,
-        ExpiryDate: Date.parse(new Date(formDatas.healthExpiry)),
+        ExpiryDate: dateISOToTimestampTZ(formDatas.healthExpiry),
         ProvinceCode: formDatas.healthProvince,
       },
       ChartNumber: formDatas.chart,
@@ -647,7 +655,7 @@ const DemographicsPU = ({
                     value={formDatas.dob}
                     onChange={handleChange}
                     name="dob"
-                    max={toLocalDate(Date.now())}
+                    max={timestampToDateISOTZ(nowTZTimestamp())}
                   />
                 ) : (
                   formDatas.dob
@@ -655,7 +663,7 @@ const DemographicsPU = ({
               </p>
               <p>
                 <label>Age: </label>
-                {getAge(toLocalDate(formDatas.dob))}
+                {getAgeTZ(dateISOToTimestampTZ(formDatas.dob))}
               </p>
               <p>
                 <label>Health Card#</label>
@@ -1044,11 +1052,11 @@ const DemographicsPU = ({
               </p>
               <p>
                 <label>Enrollment date: </label>
-                {toLocalDate(lastEnrolment?.EnrollmentDate)}
+                {timestampToDateISOTZ(lastEnrolment?.EnrollmentDate)}
               </p>
               <p>
                 <label>Enrollment termination date: </label>
-                {toLocalDate(lastEnrolment?.EnrollmentTerminationDate)}
+                {timestampToDateISOTZ(lastEnrolment?.EnrollmentTerminationDate)}
               </p>
               <p>
                 <label>Termination reason: </label>
@@ -1254,7 +1262,7 @@ const DemographicsPU = ({
                 getLastUpdate(demographicsInfos).updated_by_id
               )}{" "}
               on{" "}
-              {toLocalDateAndTime(
+              {timestampToDateTimeSecondsStrTZ(
                 getLastUpdate(demographicsInfos).date_updated
               )}
             </em>
@@ -1265,7 +1273,8 @@ const DemographicsPU = ({
                 staffInfos,
                 demographicsInfos.created_by_id
               )}{" "}
-              on {toLocalDateAndTime(demographicsInfos.date_created)}
+              on{" "}
+              {timestampToDateTimeSecondsStrTZ(demographicsInfos.date_created)}
             </em>
           )}
         </p>

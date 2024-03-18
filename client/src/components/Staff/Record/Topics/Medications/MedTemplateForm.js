@@ -13,6 +13,7 @@ import {
 } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
@@ -70,7 +71,7 @@ const MedTemplateForm = ({ setNewVisible }) => {
     const datasToPost = {
       ...formDatas,
       staff_id: user.id,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
       created_by_id: user.id,
       DrugName: formDatas.DrugName.toUpperCase(),
     };

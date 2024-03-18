@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { DateTime } from "luxon";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useAvailableRooms from "../../../hooks/useAvailableRooms";
@@ -12,8 +13,10 @@ import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
 import {
-  toLocalDate,
-  toLocalTimeWithSeconds,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+  timestampToTimeISOTZ,
+  tzComponentsToTimestamp,
 } from "../../../utils/formatDates";
 import {
   staffIdToFirstName,
@@ -25,11 +28,10 @@ import { statuses } from "../../../utils/statuses";
 import { toSiteName } from "../../../utils/toSiteName";
 import { toRoomTitle } from "../../../validation/toRoomTitle";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
+import DateTimePicker from "../../All/UI/Pickers/DateTimePicker";
 import DurationPicker from "../../All/UI/Pickers/DurationPicker";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import EditGuests from "./EditGuests";
-import FlatpickrEnd from "./FlatpickrEnd";
-import FlatpickrStart from "./FlatpickrStart";
 import HostsList from "./HostsList";
 import Invitation from "./Invitation";
 import RoomsRadio from "./RoomsRadio";
@@ -69,8 +71,17 @@ const EventForm = ({
     chart: "",
     health: "",
   });
-  const { formDatas, tempFormDatas, setTempFormDatas, loadingEvent, errMsg } =
-    useEventForm(currentEvent.current.id);
+  const {
+    formDatas,
+    tempFormDatas,
+    setTempFormDatas,
+    loadingEvent,
+    errMsg,
+    previousStart,
+    setPreviousStart,
+    previousEnd,
+    setPreviousEnd,
+  } = useEventForm(currentEvent.current.id);
 
   const { loading, err, patientsDemographics, hasMore } = usePatientsGuestsList(
     search,
@@ -79,19 +90,28 @@ const EventForm = ({
   );
   const [availableRooms, setAvailableRooms] = useAvailableRooms(
     parseInt(currentEvent.current.id),
-    currentEvent.current.start.getTime(),
-    currentEvent.current.end.getTime(),
+    DateTime.fromJSDate(currentEvent.current.start, {
+      zone: "America/Toronto",
+    }).toMillis(),
+    DateTime.fromJSDate(currentEvent.current.end, {
+      zone: "America/Toronto",
+    }).toMillis(),
     sites,
     currentEvent.current.extendedProps.siteId
   );
   const [invitationVisible, setInvitationVisible] = useState(false);
-  const fpStart = useRef(null); //flatpickr start date
-  const fpEnd = useRef(null); //flatpickr end date
-  const previousStart = useRef(currentEvent.current.start);
-  const previousEnd = useRef(currentEvent.current.end);
   const initialColor = useRef(currentEvent.current.backgroundColor);
   const initialTextColor = useRef(currentEvent.current.textColor);
   const [progress, setProgress] = useState(false);
+
+  const refDateStart = useRef(null);
+  const refHoursStart = useRef(null);
+  const refMinutesStart = useRef(null);
+  const refAMPMStart = useRef(null);
+  const refDateEnd = useRef(null);
+  const refHoursEnd = useRef(null);
+  const refMinutesEnd = useRef(null);
+  const refAMPMEnd = useRef(null);
 
   //============================ HANDLERS ==========================//
 
@@ -181,19 +201,68 @@ const EventForm = ({
     }
   };
 
-  const handleStartChange = async (selectedDates, dateStr, instance) => {
-    //dateStr is in ISOString format Z but takes local time zone UTC offset
-    if (selectedDates.length === 0) return; //if the flatpickr is cleared
-    const date = selectedDates[0].getTime();
-    const endPicker = fpEnd.current.flatpickr;
+  const handleStartChange = async (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if (!value) return;
+    const dateStr = refDateStart.current.value;
+    const hoursStr = refHoursStart.current.value;
+    const minutesStr = refMinutesStart.current.value;
+    const ampmStr = refAMPMStart.current.value;
+    let timestampStart;
+    switch (name) {
+      case "date":
+        timestampStart = tzComponentsToTimestamp(
+          value,
+          hoursStr,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "hours":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          value,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "minutes":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          value,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "ampm":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          minutesStr,
+          value,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      default:
+        break;
+    }
 
-    const rangeEnd = date > tempFormDatas.end ? date : tempFormDatas.end;
+    const rangeEnd =
+      timestampStart > tempFormDatas.end ? timestampStart : tempFormDatas.end;
     let hypotheticAvailableRooms;
 
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
         parseInt(currentEvent.current.id),
-        date,
+        timestampStart,
         rangeEnd,
         sites,
         tempFormDatas.site_id
@@ -204,6 +273,7 @@ const EventForm = ({
       });
       return;
     }
+
     if (
       tempFormDatas.room_id === "z" ||
       hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
@@ -217,42 +287,94 @@ const EventForm = ({
         })))
     ) {
       //Change event start on calendar
-      currentEvent.current.setStart(date);
-      previousStart.current = date;
-      endPicker.config.minDate = date;
-      if (date > tempFormDatas.end) {
+      currentEvent.current.setStart(timestampStart);
+      if (timestampStart > tempFormDatas.end) {
         //Change event end on calendar
-        currentEvent.current.setEnd(date);
-        endPicker.setDate(date); //Change flatpickr end
+        currentEvent.current.setEnd(timestampStart);
+        // endPicker.setDate(date); //Change flatpickr end
         //Update form datas
         setTempFormDatas({
           ...tempFormDatas,
-          start: date,
-          end: date,
+          start: timestampStart,
+          end: timestampStart,
           Duration: 0,
         });
+        setPreviousStart(timestampStart);
+        setPreviousEnd(timestampStart);
       } else {
         //Update form datas
         setTempFormDatas({
           ...tempFormDatas,
-          start: date,
-          Duration: Math.floor((tempFormDatas.end - date) / (1000 * 60)),
+          start: timestampStart,
+          Duration: Math.floor(
+            (tempFormDatas.end - timestampStart) / (1000 * 60)
+          ),
         });
+        setPreviousStart(timestampStart);
       }
-    } else {
-      instance.setDate(previousStart.current); //Put instance back to previous start if user cancel
     }
   };
 
-  const handleEndChange = async (selectedDates, dateStr, instance) => {
-    if (selectedDates.length === 0) return; //if the flatpickr is cleared
-    const date = selectedDates[0].getTime();
+  const handleEndChange = async (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if (!value) return;
+    const dateStr = refDateEnd.current.value;
+    const hoursStr = refHoursEnd.current.value;
+    const minutesStr = refMinutesEnd.current.value;
+    const ampmStr = refAMPMEnd.current.value;
+    let timestampEnd;
+    switch (name) {
+      case "date":
+        timestampEnd = tzComponentsToTimestamp(
+          value,
+          hoursStr,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "hours":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          value,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "minutes":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          value,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "ampm":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          minutesStr,
+          value,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      default:
+        break;
+    }
+
     let hypotheticAvailableRooms;
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
         parseInt(currentEvent.current.id),
         tempFormDatas.start,
-        date,
+        timestampEnd,
         sites,
         tempFormDatas.site_id
       );
@@ -274,17 +396,17 @@ const EventForm = ({
         })))
     ) {
       //Change event end on calendar
-      currentEvent.current.setEnd(date);
-      previousEnd.current = date;
+      currentEvent.current.setEnd(timestampEnd);
+      // previousEnd.current = date;
       //Update form datas
       setTempFormDatas({
         ...tempFormDatas,
-        end: date,
-        Duration: Math.floor((date - tempFormDatas.start) / (1000 * 60)),
+        end: timestampEnd,
+        Duration: Math.floor(
+          (timestampEnd - tempFormDatas.start) / (1000 * 60)
+        ),
       });
-    } else {
-      //Put instance back to previous end if user cancel
-      instance.setDate(previousEnd.current);
+      setPreviousEnd(timestampEnd);
     }
   };
 
@@ -292,88 +414,62 @@ const EventForm = ({
     if (e.target.checked) {
       //Change event on calendar
       currentEvent.current.setAllDay(true);
+      const startAllDay = DateTime.fromMillis(tempFormDatas.start, {
+        zone: "America/Toronto",
+      })
+        .set({ hour: 0, minute: 0, second: 0 })
+        .toMillis();
+      const endAllDay = startAllDay + 24 * 3600 * 1000;
+      currentEvent.current.setStart(startAllDay);
+      currentEvent.current.setEnd(endAllDay);
       //Update form datas
       setTempFormDatas({
         ...tempFormDatas,
+        start: startAllDay,
+        end: endAllDay,
         all_day: true,
-        duration: 1440,
+        Duration: 1440,
       });
-      //Clear flatpickr start and end
-      fpStart.current.flatpickr.clear();
-      fpEnd.current.flatpickr.clear();
     } else {
       //Change event on calendar
       currentEvent.current.setAllDay(false);
-      currentEvent.current.setStart(tempFormDatas.start);
-      currentEvent.current.setEnd(tempFormDatas.end);
-      //get the original dates back on flatpickr start and end
-      fpStart.current.flatpickr.setDate(tempFormDatas.start);
-      fpEnd.current.flatpickr.setDate(tempFormDatas.end);
+      currentEvent.current.setStart(previousStart);
+      currentEvent.current.setEnd(previousEnd);
       //update form datas
       setTempFormDatas({
         ...tempFormDatas,
+        start: previousStart,
+        end: previousEnd,
         all_day: false,
-        duration: Math.floor(
-          (tempFormDatas.end - tempFormDatas.start) / (1000 * 60)
-        ),
+        Duration: Math.floor((previousEnd - previousStart) / (1000 * 60)),
       });
     }
   };
 
-  const handleDurationHoursChange = async (e) => {
+  const handleDurationChange = async (e) => {
     const value = e.target.value;
-    const hoursInt = value === "" ? 0 : parseInt(value);
-    const minInt = parseInt(tempFormDatas.Duration % 60);
+    const name = e.target.name;
+    let hoursInt;
+    let minInt;
+    switch (name) {
+      case "hoursDuration":
+        hoursInt = value === "" ? 0 : parseInt(value);
+        minInt = parseInt(tempFormDatas.Duration % 60);
+        break;
+      case "minutesDuration":
+        hoursInt = parseInt(tempFormDatas.Duration / 60);
+        minInt = value === "" ? 0 : parseInt(value);
+        break;
+      default:
+        return;
+    }
+    const rangeEnd = tempFormDatas.start + hoursInt * 3600000 + minInt * 60000;
     let hypotheticAvailableRooms;
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
         parseInt(currentEvent.current.id),
         tempFormDatas.start,
-        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
-        sites,
-        tempFormDatas.site_id
-      );
-    } catch (err) {
-      toast.error(`Error: unable to get available rooms: ${err.message}`, {
-        containerId: "A",
-      });
-      return;
-    }
-    if (
-      tempFormDatas.room_id === "z" ||
-      hypotheticAvailableRooms.includes(tempFormDatas.room_id) ||
-      (!hypotheticAvailableRooms.includes(tempFormDatas.room_id) &&
-        (await confirmAlert({
-          content: `${toRoomTitle(
-            sites,
-            tempFormDatas.site_id,
-            tempFormDatas.room_id
-          )} will be occupied at this time slot, change end time anyway ?`,
-        })))
-    ) {
-      //change event end on calendar
-      currentEvent.current.setEnd(
-        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
-      );
-      //update form datas
-      setTempFormDatas({
-        ...tempFormDatas,
-        Duration: hoursInt * 60 + minInt,
-        end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
-      });
-    }
-  };
-
-  const handleDurationMinChange = async (e) => {
-    const value = e.target.value;
-    const hoursInt = parseInt(tempFormDatas.Duration / 60);
-    const minInt = value === "" ? 0 : parseInt(value);
-    let hypotheticAvailableRooms;
-    try {
-      hypotheticAvailableRooms = await getAvailableRooms(
-        parseInt(currentEvent.current.id),
-        tempFormDatas.start,
-        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+        rangeEnd,
         sites,
         tempFormDatas.site_id
       );
@@ -396,14 +492,12 @@ const EventForm = ({
         })))
     ) {
       //change event on calendar
-      currentEvent.current.setEnd(
-        tempFormDatas.start + hoursInt * 3600000 + minInt * 60000
-      );
+      currentEvent.current.setEnd(rangeEnd);
       //update form datas
       setTempFormDatas({
         ...tempFormDatas,
         Duration: hoursInt * 60 + minInt,
-        end: tempFormDatas.start + hoursInt * 3600000 + minInt * 60000,
+        end: rangeEnd,
       });
     }
   };
@@ -472,7 +566,11 @@ const EventForm = ({
       return;
     }
     setProgress(true);
-    const startAllDay = new Date(tempFormDatas.start).setHours(0, 0, 0, 0);
+    const startAllDay = DateTime.fromMillis(tempFormDatas.start, {
+      zone: "America/Toronto",
+    })
+      .set({ hour: 0, minute: 0, second: 0 })
+      .toMillis();
     const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     const datasToPut = {
@@ -491,16 +589,16 @@ const EventForm = ({
       created_by_id: tempFormDatas.created_by_id,
       updates: [
         ...tempFormDatas.updates,
-        { updated_by_id: user.id, date_updated: Date.now() },
+        { updated_by_id: user.id, date_updated: nowTZTimestamp() },
       ],
       AppointmentTime: tempFormDatas.all_day
-        ? toLocalTimeWithSeconds(startAllDay, false)
-        : toLocalTimeWithSeconds(tempFormDatas.start, false),
+        ? timestampToTimeISOTZ(startAllDay)
+        : timestampToTimeISOTZ(tempFormDatas.start),
       Duration: tempFormDatas.Duration,
       AppointmentStatus: tempFormDatas.AppointmentStatus,
       AppointmentDate: tempFormDatas.all_day
-        ? toLocalDate(startAllDay)
-        : toLocalDate(tempFormDatas.start),
+        ? timestampToDateISOTZ(startAllDay, "America/Toronto")
+        : timestampToDateISOTZ(tempFormDatas.start, "America/Toronto"),
       Provider: {
         Name: {
           FirstName: staffIdToFirstName(
@@ -620,37 +718,67 @@ const EventForm = ({
             </div>
             <div className="event-form__row">
               <div className="event-form__item">
-                <FlatpickrStart
+                {/* <FlatpickrStart
                   fpStart={fpStart}
                   startTime={tempFormDatas.start}
                   handleStartChange={handleStartChange}
                   allDay={tempFormDatas.all_day}
+                /> */}
+                <DateTimePicker
+                  value={tempFormDatas.start}
+                  refDate={refDateStart}
+                  refHours={refHoursStart}
+                  refMinutes={refMinutesStart}
+                  refAMPM={refAMPMStart}
+                  timezone="America/Toronto"
+                  locale="en-CA"
+                  handleChange={handleStartChange}
+                  label="Start"
+                  // readOnlyTime,
+                  // readOnlyDate
                 />
               </div>
               <div className="event-form__item">
-                <FlatpickrEnd
+                {/* <FlatpickrEnd
                   fpEnd={fpEnd}
                   start={currentEvent.current.start}
                   endTime={tempFormDatas.end}
                   allDay={currentEvent.current.allDay}
                   handleEndChange={handleEndChange}
+                /> */}
+                <DateTimePicker
+                  value={tempFormDatas.end}
+                  refDate={refDateEnd}
+                  refHours={refHoursEnd}
+                  refMinutes={refMinutesEnd}
+                  refAMPM={refAMPMEnd}
+                  timezone="America/Toronto"
+                  locale="en-CA"
+                  handleChange={handleEndChange}
+                  label="End"
+                  // readOnlyTime,
+                  // readOnlyDate
                 />
               </div>
               <div className="event-form__item">
                 <DurationPicker
                   durationHours={
                     tempFormDatas.all_day
-                      ? ""
-                      : parseInt(tempFormDatas.Duration / 60).toString()
+                      ? "24"
+                      : parseInt(tempFormDatas.Duration / 60)
+                          .toString()
+                          .padStart(2, "0")
                   }
                   durationMin={
                     tempFormDatas.all_day
-                      ? ""
-                      : parseInt(tempFormDatas.Duration % 60).toString()
+                      ? "00"
+                      : parseInt(tempFormDatas.Duration % 60)
+                          .toString()
+                          .padStart(2, "0")
                   }
                   disabled={tempFormDatas.all_day}
-                  handleDurationHoursChange={handleDurationHoursChange}
-                  handleDurationMinChange={handleDurationMinChange}
+                  handleChange={handleDurationChange}
+                  label="Duration"
                 />
               </div>
               <div className="event-form__item">
@@ -761,6 +889,7 @@ const EventForm = ({
               .map(({ staff_infos }) => staff_infos)}
             sites={sites}
             siteId={tempFormDatas.site_id}
+            allDay={tempFormDatas.all_day}
           />
         ))}
       {loadingEvent && (

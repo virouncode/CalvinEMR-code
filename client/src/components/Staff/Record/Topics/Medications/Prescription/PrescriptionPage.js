@@ -1,10 +1,14 @@
 import React from "react";
 import logo from "../../../../../../assets/img/logoLoginTest.png";
 import { genderCT, toCodeTableName } from "../../../../../../datas/codesTables";
+import useClinicContext from "../../../../../../hooks/useClinicContext";
 import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../../utils/formatDates";
-import { getAge } from "../../../../../../utils/getAge";
+import {
+  getAgeTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../../../utils/toPatientName";
 import CircularProgressMedium from "../../../../../All/UI/Progress/CircularProgressMedium";
@@ -24,6 +28,7 @@ const PrescriptionPage = ({
 }) => {
   const { user } = useUserContext();
   const { staffInfos } = useStaffInfosContext();
+  const { clinic } = useClinicContext();
   const handleChangeBody = (e) => {
     const value = e.target.value;
     setBody(value);
@@ -46,15 +51,18 @@ const PrescriptionPage = ({
                   {staffIdToTitleAndName(staffInfos, user.id, false, false)}{" "}
                   (LIC. {user.licence_nbr})
                 </p>
-                <p>{sites.find(({ id }) => id === siteSelectedId)?.name}</p>
+                <p>
+                  {clinic.name},{" "}
+                  {sites.find(({ id }) => id === siteSelectedId)?.name}
+                </p>
                 <p>
                   {sites.find(({ id }) => id === siteSelectedId)?.address}{" "}
-                  {sites.find(({ id }) => id === siteSelectedId)?.postal_code}{" "}
+                  {sites.find(({ id }) => id === siteSelectedId)?.city}{" "}
                   {
                     sites.find(({ id }) => id === siteSelectedId)
                       ?.province_state
                   }{" "}
-                  {sites.find(({ id }) => id === siteSelectedId)?.city}
+                  {sites.find(({ id }) => id === siteSelectedId)?.postal_code}{" "}
                 </p>
                 <p>
                   Phone: {sites.find(({ id }) => id === siteSelectedId)?.phone}
@@ -78,18 +86,18 @@ const PrescriptionPage = ({
         <div className="prescription__subheader">
           <div className="prescription__patient-infos">
             <p>
-              Patient: {toPatientName(demographicsInfos)},{" "}
-              {toCodeTableName(genderCT, demographicsInfos.Gender)}
+              Patient: {toPatientName(demographicsInfos)}
               <br />
-              Born {toLocalDate(demographicsInfos.DateOfBirth)},{" "}
-              {getAge(demographicsInfos.DateOfBirth)} years-old,{" "}
+              {toCodeTableName(genderCT, demographicsInfos.Gender)}, Born{" "}
+              {timestampToDateISOTZ(demographicsInfos.DateOfBirth)},{" "}
+              {getAgeTZ(demographicsInfos.DateOfBirth)} years-old,{" "}
               {demographicsInfos.HealthCard?.Number
                 ? `\nHealth Card Number: ${demographicsInfos.HealthCard?.Number}`
                 : ""}
             </p>
           </div>
           <p className="prescription__date">
-            Date emitted: {toLocalDate(new Date())}
+            Date emitted: {timestampToDateISOTZ(nowTZTimestamp())}
           </p>
         </div>
         <div className="prescription__body">

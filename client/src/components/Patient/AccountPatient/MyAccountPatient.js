@@ -6,8 +6,7 @@ import {
   toCodeTableName,
 } from "../../../datas/codesTables";
 import { emergencyContactCaption } from "../../../utils/emergencyContactCaption";
-import { toLocalDate } from "../../../utils/formatDates";
-import { getAge } from "../../../utils/getAge";
+import { getAgeTZ, timestampToDateISOTZ } from "../../../utils/formatDates";
 // import { onMessageUser } from "../../../utils/socketHandlers/onMessageUser";
 import { useNavigate } from "react-router-dom";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
@@ -83,11 +82,11 @@ const MyAccountPatient = () => {
               </div>
               <div className="patient-account__form-content-row">
                 <label>Date of birth*: </label>
-                {toLocalDate(user.demographics.DateOfBirth)}
+                {timestampToDateISOTZ(user.demographics.DateOfBirth)}
               </div>
               <div className="patient-account__form-content-row">
                 <label>Age: </label>
-                {getAge(toLocalDate(user.demographics.DateOfBirth))}
+                {getAgeTZ(user.demographics.DateOfBirth)}
               </div>
               <div className="patient-account__form-content-row">
                 <label>Health Card#: </label>
@@ -99,7 +98,10 @@ const MyAccountPatient = () => {
               </div>
               <div className="patient-account__form-content-row">
                 <label>Health Card Expiry: </label>
-                {toLocalDate(user.demographics.HealthCard?.ExpiryDate)}
+                {timestampToDateISOTZ(
+                  user.demographics.HealthCard?.ExpiryDate,
+                  "America/Toronto"
+                )}
               </div>
               <div className="patient-account__form-content-row">
                 <label>Health Card Province: </label>

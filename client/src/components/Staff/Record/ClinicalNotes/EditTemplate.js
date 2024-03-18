@@ -5,6 +5,7 @@ import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/formatDates";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
@@ -78,7 +79,7 @@ const EditTemplate = ({
   const handleSave = async () => {
     //save template
     const templateToPut = { ...editedTemplate };
-    templateToPut.date_created = Date.now();
+    templateToPut.date_created = nowTZTimestamp();
     try {
       const response = await xanoPut(
         `/clinical_notes_templates/${editTemplateSelectedId}`,

@@ -1,6 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 
@@ -22,7 +22,7 @@ const PrescriptionItem = ({ item, lastItemRef = null }) => {
         </em>
       </td>
       <td>
-        <em>{toLocalDate(item.attachment.date_created)}</em>
+        <em>{timestampToDateISOTZ(item.attachment.date_created)}</em>
       </td>
     </tr>
   );

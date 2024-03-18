@@ -1,123 +1,313 @@
-//UTC
+import { DateTime, Duration } from "luxon";
+//DATE Date object
+//ISO "1984-04-25T23:54:23+UTCOffset"
+//STR "1984-04-25, 11:54:23 PM"
+//HUMAN "Thursday, Apr 10, 11:54 PM"
+//TIMESTAMPS
 
-/*Takes a dateString from an input and creates a timestamp without UTC offset*/
-export const toTimestampUTC = (dateString) => {
-  //When receiving a dateString from an input "1984-04-25"
-  //If there is time Date.parse("1984-04-25T12:00:00") will give the EQUIVALENT utc timestamp for 12:00:00 in my local time whereas Date.parse("1984-04-25T12:00:00Z") will be 12:00:00 in UTC
-  return Date.parse(dateString + "Z");
-};
-/*Takes a timestamp in the database and displays date as if we were in UTC zone*/
-export const toUTCDate = (timestamp) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  //UTC components of the date
-  const year = date.getUTCFullYear();
-  const month = ("0" + (date.getUTCMonth() + 1).toString()).slice(-2); // months index start at 0
-  const day = ("0" + date.getUTCDate().toString()).slice(-2);
-  const formattedDate = year + "-" + month + "-" + day;
-  return formattedDate;
+//DATE
+export const nowTZ = (timezone = "America/Toronto") => {
+  return DateTime.local({ zone: timezone });
 };
 
-//LOCAL
-
-/*Takes a dateString from an input and creates a timestamp with UTC local offset*/
-export const toTimestampLocal = (dateString) => {
-  // Parse the date components from the date string
-  const [year, month, day] = dateString.split("-").map(Number);
-  // Create a Date object using the local time components (getTime() puts UTC offset)
-  return new Date(year, month - 1, day).getTime();
+//ISO
+export const timestampToDateISOTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toISODate();
 };
-/*Takes a timestamp in the database and displays date in the local timezone*/
-export const toLocalDate = (timestamp) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  //local components of the date
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1).toString()).slice(-2); // months index start at 0
-  const day = ("0" + date.getDate().toString()).slice(-2);
-  const formattedDate = year + "-" + month + "-" + day;
-  return formattedDate;
+export const timestampToTimeISOTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toISOTime();
 };
-export const toLocalTime = (timestamp, hour12 = true, withSeconds = false) => {
-  //2022-03-14T14:40:00Z  =>  16:40 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  let hours = parseInt(("0" + date.getHours().toString()).slice(-2));
-  let hoursStr = "";
-  const minutesStr = ("0" + date.getMinutes().toString()).slice(-2);
-  const secondsStr = ("0" + date.getSeconds().toString()).slice(-2);
-  let ampm = "";
-  if (hour12) {
-    ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // if hours = 0, it's midnight (12:00 AM)
-    hoursStr = ("0" + hours.toString()).slice(-2);
-  } else {
-    hoursStr = hours.toString();
-  }
-  const formattedTime = withSeconds
-    ? hoursStr + ":" + minutesStr + ":" + secondsStr + " " + ampm
-    : hoursStr + ":" + minutesStr + " " + ampm;
-  return formattedTime;
+export const timestampToDateTimeSecondsISOTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toISO();
 };
-
-export const toLocalTimeWithSeconds = (timestamp, hour12 = true) => {
-  //2022-03-14T14:40:00Z  =>  16:40:25 (UTC + local offset) formatted for datetime-local input
-  if (!timestamp || isNaN(timestamp)) return "";
-  return toLocalTime(timestamp, hour12, true);
+export const timestampToDateMonthsLaterISOTZ = (
+  timestamp,
+  monthsLater,
+  timezone = "America/Toronto"
+) => {
+  return timestampToDateISOTZ(
+    timestampMonthsLaterTZ(timestamp, monthsLater, timezone)
+  );
 };
 
-export const toLocalDateAndTime = (timestamp, hour12 = true) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const formattedDate = toLocalDate(timestamp);
-  const formattedTime = toLocalTime(timestamp, hour12);
-  return formattedDate + ", " + formattedTime;
+export const timestampToDateYearsLaterISOTZ = (
+  timestamp,
+  yearsLater,
+  timezone = "America/Toronto"
+) => {
+  return timestampToDateISOTZ(
+    timestampYearsLaterTZ(timestamp, yearsLater, timezone)
+  );
 };
 
-export const toLocalDateAndTimeWithSeconds = (timestamp, hour12 = true) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const formattedDate = toLocalDate(timestamp);
-  const formattedTime = toLocalTime(timestamp, hour12, true);
-  return formattedDate + ", " + formattedTime;
+//STR
+export const timestampToHoursStrTZ = (
+  timestamp,
+  timezone,
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  const hoursStr = DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  })
+    .toISOTime({ suppressSeconds: true })
+    .substring(0, 2);
+  let hours = parseInt(hoursStr) % 12;
+  if (hours === 0) hours = 12;
+  return hours.toString().padStart(2, "0");
+};
+export const timestampToMinutesStrTZ = (
+  timestamp,
+  timezone,
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  })
+    .toISOTime({ suppressSeconds: true })
+    .substring(3, 5);
+};
+export const timestampToAMPMStrTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  const hoursStr = DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  })
+    .toISOTime({ suppressSeconds: true })
+    .substring(0, 2);
+  let hours = parseInt(hoursStr);
+  return hours >= 12 ? "PM" : "AM";
 };
 
-export const toLocalHours = (timestamp, hour12 = true) => {
-  if (!timestamp || isNaN(timestamp)) {
-    return "";
-  }
-  const date = new Date(timestamp);
-  let hours = parseInt(("0" + date.getHours().toString()).slice(-2));
-  let hoursStr = "";
-  if (hour12) {
-    hours = hours % 12;
-    hours = hours ? hours : 12; // if hours = 0, it's midnight (12:00 AM)
-    hoursStr = ("0" + hours.toString()).slice(-2);
-  } else {
-    hoursStr = hours.toString();
-  }
-  return hoursStr;
+export const timestampToTimeStrTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!timestamp) return "";
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString(DateTime.TIME_SIMPLE);
+};
+export const timestampToDateTimeStrTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString(DateTime.DATETIME_SHORT);
+};
+export const timestampToDateTimeSecondsStrTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
 };
 
-export const toLocalMinutes = (timestamp) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  const minutesStr = ("0" + date.getMinutes().toString()).slice(-2);
-  return minutesStr;
+//HUMAN
+export const timestampToHumanDateTimeTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString({
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
-export const toLocalSeconds = (timestamp) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  const secondsStr = ("0" + date.getSeconds().toString()).slice(-2);
-  return secondsStr;
+export const timestampToHumanDateTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString({
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+  });
 };
 
-export const toLocalAMPM = (timestamp) => {
-  if (!timestamp || isNaN(timestamp)) return "";
-  const date = new Date(timestamp);
-  let localHours = date.getHours();
-  const AMPM = localHours < 12 ? "AM" : "PM";
-  return AMPM;
+export const timestampToHumanTimeTZ = (
+  timestamp,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  return DateTime.fromMillis(timestamp, {
+    zone: timezone,
+    locale,
+  }).toLocaleString({
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+export const nowHumanTZ = (timezone = "America/Toronto", locale = "en-CA") => {
+  const currentDateTime = DateTime.local({ zone: timezone });
+  // Formater la date et l'heure dans le format désiré avec le fuseau horaire inclus
+  const formattedDateTime = currentDateTime.toLocaleString({
+    locale,
+    month: "long",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  });
+  return formattedDateTime;
+};
+
+//TIMESTAMP
+export const timestampMonthsLaterTZ = (
+  timestamp,
+  monthsLater,
+  timezone = "America/Toronto"
+) => {
+  return DateTime.fromMillis(timestamp, { zone: timezone })
+    .plus({ months: monthsLater })
+    .toMillis();
+};
+export const timestampYearsLaterTZ = (
+  timestamp,
+  yearsLater,
+  timezone = "America/Toronto"
+) => {
+  return DateTime.fromMillis(timestamp, { zone: timezone })
+    .plus({ years: yearsLater })
+    .toMillis();
+};
+
+export const dateISOToTimestampTZ = (dateISO, timezone = "America/Toronto") => {
+  if (!dateISO) return null;
+  return DateTime.fromISO(dateISO, { zone: timezone }).toMillis();
+};
+
+export const nowTZTimestamp = (timezone = "America/Toronto") => {
+  return nowTZ(timezone).toMillis();
+};
+
+export const tzComponentsToTimestamp = (
+  dateStr,
+  hoursStr,
+  minutesStr,
+  ampm,
+  timezone = "America/Toronto",
+  locale = "en-CA"
+) => {
+  if (!dateStr) return null;
+  const [yearStr, monthStr, dayStr] = dateStr.split("-");
+  let hour = parseInt(hoursStr, 10);
+  hour = AMPMto24(hour, ampm);
+  return DateTime.fromObject(
+    {
+      year: parseInt(yearStr, 10),
+      month: parseInt(monthStr, 10),
+      day: parseInt(dayStr, 10),
+      hour,
+      minute: parseInt(minutesStr),
+    },
+    {
+      zone: timezone,
+      locale,
+    }
+  ).toMillis();
+};
+
+export const getStartOfTheMonthTZ = (timezone = "America/Toronto") => {
+  const now = nowTZ();
+  const startOfMonth = now.startOf("month");
+  const startOfMonthMidnight = startOfMonth.startOf("day");
+  return startOfMonthMidnight.toMillis();
+};
+export const getEndOfTheMonthTZ = (timezone = "America/Toronto") => {
+  const now = nowTZ();
+  const endOfMonth = now.endOf("month");
+  const beginningOfNextMonth = endOfMonth.plus({ days: 1 });
+  const beginningOfNextMonthMidnight = beginningOfNextMonth.startOf("day");
+  return beginningOfNextMonthMidnight.toMillis();
+};
+export const getTodayStartTZ = (timezone = "America/Toronto") => {
+  return nowTZ().startOf("day").toMillis();
+};
+export const getTodayEndTZ = (timezone = "America/Toronto") => {
+  return nowTZ().endOf("day").toMillis();
+};
+
+//OTHER FUNCTIONS
+export const getAgeTZ = (dateOfBirthMs, timezone = "America/Toronto") => {
+  if (!dateOfBirthMs) return "";
+  const dateOfBirth = DateTime.fromMillis(dateOfBirthMs, {
+    zone: "America/Toronto",
+  });
+  const today = DateTime.local({ zone: "America/Toronto" });
+  const age = today.diff(dateOfBirth, "years").years;
+  return Math.floor(age);
+};
+
+export const isDateExceededTZ = (
+  startMillis,
+  duration,
+  timezone = "America/Toronto"
+) => {
+  const startDate = DateTime.fromMillis(startMillis, { zone: timezone });
+  const currentDate = DateTime.local({ zone: "America/Toronto" });
+  const endDate = startDate.plus(
+    Duration.fromObject({
+      years: duration.Y,
+      months: duration.M,
+      weeks: duration.W,
+      days: duration.D,
+    })
+  );
+  return currentDate > endDate;
 };
 
 export const AMPMto24 = (hour, ampm) => {
@@ -130,76 +320,27 @@ export const AMPMto24 = (hour, ampm) => {
     else return hour + 12;
   }
 };
-export const toISOStringNoMs = (date) => {
-  return date.toISOString().slice(0, -5) + "Z";
-};
 
-//For my Appointments Forms : the user enters a date YYYY-MM-DD(in an input) and time
-export const fromLocalComponentsToTimestamp = (
-  localDate,
-  localHours,
-  localMinutes,
-  localAMPM
+export const getWeekRange = (
+  firstDayOfTheWeek,
+  timezone = "America/Toronto"
 ) => {
-  if (!localDate) return "";
-  const localYear = parseInt(localDate.slice(0, 4));
-  const localMonthIndex = parseInt(localDate.slice(5, 7)) - 1;
-  const localDay = parseInt(localDate.slice(8, 10));
-  if (localAMPM === "AM" && parseInt(localHours) === 12) {
-    localHours = 0;
+  const today = DateTime.local({ zone: timezone });
+  let startOfWeek = today
+    .startOf("week")
+    .plus({ days: firstDayOfTheWeek - today.weekday });
+  if (startOfWeek < today) {
+    startOfWeek = startOfWeek.plus({ weeks: 1 });
   }
-  if (localAMPM === "PM" && parseInt(localHours) < 12) {
-    localHours = parseInt(localHours) + 12;
-  }
-  return Date.parse(
-    new Date(
-      localYear,
-      localMonthIndex,
-      localDay,
-      parseInt(localHours),
-      parseInt(localMinutes)
-    )
-  );
-};
+  const endOfWeek = startOfWeek.plus({ weeks: 1 });
+  console.log(startOfWeek.toJSDate());
+  console.log(endOfWeek.toJSDate());
 
-export const getWeekRange = (firstDay) => {
-  //Local components of today
-  const curr = new Date();
-  const currDate = curr.getDate();
-  const currDay = curr.getDay();
-  //Start Date of the week, we want to start from firstDay
-  let startDate = new Date();
-  let offset = 0;
-  if (currDay >= firstDay) {
-    //Wednesday>Monday for instance (3>1) offset 3-1 = 2
-    offset = currDay - firstDay;
-  } else {
-    //Sunday<Monday  0<1 if we are Sunday we want to start the week on the preceding Monday : offset 7 - (1-0)
-    offset = 7 - (firstDay - currDay);
-  }
-  startDate.setDate(currDate - offset);
-  startDate.setHours(0, 0, 0, 0);
-  let endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 7);
-  return [Date.parse(startDate), Date.parse(endDate)];
-};
-
-export const toDurationHours = (durationMs) => {
-  const durationMin = durationMs / 60000;
-  return parseInt(durationMin / 60);
-};
-
-export const toDurationMin = (durationMs) => {
-  const durationMin = durationMs / 60000;
-  return durationMin % 60;
+  return [startOfWeek.toMillis(), endOfWeek.toMillis()];
 };
 
 export const getLimitTimestampForAge = (age) => {
-  const today = new Date();
-  today.setHours(0);
-  today.setMinutes(0);
-  today.setSeconds(0);
-  let limit = new Date(today);
-  limit = limit.setFullYear(limit.getFullYear() - age);
-  return limit;
+  const today = DateTime.local({ zone: "America/Toronto" });
+  const birthDate = today.minus({ years: age });
+  return birthDate.toMillis();
 };

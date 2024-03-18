@@ -4,6 +4,11 @@ import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
+import {
+  nowTZTimestamp,
+  timestampToHumanDateTZ,
+  timestampToHumanDateTimeTZ,
+} from "../../../utils/formatDates";
 import { staffIdToName } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
@@ -15,18 +20,6 @@ const NextAppointments = ({ nextAppointments, loading, err }) => {
   const { socket } = useSocketContext();
   const { staffInfos } = useStaffInfosContext();
   const [appointmentSelectedId, setAppointmentSelectedId] = useState(null);
-
-  const optionsDate = {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-
-  const optionsTime = {
-    hour: "2-digit",
-    minute: "2-digit",
-  };
 
   const isAppointmentSelected = (id) => appointmentSelectedId === id;
   const handleCheck = (e) => {
@@ -62,18 +55,11 @@ const NextAppointments = ({ nextAppointments, loading, err }) => {
 I would like to cancel my appointment with ${staffIdToTitleAndName(
               staffInfos,
               appointment.host_id
-            )} on:
+            )},
 
-${new Date(appointment.start).toLocaleString(
-  "en-CA",
-  optionsDate
-)} from ${new Date(appointment.start).toLocaleTimeString(
-              "en-CA",
-              optionsTime
-            )} to ${new Date(appointment.end).toLocaleTimeString(
-              "en-CA",
-              optionsTime
-            )}
+From ${timestampToHumanDateTimeTZ(
+              appointment.start
+            )} to ${timestampToHumanDateTimeTZ(appointment.end)}
 
 Please contact me to confirm cancelation
 
@@ -85,7 +71,7 @@ Cellphone: ${
               )?.phoneNumber
             }`,
             read_by_patient_id: user.id,
-            date_created: Date.now(),
+            date_created: nowTZTimestamp(),
             type: "External",
           };
           const response = await xanoPost(
@@ -142,31 +128,14 @@ Cellphone: ${
                 />
                 {!appointment.all_day ? (
                   <div className="appointments-patient__date">
-                    <p>
-                      {new Date(appointment.start).toLocaleString(
-                        "en-CA",
-                        optionsDate
-                      )}
-                    </p>
-                    <p>
-                      {new Date(appointment.start).toLocaleTimeString(
-                        "en-CA",
-                        optionsTime
-                      )}{" "}
-                      -{" "}
-                      {new Date(appointment.end).toLocaleTimeString(
-                        "en-CA",
-                        optionsTime
-                      )}
-                    </p>
+                    <p>{timestampToHumanDateTimeTZ(appointment.start)} - </p>
+                    <p>{timestampToHumanDateTimeTZ(appointment.end)}</p>
                   </div>
                 ) : (
                   <div>
-                    {new Date(appointment.start).toLocaleString(
-                      "en-CA",
-                      optionsDate
-                    )}{" "}
-                    {`All Day`}
+                    <p>
+                      {timestampToHumanDateTZ(appointment.start)} {`All Day`}
+                    </p>
                   </div>
                 )}
                 <p>Reason : {appointment.reason}</p>

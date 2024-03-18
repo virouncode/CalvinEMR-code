@@ -5,6 +5,10 @@ import axios from "axios";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useUserContext from "../../../hooks/useUserContext";
+import {
+  timestampToHumanDateTZ,
+  timestampToHumanDateTimeTZ,
+} from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
 import SelectSite from "./SelectSite";
@@ -20,6 +24,7 @@ const Invitation = ({
   staffGuestsInfos,
   sites,
   siteId,
+  allDay,
 }) => {
   //HOOKS
   const { user } = useUserContext();
@@ -64,43 +69,33 @@ const Invitation = ({
     }
     const hostName = staffIdToTitleAndName(staffInfos, hostId);
 
-    let optionsDate = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
+    const subject = allDay
+      ? `Appointment ${timestampToHumanDateTZ(start)} All Day`
+      : `Appointment ${timestampToHumanDateTimeTZ(
+          start
+        )} - ${timestampToHumanDateTimeTZ(end)}`;
 
-    let optionsTime = {
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-
-    const subject = `Appointment ${new Date(start).toLocaleString(
-      "en-CA",
-      optionsDate
-    )} - ${new Date(start).toLocaleTimeString("en-CA", optionsTime)}`;
-
-    const clinic = sites.find(({ id }) => id === siteSelectedId);
-    const clinicName = clinic?.name;
-    const adressToSend = clinic?.address;
-    const postalCodeToSend = clinic?.postal_code;
-    const cityToSend = clinic?.city;
+    const site = sites.find(({ id }) => id === siteSelectedId);
+    const siteName = site?.name;
+    const adressToSend = site?.address;
+    const cityToSend = site?.city;
+    const provinceToSend = site?.province_state;
+    const postalCodeToSend = site?.postal_code || site?.zip_code;
 
     const infosToSend = user.settings.invitation_templates
       .find(({ name }) => name === templateSelected)
       .infos.replace("[host_name]", hostName)
       .replace(
         "[date]",
-        `${new Date(start).toLocaleString("en-CA", optionsDate)} ${new Date(
-          start
-        ).toLocaleTimeString("en-CA", optionsTime)} - ${new Date(
-          end
-        ).toLocaleTimeString("en-CA", optionsTime)}`
+        allDay
+          ? `${timestampToHumanDateTZ(start)} All Day`
+          : `Appointment ${timestampToHumanDateTimeTZ(
+              start
+            )} - ${timestampToHumanDateTimeTZ(end)}`
       )
       .replace(
         "[address_of_clinic]",
-        `${clinicName} ${adressToSend} ${postalCodeToSend} ${cityToSend}`
+        `${siteName}, ${adressToSend} ${cityToSend} ${provinceToSend} ${postalCodeToSend}`
       )
       .replace(
         "[video_call_link]",

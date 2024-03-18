@@ -1,5 +1,5 @@
 import { terminationReasonCT, toCodeTableName } from "../datas/codesTables";
-import { toLocalDate } from "./formatDates";
+import { timestampToDateISOTZ } from "./formatDates";
 
 export const enrolmentCaption = (lastEnrolment) => {
   const firstName = lastEnrolment?.EnrolledToPhysician?.Name?.FirstName
@@ -31,10 +31,10 @@ export const enrolmentCaptionComplete = (enrolment) => {
     ? `, OHIP#: ${enrolment?.EnrolledToPhysician?.OHIPPhysicianId}`
     : "";
   const start = enrolment?.EnrollmentDate
-    ? `, since ${toLocalDate(enrolment?.EnrollmentDate)}.`
+    ? `, since ${timestampToDateISOTZ(enrolment?.EnrollmentDate)}.`
     : "";
   const end = enrolment?.EnrollmentTerminationDate
-    ? `Ended on ${toLocalDate(enrolment?.EnrollmentTerminationDate)}`
+    ? `Ended on ${timestampToDateISOTZ(enrolment?.EnrollmentTerminationDate)}`
     : "";
   const reason = enrolment?.TerminationReason
     ? `, because of: ${toCodeTableName(

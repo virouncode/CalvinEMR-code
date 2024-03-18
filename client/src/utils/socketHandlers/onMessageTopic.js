@@ -70,7 +70,7 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
           )
         ) {
           //the new appointment contains the current patient
-          setDatas([...datas, message.content.data]);
+          setDatas([message.content.data, ...datas]);
         }
         break;
       case "update":

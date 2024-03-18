@@ -6,6 +6,7 @@ import { provinceStateTerritoryCT } from "../../../datas/codesTables";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { siteSchema } from "../../../validation/siteValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
@@ -110,7 +111,7 @@ const SiteEdit = ({ infos, editVisible, setEditVisible }) => {
       ],
       updates: [
         ...formDatas.updates,
-        { updated_by_id: user.id, date_updated: Date.now() },
+        { updated_by_id: user.id, date_updated: nowTZTimestamp() },
       ],
       email: formDatas.email.toLowerCase(),
     };

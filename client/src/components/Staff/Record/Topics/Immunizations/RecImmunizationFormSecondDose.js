@@ -9,7 +9,11 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampMonthsLaterTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -37,16 +41,9 @@ const RecImmunizationFormSecondDose = ({
     Route: route,
     Site: "",
     Dose: "",
-    Date: toLocalDate(
-      new Date(
-        new Date(
-          immunizationInfos.find(({ doseNumber }) => doseNumber === 1)?.Date
-        ).setMonth(
-          new Date(
-            immunizationInfos.find(({ doseNumber }) => doseNumber === 1)?.Date
-          ).getMonth() + 6
-        )
-      )
+    Date: timestampMonthsLaterTZ(
+      immunizationInfos.find(({ doseNumber }) => doseNumber === 1)?.Date,
+      6
     ),
     RefusedFlag: { ynIndicatorsimple: "N" },
     Instructions: "",
@@ -111,7 +108,7 @@ const RecImmunizationFormSecondDose = ({
       return;
     }
     if (name === "Date") {
-      value === "" ? (value = null) : (value = Date.parse(new Date(value)));
+      value === "" ? (value = null) : (value = dateISOToTimestampTZ(value));
     }
     setFormDatas({
       ...formDatas,
@@ -201,7 +198,7 @@ const RecImmunizationFormSecondDose = ({
           type="date"
           name="Date"
           onChange={handleChange}
-          value={toLocalDate(formDatas.Date)}
+          value={timestampToDateISOTZ(formDatas.Date)}
           autoComplete="off"
         />
       </div>

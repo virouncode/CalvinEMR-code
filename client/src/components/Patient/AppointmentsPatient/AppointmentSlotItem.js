@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React from "react";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 
@@ -32,11 +33,21 @@ const AppointmentSlotItem = ({
       />
       <div className="new-appointments__content-item-date">
         <p>
-          {new Date(appointment.start).toLocaleString("en-CA", optionsDate)}
+          {DateTime.fromMillis(appointment.start, {
+            zone: "America/Toronto",
+            locale: "en-CA",
+          }).toLocaleString(optionsDate)}
         </p>
         <p>
-          {new Date(appointment.start).toLocaleTimeString("en-CA", optionsTime)}{" "}
-          - {new Date(appointment.end).toLocaleTimeString("en-CA", optionsTime)}
+          {DateTime.fromMillis(appointment.start, {
+            zone: "America/Toronto",
+            locale: "en-CA",
+          }).toLocaleString(DateTime.TIME_SIMPLE)}{" "}
+          -{" "}
+          {DateTime.fromMillis(appointment.end, {
+            zone: "America/Toronto",
+            locale: "en-CA",
+          }).toLocaleString(DateTime.TIME_SIMPLE)}
         </p>
       </div>
       <p>Reason : {appointment.reason}</p>

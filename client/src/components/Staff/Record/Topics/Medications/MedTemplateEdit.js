@@ -13,6 +13,7 @@ import {
 } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
@@ -40,7 +41,7 @@ const MedTemplateEdit = ({ setEditVisible, med }) => {
       DrugName: formDatas.DrugName.toUpperCase(),
       updates: [
         ...formDatas.updates,
-        { updated_by_id: user.id, date_updated: Date.now() },
+        { updated_by_id: user.id, date_updated: nowTZTimestamp() },
       ],
     };
 

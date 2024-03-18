@@ -6,7 +6,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { riskSchema } from "../../../../../validation/riskValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -40,7 +44,7 @@ const RiskForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "StartDate" || name === "EndDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -130,8 +134,8 @@ const RiskForm = ({
       <td>
         <input
           type="date"
-          max={toLocalDate(Date.now())}
-          value={toLocalDate(formDatas.StartDate)}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
+          value={timestampToDateISOTZ(formDatas.StartDate)}
           onChange={handleChange}
           name="StartDate"
           autoComplete="off"
@@ -140,8 +144,8 @@ const RiskForm = ({
       <td>
         <input
           type="date"
-          max={toLocalDate(Date.now())}
-          value={toLocalDate(formDatas.EndDate)}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
+          value={timestampToDateISOTZ(formDatas.EndDate)}
           onChange={handleChange}
           name="EndDate"
           autoComplete="off"
@@ -178,7 +182,7 @@ const RiskForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

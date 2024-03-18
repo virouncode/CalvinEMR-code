@@ -6,7 +6,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { pastHealthSchema } from "../../../../../validation/pastHealthValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -44,7 +48,7 @@ const PastHealthForm = ({
       name === "OnsetOrEventDate" ||
       name === "ResolvedDate"
     ) {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -129,8 +133,8 @@ const PastHealthForm = ({
         <input
           name="OnsetOrEventDate"
           type="date"
-          max={toLocalDate(Date.now())}
-          value={toLocalDate(formDatas.OnsetOrEventDate)}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
+          value={timestampToDateISOTZ(formDatas.OnsetOrEventDate)}
           onChange={handleChange}
         />
       </td>
@@ -148,8 +152,8 @@ const PastHealthForm = ({
         <input
           name="ProcedureDate"
           type="date"
-          max={toLocalDate(Date.now())}
-          value={toLocalDate(formDatas.ProcedureDate)}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
+          value={timestampToDateISOTZ(formDatas.ProcedureDate)}
           onChange={handleChange}
         />
       </td>
@@ -157,8 +161,8 @@ const PastHealthForm = ({
         <input
           name="ResolvedDate"
           type="date"
-          max={toLocalDate(Date.now())}
-          value={toLocalDate(formDatas.ResolvedDate)}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
+          value={timestampToDateISOTZ(formDatas.ResolvedDate)}
           onChange={handleChange}
         />
       </td>
@@ -184,7 +188,7 @@ const PastHealthForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

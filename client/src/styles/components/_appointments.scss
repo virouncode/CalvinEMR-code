@@ -36,6 +36,9 @@
             min-width: 120px;
             padding: 10px;
             cursor: pointer;
+            &:nth-child(4), &:nth-child(5) {
+                min-width: 170px;
+            }
         }
     }
     &__item, &__form {

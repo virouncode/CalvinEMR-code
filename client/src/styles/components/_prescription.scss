@@ -71,9 +71,11 @@
     font-weight: bold;
   }
   &__patient-infos {
+    text-align: end;
     font-size: 0.8rem;
     font-weight: bold;
     padding: 5px 10px;
+    margin-left:auto;
     p {
       padding: 0;
     }

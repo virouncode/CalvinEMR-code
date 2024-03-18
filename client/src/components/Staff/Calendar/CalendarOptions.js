@@ -2,6 +2,7 @@ import React from "react";
 import Availability from "./Availability";
 import FirstDaySelect from "./FirstDaySelect";
 import SlotSelect from "./SlotSelect";
+import Timezone from "./Timezone";
 
 const CalendarOptions = ({
   scheduleMorning,
@@ -21,24 +22,27 @@ const CalendarOptions = ({
 }) => {
   return (
     <div className="calendar__options">
-      <SlotSelect />
-      <FirstDaySelect />
-      <Availability
-        scheduleMorning={scheduleMorning}
-        setScheduleMorning={setScheduleMorning}
-        scheduleAfternoon={scheduleAfternoon}
-        setScheduleAfternoon={setScheduleAfternoon}
-        unavailability={unavailability}
-        setUnavailability={setUnavailability}
-        availabilityId={availabilityId}
-        setAvailabilityId={setAvailabilityId}
-        defaultDurationHours={defaultDurationHours}
-        setDefaultDurationHours={setDefaultDurationHours}
-        defaultDurationMin={defaultDurationMin}
-        setDefaultDurationMin={setDefaultDurationMin}
-        editAvailabilityVisible={editAvailabilityVisible}
-        setEditAvailabilityVisible={setEditAvailabilityVisible}
-      />
+      <div className="calendar__options-menu">
+        <SlotSelect />
+        <FirstDaySelect />
+        <Availability
+          scheduleMorning={scheduleMorning}
+          setScheduleMorning={setScheduleMorning}
+          scheduleAfternoon={scheduleAfternoon}
+          setScheduleAfternoon={setScheduleAfternoon}
+          unavailability={unavailability}
+          setUnavailability={setUnavailability}
+          availabilityId={availabilityId}
+          setAvailabilityId={setAvailabilityId}
+          defaultDurationHours={defaultDurationHours}
+          setDefaultDurationHours={setDefaultDurationHours}
+          defaultDurationMin={defaultDurationMin}
+          setDefaultDurationMin={setDefaultDurationMin}
+          editAvailabilityVisible={editAvailabilityVisible}
+          setEditAvailabilityVisible={setEditAvailabilityVisible}
+        />
+      </div>
+      <Timezone />
     </div>
   );
 };

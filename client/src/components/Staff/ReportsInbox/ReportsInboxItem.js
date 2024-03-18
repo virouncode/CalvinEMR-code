@@ -5,7 +5,10 @@ import { putPatientRecord } from "../../../api/fetchRecords";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { showDocument } from "../../../utils/showDocument";
 import { showReportTextContent } from "../../../utils/showReportTextContent";
 import {
@@ -40,7 +43,7 @@ const ReportsInboxItem = ({
             LastName: staffIdToLastName(staffInfos, user.id),
           },
           ReviewingOHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-          DateTimeReportReviewed: Date.now(),
+          DateTimeReportReviewed: nowTZTimestamp(),
         },
       ];
 
@@ -106,8 +109,8 @@ const ReportsInboxItem = ({
           {toPatientName(item.patient_infos)}
         </NavLink>
       </td>
-      <td>{toLocalDate(item.EventDateTime)}</td>
-      <td>{toLocalDate(item.ReceivedDateTime)}</td>
+      <td>{timestampToDateISOTZ(item.EventDateTime)}</td>
+      <td>{timestampToDateISOTZ(item.ReceivedDateTime)}</td>
       <td>
         {item.SourceAuthorPhysician?.AuthorFreeText
           ? item.SourceAuthorPhysician.AuthorFreeText

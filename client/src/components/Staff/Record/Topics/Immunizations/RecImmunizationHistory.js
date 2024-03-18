@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { routeCT } from "../../../../../datas/codesTables";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import RecImmunizationEditMultiple from "./RecImmunizationEditMultiple";
 
@@ -33,7 +33,7 @@ const RecImmunizationHistory = ({
                   className="recimmunizations-history__item"
                   onClick={(e) => handleEdit(e, immunization.id)}
                 >
-                  {`${toLocalDate(immunization.Date)}, `}
+                  {`${timestampToDateISOTZ(immunization.Date)}, `}
                   {immunization.ImmunizationName
                     ? `${immunization.ImmunizationName}, `
                     : null}

@@ -4,13 +4,17 @@ import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { DateTime } from "luxon";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateTimeSecondsStrTZ,
+} from "../../../../utils/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -44,14 +48,17 @@ const MessageExternalDetail = ({
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
 
+  console.log("prout");
+
   useEffect(() => {
+    if (!message) return;
     setPreviousMsgs(
       message.previous_messages_ids
         .map(({ previous_message }) => previous_message)
         .sort((a, b) => b.date_created - a.date_created)
     );
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
-  }, [message.attachments_ids, message.previous_messages_ids, setPreviousMsgs]);
+  }, [message]);
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
@@ -140,8 +147,8 @@ const MessageExternalDetail = ({
             message.from_staff_id
               ? staffIdToTitleAndName(staffInfos, message.from_staff_id)
               : toPatientName(message.from_patient_infos)
-          } (${toLocalDateAndTimeWithSeconds(new Date(message.date_created))})`,
-          date_created: Date.now(),
+          } (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
+          date_created: DateTime.local({ zone: "America/Toronto" }).toMillis(),
           created_by_id: user.id,
           created_by_user_type: "staff",
         },
@@ -167,7 +174,7 @@ const MessageExternalDetail = ({
             message.from_patient_id
               ? toPatientName(message.from_patient_infos)
               : staffIdToTitleAndName(staffInfos, message.from_staff_id)
-          } (${toLocalDateAndTimeWithSeconds(new Date(message.date_created))})`,
+          } (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
           MyClinicalNotesContent: "See attachment",
           ParticipatingProviders: [
             {
@@ -176,7 +183,7 @@ const MessageExternalDetail = ({
                 LastName: staffIdToLastName(staffInfos, user.id),
               },
               OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-              DateTimeNoteCreated: Date.now(),
+              DateTimeNoteCreated: nowTZTimestamp(),
             },
           ],
           version_nbr: 1,

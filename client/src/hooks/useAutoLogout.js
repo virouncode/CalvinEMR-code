@@ -3,10 +3,11 @@ We start a timer in each tab
 We listen to the activity in each
 when there is activity in one tab :
 1) we reset the timer in this tab
-2) we set lastAction key in localStorage (with Date.now() for instance)
+2) we set lastAction key in localStorage (with nowTZTimestamp() for instance)
 3) every tabs listen to lastAction key in localStorage
 4) when they receive lastAction key event they reset their timer */
 import { useCallback, useEffect, useRef } from "react";
+import { nowTZTimestamp } from "../utils/formatDates";
 import useAdminsInfosContext from "./useAdminsInfosContext";
 import useAuthContext from "./useAuthContext";
 import useStaffInfosContext from "./useStaffInfosContext";
@@ -39,7 +40,7 @@ const useAutoLogout = (timeMin) => {
   const resetTimer = useCallback(() => {
     stopTimer();
     startTimer();
-    localStorage.setItem("lastAction", Date.now());
+    localStorage.setItem("lastAction", nowTZTimestamp());
   }, [startTimer, stopTimer]);
 
   const handleStorageEvent = useCallback(

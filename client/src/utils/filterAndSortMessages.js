@@ -7,6 +7,7 @@ export const getInboxMessages = (messages, userId) => {
 };
 
 export const getSentMessages = (messages, userId) => {
+  console.log("getSentMessages", messages, userId);
   return messages.filter(
     (message) =>
       message.from_id === userId &&

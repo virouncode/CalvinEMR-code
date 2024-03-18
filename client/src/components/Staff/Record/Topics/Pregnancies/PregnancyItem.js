@@ -7,7 +7,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { pregnancySchema } from "../../../../../validation/pregnancyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import PregnanciesList from "../../../../All/UI/Lists/PregnanciesList";
@@ -37,7 +40,7 @@ const PregnancyItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "date_of_event") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     if (name === "term_nbr_of_weeks" || name === "term_nbr_of_days") {
       value = parseInt(value);
@@ -183,12 +186,12 @@ const PregnancyItem = ({
             <input
               name="date_of_event"
               type="date"
-              value={toLocalDate(itemInfos.date_of_event)}
+              value={timestampToDateISOTZ(itemInfos.date_of_event)}
               onChange={handleChange}
               className="pregnancies-item__input2"
             />
           ) : (
-            toLocalDate(itemInfos.date_of_event)
+            timestampToDateISOTZ(itemInfos.date_of_event)
           )}
         </td>
         <td>

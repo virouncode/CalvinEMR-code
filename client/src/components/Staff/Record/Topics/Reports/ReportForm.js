@@ -10,7 +10,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { getExtension } from "../../../../../utils/getExtension";
 import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
 import { reportSchema } from "../../../../../validation/reportValidation";
@@ -56,7 +59,7 @@ const ReportForm = ({
       name === "ReceivedDateTime" ||
       name === "DateTimeSent"
     ) {
-      value = value ? Date.parse(new Date(value)) : null;
+      value = value ? dateISOToTimestampTZ(value) : null;
     }
     if (name === "Format") {
       setFormDatas({
@@ -100,7 +103,7 @@ const ReportForm = ({
       ...formDatas,
       ReportReviewed: {
         ...formDatas.ReportReviewed,
-        DateTimeReportReviewed: Date.parse(new Date(value)),
+        DateTimeReportReviewed: dateISOToTimestampTZ(value),
       },
     });
   };
@@ -312,7 +315,7 @@ const ReportForm = ({
           <input
             type="date"
             name="EventDateTime"
-            value={toLocalDate(formDatas.EventDateTime)}
+            value={timestampToDateISOTZ(formDatas.EventDateTime)}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -323,7 +326,7 @@ const ReportForm = ({
             <input
               type="date"
               name="ReceivedDateTime"
-              value={toLocalDate(formDatas.ReceivedDateTime)}
+              value={timestampToDateISOTZ(formDatas.ReceivedDateTime)}
               onChange={handleChange}
               autoComplete="off"
             />
@@ -389,7 +392,7 @@ const ReportForm = ({
                 <input
                   type="date"
                   name="DateTimeReportReviewed"
-                  value={toLocalDate(
+                  value={timestampToDateISOTZ(
                     formDatas.ReportReviewed?.DateTimeReportReviewed
                   )}
                   onChange={handleReviewedDate}
@@ -436,7 +439,7 @@ const ReportForm = ({
                 <input
                   type="date"
                   name="DateTimeSent"
-                  value={toLocalDate(formDatas.DateTimeSent)}
+                  value={timestampToDateISOTZ(formDatas.DateTimeSent)}
                   onChange={handleChange}
                 />
               </div>

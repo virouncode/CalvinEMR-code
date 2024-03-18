@@ -1,4 +1,8 @@
 import React from "react";
+import {
+  timestampToDateISOTZ,
+  timestampToDateTimeStrTZ,
+} from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const AppointmentsContent = ({ topicDatas, errMsg, loading }) => {
@@ -13,20 +17,8 @@ const AppointmentsContent = ({ topicDatas, errMsg, loading }) => {
               <li key={item.id}>
                 -{" "}
                 {!item.all_day
-                  ? new Date(item.start).toLocaleString("en-CA", {
-                      //local time
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                    })
-                  : new Date(item.start).toLocaleString("en-CA", {
-                      //local time
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    }) + " All Day"}{" "}
+                  ? timestampToDateTimeStrTZ(item.start)
+                  : timestampToDateISOTZ(item.start) + " All Day"}{" "}
                 ({item.AppointmentPurpose})
               </li>
             ))}

@@ -69,23 +69,22 @@ const RelationshipItem = ({
       ).data[0].id;
 
       await xanoDelete(`/relationships/${inverseRelationToDeleteId}`, "staff");
-
-      //Put the relationship
-      await putPatientRecord(`/relationships/${item.id}`, user.id, itemInfos);
-      //Emit socket apart to add relation_infos
       socket.emit("message", {
         route: "RELATIONSHIPS",
-        action: "update",
+        action: "delete",
         content: {
-          id: item.id,
-          data: {
-            ...itemInfos,
-            relation_infos: patients.find(
-              ({ patient_id }) => patient_id === itemInfos.relation_id
-            ),
-          },
+          id: inverseRelationToDeleteId,
         },
       });
+      //Put the relationship
+      await putPatientRecord(
+        `/relationships/${item.id}`,
+        user.id,
+        itemInfos,
+        socket,
+        "RELATIONSHIPS"
+      );
+
       //Post the inverse relationship
       let inverseRelationToPost = {};
       inverseRelationToPost.patient_id = itemInfos.relation_id;
@@ -102,21 +101,11 @@ const RelationshipItem = ({
         await postPatientRecord(
           "/relationships",
           user.id,
-
-          inverseRelationToPost
+          inverseRelationToPost,
+          socket,
+          "RELATIONSHIPS"
         );
       }
-      //Emit socket apart to add relation_infos
-      socket.emit("message", {
-        route: "RELATIONSHIPS",
-        action: "create",
-        content: {
-          data: {
-            ...inverseRelationToPost,
-            relation_infos: demographicsInfos,
-          },
-        },
-      });
       editCounter.current -= 1;
       setEditVisible(false);
       toast.success("Saved successfully", { containerId: "B" });

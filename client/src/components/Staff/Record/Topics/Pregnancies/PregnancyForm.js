@@ -5,7 +5,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { pregnancySchema } from "../../../../../validation/pregnancyValidation";
 import PregnanciesList from "../../../../All/UI/Lists/PregnanciesList";
@@ -24,7 +28,7 @@ const PregnancyForm = ({
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     description: "",
-    date_of_event: Date.now(),
+    date_of_event: nowTZTimestamp(),
     premises: "",
     term_nbr_of_weeks: "",
     term_nbr_of_days: "",
@@ -37,7 +41,7 @@ const PregnancyForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "date_of_event") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     if (name === "term_nbr_of_weeks" || name === "term_nbr_of_days") {
       value = parseInt(value);
@@ -127,7 +131,7 @@ const PregnancyForm = ({
         <input
           name="date_of_event"
           type="date"
-          value={toLocalDate(formDatas.date_of_event)}
+          value={timestampToDateISOTZ(formDatas.date_of_event)}
           onChange={handleChange}
           className="pregnancies-form__input2"
         />
@@ -175,7 +179,7 @@ const PregnancyForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>{" "}
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

@@ -13,7 +13,6 @@ const PatientRecordPage = () => {
   const [demographicsInfos, setDemographicsInfos, loading, err] = useFetchDatas(
     `/demographics/${parseInt(id)}`,
     "staff",
-
     null,
     null,
     true
@@ -24,7 +23,6 @@ const PatientRecordPage = () => {
     demographicsInfos && (
       <>
         <Helmet>
-          {console.log(demographicsInfos.DateOfBirth)}
           <title>{`EMR: ${toPatientName(demographicsInfos)}`}</title>
         </Helmet>
         <section className="patient-record-section">

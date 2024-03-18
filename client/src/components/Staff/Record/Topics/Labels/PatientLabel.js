@@ -4,7 +4,7 @@ import useClinicContext from "../../../../../hooks/useClinicContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import { copyToClipboard } from "../../../../../utils/copyToClipboard";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../../utils/toPatientName";
@@ -78,7 +78,7 @@ const PatientLabel = ({ demographicsInfos, windowRef }) => {
         <p style={LINE_STYLE}>
           <span style={SPAN_STYLE}>SEX: {demographicsInfos.Gender}</span>
           <span style={SPAN_STYLE}>
-            DOB: {toLocalDate(demographicsInfos.DateOfBirth)}
+            DOB: {timestampToDateISOTZ(demographicsInfos.DateOfBirth)}
           </span>
         </p>
         <p style={LINE_STYLE}>

@@ -2,7 +2,10 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import React from "react";
 import useVisitsPerAge from "../../../hooks/useVisitsPerAge";
 import useVisitsPerGender from "../../../hooks/useVistsPerGender";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 
@@ -47,12 +50,11 @@ const DashboardCardVisits = ({
 
   const handleChangeStart = (e) => {
     const value = e.target.value;
-    console.log(value);
-    setRangeStartVisits(value === "" ? null : Date.parse(new Date(value)));
+    setRangeStartVisits(value === "" ? null : dateISOToTimestampTZ(value));
   };
   const handleChangeEnd = (e) => {
     const value = e.target.value;
-    setRangeEndVisits(value === "" ? null : Date.parse(new Date(value)));
+    setRangeEndVisits(value === "" ? null : dateISOToTimestampTZ(value));
   };
   return (
     <div className="dashboard-card">
@@ -63,13 +65,13 @@ const DashboardCardVisits = ({
           <input
             type="date"
             onChange={handleChangeStart}
-            value={toLocalDate(rangeStartVisits)}
+            value={timestampToDateISOTZ(rangeStartVisits, "America/Toronto")}
           />
           <label htmlFor="">To</label>
           <input
             type="date"
             onChange={handleChangeEnd}
-            value={toLocalDate(rangeEndVisits)}
+            value={timestampToDateISOTZ(rangeEndVisits, "America/Toronto")}
           />
         </div>
         {visitsPerGender.length > 0 ? (

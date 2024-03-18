@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
@@ -7,9 +8,11 @@ import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
 import {
-  fromLocalComponentsToTimestamp,
-  toLocalDate,
-  toLocalTimeWithSeconds,
+  nowTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+  timestampToTimeISOTZ,
+  tzComponentsToTimestamp,
 } from "../../../../../utils/formatDates";
 import {
   staffIdToFirstName,
@@ -21,7 +24,7 @@ import { statuses } from "../../../../../utils/statuses";
 import { appointmentSchema } from "../../../../../validation/appointmentValidation";
 import { toRoomTitle } from "../../../../../validation/toRoomTitle";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import TimePicker from "../../../../All/UI/Pickers/TimePicker";
+import { DateTimePicker } from "../../../../All/UI/Pickers/DateTimePicker";
 import HostsList from "../../../EventForm/HostsList";
 import RoomsList from "../../../EventForm/RoomsList";
 import SelectSite from "../../../EventForm/SelectSite";
@@ -41,8 +44,8 @@ const AppointmentForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [formDatas, setFormDatas] = useState({
     host_id: user.title === "Secretary" ? 0 : user.id,
-    start: null,
-    end: null,
+    start: nowTZ().set({ hour: 7, minute: 0, second: 0 }).toMillis(),
+    end: nowTZ().set({ hour: 8, minute: 0, second: 0 }).toMillis(),
     patients_guests_ids: [patientId],
     staff_guests_ids: [],
     room: "To Be Determined",
@@ -54,27 +57,24 @@ const AppointmentForm = ({
     site_id: user.site_id,
     room_id: "z",
   });
+  const [previousStart, setPreviousStart] = useState(
+    nowTZ().set({ hour: 7, minute: 0, second: 0 }).toMillis()
+  );
+  const [previousEnd, setPreviousEnd] = useState(
+    nowTZ().set({ hour: 8, minute: 0, second: 0 }).toMillis()
+  );
   const [availableRooms, setAvailableRooms] = useState(
     sites.find(({ id }) => id === user.site_id)?.rooms.map(({ id }) => id)
   );
-  const previousStartDate = useRef(toLocalDate(Date.now()));
-  const previousEndDate = useRef(toLocalDate(Date.now()));
-  const previousStartHours = useRef("");
-  const previousEndHours = useRef("");
-  const previousStartMin = useRef("");
-  const previousEndMin = useRef("");
-  const previousStartAMPM = useRef("");
-  const previousEndAMPM = useRef("");
-  const startDateInput = useRef("");
-  const endDateInput = useRef("");
-  const startHourInput = useRef("");
-  const endHourInput = useRef("");
-  const startMinInput = useRef("");
-  const endMinInput = useRef("");
-  const startAMPMInput = useRef("");
-  const endAMPMInput = useRef("");
-  const minStartDate = useRef(toLocalDate(Date.now()));
-  const minEndDate = useRef(toLocalDate(Date.now()));
+
+  const refDateStart = useRef(null);
+  const refHoursStart = useRef(null);
+  const refMinutesStart = useRef(null);
+  const refAMPMStart = useRef(null);
+  const refDateEnd = useRef(null);
+  const refHoursEnd = useRef(null);
+  const refMinutesEnd = useRef(null);
+  const refAMPMEnd = useRef(null);
   const [progress, setProgress] = useState(false);
 
   //STYLE
@@ -131,214 +131,202 @@ const AppointmentForm = ({
   };
 
   const handleStartChange = async (e) => {
-    setErrMsgPost(false);
-    const dateValue = startDateInput.current.value; //choosen local date YYYY:MM:DD
-    const hourValue = startHourInput.current.value; //choosen local hour
-    const minValue = startMinInput.current.value; //choosen local min
-    const ampmValue = startAMPMInput.current.value; //choosen local ampm
+    setErrMsgPost("");
     const name = e.target.name;
-
-    if (name === "date" && dateValue === "") {
-      setFormDatas({ ...formDatas, start: null });
-      return;
+    const value = e.target.value;
+    if (!value) return;
+    const dateStr = refDateStart.current.value;
+    const hoursStr = refHoursStart.current.value;
+    const minutesStr = refMinutesStart.current.value;
+    const ampmStr = refAMPMStart.current.value;
+    let timestampStart;
+    switch (name) {
+      case "date":
+        timestampStart = tzComponentsToTimestamp(
+          value,
+          hoursStr,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "hours":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          value,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "minutes":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          value,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "ampm":
+        timestampStart = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          minutesStr,
+          value,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      default:
+        break;
     }
 
-    let value = fromLocalComponentsToTimestamp(
-      dateValue,
-      hourValue,
-      minValue,
-      ampmValue
-    );
-
     const rangeEnd =
-      new Date(value) > new Date(formDatas.end) ? value : formDatas.end;
-
+      timestampStart > formDatas.end ? timestampStart : formDatas.end;
     let hypotheticAvailableRooms;
+
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
         0,
-        value,
+        timestampStart,
         rangeEnd,
         sites,
         formDatas.site_id
       );
-      if (
-        formDatas.room_id === "z" ||
-        hypotheticAvailableRooms.includes(formDatas.room_id) ||
-        (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
-          (await confirmAlert({
-            content: `${toRoomTitle(
-              sites,
-              formDatas.site_id,
-              formDatas.room_id
-            )} will be occupied at this time slot, book it anyway ?`,
-          })))
-      ) {
-        switch (name) {
-          case "date":
-            previousStartDate.current = dateValue;
-            minEndDate.current = dateValue;
-            break;
-          case "hour":
-            previousStartHours.current = hourValue;
-            break;
-          case "min":
-            previousStartMin.current = minValue;
-            break;
-          case "ampm":
-            previousStartAMPM.current = ampmValue;
-            break;
-          default:
-            break;
-        }
-        if (new Date(value) > new Date(formDatas.end)) {
-          setFormDatas({
-            ...formDatas,
-            start: value,
-            end: value,
-            Duration: 0,
-          });
-          endHourInput.value = startHourInput.value;
-          endMinInput.value = startMinInput.value;
-          endAMPMInput.vzalue = startAMPMInput.value;
-          setAvailableRooms(
-            await getAvailableRooms(0, value, value, sites, formDatas.site_id)
-          );
-        } else {
-          setFormDatas({
-            ...formDatas,
-            start: value,
-            Duration: Math.floor((formDatas.end - value) / (1000 * 60)),
-          });
-          setAvailableRooms(
-            await getAvailableRooms(
-              0,
-              value,
-              formDatas.end,
-              sites,
-              formDatas.site_id
-            )
-          );
-        }
-      } else {
-        //set input value to previous start
-        switch (name) {
-          case "date":
-            e.target.value = previousStartDate.current;
-            break;
-          case "hour":
-            e.target.value = previousStartHours.current;
-            break;
-          case "min":
-            e.target.value = previousStartMin.current;
-            break;
-          case "ampm":
-            e.target.value = previousStartAMPM.current;
-            break;
-          default:
-            break;
-        }
-      }
     } catch (err) {
-      toast.error(`Error unable to change start date: ${err.message}`, {
-        containerId: "B",
+      toast.error(`Error: unable to get available rooms: ${err.message}`, {
+        containerId: "A",
       });
+      return;
+    }
+
+    if (
+      formDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(formDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
+        (await confirmAlert({
+          content: `${toRoomTitle(
+            sites,
+            formDatas.site_id,
+            formDatas.room_id
+          )} will be occupied at this time slot, change start time anyway ?`,
+        })))
+    ) {
+      if (timestampStart > formDatas.end) {
+        // endPicker.setDate(date); //Change flatpickr end
+        //Update form datas
+        setFormDatas({
+          ...formDatas,
+          start: timestampStart,
+          end: timestampStart,
+          Duration: 0,
+        });
+        setPreviousStart(timestampStart);
+        setPreviousEnd(timestampStart);
+      } else {
+        //Update form datas
+        setFormDatas({
+          ...formDatas,
+          start: timestampStart,
+          Duration: Math.floor((formDatas.end - timestampStart) / (1000 * 60)),
+        });
+        setPreviousStart(timestampStart);
+      }
     }
   };
 
   const handleEndChange = async (e) => {
-    setErrMsgPost(false);
-    const dateValue = endDateInput.current.value;
-    const hourValue = endHourInput.current.value; //choosen local hour
-    const minValue = endMinInput.current.value; //choosen local min
-    const ampmValue = endAMPMInput.current.value; //choosen local ampm
+    setErrMsgPost("");
     const name = e.target.name;
-
-    if (name === "date" && dateValue === "") {
-      setFormDatas({ ...formDatas, end: null });
-      return;
+    const value = e.target.value;
+    if (!value) return;
+    const dateStr = refDateEnd.current.value;
+    const hoursStr = refHoursEnd.current.value;
+    const minutesStr = refMinutesEnd.current.value;
+    const ampmStr = refAMPMEnd.current.value;
+    let timestampEnd;
+    switch (name) {
+      case "date":
+        timestampEnd = tzComponentsToTimestamp(
+          value,
+          hoursStr,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "hours":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          value,
+          minutesStr,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "minutes":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          value,
+          ampmStr,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      case "ampm":
+        timestampEnd = tzComponentsToTimestamp(
+          dateStr,
+          hoursStr,
+          minutesStr,
+          value,
+          "America/Toronto",
+          "en-CA"
+        );
+        break;
+      default:
+        break;
     }
-
-    let value = fromLocalComponentsToTimestamp(
-      dateValue,
-      hourValue,
-      minValue,
-      ampmValue
-    );
 
     let hypotheticAvailableRooms;
     try {
       hypotheticAvailableRooms = await getAvailableRooms(
         0,
         formDatas.start,
-        value,
+        timestampEnd,
         sites,
         formDatas.site_id
       );
-      if (
-        formDatas.room_id === "z" ||
-        hypotheticAvailableRooms.includes(formDatas.room_id) ||
-        (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
-          (await confirmAlert({
-            content: `${toRoomTitle(
-              sites,
-              formDatas.site_id,
-              formDatas.room_id
-            )} will be occupied at this time slot, book it anyway ?`,
-          })))
-      ) {
-        switch (name) {
-          case "date":
-            previousEndDate.current = dateValue;
-            break;
-          case "hour":
-            previousEndHours.current = hourValue;
-            break;
-          case "min":
-            previousEndMin.current = minValue;
-            break;
-          case "ampm":
-            previousEndAMPM.current = ampmValue;
-            break;
-          default:
-            break;
-        }
-        setFormDatas({
-          ...formDatas,
-          end: value,
-          Duration: Math.floor((value - formDatas.start) / (1000 * 60)),
-        });
-        setAvailableRooms(
-          await getAvailableRooms(
-            0,
-            formDatas.start,
-            value,
-            sites,
-            formDatas.site_id
-          )
-        );
-      } else {
-        switch (name) {
-          case "date":
-            e.target.value = previousEndDate.current;
-            break;
-          case "hour":
-            e.target.value = previousEndHours.current;
-            break;
-          case "min":
-            e.target.value = previousEndMin.current;
-            break;
-          case "ampm":
-            e.target.value = previousEndAMPM.current;
-            break;
-          default:
-            break;
-        }
-      }
     } catch (err) {
-      toast.error(`Error unable to change end date: ${err.message}`, {
-        containerId: "B",
+      toast.error(`Error: unable to get available rooms: ${err.message}`, {
+        containerId: "A",
       });
+    }
+    if (
+      formDatas.room_id === "z" ||
+      hypotheticAvailableRooms.includes(formDatas.room_id) ||
+      (!hypotheticAvailableRooms.includes(formDatas.room_id) &&
+        (await confirmAlert({
+          content: `${toRoomTitle(
+            sites,
+            formDatas.site_id,
+            formDatas.room_id
+          )} will be occupied at this time slot, change end time anyway ?`,
+        })))
+    ) {
+      //Update form datas
+      setFormDatas({
+        ...formDatas,
+        end: timestampEnd,
+        Duration: Math.floor((timestampEnd - formDatas.start) / (1000 * 60)),
+      });
+      setPreviousEnd(timestampEnd);
     }
   };
 
@@ -351,9 +339,12 @@ const AppointmentForm = ({
         setErrMsgPost("Please choose a start date first");
         return;
       }
-      const startAllDay = new Date(formDatas.start).setHours(0, 0, 0, 0);
-      let endAllDay = new Date(startAllDay);
-      endAllDay = endAllDay.setDate(endAllDay.getDate() + 1);
+      const startAllDay = DateTime.fromMillis(formDatas.start, {
+        zone: "America/Toronto",
+      })
+        .set({ hour: 0, minute: 0, second: 0 })
+        .toMillis();
+      const endAllDay = startAllDay + 24 * 3600 * 1000;
 
       setFormDatas({
         ...formDatas,
@@ -366,6 +357,8 @@ const AppointmentForm = ({
       setFormDatas({
         ...formDatas,
         all_day: false,
+        start: previousStart,
+        end: previousEnd,
         Duration: Math.floor((formDatas.end - formDatas.start) / (1000 * 60)),
       });
     }
@@ -386,8 +379,8 @@ const AppointmentForm = ({
       AppointmentPurpose: firstLetterOfFirstWordUpper(
         formDatas.AppointmentPurpose
       ),
-      AppointmentTime: toLocalTimeWithSeconds(formDatas.start, false),
-      AppointmentDate: toLocalDate(formDatas.start),
+      AppointmentTime: timestampToTimeISOTZ(formDatas.start),
+      AppointmentDate: timestampToDateISOTZ(formDatas.start),
       Provider: {
         Name: {
           FirstName: staffIdToFirstName(
@@ -408,12 +401,15 @@ const AppointmentForm = ({
       setErrMsgPost(err.message);
       return;
     }
+    if (formDatas.end < formDatas.start) {
+      setErrMsgPost("End of appointment can't be before start !");
+      return;
+    }
     try {
       setProgress(true);
       await postPatientRecord(
         "/appointments",
         user.id,
-
         datasToPost,
         socket,
         "APPOINTMENTS"
@@ -476,45 +472,32 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <div className="appointments__item-date-container">
-          <input
-            type="date"
-            value={formDatas.start !== null ? toLocalDate(formDatas.start) : ""}
-            onChange={handleStartChange}
-            ref={startDateInput}
-            name="date"
-            min={minStartDate.current}
-          />
-          <TimePicker
-            handleChange={handleStartChange}
-            dateTimeValue={formDatas.start}
-            passingRefHour={startHourInput}
-            passingRefMin={startMinInput}
-            passingRefAMPM={startAMPMInput}
-            readOnly={formDatas.all_day || !toLocalDate(formDatas.start)}
-          />
-        </div>
+        <DateTimePicker
+          value={formDatas.start}
+          timezone="America/Toronto"
+          locale="en-CA"
+          handleChange={handleStartChange}
+          refDate={refDateStart}
+          refHours={refHoursStart}
+          refMinutes={refMinutesStart}
+          refAMPM={refAMPMStart}
+          readOnlyTime={formDatas.all_day}
+          // readOnlyDate
+        />
       </td>
       <td>
-        <div className="appointments__item-date-container">
-          <input
-            type="date"
-            value={formDatas.end !== null ? toLocalDate(formDatas.end) : ""}
-            onChange={handleEndChange}
-            min={minEndDate.current}
-            ref={endDateInput}
-            readOnly={formDatas.all_day}
-            name="date"
-          />
-          <TimePicker
-            handleChange={handleEndChange}
-            dateTimeValue={formDatas.end}
-            passingRefHour={endHourInput}
-            passingRefMin={endMinInput}
-            passingRefAMPM={endAMPMInput}
-            readOnly={formDatas.all_day || !toLocalDate(formDatas.end)}
-          />
-        </div>
+        <DateTimePicker
+          value={formDatas.end}
+          timezone="America/Toronto"
+          locale="en-CA"
+          handleChange={handleEndChange}
+          refDate={refDateEnd}
+          refHours={refHoursEnd}
+          refMinutes={refMinutesEnd}
+          refAMPM={refAMPMEnd}
+          readOnlyTime={formDatas.all_day}
+          readOnlyDate={formDatas.all_day}
+        />
       </td>
       <td>
         <select
@@ -567,7 +550,7 @@ const AppointmentForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp(), "America/Toronto")}</em>
       </td>
     </tr>
   );

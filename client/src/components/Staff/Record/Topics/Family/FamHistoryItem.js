@@ -8,7 +8,11 @@ import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { famHistorySchema } from "../../../../../validation/famHistoryValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -39,7 +43,7 @@ const FamHistoryItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "StartDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -196,13 +200,13 @@ const FamHistoryItem = ({
           {editVisible ? (
             <input
               type="date"
-              max={toLocalDate(Date.now())}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
               name="StartDate"
-              value={toLocalDate(itemInfos.StartDate)}
+              value={timestampToDateISOTZ(itemInfos.StartDate)}
               onChange={handleChange}
             />
           ) : (
-            toLocalDate(itemInfos.StartDate)
+            timestampToDateISOTZ(itemInfos.StartDate)
           )}
         </td>
         <td>

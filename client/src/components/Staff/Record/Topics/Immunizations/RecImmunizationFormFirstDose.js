@@ -9,7 +9,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -100,7 +103,7 @@ const RecImmunizationFormFirstDose = ({
       return;
     }
     if (name === "Date") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({
       ...formDatas,
@@ -190,7 +193,7 @@ const RecImmunizationFormFirstDose = ({
           type="date"
           name="Date"
           onChange={handleChange}
-          value={toLocalDate(formDatas.Date)}
+          value={timestampToDateISOTZ(formDatas.Date)}
           autoComplete="off"
         />
       </div>

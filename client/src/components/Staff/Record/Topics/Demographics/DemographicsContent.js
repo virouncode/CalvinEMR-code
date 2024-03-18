@@ -8,8 +8,10 @@ import {
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import { emergencyContactCaption } from "../../../../../utils/emergencyContactCaption";
 import { enrolmentCaption } from "../../../../../utils/enrolmentCaption";
-import { toLocalDate } from "../../../../../utils/formatDates";
-import { getAge } from "../../../../../utils/getAge";
+import {
+  getAgeTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
@@ -76,11 +78,11 @@ const DemographicsContent = ({
               </p>
               <p>
                 <label>Date of birth: </label>
-                {toLocalDate(demographicsInfos.DateOfBirth)}
+                {timestampToDateISOTZ(demographicsInfos.DateOfBirth)}
               </p>
               <p>
                 <label>Age: </label>
-                {getAge(demographicsInfos.DateOfBirth)}
+                {getAgeTZ(demographicsInfos.DateOfBirth)}
               </p>
               <p>
                 <label>Health Card#: </label>
@@ -99,7 +101,7 @@ const DemographicsContent = ({
               </p>
               <p>
                 <label>Health Card Expiry: </label>
-                {toLocalDate(demographicsInfos.HealthCard?.ExpiryDate)}
+                {timestampToDateISOTZ(demographicsInfos.HealthCard?.ExpiryDate)}
               </p>
               <p>
                 <label>SIN: </label>

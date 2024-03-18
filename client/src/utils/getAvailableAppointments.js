@@ -1,3 +1,4 @@
+import { nowTZ } from "./formatDates";
 import { getAppointmentProposal } from "./getAppoinmentProposal";
 
 export const getAvailableAppointments = (
@@ -7,23 +8,24 @@ export const getAvailableAppointments = (
   rangeStart
 ) => {
   const days = [
-    "sunday",
     "monday",
     "tuesday",
     "wednesday",
     "thursday",
     "friday",
     "saturday",
+    "sunday",
   ];
+  console.log("appointmentsInRange", appointmentsInRange);
 
   const defaulDurationMs =
     availability.default_duration_hours * 3600000 +
     availability.default_duration_min * 60000;
 
-  const now = new Date();
-  const today = now.getDay(); //1
+  const now = nowTZ();
+  const today = now.weekday - 1; //0 is Monday, 6 is Sunday (cf Luxon)
   let proposals = [];
-  let newDay = (today + 1) % 7; //2
+  let newDay = (today + 1) % 7; //On commence à regarder à partir de demain
   let counter = 0;
 
   while (counter < 7) {
@@ -35,6 +37,7 @@ export const getAvailableAppointments = (
     }
     const deltaNewDay =
       newDay - today > 0 ? newDay - today : 7 + (newDay - today);
+    console.log("deltaNewDay", deltaNewDay);
     const appointmentProposal = getAppointmentProposal(
       availability,
       appointmentsInRange,

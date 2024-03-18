@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useFetchMessagesExternal from "../../../../hooks/useFetchMessagesExternal";
 import useMessagesExternalSocket from "../../../../hooks/useMessagesExternalSocket";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -31,19 +31,17 @@ const MessagesExternal = () => {
       paging,
       search,
       sectionName,
+      messageId,
       section,
-      user.id,
-      "staff"
+      user.id
     );
-  const navigate = useNavigate();
   useMessagesExternalSocket(messages, setMessages, section, "staff");
 
   useEffect(() => {
     if (messageId) {
       setCurrentMsgId(parseInt(messageId));
-      navigate("/staff/messages");
     }
-  }, [messageId, navigate, setCurrentMsgId]);
+  }, [messageId]);
 
   return (
     <div className="messages-container">

@@ -1,11 +1,17 @@
 import { useCallback, useRef } from "react";
 
-const useIntersection = (loading, hasMore, setPaging) => {
+const useIntersection = (
+  loading,
+  hasMore,
+  setPaging,
+  addVisible = null,
+  order = null
+) => {
   const rootRef = useRef(null);
   const observer = useRef(null);
   const lastItemRef = useCallback(
     (node) => {
-      if (loading) return;
+      if (loading || (addVisible && order === "asc")) return;
       if (observer.current) {
         observer.current.disconnect();
       }
@@ -26,7 +32,7 @@ const useIntersection = (loading, hasMore, setPaging) => {
         observer.current.observe(node);
       }
     },
-    [hasMore, loading, setPaging]
+    [addVisible, hasMore, loading, order, setPaging]
   );
   return { rootRef, lastItemRef };
 };

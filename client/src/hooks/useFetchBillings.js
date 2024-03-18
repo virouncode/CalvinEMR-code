@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
+import { getEndOfTheMonthTZ, getStartOfTheMonthTZ } from "../utils/formatDates";
 import useUserContext from "./useUserContext";
 
 const useFetchBillings = (paging, userType) => {
@@ -8,12 +9,8 @@ const useFetchBillings = (paging, userType) => {
   const [billings, setBillings] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [rangeStart, setRangeStart] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
-  ); //start of the month
-  const [rangeEnd, setRangeEnd] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
-  ); //end of the month
+  const [rangeStart, setRangeStart] = useState(getStartOfTheMonthTZ()); //start of the month
+  const [rangeEnd, setRangeEnd] = useState(getEndOfTheMonthTZ()); //end of the month
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {

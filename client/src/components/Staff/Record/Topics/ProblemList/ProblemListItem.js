@@ -8,7 +8,10 @@ import { lifeStageCT } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { problemListSchema } from "../../../../../validation/problemListValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -38,7 +41,7 @@ const ProblemListItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "OnsetDate" || name === "ResolutionDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -212,12 +215,12 @@ const ProblemListItem = ({
             <input
               name="OnsetDate"
               type="date"
-              value={toLocalDate(itemInfos.OnsetDate)}
+              value={timestampToDateISOTZ(itemInfos.OnsetDate)}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.OnsetDate)
+            timestampToDateISOTZ(itemInfos.OnsetDate)
           )}
         </td>
         <td>
@@ -237,12 +240,12 @@ const ProblemListItem = ({
             <input
               name="ResolutionDate"
               type="date"
-              value={toLocalDate(itemInfos.ResolutionDate)}
+              value={timestampToDateISOTZ(itemInfos.ResolutionDate)}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.ResolutionDate)
+            timestampToDateISOTZ(itemInfos.ResolutionDate)
           )}
         </td>
         <td>

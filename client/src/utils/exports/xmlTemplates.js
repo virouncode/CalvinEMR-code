@@ -1,5 +1,5 @@
 import xmlFormat from "xml-formatter";
-import { toLocalDate } from "../formatDates";
+import { timestampToDateISOTZ } from "../formatDates";
 import { toPatientName } from "../toPatientName";
 
 export const toXmlDemographics = (jsObj, patientInfos = null) => {
@@ -67,13 +67,15 @@ export const toXmlDemographics = (jsObj, patientInfos = null) => {
     }</cdsd:LastNameSuffix>
   </Names>`;
 
-  const xmlDob = `<DateOfBirth>${toLocalDate(jsObj.DateOfBirth)}</DateOfBirth>`;
+  const xmlDob = `<DateOfBirth>${timestampToDateISOTZ(
+    jsObj.DateOfBirth
+  )}</DateOfBirth>`;
 
   const xmlHealthCard = `
     <HealthCard>
       <cdsd:Number>${jsObj.HealthCard?.Number ?? ""}</cdsd:Number>
       <cdsd:Version>${jsObj.HealthCard?.Version ?? ""}</cdsd:Version>
-      <cdsd:Expirydate>${toLocalDate(
+      <cdsd:Expirydate>${timestampToDateISOTZ(
         jsObj.HealthCard.ExpiryDate
       )}</cdsd:Expirydate>
       <cdsd:ProvinceCode>${
@@ -213,10 +215,10 @@ export const toXmlDemographics = (jsObj, patientInfos = null) => {
             <EnrollmentStatus>${
               history.EnrollmentStatus ?? ""
             }</EnrollmentStatus>
-            <EnrollmentDate>${toLocalDate(
+            <EnrollmentDate>${timestampToDateISOTZ(
               history.EnrollmentDate
             )}</EnrollmentDate>
-            <EnrollmentTerminationDate>${toLocalDate(
+            <EnrollmentTerminationDate>${timestampToDateISOTZ(
               history.EnrollmentTerminationDate
             )}</EnrollmentTerminationDate>
             <TerminationReason>${
@@ -270,7 +272,7 @@ export const toXmlDemographics = (jsObj, patientInfos = null) => {
   }
   </PersonStatusCode>`;
 
-  const xmlPersonStatusDate = `<PersonStatusDate>${toLocalDate(
+  const xmlPersonStatusDate = `<PersonStatusDate>${timestampToDateISOTZ(
     jsObj.PersonStatusDate
   )}</PersonStatusDate>`;
 
@@ -442,7 +444,7 @@ export const toXmlFamHistory = (jsObj, patientInfos = null) => {
   }
   </ResidualInfo>`;
 
-  const xmlStartDate = `<StartDate><cdsd:FullDate>${toLocalDate(
+  const xmlStartDate = `<StartDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.StartDate
   )}</cdsd:FullDate></StartDate>`;
 
@@ -521,17 +523,17 @@ export const toXmlPastHealth = (jsObj, patientInfos = null) => {
   }</cdsd:StandardCodeDescription>
   </DiagnosisProcedureCode>`;
 
-  const xmlOnsetOrEventDate = `<OnsetOrEventDate><cdsd:FullDate>${toLocalDate(
+  const xmlOnsetOrEventDate = `<OnsetOrEventDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.OnsetOrEventDate
   )}</cdsd:FullDate></OnsetOrEventDate>`;
 
   const xmlLifeStage = `<LifeStage>${jsObj.LifeStage ?? ""}</LifeStage>`;
 
-  const xmlResolvedDate = `<ResolvedDate><cdsd:FullDate>${toLocalDate(
+  const xmlResolvedDate = `<ResolvedDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.ResolvedDate
   )}</cdsd:FullDate></ResolvedDate>`;
 
-  const xmlProcedureDate = `<ProcedureDate><cdsd:FullDate>${toLocalDate(
+  const xmlProcedureDate = `<ProcedureDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.ProcedureDate
   )}</cdsd:FullDate></ProcedureDate>`;
 
@@ -598,13 +600,13 @@ export const toXmlProblemList = (jsObj, patientInfos = null) => {
     jsObj.ProblemStatus ?? ""
   }</ProblemStatus>`;
 
-  const xmlOnsetDate = `<OnsetDate><cdsd:FullDate>${toLocalDate(
+  const xmlOnsetDate = `<OnsetDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.OnsetDate
   )}</cdsd:FullDate></OnsetDate>`;
 
   const xmlLifeStage = `<LifeStage>${jsObj.LifeStage ?? ""}</LifeStage>`;
 
-  const xmlResolutionDate = `<ResolutionDate><cdsd:FullDate>${toLocalDate(
+  const xmlResolutionDate = `<ResolutionDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.ResolutionDate
   )}</cdsd:FullDate></ResolutionDate>`;
 
@@ -651,11 +653,11 @@ export const toXmlRiskFactors = (jsObj, patientInfos = null) => {
 
   const xmlAgeOfOnset = `<AgeOfOnset>${jsObj.AgeOfOnset ?? ""}</AgeOfOnset>`;
 
-  const xmlStart = `<StartDate><cdsd:FullDate>${toLocalDate(
+  const xmlStart = `<StartDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.StartDate
   )}</cdsd:FullDate></StartDate>`;
 
-  const xmlEnd = `<EndDate><cdsd:FullDate>${toLocalDate(
+  const xmlEnd = `<EndDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.EndDate
   )}</cdsd:FullDate></EndDate>`;
 
@@ -712,7 +714,7 @@ export const toXmlAllergies = (jsObj, patientInfos = null) => {
     jsObj.ReactionType ?? ""
   }</ReactionType>`;
 
-  const xmlStart = `<StartDate><cdsd:FullDate>${toLocalDate(
+  const xmlStart = `<StartDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.StartDate
   )}</cdsd:FullDate></StartDate>`;
 
@@ -722,7 +724,7 @@ export const toXmlAllergies = (jsObj, patientInfos = null) => {
 
   const xmlReaction = `<Reaction>${jsObj.Reaction ?? ""}</Reaction>`;
 
-  const xmlRecordedDate = `<RecordedDate><cdsd:FullDate>${toLocalDate(
+  const xmlRecordedDate = `<RecordedDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.RecordedDate
   )}</cdsd:FullDate></RecordedDate>`;
 
@@ -762,10 +764,10 @@ export const toXmlMedications = (jsObj, patientInfos = null) => {
       : ""
   }
   </ResidualInfo>`;
-  const xmlPrescriptionDate = `<PrescriptionWrittenDate><cdsd:FullDate>${toLocalDate(
+  const xmlPrescriptionDate = `<PrescriptionWrittenDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.PrescriptionWrittenDate
   )}</cdsd:FullDate></PrescriptionWrittenDate>`;
-  const xmlStart = `<StartDate><cdsd:FullDate>${toLocalDate(
+  const xmlStart = `<StartDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.StartDate
   )}</cdsd:FullDate></StartDate>`;
   const xmlDrugNumber = `<DrugIdentificationNumber>${
@@ -937,7 +939,7 @@ export const toXmlImmunizations = (jsObj, patientInfos = null) => {
   }</cdsd:value><cdsd:Description>${
     jsObj.ImmunizationCode?.Description ?? ""
   }</cdsd:Description></ImmunizationCode>`;
-  const xmlDate = `<Date><cdsd:FullDate>${toLocalDate(
+  const xmlDate = `<Date><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.Date
   )}</cdsd:FullDate>
   </Date>`;
@@ -1023,7 +1025,7 @@ export const toXmlClinicalNotes = (jsObj, patientInfos = null) => {
   const xmlContent = `<MyClinicalNotesContent>${
     jsObj.MyClinicalNotesContent ?? ""
   }</MyClinicalNotesContent>`;
-  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${toLocalDate(
+  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.EventDateTime
   )}</cdsd:FullDate></EventDateTime>`;
   const xmlParticipatingProviders =
@@ -1041,7 +1043,7 @@ export const toXmlClinicalNotes = (jsObj, patientInfos = null) => {
       <DateTimeNoteCreated>
         <cdsd:FullDateTime>${
           provider.DateTimeNoteCreated
-            ? new Date(provider.DateTimeNoteCreated).toISOString()
+            ? timestampToDateISOTZ(provider.DateTimeNoteCreated)
             : ""
         }
         </cdsd:FullDateTime>
@@ -1064,7 +1066,7 @@ export const toXmlClinicalNotes = (jsObj, patientInfos = null) => {
   <DateTimeNoteReviewed>
     <cdsd:FullDateTime>${
       provider.DateTimeNoteCreated
-        ? new Date(provider.DateTimeNoteCreated).toISOString()
+        ? timestampToDateISOTZ(provider.DateTimeNoteCreated)
         : ""
     }
     </cdsd:FullDateTime>
@@ -1109,10 +1111,10 @@ export const toXmlReports = (jsObj, patientInfos = null) => {
   </Content>`;
   const xmlClass = `<Class>${jsObj.Class ?? ""}</Class>`;
   const xmlSubClass = `<SubClass>${jsObj.SubClass ?? ""}</SubClass>`;
-  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${toLocalDate(
+  const xmlEventDateTime = `<EventDateTime><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.EventDateTime
   )}</cdsd:FullDate></EventDateTime>`;
-  const xmlReceivedDateTime = `<ReceivedDateTime><cdsd:FullDate>${toLocalDate(
+  const xmlReceivedDateTime = `<ReceivedDateTime><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.ReceivedDateTime
   )}</cdsd:FullDate></ReceivedDateTime>`;
   const xmlSourceAuthor = `<SourceAuthorPhysician>
@@ -1154,7 +1156,7 @@ export const toXmlReports = (jsObj, patientInfos = null) => {
         <cdsd:FullDate>
           ${
             item.DateTimeReportReviewed
-              ? toLocalDate(item.DateTimeReportReviewed)
+              ? timestampToDateISOTZ(item.DateTimeReportReviewed)
               : ""
           }
         </cdsd:FullDate>
@@ -1186,7 +1188,7 @@ export const toXmlReports = (jsObj, patientInfos = null) => {
         <cdsd:FullDateTime>
         ${
           obr.ObservationDateTime
-            ? new Date(obr.ObservationDateTime).toISOString()
+            ? timestampToDateISOTZ(obr.ObservationDateTime)
             : ""
         }
         </cdsd:FullDateTime>
@@ -1217,7 +1219,7 @@ export const toXmlReports = (jsObj, patientInfos = null) => {
 
   const xmlSentDateTime = `<SentDateTime>
   <cdsd:FullDateTime>
-  ${jsObj.SentDateTime ? new Date(jsObj.SentDateTime).toISOString() : ""}
+  ${jsObj.SentDateTime ? jsObj.SentDateTime.toISOString() : ""}
   </cdsd:FullDateTime>
 </SentDateTime>`;
 
@@ -1260,7 +1262,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
   ${status.Status ?? ""}
 </cdsd:Status>
 <cdsd:Date>
-  ${toLocalDate(status.Date)}
+  ${timestampToDateISOTZ(status.Date)}
 </cdsd:Date>
 </SmokingStatus>`
         ).join("")
@@ -1272,7 +1274,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
           (packs) =>
             `<SmokingPacks>
   <cdsd:PerDay>${packs.PerDay ?? ""}</cdsd:PerDay>
-  <cdsd:Date>${toLocalDate(packs.Date)}</cdsd:Date>
+  <cdsd:Date>${timestampToDateISOTZ(packs.Date)}</cdsd:Date>
   </SmockingPacks>`
         ).join("")
       : "";
@@ -1284,7 +1286,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
             `<Weight>
       <cdsd:Weight>${weight.Weight ?? ""}</cdsd:Weight>
       <cdsd:WeightUnit>${weight.WeightUnit ?? ""}</cdsd:WeightUnit>
-      <cdsd:Date>${toLocalDate(weight.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(weight.Date)}</cdsd:Date>
     </Weight>`
         ).join("")
       : "";
@@ -1296,7 +1298,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
             `<Height>
         <cdsd:Height>${height.Height ?? ""}</cdsd:Height>
         <cdsd:HeightUnit>${height.HeightUnit ?? ""}</cdsd:HeightUnit>
-        <cdsd:Date>${toLocalDate(height.Date)}</cdsd:Date>
+        <cdsd:Date>${timestampToDateISOTZ(height.Date)}</cdsd:Date>
       </Height>`
         ).join("")
       : "";
@@ -1312,7 +1314,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
           <cdsd:WaistCircumferenceUnit>${
             waist.WaistCircumferenceUnit ?? ""
           }</cdsd:WaistCircumferenceUnit>
-          <cdsd:Date>${toLocalDate(waist.Date)}</cdsd:Date>
+          <cdsd:Date>${timestampToDateISOTZ(waist.Date)}</cdsd:Date>
         </WaistCircumference>`
         ).join("")
       : "";
@@ -1324,7 +1326,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
   <cdsd:SystolicBP>${bp.SystolicBP ?? ""}</cdsd:SystolicBP>
   <cdsd:DiastolicBP>${bp.DiastolicBP ?? ""}</cdsd:DiastolicBP>
   <cdsd:BPUnit>${bp.BPUnit ?? ""}</cdsd:BPUnit>
-  <cdsd:Date>${toLocalDate(bp.Date)}</cdsd:Date>
+  <cdsd:Date>${timestampToDateISOTZ(bp.Date)}</cdsd:Date>
   </BloodPressure>`
         ).join("")
       : "";
@@ -1335,7 +1337,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
           (item) =>
             `<DiabetesComplicationsScreening>
       <cdsd:ExamCode>${item.ExamCode ?? ""}</cdsd:ExamCode>
-      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
     </DiabetesComplicationsScreening>`
         ).join("")
       : "";
@@ -1348,7 +1350,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
       <cdsd:CounsellingPerformed>${
         item.CounsellingPerformed ?? ""
       }</cdsd:CounsellingPerformed>
-      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
     </DiabetesMotivationalCounselling>`
         ).join("")
       : "";
@@ -1360,7 +1362,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
             `<DiabetesSelfManagementCollaborative>
       <cdsd:CodeValue>${item.CodeValue ?? ""}</cdsd:CodeValue>
       <cdsd:DocumentedGoals>${item.DocumentedGoals ?? ""}</cdsd:DocumentedGoals>
-      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
     </DiabetesSelfManagementCollaborative>`
         ).join("")
       : "";
@@ -1374,7 +1376,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
       <cdsd:ChallengesIdentified>${
         item.ChallengesIdentified ?? ""
       }</cdsd:ChallengesIdentified>
-      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
     </DiabetesSelfManagementChallenges>`
         ).join("")
       : "";
@@ -1387,7 +1389,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
       <cdsd:EducationalTrainingPerformed>${
         item.EducationalTrainingPerformed ?? ""
       }</cdsd:EducationalTrainingPerformed>
-      <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+      <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
     </DiabetesEducationalSelfManagement>`
         ).join("")
       : "";
@@ -1400,7 +1402,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
   <cdsd:NumOfReportedEpisodes>${
     item.NumOfReportedEpisodes ?? ""
   }</cdsd:NumOfReportedEpisodes>
-  <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+  <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
 </HypoglycemicEpisodes>`
         ).join("")
       : "";
@@ -1411,7 +1413,7 @@ export const toXmlCareElements = (jsObj, patientInfos = null) => {
           (item) =>
             `<SelfMonitoringBloodGlucose>
   <cdsd:SelfMonitoring>${item.SelfMonitoring ?? ""}</cdsd:SelfMonitoring>
-  <cdsd:Date>${toLocalDate(item.Date)}</cdsd:Date>
+  <cdsd:Date>${timestampToDateISOTZ(item.Date)}</cdsd:Date>
 </SelfMonitoringBloodGlucose>`
         ).join("")
       : "";
@@ -1459,11 +1461,11 @@ export const toXmlAlerts = (jsObj, patientInfos = null) => {
 
   const xmlNotes = `<Notes>${jsObj.Notes ?? ""}</Notes>`;
 
-  const xmlDateActive = `<DateActive><cdsd:FullDate>${toLocalDate(
+  const xmlDateActive = `<DateActive><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.DateActive
   )}</cdsd:FullDate></DateActive>`;
 
-  const xmlEndDate = `<EndDate><cdsd:FullDate>${toLocalDate(
+  const xmlEndDate = `<EndDate><cdsd:FullDate>${timestampToDateISOTZ(
     jsObj.EndDate
   )}</cdsd:FullDate></EndDate>`;
 
@@ -1501,7 +1503,7 @@ ${
     ? `<cdsd:DataElement>
 <cdsd:Name>EventDate</cdsd:Name>
 <cdsd:DataType>date</cdsd:DataType>
-<cdsd:Content>${toLocalDate(jsObj.date_of_event)}</cdsd:Content>
+<cdsd:Content>${timestampToDateISOTZ(jsObj.date_of_event)}</cdsd:Content>
 </cdsd:DataElement>`
     : ""
 }

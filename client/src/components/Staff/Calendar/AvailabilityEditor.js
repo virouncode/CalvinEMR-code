@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { availabilitySchema } from "../../../validation/availabilityValidation";
 import DurationPicker from "../../All/UI/Pickers/DurationPicker";
 import AvailabilityItem from "./AvailabilityItem";
@@ -48,7 +49,7 @@ const AvailabilityEditor = ({
       unavailability: unavailability,
       default_duration_hours: defaultDurationHours,
       default_duration_min: defaultDurationMin,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
     };
     try {
       await availabilitySchema.validate(datasToPut);

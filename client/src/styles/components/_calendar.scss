@@ -8,14 +8,20 @@
     height : 100%;
     display: flex;
     justify-content: space-between;
+    
     &__options{
         display: flex;
+        justify-content: space-between;
         width: 97%;
         margin: 0 auto;
         border-radius: 6px;
         box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         border: solid 1px $grey;
         background: $white;
+        padding: 0 5px;
+    }
+    &__options-menu {
+        display: flex;
     }
     &__options-title {
         @include childCenter;
@@ -102,8 +108,7 @@
             background: rgb(243, 243, 243);
         }
         .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
-            .fc-header-toolbar.fc-toolbar {
-                margin-bottom: 20px;
+            .fc-header-toolbar.fc-toolbar { 
                 .fc-toolbar-chunk {
                     width : 33%;
                     &:nth-child(2){
@@ -156,6 +161,7 @@
                 }
             }
             .fc-view-harness.fc-view-harness-active {
+                margin-top: 5px;
                 font-size: 0.75rem;
                     .fc-scrollgrid.fc-scrollgrid-liquid { 
                         .fc-event {
@@ -182,7 +188,18 @@
         &:hover{
             text-decoration: underline !important;
         }
-    }  
+    } 
+    &__timezone {
+        padding : 5px;
+        label {
+            font-size : 0.8rem;
+            font-weight: bold;
+            margin-right : 8px;
+        }
+        span {
+            font-size : 0.75rem;
+        }
+    } 
 }
 
 .flatpickr {

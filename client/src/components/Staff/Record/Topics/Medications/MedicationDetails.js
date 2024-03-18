@@ -6,7 +6,7 @@ import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../../datas/codesTables";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 
 const MedicationDetails = ({ item }) => {
   return (
@@ -14,11 +14,11 @@ const MedicationDetails = ({ item }) => {
       <div>
         <div className="medications-detail__row">
           <label>Prescription written date</label>
-          <p>{toLocalDate(item.PrescriptionWrittenDate)}</p>
+          <p>{timestampToDateISOTZ(item.PrescriptionWrittenDate)}</p>
         </div>
         <div className="medications-detail__row">
           <label>Start date</label>
-          <p>{toLocalDate(item.StartDate)}</p>
+          <p>{timestampToDateISOTZ(item.StartDate)}</p>
         </div>
         <div className="medications-detail__row">
           <label>Drug identification number (DIN)</label>

@@ -1,4 +1,4 @@
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import { showReportTextContent } from "../../../../../utils/showReportTextContent";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
@@ -44,7 +44,7 @@ const ReportsContent = ({
                         fontWeight: "bold",
                       }}
                     >
-                      - {item.name} ({toLocalDate(item.date_created)})
+                      - {item.name} ({timestampToDateISOTZ(item.date_created)})
                     </li>
                   ))}
                 {reportsReceived
@@ -66,7 +66,7 @@ const ReportsContent = ({
                         fontWeight: "normal",
                       }}
                     >
-                      - {item.name} ({toLocalDate(item.date_created)})
+                      - {item.name} ({timestampToDateISOTZ(item.date_created)})
                     </li>
                   ))}
                 <li>...</li>
@@ -89,7 +89,7 @@ const ReportsContent = ({
                         cursor: "pointer",
                       }}
                     >
-                      - {item.name} ({toLocalDate(item.date_created)})
+                      - {item.name} ({timestampToDateISOTZ(item.date_created)})
                     </li>
                   ))}
                 <li>...</li>

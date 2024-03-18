@@ -8,7 +8,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { enrolmentSchema } from "../../../../../validation/enrolmentValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
 
@@ -36,7 +39,7 @@ const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
     const name = e.target.name;
     let value = e.target.value;
     if (name === "EnrollmentDate" || name === "EnrollmentTerminationDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     if (name === "EnrolledToPhysicianFirstName") {
       setNewEnrolment({
@@ -192,7 +195,7 @@ const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
           <label>Enrolment date*:</label>
           <input
             type="date"
-            value={toLocalDate(newEnrolment?.EnrollmentDate)}
+            value={timestampToDateISOTZ(newEnrolment?.EnrollmentDate)}
             onChange={handleChange}
             name="EnrollmentDate"
           />
@@ -201,7 +204,9 @@ const NewEnrolmentForm = ({ setNewEnrolmentVisible, demographicsInfos }) => {
           <label>Termination date:</label>
           <input
             type="date"
-            value={toLocalDate(newEnrolment?.EnrollmentTerminationDate)}
+            value={timestampToDateISOTZ(
+              newEnrolment?.EnrollmentTerminationDate
+            )}
             onChange={handleChange}
             name="EnrollmentTerminationDate"
           />

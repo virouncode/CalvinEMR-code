@@ -6,7 +6,10 @@ import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import { reportClassCT, reportFormatCT } from "../../../datas/codesTables";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { getExtension } from "../../../utils/getExtension";
 import { reportSchema } from "../../../validation/reportValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
@@ -33,7 +36,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
     const name = e.target.name;
 
     if (name === "EventDateTime" || name === "ReceivedDateTime") {
-      value = value ? Date.parse(new Date(value)) : null;
+      value = value ? dateISOToTimestampTZ(value) : null;
     }
     if (name === "Format") {
       setFormDatas({
@@ -254,7 +257,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <input
             type="date"
             name="EventDateTime"
-            value={toLocalDate(formDatas.EventDateTime)}
+            value={timestampToDateISOTZ(formDatas.EventDateTime)}
             onChange={handleChange}
             autoComplete="off"
           />
@@ -264,7 +267,7 @@ const ReportsInboxFormSecretary = ({ errMsg, setErrMsg }) => {
           <input
             type="date"
             name="ReceivedDateTime"
-            value={toLocalDate(formDatas.ReceivedDateTime)}
+            value={timestampToDateISOTZ(formDatas.ReceivedDateTime)}
             onChange={handleChange}
             autoComplete="off"
           />

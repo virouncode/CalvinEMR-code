@@ -11,7 +11,12 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToAMPMStrTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { allergySchema } from "../../../../../validation/allergyValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -36,7 +41,7 @@ const AllergyForm = ({
     LifeStage: "",
     Severity: "",
     Reaction: "",
-    RecordedDate: Date.now(),
+    RecordedDate: nowTZTimestamp(),
     Notes: "",
   });
   const [progress, setProgress] = useState(false);
@@ -47,7 +52,7 @@ const AllergyForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "StartDate" || name === "RecordedDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -147,7 +152,7 @@ const AllergyForm = ({
         <input
           name="StartDate"
           type="date"
-          value={toLocalDate(formDatas.StartDate)}
+          value={timestampToAMPMStrTZ(formDatas.StartDate, "America/Toronto")}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -177,7 +182,7 @@ const AllergyForm = ({
           autoComplete="off"
         />
       </td>
-      <td>{toLocalDate(formDatas.RecordedDate)}</td>
+      <td>{timestampToDateISOTZ(formDatas.RecordedDate, "America/Toronto")}</td>
       <td>
         <input
           name="Notes"
@@ -191,7 +196,7 @@ const AllergyForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp(), "America/Toronto")}</em>
       </td>
     </tr>
   );

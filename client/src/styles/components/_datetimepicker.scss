@@ -1,0 +1,12 @@
+.datetimepicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &__label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  &__time {
+    display: flex;
+  }
+}

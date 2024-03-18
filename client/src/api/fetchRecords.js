@@ -1,4 +1,5 @@
 import { createChartNbr } from "../utils/createChartNbr";
+import { nowTZTimestamp } from "../utils/formatDates";
 import xanoDelete from "./xanoCRUD/xanoDelete";
 import xanoPost from "./xanoCRUD/xanoPost";
 import xanoPut from "./xanoCRUD/xanoPut";
@@ -14,7 +15,7 @@ export const postPatientRecord = async (
   if (url !== "/clinical_notes_log") {
     //if it's the log we don't want to change the date of creation, for attachments this is assured by the bulk add
     datasToPost.created_by_id = userId;
-    datasToPost.date_created = Date.now();
+    datasToPost.date_created = nowTZTimestamp();
   }
   try {
     const response = await xanoPost(url, "staff", datasToPost, abortController);
@@ -63,7 +64,7 @@ export const putPatientRecord = async (
     //because we have a versioning for that
     datasToPut.updates.push({
       updated_by_id: userId,
-      date_updated: Date.now(),
+      date_updated: nowTZTimestamp(),
     });
   }
 

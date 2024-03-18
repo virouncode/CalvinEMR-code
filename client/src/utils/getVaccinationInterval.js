@@ -1,69 +1,80 @@
-export const getVaccinationInterval = (age, date_of_birth) => {
-  let rangeStart = new Date();
-  let rangeEnd = new Date();
-  const dob = new Date(date_of_birth);
+import { DateTime } from "luxon";
+import { nowTZ } from "./formatDates";
+
+export const getVaccinationInterval = (
+  age,
+  patientDob,
+  timezone = "America/Toronto"
+) => {
+  let rangeStart = nowTZ();
+  let rangeEnd = nowTZ();
+  const dob = DateTime.fromMillis(patientDob, { zone: timezone });
+  console.log(dob);
 
   switch (age) {
     case "2 Months": {
-      rangeStart = new Date(dob.setMonth(dob.getMonth() + 2));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 1));
+      rangeStart = dob.plus({ months: 2 });
+      rangeEnd = dob.plus({ months: 3 });
       break;
     }
     case "4 Months": {
-      rangeStart = new Date(dob.setMonth(dob.getMonth() + 4));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 1));
+      rangeStart = dob.plus({ months: 4 });
+      rangeEnd = dob.plus({ months: 5 });
       break;
     }
     case "6 Months": {
-      rangeStart = new Date(dob.setMonth(dob.getMonth() + 6));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 1));
+      rangeStart = dob.plus({ months: 6 });
+      rangeEnd = dob.plus({ months: 7 });
       break;
     }
     case "1 Year": {
-      rangeStart = new Date(dob.setFullYear(dob.getFullYear() + 1));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 4));
+      rangeStart = dob.plus({ years: 1 });
+      rangeEnd = dob.plus({ months: 16 });
       break;
     }
     case "15 Months": {
-      rangeStart = new Date(dob.setMonth(dob.getMonth() + 15));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 1));
+      rangeStart = dob.plus({ months: 15 });
+      rangeEnd = dob.plus({ months: 16 });
       break;
     }
     case "18 Months": {
-      rangeStart = new Date(dob.setMonth(dob.getMonth() + 18));
-      rangeEnd = new Date(dob.setMonth(dob.getMonth() + 1));
+      rangeStart = dob.plus({ months: 18 });
+      rangeEnd = dob.plus({ months: 19 });
       break;
     }
     case "4 Years": {
-      rangeStart = new Date(dob.setFullYear(dob.getFullYear() + 4));
-      rangeEnd = new Date(dob.setFullYear(dob.getFullYear() + 1));
+      rangeStart = dob.plus({ years: 4 });
+      rangeEnd = dob.plus({ years: 5 });
       break;
     }
     case "14 Years": {
-      rangeStart = new Date(dob.setFullYear(dob.getFullYear() + 14));
-      rangeEnd = new Date(dob.setFullYear(dob.getFullYear() + 1));
+      rangeStart = dob.plus({ years: 14 });
+      rangeEnd = dob.plus({ years: 15 });
       break;
     }
     case "24 Years": {
-      rangeStart = new Date(dob.setFullYear(dob.getFullYear() + 24));
-      rangeEnd = new Date(dob.setFullYear(dob.getFullYear() + 1));
+      rangeStart = dob.plus({ years: 24 });
+      rangeEnd = dob.plus({ years: 25 });
       break;
     }
     case "Grade 7": {
       rangeStart = "";
-      rangeEnd = new Date(dob.setFullYear(dob.getFullYear() + 15));
+      rangeEnd = dob.plus({ years: 15 });
       break;
     }
     case "65 Years": {
-      rangeStart = new Date(dob.setFullYear(dob.getFullYear() + 65));
-      rangeEnd = new Date(dob.setFullYear(dob.getFullYear() + 1));
+      rangeStart = dob.plus({ years: 65 });
+      rangeEnd = dob.plus({ years: 66 });
       break;
     }
     default:
       break;
   }
+  console.log(patientDob);
+  console.log(age);
+
   return {
-    rangeStart: Date.parse(rangeStart),
-    rangeEnd: Date.parse(rangeEnd),
+    rangeStart: rangeStart ? rangeStart.toMillis() : 0,
+    rangeEnd: rangeEnd.toMillis(),
   };
 };

@@ -28,7 +28,6 @@ const ClinicalNotesToolBar = ({
   setPaging,
   overviewVisible,
   setOverviewVisible,
-  setClinicalNotes,
 }) => {
   //HOOKS
   const { user } = useUserContext();

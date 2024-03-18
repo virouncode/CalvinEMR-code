@@ -4,7 +4,7 @@ import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDateAndTime } from "../../../utils/formatDates";
+import { timestampToDateTimeStrTZ } from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
@@ -187,7 +187,7 @@ const MessagePatientThumbnail = ({
         </div>
       </div>
       <div className="message-thumbnail__date message-thumbnail__date--external">
-        {toLocalDateAndTime(message.date_created)}
+        {timestampToDateTimeStrTZ(message.date_created)}
       </div>
       <div className="message-thumbnail__logos">
         {section !== "Deleted messages" && (

@@ -12,7 +12,10 @@ import {
   toCodeTableName,
   ynIndicatorsimpleCT,
 } from "../../../../datas/codesTables";
-import { toLocalDateAndTime } from "../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateTimeSecondsStrTZ,
+} from "../../../../utils/formatDates";
 import {
   bodyMassIndex,
   bodySurfaceArea,
@@ -163,11 +166,11 @@ const CareElementsPU = ({
       case "SmokingStatus":
         setFormDatas({
           ...formDatas,
-          SmokingStatus: { Status: value, Date: Date.now() },
+          SmokingStatus: { Status: value, Date: nowTZTimestamp() },
           SmokingPacks:
             value === "N"
-              ? { PerDay: 0, Date: Date.now() }
-              : { PerDay: "", Date: Date.now() },
+              ? { PerDay: 0, Date: nowTZTimestamp() }
+              : { PerDay: "", Date: nowTZTimestamp() },
         });
         break;
       case "SmokingPacks":
@@ -175,23 +178,23 @@ const CareElementsPU = ({
           ...formDatas,
           SmokingStatus: {
             Status: Number(value) ? "Y" : "N",
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
-          SmokingPacks: { PerDay: value, Date: Date.now() },
+          SmokingPacks: { PerDay: value, Date: nowTZTimestamp() },
         });
         break;
       case "Weight":
         setFormDatas({
           ...formDatas,
-          Weight: { Weight: value, WeightUnit: "kg", Date: Date.now() },
+          Weight: { Weight: value, WeightUnit: "kg", Date: nowTZTimestamp() },
           WeightLbs: kgToLbs(value),
           bodyMassIndex: {
             BMI: bodyMassIndex(formDatas.Height?.Height, value),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           bodySurfaceArea: {
             BSA: bodySurfaceArea(formDatas.Height?.Height, value),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -201,31 +204,31 @@ const CareElementsPU = ({
           Weight: {
             Weight: lbsToKg(value),
             WeightUnit: "kg",
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           WeightLbs: value,
           bodyMassIndex: {
             BMI: bodyMassIndex(formDatas.Height?.Height, lbsToKg(value)),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           bodySurfaceArea: {
             BSA: bodySurfaceArea(formDatas.Height?.Height, lbsToKg(value)),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
       case "Height":
         setFormDatas({
           ...formDatas,
-          Height: { Height: value, HeightUnit: "cm", Date: Date.now() },
+          Height: { Height: value, HeightUnit: "cm", Date: nowTZTimestamp() },
           HeightFeet: cmToFeet(value),
           bodyMassIndex: {
             BMI: bodyMassIndex(value, formDatas.Weight?.Weight),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           bodySurfaceArea: {
             BSA: bodySurfaceArea(value, formDatas.Weight?.Weight),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -235,16 +238,16 @@ const CareElementsPU = ({
           Height: {
             Height: feetToCm(value),
             HeightUnit: "cm",
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           HeightFeet: value,
           bodyMassIndex: {
             BMI: bodyMassIndex(feetToCm(value), formDatas.Weight?.Weight),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
           bodySurfaceArea: {
             BSA: bodySurfaceArea(feetToCm(value), formDatas.Weight?.Weight),
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -254,7 +257,7 @@ const CareElementsPU = ({
           WaistCircumference: {
             WaistCircumference: value,
             WaistCircumferenceUnit: "cm",
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -264,7 +267,7 @@ const CareElementsPU = ({
           BloodPressure: {
             ...formDatas.BloodPressure,
             SystolicBP: value,
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -274,7 +277,7 @@ const CareElementsPU = ({
           BloodPressure: {
             ...formDatas.BloodPressure,
             DiastolicBP: value,
-            Date: Date.now(),
+            Date: nowTZTimestamp(),
           },
         });
         break;
@@ -861,7 +864,7 @@ const CareElementsPU = ({
                       getLastUpdate(topicDatas[0]).updated_by_id
                     )}{" "}
                     on{" "}
-                    {toLocalDateAndTime(
+                    {timestampToDateTimeSecondsStrTZ(
                       getLastUpdate(topicDatas[0]).date_updated
                     )}
                   </em>
@@ -874,7 +877,10 @@ const CareElementsPU = ({
                         staffInfos,
                         topicDatas[0].created_by_id
                       )}{" "}
-                      on {toLocalDateAndTime(topicDatas[0].date_created)}
+                      on{" "}
+                      {timestampToDateTimeSecondsStrTZ(
+                        topicDatas[0].date_created
+                      )}
                     </em>
                   )
                 )}

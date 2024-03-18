@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
 import xanoGet from "../api/xanoCRUD/xanoGet";
 import { filterAndSortMessages } from "../utils/filterAndSortMessages";
 
-const useFetchMessages = (paging, search, sectionName, section, staffId) => {
+const useFetchMessages = (
+  paging,
+  search,
+  sectionName,
+  messageId,
+  section,
+  staffId
+) => {
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMessages([]);
@@ -30,13 +39,35 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
           abortController
         );
         if (abortController.signal.aborted) return;
-        setMessages((prevDatas) => {
-          return filterAndSortMessages(
-            sectionName || section,
-            [...prevDatas, ...response.data.items],
-            staffId
-          );
-        });
+        if (
+          messageId &&
+          !response.data.items.find(({ id }) => id === messageId)
+        ) {
+          const missingMessage = (
+            await xanoGet(
+              `/messages/${messageId}`,
+              "staff",
+              null,
+              abortController
+            )
+          ).data;
+          setMessages((prevDatas) => {
+            return filterAndSortMessages(
+              section,
+              [...prevDatas, ...response.data.items, missingMessage],
+              staffId
+            );
+          });
+          navigate("/staff/messages");
+        } else {
+          setMessages((prevDatas) => {
+            return filterAndSortMessages(
+              section,
+              [...prevDatas, ...response.data.items],
+              staffId
+            );
+          });
+        }
         setHasMore(response.data.items.length > 0);
         setLoading(false);
       } catch (err) {
@@ -51,7 +82,7 @@ const useFetchMessages = (paging, search, sectionName, section, staffId) => {
     return () => {
       abortController.abort();
     };
-  }, [paging, search, section, sectionName, staffId]);
+  }, [messageId, navigate, paging, search, section, staffId]);
 
   return {
     messages,

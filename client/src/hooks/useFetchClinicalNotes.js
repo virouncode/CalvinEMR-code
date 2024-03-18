@@ -5,6 +5,7 @@ import useUserContext from "./useUserContext";
 
 const useFetchClinicalNotes = (patientId) => {
   const { user } = useUserContext();
+  const [addVisible, setAddVisible] = useState(false);
   const [order, setOrder] = useState(user.settings.clinical_notes_order);
   const [search, setSearch] = useState("");
   const [clinicalNotes, setClinicalNotes] = useState([]);
@@ -15,7 +16,7 @@ const useFetchClinicalNotes = (patientId) => {
 
   useEffect(() => {
     setClinicalNotes([]);
-  }, [order, search]);
+  }, [order, search, addVisible]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -23,16 +24,48 @@ const useFetchClinicalNotes = (patientId) => {
       try {
         setLoading(true);
         setErrMsg("");
-        const response = await xanoGet("/clinical_notes_of_patient", "staff", {
-          patient_id: patientId,
-          paging,
-          orderBy: order,
-          columnName: "date_created",
-          search,
-        });
-        if (abortController.signal.aborted) return;
-        setClinicalNotes((prevDatas) => [...prevDatas, ...response.data.items]);
-        setHasMore(response.data.items.length > 0);
+        if (addVisible && order === "asc") {
+          let hasMoreForAll = true;
+          let i = 1;
+          while (hasMoreForAll) {
+            const response = await xanoGet(
+              "/clinical_notes_of_patient",
+              "staff",
+              {
+                patient_id: patientId,
+                paging: { page: i, perPage: 40, offset: 0 },
+                orderBy: order,
+                columnName: "date_created",
+                search,
+              }
+            );
+            if (abortController.signal.aborted) return;
+            setClinicalNotes((prevDatas) => [
+              ...prevDatas,
+              ...response.data.items,
+            ]);
+            hasMoreForAll = response.data.items.length > 0;
+            ++i;
+          }
+        } else {
+          const response = await xanoGet(
+            "/clinical_notes_of_patient",
+            "staff",
+            {
+              patient_id: patientId,
+              paging,
+              orderBy: order,
+              columnName: "date_created",
+              search,
+            }
+          );
+          if (abortController.signal.aborted) return;
+          setClinicalNotes((prevDatas) => [
+            ...prevDatas,
+            ...response.data.items,
+          ]);
+          setHasMore(response.data.items.length > 0);
+        }
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -43,9 +76,11 @@ const useFetchClinicalNotes = (patientId) => {
     };
     fetchClinicalNotes();
     return () => abortController.abort();
-  }, [order, paging, patientId, search]);
+  }, [addVisible, order, paging, patientId, search]);
 
   return {
+    addVisible,
+    setAddVisible,
     order,
     setOrder,
     search,

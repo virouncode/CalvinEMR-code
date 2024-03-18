@@ -14,7 +14,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { allergySchema } from "../../../../../validation/allergyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -44,7 +47,7 @@ const AllergyItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "StartDate" || name === "RecordedDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -213,12 +216,15 @@ const AllergyItem = ({
             <input
               name="StartDate"
               type="date"
-              value={toLocalDate(itemInfos.StartDate)}
+              value={timestampToDateISOTZ(
+                itemInfos.StartDate,
+                "America/Toronto"
+              )}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(item.StartDate)
+            timestampToDateISOTZ(item.StartDate, "America/Toronto")
           )}
         </td>
         <td>
@@ -258,7 +264,9 @@ const AllergyItem = ({
             item.Reaction
           )}
         </td>
-        <td>{toLocalDate(itemInfos.RecordedDate)}</td>
+        <td>
+          {timestampToDateISOTZ(itemInfos.RecordedDate, "America/Toronto")}
+        </td>
         <td>
           {editVisible ? (
             <input

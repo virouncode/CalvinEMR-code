@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { toLocalDate } from "../utils/formatDates";
+import { timestampToDateISOTZ } from "../utils/formatDates";
 
 const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
   const [patientsDemographics, setPatientsDemographics] = useState([]);
@@ -39,7 +39,7 @@ const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
         //Because we can't filter those things in Xano
         const filteredDatas = response.data.items.filter(
           (item) =>
-            toLocalDate(item.DateOfBirth).includes(search.birth) &&
+            timestampToDateISOTZ(item.DateOfBirth).includes(search.birth) &&
             (item.PhoneNumber.find(
               ({ _phoneNumberType }) => _phoneNumberType === "C"
             )?.phoneNumber.includes(search.phone) ||

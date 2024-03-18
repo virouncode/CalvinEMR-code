@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { cmToFeet, kgToLbs } from "./measurements";
 
 export const toDatasToPlot = (historyTopic, historyDatas) => {
@@ -8,7 +9,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           Status: data.Status === "Y" ? 1 : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -17,7 +18,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           PerDay: data.PerDay ? parseFloat(data.PerDay) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -26,7 +27,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           Weight: data.Weight ? parseFloat(data.Weight) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -35,7 +36,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           Weight: data.Weight ? kgToLbs(parseFloat(data.Weight)) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -44,7 +45,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           Height: data.Height ? parseFloat(data.Height) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -53,7 +54,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           Height: data.Height ? cmToFeet(parseFloat(data.Height)) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -64,14 +65,14 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
           WaistCircumference: data.WaistCircumference
             ? parseFloat(data.WaistCircumference)
             : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
     case "BLOOD PRESSURE":
       datasToPlot = historyDatas.map((data) => {
         return {
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
           SystolicBP: data.SystolicBP ? parseFloat(data.SystolicBP) : 0,
           DiastolicBP: data.DiastolicBP ? parseFloat(data.DiastolicBP) : 0,
         };
@@ -82,7 +83,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           BMI: data.BMI ? parseFloat(data.BMI) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;
@@ -91,7 +92,7 @@ export const toDatasToPlot = (historyTopic, historyDatas) => {
         return {
           ...data,
           BSA: data.BSA ? parseFloat(data.BSA) : 0,
-          Date: new Date(data.Date),
+          Date: DateTime.fromMillis(data.Date, { zone: "America/Toronto" }),
         };
       });
       break;

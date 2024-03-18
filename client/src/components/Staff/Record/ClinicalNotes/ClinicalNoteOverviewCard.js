@@ -1,6 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 
 const ClinicalNoteOverviewCard = ({ clinicalNote, lastItemRef = null }) => {
@@ -13,7 +13,7 @@ const ClinicalNoteOverviewCard = ({ clinicalNote, lastItemRef = null }) => {
       </div>
       <div className="clinical-notes__overview-card-row">
         <label>Date:</label>
-        <p>{toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}</p>
+        <p>{timestampToDateTimeSecondsStrTZ(clinicalNote.date_created)}</p>
       </div>
       <div className="clinical-notes__overview-card-row">
         <label>Subject:</label>

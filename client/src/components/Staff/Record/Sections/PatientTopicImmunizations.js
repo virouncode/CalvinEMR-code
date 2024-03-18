@@ -29,7 +29,6 @@ const PatientTopicImmunizations = ({
   const [topicDatas, setTopicDatas, loading, errMsg] = useFetchDatas(
     "/immunizations_of_patient",
     "staff",
-
     "patient_id",
     patientId
   );

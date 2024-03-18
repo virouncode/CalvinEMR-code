@@ -5,6 +5,7 @@ import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { myAccountSchema } from "../../../validation/myAccountValidation";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import SelectSite from "../../Staff/EventForm/SelectSite";
@@ -95,7 +96,7 @@ const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
       datasToPut.updates = [
         ...formDatas.updates,
         {
-          date_updated: Date.now(),
+          date_updated: nowTZTimestamp(),
           updated_by_id: user.id,
           updated_by_user_type: "admin",
         },

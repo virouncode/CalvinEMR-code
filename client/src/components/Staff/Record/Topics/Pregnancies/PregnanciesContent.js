@@ -1,5 +1,5 @@
 import React from "react";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const PregnanciesContent = ({ topicDatas, loading, errMsg }) => {
@@ -12,7 +12,8 @@ const PregnanciesContent = ({ topicDatas, loading, errMsg }) => {
           <ul>
             {topicDatas.map((item) => (
               <li key={item.id}>
-                - {item.description} ({toLocalDate(item.date_of_event)})
+                - {item.description} ({timestampToDateISOTZ(item.date_of_event)}
+                )
               </li>
             ))}
             <li>...</li>

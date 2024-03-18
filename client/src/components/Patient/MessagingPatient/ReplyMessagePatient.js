@@ -4,6 +4,7 @@ import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
@@ -63,7 +64,7 @@ const ReplyMessagePatient = ({
           ...previousMsgs.map(({ id }) => id),
           message.id,
         ],
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
       };
       const response = await xanoPost(
         "/messages_external",
@@ -132,7 +133,7 @@ const ReplyMessagePatient = ({
             {
               file: response.data,
               alias: file.name,
-              date_created: Date.now(),
+              date_created: nowTZTimestamp(),
               created_by_id: user.id,
               created_by_user_type: "patient",
             },

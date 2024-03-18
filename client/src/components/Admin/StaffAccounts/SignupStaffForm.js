@@ -6,6 +6,7 @@ import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { generatePassword } from "../../../utils/generatePassword";
 import { staffSchema } from "../../../validation/staffValidation";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
@@ -122,7 +123,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
       const datasToPost = {
         ...formDatas,
         created_by_id: user.id,
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
       };
 
       //Formatting
@@ -162,7 +163,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
       await xanoPost("/settings", "admin", {
         staff_id: response.data.id,
         slot_duration: "00:15",
-        first_day: "0",
+        first_day: "1",
         invitation_templates: [
           {
             name: "In person appointment",
@@ -208,13 +209,13 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
           },
           { name: "[Blank]", intro: "", infos: "", message: "" },
         ],
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
         clinical_notes_order: "top",
       });
 
       await xanoPost("/availability", "admin", {
         staff_id: response.data.id,
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
         schedule_morning: {
           monday: [
             { hours: "09", min: "00", ampm: "AM" },

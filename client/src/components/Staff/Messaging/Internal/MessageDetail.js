@@ -11,7 +11,10 @@ import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateTimeSecondsStrTZ,
+} from "../../../../utils/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -45,7 +48,6 @@ const MessageDetail = ({
   const [allPersons, setAllPersons] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
-
   const [previousMsgs, loading, errMsg] = useFetchPreviousMessages(message);
   useEffect(() => {
     if (!message) return;
@@ -138,10 +140,8 @@ const MessageDetail = ({
           alias: `Message from: ${staffIdToTitleAndName(
             staffInfos,
             message.from_id
-          )} (${toLocalDateAndTimeWithSeconds(
-            new Date(message.date_created)
-          )})`,
-          date_created: Date.now(),
+          )} (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
+          date_created: Date.local({ zone: "America/Toronto" }),
           created_by_id: user.id,
           created_by_user_type: "staff",
         },
@@ -166,9 +166,7 @@ const MessageDetail = ({
           subject: `Message from ${staffIdToTitleAndName(
             staffInfos,
             message.from_id
-          )} (${toLocalDateAndTimeWithSeconds(
-            new Date(message.date_created)
-          )})`,
+          )} (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
           MyClinicalNotesContent: "See attachment",
           ParticipatingProviders: [
             {
@@ -177,7 +175,7 @@ const MessageDetail = ({
                 LastName: staffIdToLastName(staffInfos, user.id),
               },
               OHIPPhysicianId: staffIdToOHIP((staffInfos, user.id)),
-              DateTimeNoteCreated: Date.now(),
+              DateTimeNoteCreated: nowTZTimestamp(),
             },
           ],
           version_nbr: 1,

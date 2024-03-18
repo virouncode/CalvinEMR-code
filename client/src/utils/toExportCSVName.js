@@ -1,4 +1,4 @@
-import { toLocalDate } from "./formatDates";
+import { timestampToDateISOTZ } from "./formatDates";
 import { staffIdToTitleAndName } from "./staffIdToTitleAndName";
 
 export const toExportCSVName = (
@@ -10,8 +10,8 @@ export const toExportCSVName = (
   staffInfos,
   staffId
 ) => {
-  const start = all ? "" : `_${toLocalDate(rangeStart)}`;
-  const end = all ? "" : `_to_${toLocalDate(rangeEnd)}`;
+  const start = all ? "" : `_${timestampToDateISOTZ(rangeStart)}`;
+  const end = all ? "" : `_to_${timestampToDateISOTZ(rangeEnd)}`;
   const allCaption = all ? "_All" : "";
   let name = "";
 

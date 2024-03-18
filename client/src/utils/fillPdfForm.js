@@ -3,8 +3,7 @@ import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../datas/codesTables";
-import { toLocalDate } from "./formatDates";
-import { getAge } from "./getAge";
+import { getAgeTZ, timestampToDateISOTZ } from "./formatDates";
 import {
   toPatientFirstName,
   toPatientLastName,
@@ -49,11 +48,11 @@ export const fillPdfForm = async (url, demographicsInfos, doctorInfos) => {
   }
   if (form.getFieldMaybe("date_of_birth")) {
     const birthField = form.getFieldMaybe("date_of_birth");
-    birthField.setText(toLocalDate(demographicsInfos.DateOfBirth));
+    birthField.setText(timestampToDateISOTZ(demographicsInfos.DateOfBirth));
   }
   if (form.getFieldMaybe("age")) {
     const ageField = form.getFieldMaybe("age");
-    ageField.setText(getAge(demographicsInfos.DateOfBirth));
+    ageField.setText(getAgeTZ(demographicsInfos.DateOfBirth));
   }
   if (form.getFieldMaybe("email")) {
     const emailField = form.getFieldMaybe("email");

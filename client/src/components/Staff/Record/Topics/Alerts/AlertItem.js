@@ -7,7 +7,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { alertSchema } from "../../../../../validation/alertValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
@@ -36,7 +39,7 @@ const AlertItem = ({
     const name = e.target.name;
     let value = e.target.value;
     if (name === "DateActive" || name === "EndDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -172,11 +175,14 @@ const AlertItem = ({
               name="DateActive"
               onChange={handleChange}
               type="date"
-              value={toLocalDate(itemInfos.DateActive)}
+              value={timestampToDateISOTZ(
+                itemInfos.DateActive,
+                "America/Toronto"
+              )}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.DateActive)
+            timestampToDateISOTZ(itemInfos.DateActive, "America/Toronto")
           )}
         </td>
         <td>
@@ -185,11 +191,11 @@ const AlertItem = ({
               name="EndDate"
               onChange={handleChange}
               type="date"
-              value={toLocalDate(itemInfos.EndDate)}
+              value={timestampToDateISOTZ(itemInfos.EndDate, "America/Toronto")}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(itemInfos.EndDate)
+            timestampToDateISOTZ(itemInfos.EndDate, "America/Toronto")
           )}
         </td>
         <td>

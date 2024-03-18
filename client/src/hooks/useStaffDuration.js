@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { nowTZTimestamp } from "../utils/formatDates";
 import useStaffInfosContext from "./useStaffInfosContext";
 
 const useStaffDuration = (sites) => {
@@ -8,13 +9,14 @@ const useStaffDuration = (sites) => {
   useEffect(() => {
     if (!sites || sites?.length === 0) return;
     let totalsBySite = [];
+    const nowMs = nowTZTimestamp();
     for (const site of sites) {
       const staffInfosForSite = staffInfos.filter(
         (staff) =>
           staff.site_id === site.id && staff.account_status === "Active"
       );
       const durations = staffInfosForSite.map(({ date_created }) =>
-        Math.floor((Date.now() - date_created) / (24 * 60 * 60 * 1000))
+        Math.floor((nowMs - date_created) / (24 * 60 * 60 * 1000))
       );
       let totalsOfSite = {};
       if (durations.length) {

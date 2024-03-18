@@ -20,7 +20,8 @@
         display: flex;
         align-items: center;
         margin-bottom: 10px;
-        border: solid 1px $grey;
+        // border: solid 1px $grey;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
         border-radius: 6px;
         padding: 10px;
         &--guest {
@@ -205,4 +206,16 @@
         }
     }
   
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+    padding:0;
+    font-size: 0.75rem;
+}
+
+.css-zvyeh0-MuiFormControl-root-MuiTextField-root {
+    input {
+        padding:2px 5px;
+        font-size: 0.85rem;
+    }
 }

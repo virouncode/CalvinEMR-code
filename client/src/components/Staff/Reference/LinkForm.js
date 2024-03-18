@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkForm = ({ links, setAddVisible }) => {
@@ -45,7 +46,7 @@ const LinkForm = ({ links, setAddVisible }) => {
       const response = await xanoPost("/links", "staff", {
         ...newLink,
         url: urlFormatted,
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
       });
       socket.emit("message", {
         route: "LINKS",

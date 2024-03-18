@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../../../hooks/useSocketContext";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
@@ -40,7 +41,7 @@ const MedTemplateItem = ({
   const handleDuplicate = async () => {
     const datasToPost = {
       ...med,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
     };
     try {
       const response = await xanoPost(

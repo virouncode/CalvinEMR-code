@@ -8,6 +8,7 @@ import { recordCategories } from "../../../utils/exports/recordCategories";
 
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
+import { nowTZ } from "../../../utils/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -120,7 +121,7 @@ const MigrationExport = () => {
       return;
     }
     setProgress(true);
-    const dateOfExport = dateFormat(Date.now(), "yyyy-mm-dd_HH-MM-TT");
+    const dateOfExport = nowTZ().toFormat("yyyy-LL-dd_hh-MM-a");
     try {
       for (let patientId of checkedPatientsIds) {
         const patientInfos = patientsDemographics.find(

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
 import RecImmunizationFormMultiple from "./RecImmunizationFormMultiple";
 import RecImmunizationHistory from "./RecImmunizationHistory";
@@ -31,7 +31,7 @@ const RecImmunizationItemMultiple = ({
         <label>
           Every year in the fall{" "}
           {immunizationInfos.length
-            ? `(last : ${toLocalDate(
+            ? `(last : ${timestampToDateISOTZ(
                 immunizationInfos.sort((a, b) => a.Date - b.Date).slice(-1)[0]
                   .Date
               )})`
@@ -41,7 +41,7 @@ const RecImmunizationItemMultiple = ({
         <label>
           One dose in every pregnancy, ideally between 27-32 weeks of gestation{" "}
           {immunizationInfos.length
-            ? `(last : ${toLocalDate(
+            ? `(last : ${timestampToDateISOTZ(
                 immunizationInfos.sort((a, b) => a.Date - b.Date).slice(-1)[0]
                   .Date
               )})`
@@ -51,7 +51,7 @@ const RecImmunizationItemMultiple = ({
         <label>
           Every ten years <br />{" "}
           {immunizationInfos.length
-            ? `(last : ${toLocalDate(
+            ? `(last : ${timestampToDateISOTZ(
                 immunizationInfos.sort((a, b) => a.Date - b.Date).slice(-1)[0]
                   .Date
               )})`

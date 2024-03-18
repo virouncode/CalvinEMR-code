@@ -1,23 +1,15 @@
 import React from "react";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import {
+  timestampToHumanDateTZ,
+  timestampToHumanDateTimeTZ,
+} from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 
 const PastAppointments = ({ pastAppointments, loading, err }) => {
   const { staffInfos } = useStaffInfosContext();
-
-  const optionsDate = {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-
-  const optionsTime = {
-    hour: "2-digit",
-    minute: "2-digit",
-  };
 
   return (
     <div className="appointments-patient appointments-patient--past">
@@ -33,31 +25,14 @@ const PastAppointments = ({ pastAppointments, loading, err }) => {
               <div key={appointment.id} className="appointments-patient__item">
                 {!appointment.all_day ? (
                   <div className="appointments-patient__date">
-                    <p>
-                      {new Date(appointment.start).toLocaleString(
-                        "en-CA",
-                        optionsDate
-                      )}
-                    </p>
-                    <p>
-                      {new Date(appointment.start).toLocaleTimeString(
-                        "en-CA",
-                        optionsTime
-                      )}{" "}
-                      -{" "}
-                      {new Date(appointment.end).toLocaleTimeString(
-                        "en-CA",
-                        optionsTime
-                      )}
-                    </p>
+                    <p>{timestampToHumanDateTimeTZ(appointment.start)} - </p>
+                    <p>{timestampToHumanDateTimeTZ(appointment.end)}</p>
                   </div>
                 ) : (
                   <div>
-                    {new Date(appointment.start).toLocaleString(
-                      "en-CA",
-                      optionsDate
-                    )}{" "}
-                    {`All Day`}
+                    <p>
+                      {timestampToHumanDateTZ(appointment.start)} {`All Day`}
+                    </p>
                   </div>
                 )}
                 <p>Reason : {appointment.AppointmentPurpose}</p>

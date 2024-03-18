@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
 const MessagesContent = ({ topicDatas, loading, errMsg }) => {
@@ -57,7 +57,7 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
                       )}/Internal`}
                       // target="_blank"
                     >
-                      {toLocalDate(message.date_created)}
+                      {timestampToDateISOTZ(message.date_created)}
                     </NavLink>
                   </div>
                 </li>

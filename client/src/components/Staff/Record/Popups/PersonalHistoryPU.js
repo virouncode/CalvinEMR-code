@@ -5,7 +5,7 @@ import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../utils/firstLetterUpper";
-import { toLocalDateAndTime } from "../../../../utils/formatDates";
+import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
 import { getResidualInfo } from "../../../../utils/getResidualInfo";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { getLastUpdate, isUpdated } from "../../../../utils/updates";
@@ -332,7 +332,7 @@ const PersonalHistoryPU = ({
                     getLastUpdate(topicDatas[0]).updated_by_id
                   )}{" "}
                   on{" "}
-                  {toLocalDateAndTime(
+                  {timestampToDateTimeSecondsStrTZ(
                     getLastUpdate(topicDatas[0]).date_updated
                   )}
                 </em>
@@ -343,7 +343,8 @@ const PersonalHistoryPU = ({
                     staffInfos,
                     topicDatas[0].created_by_id
                   )}{" "}
-                  on {toLocalDateAndTime(topicDatas[0].date_created)}
+                  on{" "}
+                  {timestampToDateTimeSecondsStrTZ(topicDatas[0].date_created)}
                 </em>
               )}
             </p>

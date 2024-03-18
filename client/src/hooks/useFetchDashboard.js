@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { getLimitTimestampForAge } from "../utils/formatDates";
+import {
+  getEndOfTheMonthTZ,
+  getLimitTimestampForAge,
+  getStartOfTheMonthTZ,
+} from "../utils/formatDates";
 
 const useFetchDashboard = () => {
   const [sites, setSites] = useState([]);
@@ -18,20 +22,18 @@ const useFetchDashboard = () => {
 
   const [visits, setVisits] = useState([]);
   const [rangeStartVisits, setRangeStartVisits] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+    getStartOfTheMonthTZ()
   );
-  const [rangeEndVisits, setRangeEndVisits] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
-  );
+  const [rangeEndVisits, setRangeEndVisits] = useState(getEndOfTheMonthTZ());
   const [errVisits, setErrVisits] = useState("");
   const [loadingVisits, setLoadingVisits] = useState(true);
 
   const [billings, setBillings] = useState([]);
   const [rangeStartBillings, setRangeStartBillings] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+    getStartOfTheMonthTZ()
   );
   const [rangeEndBillings, setRangeEndBillings] = useState(
-    Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
+    getEndOfTheMonthTZ()
   );
   const [errBillings, setErrBillings] = useState("");
   const [loadingBillings, setLoadingBillings] = useState(true);

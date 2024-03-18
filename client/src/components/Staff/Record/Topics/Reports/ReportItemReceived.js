@@ -7,7 +7,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import { showReportTextContent } from "../../../../../utils/showReportTextContent";
 import {
@@ -65,7 +68,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
             LastName: staffIdToLastName(staffInfos, user.id),
           },
           ReviewingOHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-          DateTimeReportReviewed: Date.now(),
+          DateTimeReportReviewed: nowTZTimestamp(),
         },
       ];
       setProgress(true);
@@ -132,8 +135,8 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
       </td>
       <td>{item.Class}</td>
       <td>{item.SubClass}</td>
-      <td>{toLocalDate(item.EventDateTime)}</td>
-      <td>{toLocalDate(item.ReceivedDateTime)}</td>
+      <td>{timestampToDateISOTZ(item.EventDateTime)}</td>
+      <td>{timestampToDateISOTZ(item.ReceivedDateTime)}</td>
       <td>
         {item.SourceAuthorPhysician?.AuthorFreeText
           ? item.SourceAuthorPhysician.AuthorFreeText
@@ -158,7 +161,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
           ? item.ReportReviewed.map((review) =>
               review?.DateTimeReportReviewed ? (
                 <span key={review.DateTimeReportReviewed}>
-                  {toLocalDate(review.DateTimeReportReviewed)}
+                  {timestampToDateISOTZ(review.DateTimeReportReviewed)}
                 </span>
               ) : null
             )
@@ -169,7 +172,7 @@ const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
         {item.RecipientName?.FirstName || ""}{" "}
         {item.RecipientName?.LastName || ""}
       </td>
-      <td>{toLocalDate(item.DateTimeSent)}</td> */}
+      <td>{timestampToDateISOTZ(item.DateTimeSent)}</td> */}
       <SignCell item={item} />
     </tr>
   );

@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
@@ -7,7 +8,11 @@ import useFetchDatas from "../../../hooks/useFetchDatas";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { getWeekRange } from "../../../utils/formatDates";
+import {
+  nowTZ,
+  nowTZTimestamp,
+  timestampToHumanDateTimeTZ,
+} from "../../../utils/formatDates";
 import { staffIdToName } from "../../../utils/staffIdToName";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
@@ -16,20 +21,7 @@ import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
 import AppointmentsSlots from "./AppointmentsSlots";
 import WeekPicker from "./WeekPicker";
-
 var _ = require("lodash");
-
-const optionsDate = {
-  weekday: "short",
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-};
-
-const optionsTime = {
-  hour: "2-digit",
-  minute: "2-digit",
-};
 
 const NewAppointment = () => {
   const { user } = useUserContext();
@@ -37,11 +29,12 @@ const NewAppointment = () => {
   const { staffInfos } = useStaffInfosContext();
   const [appointmentsInRange, setAppointmentsInRange] = useState(null);
   const [rangeStart, setRangeStart] = useState(
-    getWeekRange(new Date().getDay())[0]
+    nowTZ().startOf("day").toMillis()
   );
   const [rangeEnd, setRangeEnd] = useState(
-    getWeekRange(new Date().getDay())[1]
+    nowTZ().plus({ weeks: 1 }).startOf("day").toMillis()
   );
+
   const [appointmentSelected, setAppointmentSelected] = useState({});
   const [requestSent, setRequestSent] = useState(false);
   const [loadingAppointments, setLoadingAppointments] = useState(false);
@@ -54,13 +47,11 @@ const NewAppointment = () => {
         setLoadingAppointments(true);
         const response = await xanoGet("/appointments_of_staff", "patient", {
           host_id: user.demographics.assigned_staff_id,
-          range_start: rangeStart + 86400000, //+1 day
-          range_end: rangeEnd + 86400000,
+          range_start: rangeStart,
+          range_end: rangeEnd,
         });
         if (abortController.signal.aborted) return;
-        setAppointmentsInRange(
-          response.data.filter(({ start }) => start > rangeStart + 86400000)
-        );
+        setAppointmentsInRange(response.data);
         setLoadingAppointments(false);
       } catch (err) {
         setLoadingAppointments(false);
@@ -87,13 +78,17 @@ const NewAppointment = () => {
   useAvailabilitySocket(setAvailability);
 
   const handleClickNext = async () => {
-    setRangeStart((rs) => rs + 6.048e8);
-    setRangeEnd((re) => re + 6.048e8);
+    setRangeStart((rs) =>
+      DateTime.fromMillis(rs).plus({ weeks: 1 }).toMillis()
+    );
+    setRangeEnd((re) => DateTime.fromMillis(re).plus({ weeks: 1 }).toMillis());
     setAppointmentSelected({});
   };
   const handleClickPrevious = () => {
-    setRangeStart((rs) => rs - 6.048e8);
-    setRangeEnd((re) => re - 6.048e8);
+    setRangeStart((rs) =>
+      DateTime.fromMillis(rs).minus({ weeks: 1 }).toMillis()
+    );
+    setRangeEnd((re) => DateTime.fromMillis(re).minus({ weeks: 1 }).toMillis());
     setAppointmentSelected({});
   };
 
@@ -103,15 +98,10 @@ const NewAppointment = () => {
         content: `You are about to request an appointment with ${staffIdToTitleAndName(
           staffInfos,
           user.demographics.assigned_staff_id
-        )}, on ${new Date(appointmentSelected.start).toLocaleString(
-          "en-CA",
-          optionsDate
-        )} ${new Date(appointmentSelected.start).toLocaleTimeString(
-          "en-CA",
-          optionsTime
-        )} - ${new Date(appointmentSelected.end).toLocaleTimeString(
-          "en-CA",
-          optionsTime
+        )}, from ${timestampToHumanDateTimeTZ(
+          appointmentSelected.start
+        )} to ${timestampToHumanDateTimeTZ(
+          appointmentSelected.end
         )}, do you confirm ?`,
       })
     ) {
@@ -132,18 +122,11 @@ const NewAppointment = () => {
 I would like to have an appointment with ${staffIdToTitleAndName(
               staffInfos,
               user.demographics.assigned_staff_id
-            )} on:
+            )},
 
-${new Date(appointmentSelected.start).toLocaleString(
-  "en-CA",
-  optionsDate
-)} from ${new Date(appointmentSelected.start).toLocaleTimeString(
-              "en-CA",
-              optionsTime
-            )} to ${new Date(appointmentSelected.end).toLocaleTimeString(
-              "en-CA",
-              optionsTime
-            )} 
+From ${timestampToHumanDateTimeTZ(
+              appointmentSelected.start
+            )} to ${timestampToHumanDateTimeTZ(appointmentSelected.end)}
   
 Please call me or send me a message to confirm the appointment.
 
@@ -155,7 +138,7 @@ Cellphone: ${
               )?.phoneNumber
             }`,
             read_by_patient_id: user.id,
-            date_created: Date.now(),
+            date_created: nowTZTimestamp(),
             type: "External",
           };
           const response = await xanoPost(

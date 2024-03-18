@@ -14,6 +14,7 @@ import useFetchDatas from "../../../../../../hooks/useFetchDatas";
 import useSocketContext from "../../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../../../utils/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -112,8 +113,8 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
               const datasToPost = {
                 ...med,
                 patient_id: patientId,
-                PrescriptionWrittenDate: Date.now(),
-                StartDate: Date.now(),
+                PrescriptionWrittenDate: nowTZTimestamp(),
+                StartDate: nowTZTimestamp(),
                 PrescribedBy: {
                   Name: {
                     FirstName: staffIdToFirstName(staffInfos, user.id),
@@ -154,7 +155,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             {
               file: fileToUpload.data,
               alias: `Prescription (id:${uniqueId})`,
-              date_created: Date.now(),
+              date_created: nowTZTimestamp(),
               created_by_id: user.id,
               created_by_user_type: "staff",
             },
@@ -175,7 +176,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             patient_id: patientId,
             attachment_id: attach_ids[0],
             unique_id: uniqueId,
-            date_created: Date.now(),
+            date_created: nowTZTimestamp(),
           };
           const response = await xanoPost(
             "/prescriptions",
@@ -205,7 +206,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
                     LastName: staffIdToLastName(staffInfos, user.id),
                   },
                   OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-                  DateTimeNoteCreated: Date.now(),
+                  DateTimeNoteCreated: nowTZTimestamp(),
                 },
               ],
               version_nbr: 1,
@@ -257,100 +258,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
 
   const handlePrint = () => setPrintVisible(true);
 
-  const handleFax = async () => {
-    // if (!siteSelectedId) {
-    //   alert("Please choose an address first");
-    //   return;
-    // }
-    // if (addedMeds.length === 0) {
-    //   alert("Your prescription is empty !");
-    //   return;
-    // }
-    // setProgress(true);
-    // const element = printRef.current;
-    // try {
-    //   const canvas = await html2canvas(element, {
-    //     logging: true,
-    //     letterRendering: 1,
-    //     allowTaint: false,
-    //     useCORS: true,
-    //     scale: 2,
-    //   });
-    //   const dataURL = canvas.toDataURL("image/png");
-    //   const pdf = new jsPDF("portrait", "pt", "a4");
-    //   pdf.addImage(
-    //     dataURL,
-    //     "PNG",
-    //     0,
-    //     0,
-    //     pdf.internal.pageSize.getWidth(),
-    //     pdf.internal.pageSize.getHeight()
-    //   );
-    //   let fileToUpload = await "staff".post(
-    //     "/upload/attachment",
-    //     {
-    //       content: pdf.output("dataurlstring"),
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Bearer ${auth.authToken}`,
-    //       },
-    //     }
-    //   );
-    //   const datasAttachment = [
-    //     {
-    //       file: fileToUpload.data,
-    //       alias: `Prescription ${patientIdToName(
-    //         clinic.demographicsInfos,
-    //         demographicsInfos.patient_id
-    //       )} ${toLocalDateAndTimeWithSeconds(new Date())}`,
-    //       date_created: Date.now(),
-    //       created_by_id: user.id,
-    //       created_by_user_type: "staff",
-    //     },
-    //   ];
-    //   const attach_ids = (
-    //     await postPatientRecord("/clinical_notes_attachments", user.id,  {
-    //       attachments_array: datasAttachment,
-    //     })
-    //   ).data;
-    //   await postPatientRecord(
-    //     "/clinical_notes",
-    //     user.id,
-    //
-    //     {
-    //       patient_id: demographicsInfos.patient_id,
-    //       subject: `Prescription ${toLocalDateAndTimeWithSeconds(new Date())}`,
-    //       MyClinicalNotesContent: "See attachment",
-    //       ParticipatingProviders: [
-    //         {
-    //           Name: {
-    //             FirstName: staffIdToFirstName(staffInfos, user.id),
-    //             LastName: staffIdToLastName(staffInfos, user.id),
-    //           },
-    //           OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-    //           DateTimeNoteCreated: Date.now(),
-    //         },
-    //       ],
-    //       version_nbr: 1,
-    //       attachments_ids: attach_ids,
-    //     },
-    //     socket,
-    //     "CLINICAL NOTES"
-    //   );
-    //   setProgress(false);
-    //   toast.success("Saved succesfully to clinical notes", {
-    //     containerId: "B",
-    //   });
-    // } catch (err) {
-    //   setProgress(false);
-    //   toast.error(
-    //     `Error: unable to save prescription to clinical notes: ${err.message}`,
-    //     { containerId: "B" }
-    //   );
-    // }
-  };
+  const handleFax = async () => {};
 
   return (
     <>

@@ -1,6 +1,6 @@
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
@@ -38,7 +38,7 @@ const ClinicalNotesCardHeader = ({
           <p>
             <strong>From: </strong>
             {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)}
-            {` ${toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}`}
+            {` ${timestampToDateTimeStrTZ(clinicalNote.date_created)}`}
           </p>
         </div>
         <div className="clinical-notes__card-version">

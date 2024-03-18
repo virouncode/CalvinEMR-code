@@ -6,7 +6,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { famHistorySchema } from "../../../../../validation/famHistoryValidation";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -41,7 +45,7 @@ const FamHistoryForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "StartDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -136,9 +140,9 @@ const FamHistoryForm = ({
       <td>
         <input
           type="date"
-          max={toLocalDate(Date.now())}
+          max={timestampToDateISOTZ(nowTZTimestamp())}
           name="StartDate"
-          value={toLocalDate(formDatas.StartDate)}
+          value={timestampToDateISOTZ(formDatas.StartDate)}
           onChange={handleChange}
         />
       </td>
@@ -180,7 +184,7 @@ const FamHistoryForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

@@ -14,6 +14,7 @@ import {
 import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
 import { medicationSchema } from "../../../../../validation/medicationValidation";
 import { toDurationText } from "../../../../../validation/toDurationText";
@@ -153,6 +154,13 @@ const MedicationForm = ({
     }
     //Submission
     setAddedMeds([...addedMeds, datasToAdd]);
+    setFinalInstructions(
+      [...addedMeds, datasToAdd]
+        .map(({ PrescriptionInstructions }) => PrescriptionInstructions)
+        .join("\n\n") +
+        "\n\n" +
+        body
+    );
     setFormDatas({
       DrugIdentificationNumber: "",
       DrugName: "",
@@ -189,7 +197,7 @@ const MedicationForm = ({
     const templateToPost = {
       ...formDatas,
       staff_id: user.id,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
       created_by_id: user.id,
       DrugName: formDatas.DrugName.toUpperCase(),
     };

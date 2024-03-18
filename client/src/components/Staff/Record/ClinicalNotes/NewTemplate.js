@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/formatDates";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import CopyTemplatesList from "./CopyTemplatesList";
 
@@ -48,7 +49,7 @@ const NewTemplate = ({
       return;
     }
     const templateToSave = { ...newTemplate };
-    templateToSave.date_created = Date.now();
+    templateToSave.date_created = nowTZTimestamp();
     templateToSave.author_id = user.id;
     try {
       const response = await xanoPost(

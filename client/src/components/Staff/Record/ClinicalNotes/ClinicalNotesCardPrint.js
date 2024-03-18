@@ -1,6 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
@@ -38,7 +38,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           </p>
           <p style={{ margin: "0", fontSize: "0.7rem", padding: "0 5px" }}>
             Signed on{" "}
-            {`${toLocalDateAndTimeWithSeconds(
+            {`${timestampToDateTimeSecondsStrTZ(
               isUpdated(clinicalNote)
                 ? getLastUpdate(clinicalNote).date_updated
                 : clinicalNote.date_created
@@ -80,7 +80,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
                 getLastUpdate(clinicalNote).updated_by_id
               )}{" "}
               on{" "}
-              {toLocalDateAndTimeWithSeconds(
+              {timestampToDateTimeSecondsStrTZ(
                 getLastUpdate(clinicalNote).date_updated
               )}
             </p>
@@ -88,7 +88,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           <p style={{ padding: "0", margin: "0" }}>
             Created by{" "}
             {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
-            {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
+            {timestampToDateTimeSecondsStrTZ(clinicalNote.date_created)}
           </p>
         </div>
       </div>

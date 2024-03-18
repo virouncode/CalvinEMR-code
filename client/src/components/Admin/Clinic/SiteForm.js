@@ -5,6 +5,7 @@ import { provinceStateTerritoryCT } from "../../../datas/codesTables";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { siteSchema } from "../../../validation/siteValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
@@ -113,7 +114,7 @@ const SiteForm = ({ setAddVisible }) => {
         { id: "z", title: "To Be Determined" },
       ],
       created_by_id: user.id,
-      date_created: Date.now(),
+      date_created: nowTZTimestamp(),
     };
     //Validation
     if (formDatas.rooms.length === 0) {

@@ -8,6 +8,7 @@ import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
@@ -24,7 +25,12 @@ import ClinicalNotesTemplatesList from "./ClinicalNotesTemplatesList";
 import EditTemplate from "./EditTemplate";
 import NewTemplate from "./NewTemplate";
 
-const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
+const ClinicalNotesForm = ({
+  setAddVisible,
+  patientId,
+  demographicsInfos,
+  formRef,
+}) => {
   //hooks
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -89,7 +95,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
                 LastName: staffIdToLastName(staffInfos, user.id),
               },
               OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-              DateTimeNoteCreated: Date.now(),
+              DateTimeNoteCreated: nowTZTimestamp(),
             },
           ],
         },
@@ -140,7 +146,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
                 LastName: staffIdToLastName(staffInfos, user.id),
               },
               OHIPPhysicianId: staffIdToOHIP(staffInfos, user.id),
-              DateTimeNoteCreated: Date.now(),
+              DateTimeNoteCreated: nowTZTimestamp(),
             },
           ],
         },
@@ -157,7 +163,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
     window.open(
       `/staff/billing/${patientId}/${toPatientName(demographicsInfos)}/${
         demographicsInfos.HealthCard?.Number
-      }/${Date.now()}`,
+      }/${nowTZTimestamp()}`,
       "_blank"
     );
   };
@@ -203,7 +209,7 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
             {
               file: response.data,
               alias: file.name,
-              date_created: Date.now(),
+              date_created: nowTZTimestamp(),
               created_by_id: user.id,
               created_by_user_type: "staff",
             },
@@ -254,7 +260,11 @@ const ClinicalNotesForm = ({ setAddVisible, patientId, demographicsInfos }) => {
 
   return (
     <>
-      <form className="clinical-notes__form" onSubmit={handleSubmit}>
+      <form
+        className="clinical-notes__form"
+        onSubmit={handleSubmit}
+        ref={formRef}
+      >
         <div className="clinical-notes__form-header">
           <div className="clinical-notes__form-row">
             <p>

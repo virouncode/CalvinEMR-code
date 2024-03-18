@@ -1,4 +1,3 @@
-import LinearProgress from "@mui/joy/LinearProgress";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -10,7 +9,10 @@ import xanoGet from "../../../../api/xanoCRUD/xanoGet";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import {
+  nowTZTimestamp,
+  timestampToDateTimeSecondsStrTZ,
+} from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
@@ -34,6 +36,8 @@ const ClinicalNotesCard = ({
   contentsVisible,
   demographicsInfos,
   lastItemRef = null,
+  addVisible,
+  order,
 }) => {
   //hooks
   const { user } = useUserContext();
@@ -118,7 +122,7 @@ const ClinicalNotesCard = ({
         datasToPost.attachments_ids = clinicalNote.attachments_ids.map(
           ({ attachment }) => attachment.id
         ); //format attachments_ids
-        datasToPost.date_updated = Date.now(); //we update the date_updated
+        datasToPost.date_updated = nowTZTimestamp(); //we update the date_updated
         delete datasToPost.version;
         await putPatientRecord(
           `/clinical_notes/${clinicalNote.id}`,
@@ -199,98 +203,94 @@ const ClinicalNotesCard = ({
     return checkedNotes.includes(progressNoteId);
   };
 
-  return tempFormDatas ? (
-    <div className="clinical-notes__card" ref={lastItemRef}>
-      {bodyVisible ? (
-        <ClinicalNotesCardHeader
-          demographicsInfos={demographicsInfos}
-          isChecked={isChecked}
-          handleCheck={handleCheck}
-          clinicalNote={clinicalNote}
-          tempFormDatas={tempFormDatas}
-          editVisible={editVisible}
-          versions={clinicalNote.versions}
-          handleVersionChange={handleVersionChange}
-          handleEditClick={handleEditClick}
-          handleCalvinAIClick={handleCalvinAIClick}
-          handleSaveClick={handleSaveClick}
-          handleCancelClick={handleCancelClick}
-          handleChange={handleChange}
-          handleTriangleProgressClick={handleTriangleProgressClick}
-          choosenVersionNbr={choosenVersionNbr}
-        />
-      ) : (
-        <ClinicalNotesCardHeaderFolded
-          tempFormDatas={tempFormDatas}
-          handleTriangleProgressClick={handleTriangleProgressClick}
-          isChecked={isChecked}
-          clinicalNote={clinicalNote}
-          handleCheck={handleCheck}
-        />
-      )}
-      <div
-        ref={bodyRef}
-        className={
-          bodyVisible
-            ? "clinical-notes__card-body-container clinical-notes__card-body-container--active"
-            : "clinical-notes__card-body-container"
-        }
-      >
-        <ClinicalNotesCardBody
-          tempFormDatas={tempFormDatas}
-          editVisible={editVisible}
-          handleChange={handleChange}
-        />
-        <ClinicalNotesAttachments
-          attachments={clinicalNote.attachments_ids.map(
-            ({ attachment }) => attachment
-          )}
-          deletable={false}
-          patientId={patientId}
-          date={clinicalNote.date_created}
-        />
-        {!editVisible && (
-          <div className="clinical-notes__card-sign">
-            <p style={{ padding: "0 10px" }}>
-              Created by{" "}
-              {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
-              {toLocalDateAndTimeWithSeconds(clinicalNote.date_created)}
-            </p>
-            {clinicalNote.date_updated && (
-              <p style={{ padding: "0 10px" }}>
-                Updated on{" "}
-                {toLocalDateAndTimeWithSeconds(clinicalNote.date_updated)}
-              </p>
-            )}
-          </div>
+  return (
+    tempFormDatas && (
+      <div className="clinical-notes__card" ref={lastItemRef}>
+        {bodyVisible ? (
+          <ClinicalNotesCardHeader
+            demographicsInfos={demographicsInfos}
+            isChecked={isChecked}
+            handleCheck={handleCheck}
+            clinicalNote={clinicalNote}
+            tempFormDatas={tempFormDatas}
+            editVisible={editVisible}
+            versions={clinicalNote.versions}
+            handleVersionChange={handleVersionChange}
+            handleEditClick={handleEditClick}
+            handleCalvinAIClick={handleCalvinAIClick}
+            handleSaveClick={handleSaveClick}
+            handleCancelClick={handleCancelClick}
+            handleChange={handleChange}
+            handleTriangleProgressClick={handleTriangleProgressClick}
+            choosenVersionNbr={choosenVersionNbr}
+          />
+        ) : (
+          <ClinicalNotesCardHeaderFolded
+            tempFormDatas={tempFormDatas}
+            handleTriangleProgressClick={handleTriangleProgressClick}
+            isChecked={isChecked}
+            clinicalNote={clinicalNote}
+            handleCheck={handleCheck}
+          />
         )}
-      </div>
-      {popUpVisible && (
-        <FakeWindow
-          title={`CALVIN AI talk about ${toPatientName(demographicsInfos)}`}
-          width={1000}
-          height={window.innerHeight}
-          x={(window.innerWidth - 1000) / 2}
-          y={0}
-          color="#50B1C1"
-          setPopUpVisible={setPopUpVisible}
+        <div
+          ref={bodyRef}
+          className={
+            bodyVisible
+              ? "clinical-notes__card-body-container clinical-notes__card-body-container--active"
+              : "clinical-notes__card-body-container"
+          }
         >
-          <CalvinAI
+          <ClinicalNotesCardBody
+            tempFormDatas={tempFormDatas}
+            editVisible={editVisible}
+            handleChange={handleChange}
+          />
+          <ClinicalNotesAttachments
             attachments={clinicalNote.attachments_ids.map(
               ({ attachment }) => attachment
             )}
-            initialBody={formDatas.MyClinicalNotesContent}
-            demographicsInfos={demographicsInfos}
+            deletable={false}
+            patientId={patientId}
+            date={clinicalNote.date_created}
           />
-        </FakeWindow>
-      )}
-    </div>
-  ) : (
-    <LinearProgress
-      thickness={0.5}
-      style={{ margin: "10px" }}
-      color="#cececd"
-    />
+          {!editVisible && (
+            <div className="clinical-notes__card-sign">
+              <p style={{ padding: "0 10px" }}>
+                Created by{" "}
+                {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)}{" "}
+                on {timestampToDateTimeSecondsStrTZ(clinicalNote.date_created)}
+              </p>
+              {clinicalNote.date_updated && (
+                <p style={{ padding: "0 10px" }}>
+                  Updated on{" "}
+                  {timestampToDateTimeSecondsStrTZ(clinicalNote.date_updated)}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        {popUpVisible && (
+          <FakeWindow
+            title={`CALVIN AI talk about ${toPatientName(demographicsInfos)}`}
+            width={1000}
+            height={window.innerHeight}
+            x={(window.innerWidth - 1000) / 2}
+            y={0}
+            color="#50B1C1"
+            setPopUpVisible={setPopUpVisible}
+          >
+            <CalvinAI
+              attachments={clinicalNote.attachments_ids.map(
+                ({ attachment }) => attachment
+              )}
+              initialBody={formDatas.MyClinicalNotesContent}
+              demographicsInfos={demographicsInfos}
+            />
+          </FakeWindow>
+        )}
+      </div>
+    )
   );
 };
 

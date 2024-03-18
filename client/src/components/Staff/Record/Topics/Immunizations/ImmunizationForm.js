@@ -11,7 +11,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
@@ -39,7 +43,7 @@ const ImmunizationForm = ({
     Instructions: "",
     Notes: "",
     recommended: false,
-    Date: Date.now(),
+    Date: nowTZTimestamp(),
     RefusedFlag: { ynIndicatorsimple: "N" },
   });
   const [progress, setProgress] = useState(false);
@@ -98,7 +102,7 @@ const ImmunizationForm = ({
       return;
     }
     if (name === "Date") {
-      value = value ? Date.parse(new Date(value)) : null;
+      value = value ? dateISOToTimestampTZ(value) : null;
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -187,7 +191,7 @@ const ImmunizationForm = ({
         <input
           name="Date"
           type="date"
-          value={toLocalDate(formDatas.Date)}
+          value={timestampToDateISOTZ(formDatas.Date)}
           onChange={handleChange}
           autoComplete="off"
         />
@@ -219,7 +223,7 @@ const ImmunizationForm = ({
         />
       </td>
       <td>{staffIdToTitleAndName(staffInfos, user.id)}</td>
-      <td>{toLocalDate(Date.now())}</td>
+      <td>{timestampToDateISOTZ(nowTZTimestamp())}</td>
     </tr>
   );
 };

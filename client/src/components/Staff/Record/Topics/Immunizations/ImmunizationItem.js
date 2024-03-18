@@ -14,7 +14,10 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { immunizationSchema } from "../../../../../validation/immunizationValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
@@ -46,7 +49,7 @@ const ImmunizationItem = ({
       return;
     }
     if (name === "Date") {
-      value = value ? Date.parse(new Date(value)) : null;
+      value = value ? dateISOToTimestampTZ(value) : null;
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -258,12 +261,12 @@ const ImmunizationItem = ({
             <input
               name="Date"
               type="date"
-              value={toLocalDate(itemInfos.Date)}
+              value={timestampToDateISOTZ(itemInfos.Date)}
               onChange={handleChange}
               autoComplete="off"
             />
           ) : (
-            toLocalDate(item.Date)
+            timestampToDateISOTZ(item.Date)
           )}
         </td>
         <td>

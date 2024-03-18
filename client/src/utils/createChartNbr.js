@@ -1,7 +1,7 @@
-import { toLocalDate } from "./formatDates";
+import { timestampToDateISOTZ } from "./formatDates";
 
 export const createChartNbr = (dob, gender, id) => {
-  const dobString = toLocalDate(dob).split("-").join("").substring(2);
+  const dobString = timestampToDateISOTZ(dob).split("-").join("").substring(2);
   const genderCode = gender === "Female" ? "0" : gender === "Male" ? "1" : "2";
   let idString = id.toString();
   if (idString.length === 1) {

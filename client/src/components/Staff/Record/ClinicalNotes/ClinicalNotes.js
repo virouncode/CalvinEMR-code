@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
 import useClinicalNotesSocket from "../../../../hooks/useClinicalNotesSocket";
 import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
@@ -21,13 +21,15 @@ const ClinicalNotes = ({
   loadingPatient,
   errPatient,
 }) => {
-  const [addVisible, setAddVisible] = useState(false);
-  const [popUpVisible, setPopUpVisible] = useState(false);
+  const formRef = useRef(null);
   const [checkedNotes, setCheckedNotes] = useState([]);
+  const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [overviewVisible, setOverviewVisible] = useState(false);
   const triangleRef = useRef(null);
   const {
+    addVisible,
+    setAddVisible,
     order,
     setOrder,
     search,
@@ -45,10 +47,18 @@ const ClinicalNotes = ({
   const { rootRef: contentRef, lastItemRef } = useIntersection(
     loading,
     hasMore,
-    setPaging
+    setPaging,
+    addVisible,
+    order
   );
   //SOCKET
   useClinicalNotesSocket(clinicalNotes, setClinicalNotes, patientId, order);
+
+  useEffect(() => {
+    if (addVisible && formRef.current && !loading) {
+      formRef.current.scrollIntoView({ behavior: "instant", block: "nearest" });
+    }
+  }, [addVisible, formRef, loading]);
 
   //HANDLERS
   const handleSearch = (e) => {
@@ -144,8 +154,9 @@ const ClinicalNotes = ({
         }
         ref={contentRef}
       >
-        {clinicalNotes && addVisible && (
+        {clinicalNotes && addVisible && order === "desc" && (
           <ClinicalNotesForm
+            formRef={formRef}
             setAddVisible={setAddVisible}
             patientId={patientId}
             demographicsInfos={demographicsInfos}
@@ -169,6 +180,7 @@ const ClinicalNotes = ({
                     contentsVisible={contentsVisible}
                     demographicsInfos={demographicsInfos}
                     lastItemRef={lastItemRef}
+                    addVisible={addVisible}
                   />
                 ) : (
                   <ClinicalNotesCard
@@ -191,6 +203,14 @@ const ClinicalNotes = ({
                 <div style={{ padding: "5px" }}>No clinical notes</div>
               ))}
         {loading && <LoadingClinical />}
+        {!loading && clinicalNotes && addVisible && order === "asc" && (
+          <ClinicalNotesForm
+            formRef={formRef}
+            setAddVisible={setAddVisible}
+            patientId={patientId}
+            demographicsInfos={demographicsInfos}
+          />
+        )}
       </div>
     </div>
   );

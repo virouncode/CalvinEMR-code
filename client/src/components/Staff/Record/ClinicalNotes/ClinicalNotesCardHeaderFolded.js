@@ -1,6 +1,6 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { toLocalDateAndTimeWithSeconds } from "../../../../utils/formatDates";
+import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
 
@@ -26,7 +26,7 @@ const ClinicalNotesCardHeaderFolded = ({
             <strong>From: </strong>
           </label>
           {staffIdToTitleAndName(staffInfos, tempFormDatas.created_by_id)}
-          {` ${toLocalDateAndTimeWithSeconds(tempFormDatas.date_created)}`}
+          {` ${timestampToDateTimeStrTZ(tempFormDatas.date_created)}`}
           {" / "}
           <strong>Subject: </strong>
           {tempFormDatas.subject}

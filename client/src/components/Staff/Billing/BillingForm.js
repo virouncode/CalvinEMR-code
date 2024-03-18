@@ -7,7 +7,11 @@ import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
-import { toLocalDate } from "../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../utils/formatDates";
 import { staffIdToOHIP } from "../../../utils/staffIdToName";
 import { toPatientName } from "../../../utils/toPatientName";
 import { billingFormSchema } from "../../../validation/billingValidation";
@@ -26,7 +30,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const [progress, setProgress] = useState(false);
 
   const [formDatas, setFormDatas] = useState({
-    date: toLocalDate(Date.now()),
+    date: timestampToDateISOTZ(nowTZTimestamp(), "America/Toronto"),
     provider_ohip_billing_nbr:
       user.access_level === "Admin" ? "" : staffIdToOHIP(staffInfos, user.id),
     referrer_ohip_billing_nbr: "",
@@ -49,7 +53,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
         patient_hcn: hcn || "",
         patient_id: parseInt(pid) || "",
         patient_name: pName || "",
-        date: toLocalDate(parseInt(date)),
+        date: timestampToDateISOTZ(parseInt(date), "America/Toronto"),
       });
       navigate("/staff/billing");
     }
@@ -131,8 +135,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
       for (let billing_code of formDatas.billing_codes) {
         billing_code = billing_code.toUpperCase();
         const datasToPost = {
-          date: Date.parse(new Date(formDatas.date)),
-          date_created: Date.now(),
+          date: dateISOToTimestampTZ(formDatas.date),
+          date_created: nowTZTimestamp(),
           provider_id: user.id,
           referrer_ohip_billing_nbr: parseInt(
             formDatas.referrer_ohip_billing_nbr

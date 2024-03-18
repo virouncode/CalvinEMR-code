@@ -1,5 +1,6 @@
+import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
 import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
@@ -24,7 +25,10 @@ const RecImmunizationItemSingle = ({
 
   //STYLES
   const INTERVAL_STYLE = {
-    color: rangeEnd < new Date() ? "orange" : "black",
+    color:
+      rangeEnd < DateTime.local({ zone: "America/Toronto" })
+        ? "orange"
+        : "black",
   };
 
   //HANDLERS
@@ -59,14 +63,17 @@ const RecImmunizationItemSingle = ({
                 : "forestgreen",
           }}
         >
-          {toLocalDate(immunizationInfos.Date)} {getVaccinationLogo(route)}
+          {timestampToDateISOTZ(immunizationInfos.Date)}{" "}
+          {getVaccinationLogo(route)}
         </label>
       ) : (
         <label>
           <span style={INTERVAL_STYLE}>
             {age === "Grade 7"
-              ? `Grade 7 to 12 (til ${toLocalDate(rangeEnd)})`
-              : `${toLocalDate(rangeStart)} to ${toLocalDate(rangeEnd)}`}
+              ? `Grade 7 to 12 (til ${timestampToDateISOTZ(rangeEnd)})`
+              : `${timestampToDateISOTZ(rangeStart)} to ${timestampToDateISOTZ(
+                  rangeEnd
+                )}`}
           </span>{" "}
           {getVaccinationLogo(route)}
         </label>

@@ -5,7 +5,11 @@ import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
 import { alertSchema } from "../../../../../validation/alertValidation";
 
@@ -23,7 +27,7 @@ const AlertForm = ({
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     AlertDescription: "",
-    DateActive: Date.now(),
+    DateActive: nowTZTimestamp(),
     Notes: "",
   });
   const [progress, setProgress] = useState(false);
@@ -34,7 +38,7 @@ const AlertForm = ({
     let value = e.target.value;
     const name = e.target.name;
     if (name === "DateActive" || name === "EndDate") {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setFormDatas({ ...formDatas, [name]: value });
   };
@@ -114,7 +118,7 @@ const AlertForm = ({
           name="DateActive"
           onChange={handleChange}
           type="date"
-          value={toLocalDate(formDatas.DateActive)}
+          value={timestampToDateISOTZ(formDatas.DateActive, "America/Toronto")}
           autoComplete="off"
         />
       </td>
@@ -123,7 +127,7 @@ const AlertForm = ({
           name="EndDate"
           onChange={handleChange}
           type="date"
-          value={toLocalDate(formDatas.EndDate)}
+          value={timestampToDateISOTZ(formDatas.EndDate, "America/Toronto")}
           autoComplete="off"
         />
       </td>
@@ -140,7 +144,7 @@ const AlertForm = ({
         <em>{staffIdToTitleAndName(staffInfos, user.id)}</em>
       </td>
       <td>
-        <em>{toLocalDate(Date.now())}</em>
+        <em>{timestampToDateISOTZ(nowTZTimestamp())}</em>
       </td>
     </tr>
   );

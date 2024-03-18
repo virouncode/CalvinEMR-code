@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import { showDocument } from "../../../../../utils/showDocument";
 import { showReportTextContent } from "../../../../../utils/showReportTextContent";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
@@ -72,8 +72,8 @@ const ReportItemSent = ({ item, lastItemSentRef = null }) => {
       </td>
       <td>{item.Class}</td>
       <td>{item.SubClass}</td>
-      <td>{toLocalDate(item.EventDateTime)}</td>
-      <td>{toLocalDate(item.DateTimeSent)}</td>
+      <td>{timestampToDateISOTZ(item.EventDateTime)}</td>
+      <td>{timestampToDateISOTZ(item.DateTimeSent)}</td>
       <td>
         {item.SourceAuthorPhysician?.AuthorFreeText
           ? item.SourceAuthorPhysician.AuthorFreeText

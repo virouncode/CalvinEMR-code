@@ -8,7 +8,11 @@ import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  dateISOToTimestampTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+} from "../../../../../utils/formatDates";
 import { pastHealthSchema } from "../../../../../validation/pastHealthValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
@@ -42,7 +46,7 @@ const PastHealthItem = ({
       name === "OnsetOrEventDate" ||
       name === "ResolvedDate"
     ) {
-      value = value === "" ? null : Date.parse(new Date(value));
+      value = value === "" ? null : dateISOToTimestampTZ(value);
     }
     setItemInfos({ ...itemInfos, [name]: value });
   };
@@ -185,12 +189,12 @@ const PastHealthItem = ({
             <input
               name="OnsetOrEventDate"
               type="date"
-              max={toLocalDate(Date.now())}
-              value={toLocalDate(itemInfos.OnsetOrEventDate)}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
+              value={timestampToDateISOTZ(itemInfos.OnsetOrEventDate)}
               onChange={handleChange}
             />
           ) : (
-            toLocalDate(itemInfos.OnsetOrEventDate)
+            timestampToDateISOTZ(itemInfos.OnsetOrEventDate)
           )}
         </td>
         <td>
@@ -212,12 +216,12 @@ const PastHealthItem = ({
             <input
               name="ProcedureDate"
               type="date"
-              max={toLocalDate(Date.now())}
-              value={toLocalDate(itemInfos.ProcedureDate)}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
+              value={timestampToDateISOTZ(itemInfos.ProcedureDate)}
               onChange={handleChange}
             />
           ) : (
-            toLocalDate(itemInfos.ProcedureDate)
+            timestampToDateISOTZ(itemInfos.ProcedureDate)
           )}
         </td>
         <td>
@@ -225,12 +229,12 @@ const PastHealthItem = ({
             <input
               name="ResolvedDate"
               type="date"
-              max={toLocalDate(Date.now())}
-              value={toLocalDate(itemInfos.ResolvedDate)}
+              max={timestampToDateISOTZ(nowTZTimestamp())}
+              value={timestampToDateISOTZ(itemInfos.ResolvedDate)}
               onChange={handleChange}
             />
           ) : (
-            toLocalDate(itemInfos.ResolvedDate)
+            timestampToDateISOTZ(itemInfos.ResolvedDate)
           )}
         </td>
         <td>

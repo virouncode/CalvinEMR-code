@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useUserContext from "../../../../../hooks/useUserContext";
-import { getAge } from "../../../../../utils/getAge";
+import { getAgeTZ } from "../../../../../utils/formatDates";
 import ToastCalvin from "../../../../All/UI/Toast/ToastCalvin";
 import StaffAIAgreement from "../../../Agreement/StaffAIAgreement";
 import CalvinAIDiscussion from "./CalvinAIDiscussion";
@@ -13,7 +13,7 @@ const CalvinAI = ({ attachments, initialBody, demographicsInfos }) => {
   const [start, setStart] = useState(user.ai_consent);
 
   const [msgText, setMsgText] = useState({
-    intro: `Hello I'm a doctor. My patient is a ${getAge(
+    intro: `Hello I'm a doctor. My patient is a ${getAgeTZ(
       demographicsInfos.DateOfBirth
     )} year-old ${toCodeTableName(
       genderCT,
@@ -25,7 +25,7 @@ const CalvinAI = ({ attachments, initialBody, demographicsInfos }) => {
     question: "What is the diagnosis and what treatment would you suggest ?",
   });
   const [introMsg, setIntroMsg] = useState(
-    `Hello I'm a doctor. My patient is a ${getAge(
+    `Hello I'm a doctor. My patient is a ${getAgeTZ(
       demographicsInfos.DateOfBirth
     )} year-old ${toCodeTableName(
       genderCT,

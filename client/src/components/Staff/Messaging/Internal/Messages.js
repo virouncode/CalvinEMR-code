@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useFetchMessages from "../../../../hooks/useFetchMessages";
 import useMessagesSocket from "../../../../hooks/useMessagesSocket";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -30,22 +30,22 @@ const Messages = () => {
     paging,
     search,
     sectionName,
+    messageId,
     section,
     user.id
   );
 
-  const navigate = useNavigate();
   useMessagesSocket(messages, setMessages, section);
 
   useEffect(() => {
     if (messageId) {
       setCurrentMsgId(parseInt(messageId));
-      navigate("/staff/messages");
     }
-  }, [messageId, navigate, setCurrentMsgId]);
+  }, [messageId]);
 
   return (
     <div className="messages-container">
+      {console.log("messages after fetch", messages)}
       <MessagesToolBar
         search={search}
         setSearch={setSearch}

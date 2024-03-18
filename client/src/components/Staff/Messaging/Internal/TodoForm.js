@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useUserContext from "../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/formatDates";
 
 const TodoForm = ({ setNewTodoVisible }) => {
   const { user } = useUserContext();
@@ -23,7 +24,7 @@ const TodoForm = ({ setNewTodoVisible }) => {
   };
   const handleSave = async () => {
     try {
-      const datasToPost = { ...formDatas, date_created: Date.now() };
+      const datasToPost = { ...formDatas, date_created: nowTZTimestamp() };
       const response = await xanoPost("/todos", "staff", datasToPost);
       socket.emit("message", {
         route: "TODOS",

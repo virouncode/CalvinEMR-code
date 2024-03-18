@@ -1,7 +1,6 @@
 import React from "react";
 import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import { toLocalDate } from "../../../../utils/formatDates";
-import { getAge } from "../../../../utils/getAge";
+import { getAgeTZ, timestampToDateISOTZ } from "../../../../utils/formatDates";
 import { toPatientName } from "../../../../utils/toPatientName";
 import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
 import TriangleButton from "../Buttons/TriangleButton";
@@ -39,8 +38,8 @@ const ClinicalNotesTitle = ({
         <span>
           {toPatientName(demographicsInfos)},{" "}
           {toCodeTableName(genderCT, demographicsInfos.Gender)},{" "}
-          {getAge(demographicsInfos.DateOfBirth)}, born{" "}
-          {toLocalDate(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
+          {getAgeTZ(demographicsInfos.DateOfBirth)}, born{" "}
+          {timestampToDateISOTZ(demographicsInfos.DateOfBirth)}, Chart Nbr:{" "}
           {demographicsInfos.ChartNumber},{" "}
           <i className="fa-regular fa-envelope fa-sm"></i>{" "}
           {demographicsInfos.Email}, <i className="fa-solid fa-phone fa-sm"></i>{" "}

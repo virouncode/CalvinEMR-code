@@ -1,5 +1,12 @@
+import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { toLocalDate } from "../../../../../utils/formatDates";
+import {
+  timestampMonthsLaterTZ,
+  timestampToDateISOTZ,
+  timestampToDateMonthsLaterISOTZ,
+  timestampToDateYearsLaterISOTZ,
+  timestampYearsLaterTZ,
+} from "../../../../../utils/formatDates";
 import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
 import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
 import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
@@ -31,21 +38,15 @@ const RecImmunizationItemDouble = ({
   //STYLES
   const INTERVAL_GRADE_7_STYLE = {
     color:
-      new Date(
-        new Date(patientDob).setFullYear(
-          new Date(patientDob).getFullYear() + 15
-        )
-      ) < new Date()
+      timestampYearsLaterTZ(patientDob, 15) <
+      DateTime.local({ zone: "America/Toronto" }).toMillis()
         ? "orange"
         : "black",
   };
   const INTERVAL_65_YEARS_STYLE = {
     color:
-      new Date(
-        new Date(patientDob).setFullYear(
-          new Date(patientDob).getFullYear() + 70
-        )
-      ) < new Date()
+      timestampYearsLaterTZ(patientDob, 70) <
+      DateTime.local({ zone: "America/Toronto" }).toMillis()
         ? "orange"
         : "black",
   };
@@ -105,7 +106,7 @@ const RecImmunizationItemDouble = ({
                   : "forestgreen",
             }}
           >
-            {toLocalDate(
+            {timestampToDateISOTZ(
               immunizationInfos.find(({ doseNumber }) => doseNumber === 1).Date
             )}{" "}
             {getVaccinationLogo(type)}
@@ -116,13 +117,7 @@ const RecImmunizationItemDouble = ({
               type !== "Tdap_pregnancy" && ( //not a pregnancy
                 <span style={INTERVAL_GRADE_7_STYLE}>
                   Grade 7 to 12 &#40;til{" "}
-                  {toLocalDate(
-                    new Date(
-                      new Date(patientDob).setFullYear(
-                        new Date(patientDob).getFullYear() + 15
-                      )
-                    )
-                  )}
+                  {timestampToDateYearsLaterISOTZ(patientDob, 15)}
                   &#41;
                 </span>
               )}
@@ -132,21 +127,8 @@ const RecImmunizationItemDouble = ({
             {age === ">=34 Years" && `Every 10 Years`}
             {age === "65 Years" && (
               <span style={INTERVAL_65_YEARS_STYLE}>
-                {toLocalDate(
-                  new Date(
-                    new Date(patientDob).setFullYear(
-                      new Date(patientDob).getFullYear() + 65
-                    )
-                  )
-                )}{" "}
-                to{" "}
-                {toLocalDate(
-                  new Date(
-                    new Date(patientDob).setFullYear(
-                      new Date(patientDob).getFullYear() + 70
-                    )
-                  )
-                )}
+                {timestampToDateYearsLaterISOTZ(patientDob, 65)} to{" "}
+                {timestampToDateYearsLaterISOTZ(patientDob, 70)}
               </span>
             )}
             {age === "6 Months" && `Every year in the fall *`}{" "}
@@ -227,7 +209,7 @@ const RecImmunizationItemDouble = ({
                       : "forestgreen",
                 }}
               >
-                {toLocalDate(
+                {timestampToDateISOTZ(
                   immunizationInfos.find(({ doseNumber }) => doseNumber === 2)
                     .Date
                 )}{" "}
@@ -243,53 +225,28 @@ const RecImmunizationItemDouble = ({
                       <span
                         style={{
                           color:
-                            new Date(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).setMonth(
-                                new Date(
-                                  immunizationInfos.find(
-                                    ({ doseNumber }) => doseNumber === 1
-                                  )?.Date
-                                ).getMonth() + 7
-                              )
-                            ) < new Date()
+                            timestampMonthsLaterTZ(
+                              immunizationInfos.find(
+                                ({ doseNumber }) => doseNumber === 1
+                              ),
+                              7
+                            ) < DateTime.local({ zone: "America/Toronto" })
                               ? "orange"
                               : "black",
                         }}
                       >
-                        {toLocalDate(
-                          new Date(
-                            new Date(
-                              immunizationInfos.find(
-                                ({ doseNumber }) => doseNumber === 1
-                              )?.Date
-                            ).setMonth(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).getMonth() + 6
-                            )
-                          )
+                        {timestampToDateMonthsLaterISOTZ(
+                          immunizationInfos.find(
+                            ({ doseNumber }) => doseNumber === 1
+                          )?.Date,
+                          6
                         ) +
                           " to " +
-                          toLocalDate(
-                            new Date(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).setMonth(
-                                new Date(
-                                  immunizationInfos.find(
-                                    ({ doseNumber }) => doseNumber === 1
-                                  )?.Date
-                                ).getMonth() + 7
-                              )
-                            )
+                          timestampToDateMonthsLaterISOTZ(
+                            immunizationInfos.find(
+                              ({ doseNumber }) => doseNumber === 1
+                            )?.Date,
+                            7
                           )}
                       </span>
                     ) : (
@@ -302,53 +259,28 @@ const RecImmunizationItemDouble = ({
                       <span
                         style={{
                           color:
-                            new Date(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).setMonth(
-                                new Date(
-                                  immunizationInfos.find(
-                                    ({ doseNumber }) => doseNumber === 1
-                                  )?.Date
-                                ).getMonth() + 7
-                              )
-                            ) < new Date()
+                            timestampMonthsLaterTZ(
+                              immunizationInfos.find(
+                                ({ doseNumber }) => doseNumber === 1
+                              )?.Date,
+                              7
+                            ) < DateTime.local({ zone: "America/Toronto" })
                               ? "orange"
                               : "black",
                         }}
                       >
-                        {toLocalDate(
-                          new Date(
-                            new Date(
-                              immunizationInfos.find(
-                                ({ doseNumber }) => doseNumber === 1
-                              )?.Date
-                            ).setMonth(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).getMonth() + 2
-                            )
-                          )
+                        {timestampToDateMonthsLaterISOTZ(
+                          immunizationInfos.find(
+                            ({ doseNumber }) => doseNumber === 1
+                          )?.Date,
+                          2
                         ) +
                           " to " +
-                          toLocalDate(
-                            new Date(
-                              new Date(
-                                immunizationInfos.find(
-                                  ({ doseNumber }) => doseNumber === 1
-                                )?.Date
-                              ).setMonth(
-                                new Date(
-                                  immunizationInfos.find(
-                                    ({ doseNumber }) => doseNumber === 1
-                                  )?.Date
-                                ).getMonth() + 7
-                              )
-                            )
+                          timestampToDateMonthsLaterISOTZ(
+                            immunizationInfos.find(
+                              ({ doseNumber }) => doseNumber === 1
+                            )?.Date,
+                            7
                           )}
                       </span>
                     ) : (

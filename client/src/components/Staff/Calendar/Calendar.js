@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { DateTime } from "luxon";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
@@ -14,8 +15,11 @@ import useSocketContext from "../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import {
-  toLocalDate,
-  toLocalTimeWithSeconds,
+  getTodayEndTZ,
+  getTodayStartTZ,
+  nowTZTimestamp,
+  timestampToDateISOTZ,
+  timestampToTimeISOTZ,
 } from "../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../utils/toPatientName";
@@ -45,8 +49,8 @@ const Calendar = () => {
   const { staffInfos } = useStaffInfosContext();
   const [timelineVisible, setTimelineVisible] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
-  const [rangeStart, setRangeStart] = useState(new Date().setHours(0, 0, 0));
-  const [rangeEnd, setRangeEnd] = useState(new Date().setHours(23, 59, 59));
+  const [rangeStart, setRangeStart] = useState(getTodayStartTZ());
+  const [rangeEnd, setRangeEnd] = useState(getTodayEndTZ());
   const [formColor, setFormColor] = useState("#93B5E9");
   const [sitesIds, setSitesIds] = useState([user.site_id]); //Sites for CalendarFilter
   const [timelineSiteId, setTimelineSiteId] = useState(user.site_id); //SelectTimelineSite
@@ -89,7 +93,6 @@ const Calendar = () => {
   const currentView = useRef(null);
   const lastCurrentId = useRef("");
   const eventCounter = useRef(0);
-  console.log("events", events);
 
   useEffect(() => {
     if (lastCurrentId.current) {
@@ -123,8 +126,29 @@ const Calendar = () => {
 
   //=============================== EVENTS HANDLERS =================================//
   const handleShortcutpickrChange = (selectedDates, dateStr) => {
-    fcRef.current.calendar.gotoDate(dateStr);
+    //offset UTC local
+    const now = DateTime.now();
+    const offsetLocal = now.offset;
+    console.log(offsetLocal);
+
+    //offset UTC de Toronto
+    const offsetToronto = DateTime.local({ zone: "America/Toronto" }).offset;
+    console.log(offsetToronto);
+
+    const midnightUTC = DateTime.fromISO(dateStr, { zone: "utc" })
+      .plus({ minutes: offsetLocal })
+      .startOf("day")
+      .toJSDate();
+
+    fcRef.current.calendar.gotoDate(
+      DateTime.fromJSDate(midnightUTC, { zone: "America/Toronto" })
+        .minus({
+          minutes: offsetToronto,
+        })
+        .toMillis()
+    );
   };
+
   const handlePatientClick = (e, id) => {
     e.stopPropagation();
     if (formVisible) return;
@@ -526,7 +550,6 @@ const Calendar = () => {
     const event = info.event;
     const view = info.view;
     if (currentEvent.current && currentEvent.current.id !== event.id) {
-      console.log("Bingo");
       //event selection change
       //change border and unselect previous event
       currentEventElt.current.style.border = "none";
@@ -537,7 +560,6 @@ const Calendar = () => {
       currentView.current = view;
       eventElt.style.border = "solid 1px red";
     } else if (currentEvent.current === null) {
-      console.log("Bingo2");
       //first event selection
       currentEvent.current = event;
       lastCurrentId.current = event.id;
@@ -546,7 +568,6 @@ const Calendar = () => {
       eventElt.style.border = "solid 1px red";
     } else {
       //click on already selected event
-      console.log("Bingo3");
       currentEvent.current = event;
       lastCurrentId.current = event.id;
       currentEventElt.current = eventElt;
@@ -559,8 +580,12 @@ const Calendar = () => {
   };
   // DATES SET
   const handleDatesSet = (info) => {
-    setRangeStart(info.start.getTime());
-    setRangeEnd(info.end.getTime());
+    setRangeStart(
+      DateTime.fromJSDate(info.start, { zone: "America/Toronto" }).toMillis()
+    );
+    setRangeEnd(
+      DateTime.fromJSDate(info.end, { zone: "America/Toronto" }).toMillis()
+    );
     if (currentEventElt.current) {
       currentEventElt.current.style.border = "none";
     }
@@ -572,15 +597,27 @@ const Calendar = () => {
   // //DATE SELECT
   const handleDateSelect = async (info) => {
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
-    const startDate = info.start.getTime(); //local timestamp
+    const startDate = DateTime.fromJSDate(info.start, {
+      zone: "America/Toronto",
+    }).toMillis(); //timestamp
     const defaultDuration =
       defaultDurationHours * 3600000 + defaultDurationMin * 60000;
+
     const endDate =
-      info.end.getTime() > startDate + defaultDuration
-        ? info.end.getTime()
+      DateTime.fromJSDate(info.end, {
+        zone: "America/Toronto",
+      }).toMillis() >
+      startDate + defaultDuration
+        ? DateTime.fromJSDate(info.end, {
+            zone: "America/Toronto",
+          }).toMillis()
         : startDate + defaultDuration; //local timestamp
 
-    const startAllDay = new Date(startDate).setHours(0, 0, 0, 0);
+    const startAllDay = DateTime.fromMillis(startDate, {
+      zone: "America/Toronto",
+    })
+      .set({ hours: 0, minutes: 0, seconds: 0 })
+      .toMillis();
     const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     let newEvent = {
@@ -647,12 +684,15 @@ const Calendar = () => {
           staff_guests_ids: [],
           room_id: newEvent.extendedProps.roomId,
           all_day: newEvent.allDay,
-          date_created: Date.now(),
+          date_created: nowTZTimestamp(),
           created_by_id: user.id,
-          AppointmentTime: toLocalTimeWithSeconds(newEvent.start, false),
+          AppointmentTime: timestampToTimeISOTZ(newEvent.start),
           Duration: newEvent.extendedProps.duration,
           AppointmentStatus: newEvent.extendedProps.status,
-          AppointmentDate: toLocalDate(newEvent.start),
+          AppointmentDate: timestampToDateISOTZ(
+            newEvent.start,
+            "America/Toronto"
+          ),
           AppointmentPurpose: newEvent.extendedProps.purpose,
           AppointmentNotes: newEvent.extendedProps.notes,
           site_id: timelineSiteId,
@@ -708,12 +748,15 @@ const Calendar = () => {
         staff_guests_ids: [],
         room_id: newEvent.extendedProps.roomId,
         all_day: newEvent.allDay,
-        date_created: Date.now(),
+        date_created: nowTZTimestamp(),
         created_by_id: user.id,
-        AppointmentTime: toLocalTimeWithSeconds(newEvent.start, false),
+        AppointmentTime: timestampToTimeISOTZ(newEvent.start),
         Duration: newEvent.extendedProps.duration,
         AppointmentStatus: newEvent.extendedProps.status,
-        AppointmentDate: toLocalDate(newEvent.start),
+        AppointmentDate: timestampToDateISOTZ(
+          newEvent.start,
+          "America/Toronto"
+        ),
         AppointmentPurpose: newEvent.extendedProps.purpose,
         AppointmentNotes: newEvent.extendedProps.notes,
         site_id: user.site_id,
@@ -764,17 +807,19 @@ const Calendar = () => {
     }
   };
   const handleDrop = async (info) => {
-    console.log("drop");
     const event = info.event;
     const eventElt = info.el;
     if (currentEventElt.current) currentEventElt.current.style.border = "none";
     info.el.style.border = "solid 1px red";
-    console.log("border ok");
     currentEvent.current = event;
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
-    const startDate = event.start.getTime();
-    const endDate = event.end.getTime();
+    const startDate = DateTime.fromJSDate(event.start, {
+      zone: "America/Toronto",
+    }).toMillis();
+    const endDate = DateTime.fromJSDate(event.end, {
+      zone: "America/Toronto",
+    }).toMillis();
     let availableRooms;
     try {
       availableRooms = await getAvailableRooms(
@@ -790,7 +835,11 @@ const Calendar = () => {
       });
       return;
     }
-    const startAllDay = new Date(startDate).setHours(0, 0, 0, 0);
+    const startAllDay = DateTime.fromMillis(startDate, {
+      zone: "America/Toronto",
+    })
+      .set({ hour: 0, minute: 0, second: 0 })
+      .toMillis();
     const endAllDay = startAllDay + 24 * 3600 * 1000;
 
     let datasToPut = {
@@ -808,14 +857,18 @@ const Calendar = () => {
       created_by_id: event.extendedProps.created_by_id,
       updates: [
         ...event.extendedProps.updates,
-        { updated_by_id: user.id, date_updated: Date.now() },
+        { updated_by_id: user.id, date_updated: nowTZTimestamp() },
       ],
-      AppointmentTime: toLocalTimeWithSeconds(event.start, false),
+      AppointmentTime: timestampToTimeISOTZ(
+        DateTime.fromJSDate(event.start, { zone: "America/Toronto" }).toMillis()
+      ),
       Duration: event.allDay
         ? 1440
         : Math.floor((endDate - startDate) / (1000 * 60)),
       AppointmentStatus: event.extendedProps.status,
-      AppointmentDate: toLocalDate(event.start),
+      AppointmentDate: timestampToDateISOTZ(
+        DateTime.fromJSDate(event.start, { zone: "America/Toronto" }).toMillis()
+      ),
       Provider: {
         Name: {
           FirstName: event.extendedProps.hostFirstName,
@@ -848,7 +901,6 @@ const Calendar = () => {
             "staff",
             datasToPut
           );
-          console.log("response", response.data);
           socket.emit("message", {
             route: "EVENTS",
             action: "update",
@@ -910,10 +962,7 @@ const Calendar = () => {
             });
         }
       } else {
-        info.el.style.border = "solid 1px red"; //because of a bug...
         info.revert();
-        console.log("revert");
-        console.log(info.el);
       }
     }
   };
@@ -931,8 +980,12 @@ const Calendar = () => {
     lastCurrentId.current = event.id;
     currentEventElt.current = eventElt;
 
-    const startDate = event.start.getTime();
-    const endDate = event.end.getTime();
+    const startDate = DateTime.fromJSDate(event.start, {
+      zone: "America/Toronto",
+    }).toMillis();
+    const endDate = DateTime.fromJSDate(event.end, {
+      zone: "America/Toronto",
+    }).toMillis();
 
     //same as a drop
     let availableRooms;
@@ -979,14 +1032,22 @@ const Calendar = () => {
         created_by_id: event.extendedProps.created_by_id,
         updates: [
           ...event.extendedProps.updates,
-          { updated_by_id: user.id, date_updated: Date.now() },
+          { updated_by_id: user.id, date_updated: nowTZTimestamp() },
         ],
-        AppointmentTime: toLocalTimeWithSeconds(event.start, false),
+        AppointmentTime: timestampToTimeISOTZ(
+          DateTime.fromJSDate(event.start, {
+            zone: "America/Toronto",
+          }).toMillis()
+        ),
         Duration: event.allDay
           ? 1440
           : Math.floor((endDate - startDate) / (1000 * 60)),
         AppointmentStatus: event.extendedProps.status,
-        AppointmentDate: toLocalDate(event.start),
+        AppointmentDate: timestampToDateISOTZ(
+          DateTime.fromJSDate(event.start, {
+            zone: "America/Toronto",
+          }).toMillis()
+        ),
         Provider: {
           Name: {
             FirstName: event.extendedProps.hostFirstName,
@@ -1106,9 +1167,9 @@ const Calendar = () => {
           {formVisible && (
             <FakeWindow
               title={`APPOINTMENT DETAILS`}
-              width={900}
+              width={1050}
               height={790}
-              x={(window.innerWidth - 900) / 2}
+              x={(window.innerWidth - 1050) / 2}
               y={(window.innerHeight - 790) / 2}
               color={formColor}
               setPopUpVisible={setFormVisible}
