@@ -33,7 +33,7 @@
     }
     &__left-bar {   
         width : 14%;
-        height: 79.5vh;
+        height: 78vh;
         overflow-y :scroll;
         .calendar__shortcutpickr {
             border:solid 1px $grey;
@@ -98,7 +98,7 @@
         border: solid 1px $grey;
         border-radius: 6px;
         padding: 10px;
-        height:79.5vh;
+        height:78vh;
         overflow-y:scroll;
         //fullcalendar
         .fc .fc-timegrid-col.fc-day-today {

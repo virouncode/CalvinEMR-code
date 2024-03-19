@@ -10968,7 +10968,7 @@ readers do not read off random characters that represent icons */
 }
 .calendar__left-bar {
   width: 14%;
-  height: 79.5vh;
+  height: 78vh;
   overflow-y: scroll;
 }
 .calendar__left-bar .calendar__shortcutpickr {
@@ -11029,7 +11029,7 @@ readers do not read off random characters that represent icons */
   border: solid 1px #cecdcd;
   border-radius: 6px;
   padding: 10px;
-  height: 79.5vh;
+  height: 78vh;
   overflow-y: scroll;
 }
 .calendar__display .fc .fc-timegrid-col.fc-day-today {
@@ -11228,7 +11228,7 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   font-weight: bold;
   overflow-y: scroll;
-  height: 46.4vh;
+  height: 44.7vh;
   border: solid 1px #cecdcd;
 }
 .calendar__filter-title {
