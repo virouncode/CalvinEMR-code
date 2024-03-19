@@ -24,6 +24,8 @@ const useFetchBillings = (paging, userType) => {
         setLoading(true);
         let response;
         if (user.title !== "Secretary" && user.access_level !== "Admin") {
+          console.log("rangeStart", rangeStart);
+          console.log("rangeEnd", rangeEnd);
           //billings concerning the user in range
           response = await xanoGet(
             "/billings_of_staff_in_range",

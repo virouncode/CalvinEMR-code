@@ -53,7 +53,6 @@ const Billing = () => {
 
   return (
     <div className="billing">
-      {errMsgPost && <p className="billing__err">{errMsgPost}</p>}
       <div className="billing__btn-container">
         {user.title !== "Secretary" && (
           <button onClick={handleAdd} disabled={addVisible}>
@@ -61,6 +60,7 @@ const Billing = () => {
           </button>
         )}
       </div>
+      {errMsgPost && <p className="billing__err">{errMsgPost}</p>}
       {addVisible && (
         <BillingForm
           setAddVisible={setAddVisible}

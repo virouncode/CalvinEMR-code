@@ -63,7 +63,7 @@ const BillingTable = ({
                       />
                     )
                   )
-                : !loading && <EmptyRow colSpan="13" />}
+                : !loading && <EmptyRow colSpan="13" text="No Billings" />}
               {loading && <LoadingRow colSpan="13" />}
             </tbody>
             <tfoot>

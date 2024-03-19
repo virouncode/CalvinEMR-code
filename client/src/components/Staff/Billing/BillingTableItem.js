@@ -171,7 +171,7 @@ const BillingTableItem = ({
     const response = await xanoGet("/ohip_fee_schedule_for_code", userType, {
       billing_code: itemInfos.billing_code.toUpperCase(),
     });
-    if (response.data === null) {
+    if (!response.data) {
       setErrMsgPost(
         `Billing code ${itemInfos.billing_code.toUpperCase()} doesn't exists`
       );
@@ -298,15 +298,12 @@ const BillingTableItem = ({
             {editVisible ? (
               <input
                 type="date"
-                value={timestampToDateISOTZ(
-                  itemInfos.date,
-                  timestampToDateISOTZ
-                )}
+                value={timestampToDateISOTZ(itemInfos.date)}
                 name="date"
                 onChange={handleChange}
               />
             ) : (
-              timestampToDateISOTZ(itemInfos.date, timestampToDateISOTZ)
+              timestampToDateISOTZ(itemInfos.date)
             )}
           </td>
           <td>

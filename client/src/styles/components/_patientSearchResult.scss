@@ -13,12 +13,10 @@
         box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
     }
     &__table{    
-        table-layout: fixed;
-        margin: 0 auto;
-        background-color: $white;
+        table-layout:fixed;
+        min-width:100%;
         border-collapse: collapse;
-        border-radius: 6px;
-        white-space: nowrap;
+        font-size: 0.8rem;
         thead{
             position: sticky;
             top:0;
@@ -32,9 +30,7 @@
                 &:nth-child(1),&:nth-child(2),&:nth-child(3){
                     min-width : 100px;
                 }
-                &:nth-child(4){
-                    min-width : 50px;  
-                }
+         
                 &:nth-child(5){
                     min-width : 10px;  
                 }

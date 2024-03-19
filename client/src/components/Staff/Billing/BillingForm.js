@@ -123,7 +123,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
       const response = await xanoGet("/ohip_fee_schedule_for_code", userType, {
         billing_code,
       });
-      if (response.data === null) {
+      if (!response.data) {
         setErrMsgPost(`Billing code ${billing_code} doesn't exist`);
         return;
       }
