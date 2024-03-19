@@ -12,7 +12,7 @@ const PatientAppointments = () => {
 
   return (
     <>
-      <div>
+      <div className="past-next-appointments">
         <PastAppointments
           pastAppointments={appointments
             .filter(({ start }) => start < nowTZTimestamp())

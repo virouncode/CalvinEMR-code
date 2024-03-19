@@ -6,6 +6,7 @@
     padding : 10px ;
     font-size: 0.85rem;
     box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+    height: 50%;
     &--past {
         margin-bottom: 10px;
     }
@@ -22,11 +23,13 @@
     &__item {
         width:100%;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
+        padding: 5px 10px;
         p {
             font-size: 0.85rem;
-            width:25%;
+            padding:0;
+
         }
         input[type="checkbox"] {
             margin-right: 10px;         
@@ -34,14 +37,10 @@
     }
     &__date {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         width:50%;
-        p {
-            padding:0;
-            font-size: 0.85rem;
-            width:50%;
-        }
+       
         input[type="checkbox"] {
             margin-right: 10px;
         }

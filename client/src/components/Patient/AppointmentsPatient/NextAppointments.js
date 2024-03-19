@@ -120,24 +120,27 @@ Cellphone: ${
         {!err && nextAppointments && nextAppointments.length > 0
           ? nextAppointments.map((appointment) => (
               <div key={appointment.id} className="appointments-patient__item">
-                <input
-                  type="checkbox"
-                  checked={isAppointmentSelected(appointment.id)}
-                  onChange={handleCheck}
-                  id={appointment.id}
-                />
-                {!appointment.all_day ? (
-                  <div className="appointments-patient__date">
-                    <p>{timestampToHumanDateTimeTZ(appointment.start)} - </p>
-                    <p>{timestampToHumanDateTimeTZ(appointment.end)}</p>
-                  </div>
-                ) : (
-                  <div>
-                    <p>
+                <div className="appointments-patient__date">
+                  <input
+                    type="checkbox"
+                    checked={isAppointmentSelected(appointment.id)}
+                    onChange={handleCheck}
+                    id={appointment.id}
+                  />
+                  {!appointment.all_day ? (
+                    <>
+                      <div style={{ marginRight: "10px" }}>
+                        {timestampToHumanDateTimeTZ(appointment.start)}{" "}
+                      </div>
+                      <div style={{ marginRight: "10px" }}>-</div>
+                      <div>{timestampToHumanDateTimeTZ(appointment.end)}</div>
+                    </>
+                  ) : (
+                    <div>
                       {timestampToHumanDateTZ(appointment.start)} {`All Day`}
-                    </p>
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
                 <p>Reason : {appointment.reason}</p>
                 <p>{staffIdToTitleAndName(staffInfos, appointment.host_id)}</p>
               </div>

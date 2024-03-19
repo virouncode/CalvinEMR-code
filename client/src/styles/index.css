@@ -270,7 +270,7 @@ select:focus {
 .search-patient-section {
   margin: 0 auto;
   width: 97%;
-  min-height: 80vh;
+  min-height: 83vh;
 }
 .search-patient-section__title {
   font-size: 1.2rem;
@@ -292,7 +292,7 @@ select:focus {
 
 .signup-section {
   width: 100%;
-  height: 80vh;
+  height: 83vh;
   display: flex;
   flex-direction: column;
 }
@@ -340,19 +340,25 @@ select:focus {
 .patient-appointments-section {
   display: flex;
   flex-direction: column;
+  height: 82vh;
 }
 .patient-appointments-section-content {
   margin: 0 auto;
-  width: 100%;
+  width: 98%;
   display: grid;
   grid-template-columns: 49% 49%;
   justify-content: space-between;
-  padding: 20px;
+  height: 100%;
 }
 .patient-appointments-section-title {
   font-size: 1.2rem;
   text-align: center;
   margin-bottom: 10px;
+}
+.patient-appointments-section .past-next-appointments {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .reset-section {
@@ -363,7 +369,7 @@ select:focus {
 
 .calvinai-section {
   width: 100%;
-  height: 80vh;
+  height: 83vh;
 }
 .calvinai-section__title {
   font-size: 1.2rem;
@@ -393,7 +399,7 @@ select:focus {
 
 .reportsinbox-section {
   width: 100%;
-  min-height: 80vh;
+  min-height: 83vh;
   padding: 0 20px;
 }
 .reportsinbox-section__title {
@@ -404,7 +410,7 @@ select:focus {
 
 .messages-section {
   width: 100%;
-  height: 80vh;
+  height: 83vh;
 }
 .messages-section__title {
   font-size: 1.2rem;
@@ -414,7 +420,7 @@ select:focus {
 
 .billing-section {
   width: 100%;
-  min-height: 80vh;
+  min-height: 83vh;
 }
 .billing-section__title {
   font-size: 1.2rem;
@@ -423,7 +429,7 @@ select:focus {
 
 .patient-messages-section {
   width: 100%;
-  height: 85vh;
+  height: 83vh;
 }
 .patient-messages-section__title {
   font-size: 1.2rem;
@@ -433,7 +439,7 @@ select:focus {
 
 .accounts-section {
   width: 100%;
-  min-height: 80vh;
+  height: 83vh;
 }
 .accounts-section__title {
   font-size: 1.2rem;
@@ -469,7 +475,7 @@ select:focus {
 
 .clinic-section {
   width: 100%;
-  min-height: 80vh;
+  min-height: 83vh;
 }
 .clinic-section__title {
   font-size: 1.2rem;
@@ -11718,7 +11724,7 @@ readers do not read off random characters that represent icons */
 }
 
 .staff-result {
-  height: 450px;
+  height: 465px;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
@@ -14447,11 +14453,14 @@ readers do not read off random characters that represent icons */
 }
 
 .messages-container {
-  height: 100%;
+  height: 615px;
   border-radius: 6px;
   width: 98%;
   margin: 0 auto;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+}
+.messages-container--patient {
+  height: 650px;
 }
 
 .messages-toggle {
@@ -16653,7 +16662,7 @@ readers do not read off random characters that represent icons */
 }
 
 .billing-table__container {
-  height: 65vh;
+  height: 520px;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
@@ -16920,6 +16929,7 @@ readers do not read off random characters that represent icons */
   padding: 10px;
   font-size: 0.85rem;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  height: 50%;
 }
 .appointments-patient--past {
   margin-bottom: 10px;
@@ -16937,25 +16947,21 @@ readers do not read off random characters that represent icons */
 .appointments-patient__item {
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  padding: 5px 10px;
 }
 .appointments-patient__item p {
   font-size: 0.85rem;
-  width: 25%;
+  padding: 0;
 }
 .appointments-patient__item input[type=checkbox] {
   margin-right: 10px;
 }
 .appointments-patient__date {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  width: 50%;
-}
-.appointments-patient__date p {
-  padding: 0;
-  font-size: 0.85rem;
   width: 50%;
 }
 .appointments-patient__date input[type=checkbox] {
@@ -17516,7 +17522,7 @@ readers do not read off random characters that represent icons */
 
 .sites__table-container {
   width: 98%;
-  height: 600px;
+  height: 580px;
   margin: 0 auto;
   overflow: scroll;
   border-radius: 6px;

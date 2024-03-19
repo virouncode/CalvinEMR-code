@@ -1,9 +1,12 @@
 .messages-container {
-    height:100%;
+    height:615px;
     border-radius: 6px;
     width:98%;
     margin: 0 auto;
     box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+    &--patient {
+        height:650px;
+    }
 }
 .messages-toggle {
     padding: 5px 10px;

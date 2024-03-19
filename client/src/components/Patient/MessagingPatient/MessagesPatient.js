@@ -27,7 +27,7 @@ const MessagesPatient = () => {
 
   useMessagesExternalSocket(messages, setMessages, section, "patient");
   return (
-    <div className="messages-container">
+    <div className="messages-container messages-container--patient">
       <MessagesPatientToolBar
         search={search}
         setSearch={setSearch}
