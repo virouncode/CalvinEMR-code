@@ -186,12 +186,7 @@ const SignupPatientForm = () => {
     };
     let patientId;
     try {
-      const response2 = await xanoPost(
-        "/patients",
-        "staff",
-
-        patientToPost
-      );
+      const response2 = await xanoPost("/patients", "staff", patientToPost);
       socket.emit("message", {
         route: "PATIENTS",
         action: "create",

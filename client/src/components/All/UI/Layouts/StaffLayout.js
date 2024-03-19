@@ -4,6 +4,7 @@ import useTitleContext from "../../../../hooks/useTitleContext";
 import ConfirmGlobal from "../../Confirm/ConfirmGlobal";
 import Welcome from "../../Welcome/Welcome";
 import StaffHeader from "../Headers/StaffHeader";
+import ToastAlarm from "../Toast/ToastAlarm";
 import ToastCalvin from "../Toast/ToastCalvin";
 
 const StaffLayout = () => {
@@ -18,6 +19,7 @@ const StaffLayout = () => {
         {/********************************************/}
         <ConfirmGlobal /> {/******* custom confirm modal ********/}
         <ToastCalvin id="A" />
+        <ToastAlarm id="Z" />
         {/******* toast system *****************/}
       </main>
       {/* <Footer /> */}

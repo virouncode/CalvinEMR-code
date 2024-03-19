@@ -82,12 +82,9 @@ const CredentialsForm = () => {
 
     if (credentials.email.toLowerCase() !== auth.email.toLowerCase()) {
       try {
-        const response = await xanoGet(
-          `/staff_with_email`,
-          "staff",
-
-          { email: credentials.email.toLowerCase() }
-        );
+        const response = await xanoGet(`/staff_with_email`, "staff", {
+          email: credentials.email.toLowerCase(),
+        });
         if (response.data) {
           setErrMsg("There is already an account with this email");
           return;

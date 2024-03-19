@@ -4,6 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAdminsInfosContext from "./useAdminsInfosContext";
 import useAuthContext from "./useAuthContext";
+import useClinicContext from "./useClinicContext";
 import useStaffInfosContext from "./useStaffInfosContext";
 import useUserContext from "./useUserContext";
 
@@ -12,6 +13,7 @@ const useLogoutForAll = () => {
   const { setStaffInfos } = useStaffInfosContext();
   const { setAuth } = useAuthContext();
   const { setAdminsInfos } = useAdminsInfosContext();
+  const { setClinic } = useClinicContext();
   const navigate = useNavigate();
   const handleStorageEvent = useCallback(
     (e) => {
@@ -19,14 +21,16 @@ const useLogoutForAll = () => {
       const message = e.newValue;
       if (!message) return;
       if (message === "logout") {
+        //clean context
         setUser({});
-        setStaffInfos([]);
         setAuth({});
+        setStaffInfos([]);
         setAdminsInfos([]);
+        setClinic({});
         navigate("/");
       }
     },
-    [navigate, setAdminsInfos, setAuth, setStaffInfos, setUser]
+    [navigate, setAdminsInfos, setAuth, setClinic, setStaffInfos, setUser]
   );
   useEffect(() => {
     window.addEventListener("storage", handleStorageEvent);

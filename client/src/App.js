@@ -42,7 +42,7 @@ import SignupPatientPage from "./pages/Staff/SignupPatientPage";
 
 const App = () => {
   useLocalStorageTracker();
-  useAutoLogout(120); //autologout in min
+  useAutoLogout(1.2); //autologout in min
   useLogoutForAll(); //log every tabs out if logout on one tab
   useSocketConfig(false); //true for dev, false for prod
   useStaffInfosSocket();
@@ -51,61 +51,63 @@ const App = () => {
   useUnreadSocket(); //for staff
 
   return (
-    <Routes>
-      <Route path="/" element={<LoginLayout />}>
-        {/* public routes */}
-        <Route index element={<LoginPage />} />
-        <Route path="unauthorized" element={<UnauthorizedPage />} />
-        <Route path="suspended" element={<SuspendedPage />} />
-        <Route path="reset-password" element={<ResetPage />}></Route>
-        {/* catch all */}
-        <Route path="*" element={<MissingPage />} />
-      </Route>
-      <Route path="staff" element={<StaffLayout />}>
-        {/* protected routes */}
-        <Route element={<RequireAuth allowedAccesses={["Staff"]} />}>
-          <Route path="calendar" element={<CalendarPage />} />
-          <Route path="search-patient" element={<SearchPatientPage />} />
-          <Route path="patient-record/:id" element={<PatientRecordPage />} />
-          <Route path="signup-patient" element={<SignupPatientPage />} />
-          <Route path="reports-inbox" element={<ReportsInboxPage />} />
-          <Route path="messages" element={<MessagesPage />} />
-          <Route
-            path="messages/:messageId/:sectionName/:msgType"
-            element={<MessagesPage />}
-          />
-          <Route path="reference" element={<ReferencePage />} />
-          <Route path="calvinai" element={<CalvinAIPage />} />
-          <Route path="billing" element={<BillingPage />} />
-          <Route
-            path="billing/:pid/:pName/:hcn/:date"
-            element={<BillingPage />}
-          />
-          <Route path="my-account" element={<MyAccountPage />} />
-          <Route path="credentials" element={<CredentialsPage />} />
-          <Route path="export" element={<MigrationPage />} />
+    <>
+      <Routes>
+        <Route path="/" element={<LoginLayout />}>
+          {/* public routes */}
+          <Route index element={<LoginPage />} />
+          <Route path="unauthorized" element={<UnauthorizedPage />} />
+          <Route path="suspended" element={<SuspendedPage />} />
+          <Route path="reset-password" element={<ResetPage />}></Route>
+          {/* catch all */}
+          <Route path="*" element={<MissingPage />} />
         </Route>
-      </Route>
-      <Route path="admin" element={<AdminLayout />}>
-        {/* protected routes */}
-        <Route element={<RequireAuth allowedAccesses={["Admin"]} />}>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="staff-accounts" element={<StaffAccountsPage />} />
-          <Route path="clinic" element={<ClinicPage />} />
-          <Route path="billing" element={<BillingPageAdmin />} />
-          <Route path="migration" element={<MigrationPage />} />
+        <Route path="staff" element={<StaffLayout />}>
+          {/* protected routes */}
+          <Route element={<RequireAuth allowedAccesses={["Staff"]} />}>
+            <Route path="calendar" element={<CalendarPage />} />
+            <Route path="search-patient" element={<SearchPatientPage />} />
+            <Route path="patient-record/:id" element={<PatientRecordPage />} />
+            <Route path="signup-patient" element={<SignupPatientPage />} />
+            <Route path="reports-inbox" element={<ReportsInboxPage />} />
+            <Route path="messages" element={<MessagesPage />} />
+            <Route
+              path="messages/:messageId/:sectionName/:msgType"
+              element={<MessagesPage />}
+            />
+            <Route path="reference" element={<ReferencePage />} />
+            <Route path="calvinai" element={<CalvinAIPage />} />
+            <Route path="billing" element={<BillingPage />} />
+            <Route
+              path="billing/:pid/:pName/:hcn/:date"
+              element={<BillingPage />}
+            />
+            <Route path="my-account" element={<MyAccountPage />} />
+            <Route path="credentials" element={<CredentialsPage />} />
+            <Route path="export" element={<MigrationPage />} />
+          </Route>
         </Route>
-      </Route>
-      <Route path="patient" element={<PatientLayout />}>
-        {/* protected routes */}
-        <Route element={<RequireAuth allowedAccesses={["Patient"]} />}>
-          <Route path="messages" element={<PatientMessagesPage />} />
-          <Route path="appointments" element={<PatientAppointmentsPage />} />
-          <Route path="my-account" element={<PatientAccountPage />} />
-          <Route path="credentials" element={<PatientCredentialsPage />} />
+        <Route path="admin" element={<AdminLayout />}>
+          {/* protected routes */}
+          <Route element={<RequireAuth allowedAccesses={["Admin"]} />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="staff-accounts" element={<StaffAccountsPage />} />
+            <Route path="clinic" element={<ClinicPage />} />
+            <Route path="billing" element={<BillingPageAdmin />} />
+            <Route path="migration" element={<MigrationPage />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+        <Route path="patient" element={<PatientLayout />}>
+          {/* protected routes */}
+          <Route element={<RequireAuth allowedAccesses={["Patient"]} />}>
+            <Route path="messages" element={<PatientMessagesPage />} />
+            <Route path="appointments" element={<PatientAppointmentsPage />} />
+            <Route path="my-account" element={<PatientAccountPage />} />
+            <Route path="credentials" element={<PatientCredentialsPage />} />
+          </Route>
+        </Route>
+      </Routes>
+    </>
   );
 };
 

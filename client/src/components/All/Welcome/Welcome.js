@@ -5,6 +5,7 @@ import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../hooks/useUserContext";
 import { nowHumanTZ, nowTZ } from "../../../utils/formatDates";
 import { toWelcomeName } from "../../../utils/toWelcomeName";
+import ToastCalvin from "../UI/Toast/ToastCalvin";
 
 const Welcome = ({ title }) => {
   //=================== STATES =======================//
@@ -63,6 +64,7 @@ const Welcome = ({ title }) => {
         <p className="welcome-section__message">
           {helloMessage} {toWelcomeName(user, staffInfos, adminsInfos)}
         </p>
+        <ToastCalvin id={"A"} />
       </section>
     )
   );

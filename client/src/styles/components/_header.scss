@@ -3,8 +3,9 @@
   top: 0px;
   z-index: 10;
   padding: 10px 15px;
-  background: rgb(156,185,228);
-  background: linear-gradient(132deg, $blue 0%, $blue2 100%);
+  background: $blue2;
+  // background: rgb(156,185,228);
+  // background: linear-gradient(132deg, $blue 0%, $blue2 100%);
   box-shadow:rgba(149, 157, 165, 0.8) 0px 3px 4px;
   display: grid;
   grid-template-columns: 20% 60% 20%;

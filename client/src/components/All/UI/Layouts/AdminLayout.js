@@ -4,6 +4,7 @@ import useTitleContext from "../../../../hooks/useTitleContext";
 import ConfirmGlobal from "../../Confirm/ConfirmGlobal";
 import Welcome from "../../Welcome/Welcome";
 import AdminHeader from "../Headers/AdminHeader";
+import ToastAlarm from "../Toast/ToastAlarm";
 import ToastCalvin from "../Toast/ToastCalvin";
 
 const AdminLayout = () => {
@@ -17,6 +18,7 @@ const AdminLayout = () => {
         <Outlet />
         <ConfirmGlobal />
         <ToastCalvin id="A" />
+        <ToastAlarm id="Z" />
       </main>
     </div>
   );

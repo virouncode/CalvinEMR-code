@@ -10782,8 +10782,7 @@ readers do not read off random characters that represent icons */
   top: 0px;
   z-index: 10;
   padding: 10px 15px;
-  background: rgb(156, 185, 228);
-  background: linear-gradient(132deg, #93b5e9 0%, #6492d8 100%);
+  background: #6492d8;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   display: grid;
   grid-template-columns: 20% 60% 20%;
@@ -11548,11 +11547,13 @@ readers do not read off random characters that represent icons */
 }
 
 .welcome-section {
-  margin: 10px auto 10px;
-  width: 97%;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: solid 0.5px grey;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgb(243, 243, 243);
 }
 .welcome-section__clinic {
   font-weight: normal;

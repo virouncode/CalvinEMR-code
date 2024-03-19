@@ -2,6 +2,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useAuthContext from "../../../../hooks/useAuthContext";
+import useClinicContext from "../../../../hooks/useClinicContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
 
@@ -9,15 +10,17 @@ const PatientHeader = () => {
   const { user, setUser } = useUserContext();
   const { setAuth } = useAuthContext();
   const { setStaffInfos } = useStaffInfosContext();
+  const { setClinic } = useClinicContext();
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth({});
     setUser({});
     setStaffInfos({});
+    setClinic({});
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
     localStorage.removeItem("staffInfos");
-    localStorage.removeItem("tabCounter");
+    localStorage.removeItem("clinic");
     localStorage.removeItem("lastAction");
     localStorage.setItem("message", "logout");
     localStorage.removeItem("message");
