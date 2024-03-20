@@ -14,13 +14,6 @@ const MessagesLeftBar = ({
 }) => {
   const { user } = useUserContext();
 
-  const handleClickToDo = (e) => {
-    const name = e.target.id;
-    setSection(name);
-    setCurrentMsgId(0);
-    setMsgsSelectedIds([]);
-    setSelectAllVisible(true);
-  };
   const handleClickSection = (e) => {
     const name = e.target.id;
     setSection(name);
@@ -65,13 +58,13 @@ const MessagesLeftBar = ({
         >
           Deleted messages
         </li>
-        {user.access_level === "Staff" && (
+        {user.access_level === "Staff" && msgType === "internal" && (
           <li
-            className={isActive("To do list")}
-            id="To do list"
-            onClick={handleClickToDo}
+            className={isActive("To-dos")}
+            id="To-dos"
+            onClick={handleClickSection}
           >
-            To do list
+            To-dos
           </li>
         )}
       </ul>

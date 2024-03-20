@@ -122,6 +122,9 @@
     &__subject {
         text-align:center;
         width: 50%;
+        &--todo {
+            width:69%;
+        }
     }
     &__patient {
         text-align:center;
@@ -233,6 +236,9 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        &--todo {
+            width:69%;
+        }
     }
     &__patient {
         width: 40%;

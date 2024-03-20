@@ -243,6 +243,16 @@ const useFetchPatientRecord = (patientId) => {
     offset: 0,
   });
 
+  const [todosAbout, setTodosAbout] = useState([]);
+  const [loadingTodosAbout, setLoadingTodosAbout] = useState(true);
+  const [errTodosAbout, setErrTodosAbout] = useState("");
+  const [hasMoreTodosAbout, setHasMoreTodosAbout] = useState(true);
+  const [pagingTodosAbout, setPagingTodosAbout] = useState({
+    page: 1,
+    perPage: 10,
+    offset: 0,
+  });
+
   const fetchTopicDatas = async (
     url,
     setTopicDatas,
@@ -494,6 +504,15 @@ const useFetchPatientRecord = (patientId) => {
         setHasMoreMessagesWith,
         setLoadingMessagesWith,
         setErrMessagesWith,
+        abortController
+      );
+      await fetchTopicDatas(
+        "/todos_about_patient",
+        setTodosAbout,
+        pagingTodosAbout,
+        setHasMoreTodosAbout,
+        setLoadingTodosAbout,
+        setErrTodosAbout,
         abortController
       );
       setLoadingRecord(false);
@@ -753,6 +772,10 @@ const useFetchPatientRecord = (patientId) => {
     messagesWith,
     loadingMessagesWith,
     errMessagesWith,
+
+    todosAbout,
+    loadingTodosAbout,
+    errTodosAbout,
   };
 };
 

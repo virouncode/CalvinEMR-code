@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
 
-const useFetchPreviousMessages = (message) => {
+const useFetchPreviousMessages = (message, section) => {
   const [previousMessages, setPreviousMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    if (!message) return;
+    if (!message || section === "To-dos") return;
     const abortController = new AbortController();
     const fetchPreviousMessages = async () => {
       try {
@@ -55,7 +55,7 @@ const useFetchPreviousMessages = (message) => {
     };
     fetchPreviousMessages();
     return () => abortController.abort();
-  }, [message]);
+  }, [message, section]);
 
   return [previousMessages, loading, errMsg];
 };

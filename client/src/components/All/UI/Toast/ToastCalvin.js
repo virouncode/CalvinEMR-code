@@ -7,7 +7,7 @@ const ToastCalvin = ({ id }) => {
       enableMultiContainer
       containerId={id}
       position="bottom-right"
-      autoClose={2000}
+      autoClose={1000}
       hideProgressBar={true}
       newestOnTop={false}
       closeOnClick

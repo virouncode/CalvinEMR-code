@@ -1,9 +1,10 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
 
-const ToastAlarm = ({ id }) => {
+const ToastInactivity = ({ id }) => {
   return (
     <ToastContainer
+      enableMultiContainer
       containerId={id}
       position="top-right"
       hideProgressBar={false}
@@ -14,8 +15,9 @@ const ToastAlarm = ({ id }) => {
       draggable
       pauseOnHover
       theme="light"
+      limit={1}
     />
   );
 };
 
-export default ToastAlarm;
+export default ToastInactivity;

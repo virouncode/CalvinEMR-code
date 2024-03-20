@@ -18,6 +18,8 @@ const ReplyMessageExternal = ({
   message,
   previousMsgs,
   setCurrentMsgId,
+  setMessages,
+  setPaging,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -86,6 +88,10 @@ const ReplyMessageExternal = ({
       });
       setReplyVisible(false);
       setCurrentMsgId(0);
+      setMessages([]);
+      setPaging((p) => {
+        return { ...p, page: 1 };
+      });
       //send an email and an SMS to patient
       await sendEmail(
         "virounk@gmail.com", //to be changed to patient email

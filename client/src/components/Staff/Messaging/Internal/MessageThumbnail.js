@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
@@ -25,7 +26,7 @@ const MessageThumbnail = ({
   const { staffInfos } = useStaffInfosContext();
 
   const handleMsgClick = async (e) => {
-    if (!message.read_by_staff_ids.includes(user.id)) {
+    if (section !== "To-dos" && !message.read_by_staff_ids?.includes(user.id)) {
       //create and replace message with read by user id
       try {
         const datasToPut = {
@@ -99,41 +100,69 @@ const MessageThumbnail = ({
   const handleDeleteMsg = async (e) => {
     if (
       await confirmAlert({
-        content: "Do you really want to remove this message ?",
+        content: `Do you really want to delete this ${
+          section === "To-dos" ? "to-do" : "message"
+        } ?`,
       })
     ) {
       try {
-        const datasToPut = {
-          ...message,
-          deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          attachments_ids: message.attachments_ids.map(
+        if (section === "To-dos") {
+          const attachmentsIdsToDelete = message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ), //reformatted because off add-on
-        };
-        delete datasToPut.patient_infos; //from add-on
-        const response = await xanoPut(
-          `/messages/${message.id}`,
-          "staff",
-          datasToPut
-        );
-        socket.emit("message", {
-          route: "MESSAGES INBOX",
-          action: "update",
-          content: {
-            id: message.id,
-            data: response.data,
-          },
-        });
-        socket.emit("message", {
-          route: "MESSAGES ABOUT PATIENT",
-          action: "update",
-          content: {
-            id: message.id,
-            data: response.data,
-          },
-        });
-        toast.success("Message deleted successfully", { containerId: "A" });
-        setMsgsSelectedIds([]);
+          );
+          for (let attachmentId of attachmentsIdsToDelete) {
+            await xanoDelete(`/messages_attachments/${attachmentId}`, "staff");
+          }
+          await xanoDelete(`/todos/${message.id}`, "staff");
+          socket.emit("message", {
+            route: "MESSAGES INBOX",
+            action: "delete",
+            content: {
+              id: message.id,
+            },
+          });
+          socket.emit("message", {
+            route: "TO-DOS ABOUT PATIENT",
+            action: "delete",
+            content: {
+              id: message.id,
+            },
+          });
+          toast.success("To-do deleted successfully", { containerId: "A" });
+          setMsgsSelectedIds([]);
+        } else {
+          const datasToPut = {
+            ...message,
+            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+            attachments_ids: message.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            ), //reformatted because off add-on
+          };
+          delete datasToPut.patient_infos; //from add-on
+          const response = await xanoPut(
+            `/messages/${message.id}`,
+            "staff",
+            datasToPut
+          );
+          socket.emit("message", {
+            route: "MESSAGES INBOX",
+            action: "update",
+            content: {
+              id: message.id,
+              data: response.data,
+            },
+          });
+          socket.emit("message", {
+            route: "MESSAGES ABOUT PATIENT",
+            action: "update",
+            content: {
+              id: message.id,
+              data: response.data,
+            },
+          });
+          toast.success("Message deleted successfully", { containerId: "A" });
+          setMsgsSelectedIds([]);
+        }
       } catch (err) {
         toast.error(`Error: unable to delete message: ${err.message}`, {
           containerId: "A",
@@ -142,11 +171,78 @@ const MessageThumbnail = ({
     }
   };
 
+  const handleDone = async (e) => {
+    e.stopPropagation();
+    try {
+      const datasToPut = {
+        ...message,
+        attachments_ids: message.attachments_ids.map(
+          ({ attachment }) => attachment.id
+        ),
+        done: true,
+      };
+      delete datasToPut.patient_infos;
+      const response = await xanoPut(
+        `/todos/${message.id}`,
+        "staff",
+        datasToPut
+      );
+      socket.emit("message", {
+        route: "MESSAGES INBOX",
+        action: "update",
+        content: { id: message.id, data: response.data },
+      });
+      socket.emit("message", {
+        route: "TO-DOS ABOUT PATIENT",
+        action: "update",
+        content: { id: message.id, data: response.data },
+      });
+    } catch (err) {
+      toast.error(`Unable to update to-do: ${err.message}`, {
+        containerId: "A",
+      });
+    }
+  };
+
+  const handleUndone = async (e) => {
+    e.stopPropagation();
+    try {
+      const datasToPut = {
+        ...message,
+        attachments_ids: message.attachments_ids.map(
+          ({ attachment }) => attachment.id
+        ),
+        done: false,
+      };
+      delete datasToPut.patient_infos;
+      const response = await xanoPut(
+        `/todos/${message.id}`,
+        "staff",
+        datasToPut
+      );
+      socket.emit("message", {
+        route: "MESSAGES INBOX",
+        action: "update",
+        content: { id: message.id, data: response.data },
+      });
+      socket.emit("message", {
+        route: "TO-DOS ABOUT PATIENT",
+        action: "update",
+        content: { id: message.id, data: response.data },
+      });
+    } catch (err) {
+      toast.error(`Unable to update to-do: ${err.message}`, {
+        containerId: "A",
+      });
+    }
+  };
+
   return (
     <div
       className={
-        message.to_staff_ids.includes(user.id) &&
-        !message.read_by_staff_ids.includes(user.id)
+        section !== "To-dos" &&
+        message.to_staff_ids?.includes(user.id) &&
+        !message.read_by_staff_ids?.includes(user.id)
           ? "message-thumbnail message-thumbnail--unread"
           : "message-thumbnail"
       }
@@ -160,19 +256,52 @@ const MessageThumbnail = ({
         onChange={handleCheckMsg}
       />
       <div onClick={handleMsgClick} className="message-thumbnail__link">
-        <div className="message-thumbnail__author">
-          {section !== "Sent messages"
-            ? staffIdToTitleAndName(staffInfos, message.from_id)
-            : staffIdListToTitleAndName(staffInfos, message.to_staff_ids)}
-        </div>
+        {section !== "To-dos" && (
+          <div className="message-thumbnail__author">
+            {section !== "Sent messages"
+              ? staffIdToTitleAndName(staffInfos, message.from_id)
+              : staffIdListToTitleAndName(staffInfos, message.to_staff_ids)}
+          </div>
+        )}
         <div className="message-thumbnail__sample">
-          <span>{message.subject}</span> - {message.body}{" "}
+          <span
+            style={{
+              textDecoration:
+                section === "To-dos" && message.done && "line-through",
+            }}
+          >
+            {message.subject} - {message.body}
+          </span>{" "}
           {message.attachments_ids.length !== 0 && (
             <i
               className="fa-solid fa-paperclip"
               style={{ marginLeft: "5px" }}
             ></i>
           )}
+          {section === "To-dos" &&
+            (message.done ? (
+              <button
+                style={{
+                  marginLeft: "5px",
+                  fontSize: "0.7rem",
+                  boxShadow: "none",
+                }}
+                onClick={handleUndone}
+              >
+                Undone
+              </button>
+            ) : (
+              <button
+                style={{
+                  marginLeft: "5px",
+                  fontSize: "0.7rem",
+                  boxShadow: "none",
+                }}
+                onClick={handleDone}
+              >
+                Done
+              </button>
+            ))}
         </div>
       </div>
       <div className="message-thumbnail__patient">

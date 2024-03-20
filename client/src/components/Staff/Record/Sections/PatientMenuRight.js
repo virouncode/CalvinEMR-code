@@ -126,6 +126,10 @@ const PatientMenuRight = ({
   messagesWith,
   loadingMessagesWith,
   errMessagesWith,
+
+  todosAbout,
+  loadingTodosAbout,
+  errTodosAbout,
 }) => {
   return (
     <div className="patient-record__menu">
@@ -357,6 +361,20 @@ const PatientMenuRight = ({
         topicDatas={messagesWith}
         loading={loadingMessagesWith}
         errMsg={errMessagesWith}
+      />
+
+      <PatientTopic
+        textColor="#FEFEFE"
+        backgroundColor="#848484"
+        topic="TO-DOS ABOUT PATIENT"
+        patientId={patientId}
+        demographicsInfos={demographicsInfos}
+        contentsVisible={contentsVisible}
+        patientName={toPatientName(demographicsInfos)}
+        side="right"
+        topicDatas={todosAbout}
+        loading={loadingTodosAbout}
+        errMsg={errTodosAbout}
       />
     </div>
   );

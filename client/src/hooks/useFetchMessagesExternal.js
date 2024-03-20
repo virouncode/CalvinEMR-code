@@ -6,7 +6,6 @@ import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMes
 const useFetchMessagesExternal = (
   paging,
   search,
-  sectionName,
   messageId,
   section,
   staffId
@@ -25,22 +24,36 @@ const useFetchMessagesExternal = (
     const abortController = new AbortController();
     const fetchMessages = async () => {
       try {
+        let response;
         setLoading(true);
         setErrMsg("");
-        const response = await xanoGet(
-          "/messages_external_of_staff",
-          "staff",
-          {
-            staff_id: staffId,
-            search,
-            paging,
-          },
-          abortController
-        );
+        if (section === "To-dos") {
+          response = await xanoGet(
+            "/todos_of_staff",
+            "staff",
+            {
+              staff_id: staffId,
+              search,
+              paging,
+            },
+            abortController
+          );
+        } else {
+          response = await xanoGet(
+            "/messages_external_of_staff",
+            "staff",
+            {
+              staff_id: staffId,
+              search,
+              paging,
+            },
+            abortController
+          );
+        }
         if (abortController.signal.aborted) return;
         if (
           messageId &&
-          !response.data.items.find(({ id }) => id === messageId)
+          !response.data.items.find(({ id }) => id === messageId) //if the messageId in useParams isn't in the first page results
         ) {
           const missingMessage = (
             await xanoGet(
@@ -61,7 +74,7 @@ const useFetchMessagesExternal = (
         } else {
           setMessages((prevDatas) => {
             return filterAndSortExternalMessages(
-              sectionName || section,
+              section,
               [...prevDatas, ...response.data.items],
               "staff",
               staffId
@@ -82,7 +95,7 @@ const useFetchMessagesExternal = (
     return () => {
       abortController.abort();
     };
-  }, [messageId, navigate, paging, search, section, sectionName, staffId]);
+  }, [messageId, navigate, paging, search, section, staffId]);
 
   return {
     messages,

@@ -29,6 +29,8 @@ const MessagesOverview = ({
         return search
           ? `No results in deleted internal messages`
           : `No deleted internal messages`;
+      case "To-dos":
+        return search ? `No results in to-dos` : `No to-dos`;
       default:
         break;
     }

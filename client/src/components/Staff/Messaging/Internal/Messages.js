@@ -6,7 +6,6 @@ import useUserContext from "../../../../hooks/useUserContext";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesBox from "./MessagesBox";
 import MessagesToolBar from "./MessagesToolBar";
-import TodosBox from "./TodosBox";
 
 const Messages = () => {
   //HOOKS
@@ -29,7 +28,6 @@ const Messages = () => {
   const { messages, setMessages, loading, errMsg, hasMore } = useFetchMessages(
     paging,
     search,
-    sectionName,
     messageId,
     section,
     user.id
@@ -76,32 +74,27 @@ const Messages = () => {
           setPaging={setPaging}
           setMessages={setMessages}
         />
-        {section === "To do list" ? (
-          <TodosBox
-            search={search}
-            newTodoVisible={newTodoVisible}
-            setNewTodoVisible={setNewTodoVisible}
-          />
-        ) : (
-          <MessagesBox
-            section={section}
-            newVisible={newVisible}
-            setNewVisible={setNewVisible}
-            setSection={setSection}
-            msgsSelectedIds={msgsSelectedIds}
-            setMsgsSelectedIds={setMsgsSelectedIds}
-            currentMsgId={currentMsgId}
-            setCurrentMsgId={setCurrentMsgId}
-            messages={messages}
-            loading={loading}
-            errMsg={errMsg}
-            hasMore={hasMore}
-            setPaging={setPaging}
-            popUpVisible={popUpVisible}
-            setPopUpVisible={setPopUpVisible}
-            search={search}
-          />
-        )}
+        <MessagesBox
+          section={section}
+          newVisible={newVisible}
+          setNewVisible={setNewVisible}
+          newTodoVisible={newTodoVisible}
+          setNewTodoVisible={setNewTodoVisible}
+          setSection={setSection}
+          msgsSelectedIds={msgsSelectedIds}
+          setMsgsSelectedIds={setMsgsSelectedIds}
+          currentMsgId={currentMsgId}
+          setCurrentMsgId={setCurrentMsgId}
+          messages={messages}
+          setMessages={setMessages}
+          loading={loading}
+          errMsg={errMsg}
+          hasMore={hasMore}
+          setPaging={setPaging}
+          popUpVisible={popUpVisible}
+          setPopUpVisible={setPopUpVisible}
+          search={search}
+        />
       </div>
     </div>
   );

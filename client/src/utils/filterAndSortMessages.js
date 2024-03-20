@@ -5,7 +5,6 @@ export const getInboxMessages = (messages, userId) => {
       !message.deleted_by_staff_ids?.includes(userId)
   );
 };
-
 export const getSentMessages = (messages, userId) => {
   return messages.filter(
     (message) =>
@@ -13,13 +12,11 @@ export const getSentMessages = (messages, userId) => {
       !message.deleted_by_staff_ids?.includes(userId)
   );
 };
-
 export const getDeletedMessages = (messages, userId) => {
   return messages.filter((message) =>
     message.deleted_by_staff_ids?.includes(userId)
   );
 };
-
 export const filterAndSortMessages = (section, datas, userId) => {
   let newMessages = [];
   switch (section) {
@@ -31,6 +28,9 @@ export const filterAndSortMessages = (section, datas, userId) => {
       break;
     case "Deleted messages":
       newMessages = getDeletedMessages(datas, userId);
+      break;
+    case "To-dos":
+      newMessages = datas;
       break;
     default:
       break;

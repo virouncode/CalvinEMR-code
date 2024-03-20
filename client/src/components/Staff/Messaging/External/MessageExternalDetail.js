@@ -36,6 +36,8 @@ const MessageExternalDetail = ({
   section,
   popUpVisible,
   setPopUpVisible,
+  setMessages,
+  setPaging,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -60,6 +62,10 @@ const MessageExternalDetail = ({
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
+    setMessages([]);
+    setPaging((p) => {
+      return { ...p, page: 1 };
+    });
   };
 
   const handleClickForward = (e) => {
@@ -107,6 +113,10 @@ const MessageExternalDetail = ({
           },
         });
         setCurrentMsgId(0);
+        setMessages([]);
+        setPaging((p) => {
+          return { ...p, page: 1 };
+        });
         toast.success("Message deleted successfully", { containerId: "A" });
       } catch (err) {
         toast.error(`Error: unable to delete message: ${err.message}`, {
@@ -326,6 +336,8 @@ const MessageExternalDetail = ({
             message={message}
             previousMsgs={previousMsgs}
             setCurrentMsgId={setCurrentMsgId}
+            setMessages={setMessages}
+            setPaging={setPaging}
           />
         )}
         {section !== "Deleted messages" && !replyVisible && (

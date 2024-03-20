@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { postPatientRecord } from "../../../../api/fetchRecords";
+import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages";
@@ -38,6 +39,8 @@ const MessageDetail = ({
   section,
   popUpVisible,
   setPopUpVisible,
+  setMessages,
+  setPaging,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -48,7 +51,10 @@ const MessageDetail = ({
   const [allPersons, setAllPersons] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [posting, setPosting] = useState(false);
-  const [previousMsgs, loading, errMsg] = useFetchPreviousMessages(message);
+  const [previousMsgs, loading, errMsg] = useFetchPreviousMessages(
+    message,
+    section
+  );
   useEffect(() => {
     if (!message) return;
     setAttachments(message.attachments_ids.map(({ attachment }) => attachment));
@@ -56,47 +62,87 @@ const MessageDetail = ({
 
   const handleClickBack = (e) => {
     setCurrentMsgId(0);
+    setMessages([]);
+    setPaging((p) => {
+      return { ...p, page: 1 };
+    });
   };
 
   const handleDeleteMsg = async (e) => {
     if (
       await confirmAlert({
-        content: "Do you really want to delete this message ?",
+        content: `Do you really want to delete this ${
+          section === "To-dos" ? "to-do" : "message"
+        } ?`,
       })
     ) {
       try {
-        const datasToPut = {
-          ...message,
-          deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          attachments_ids: message.attachments_ids.map(
+        if (section === "To-dos") {
+          const attachmentsIdsToDelete = message.attachments_ids.map(
             ({ attachment }) => attachment.id
-          ), //reformatted because of add-on
-        };
-        delete datasToPut.patient_infos; //from add-on
-        const response = await xanoPut(
-          `/messages/${message.id}`,
-          "staff",
-          datasToPut
-        );
-        socket.emit("message", {
-          route: "MESSAGES INBOX",
-          action: "update",
-          content: {
-            id: message.id,
-            data: response.data,
-          },
-        });
-        socket.emit("message", {
-          route: "MESSAGES ABOUT PATIENT",
-          action: "update",
-          content: {
-            id: message.id,
-            data: response.data,
-          },
-        });
+          );
+          for (let attachmentId of attachmentsIdsToDelete) {
+            await xanoDelete(`/messages_attachments/${attachmentId}`, "staff");
+          }
+          await xanoDelete(`/todos/${message.id}`, "staff");
+          socket.emit("message", {
+            route: "MESSAGES INBOX",
+            action: "delete",
+            content: {
+              id: message.id,
+            },
+          });
+          socket.emit("message", {
+            route: "TO-DOS ABOUT PATIENT",
+            action: "delete",
+            content: {
+              id: message.id,
+            },
+          });
+          setCurrentMsgId(0);
+          setMessages([]);
+          setPaging((p) => {
+            return { ...p, page: 1 };
+          });
+          toast.success("To-do deleted successfully", { containerId: "A" });
+        } else {
+          const datasToPut = {
+            ...message,
+            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+            attachments_ids: message.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            ), //reformatted because of add-on
+          };
+          delete datasToPut.patient_infos; //from add-on
+          const response = await xanoPut(
+            `/messages/${message.id}`,
+            "staff",
+            datasToPut
+          );
+          socket.emit("message", {
+            route: "MESSAGES INBOX",
+            action: "update",
+            content: {
+              id: message.id,
+              data: response.data,
+            },
+          });
+          socket.emit("message", {
+            route: "MESSAGES ABOUT PATIENT",
+            action: "update",
+            content: {
+              id: message.id,
+              data: response.data,
+            },
+          });
 
-        setCurrentMsgId(0);
-        toast.success("Message deleted successfully", { containerId: "A" });
+          setCurrentMsgId(0);
+          setMessages([]);
+          setPaging((p) => {
+            return { ...p, page: 1 };
+          });
+          toast.success("Message deleted successfully", { containerId: "A" });
+        }
       } catch (err) {
         toast.error(`Error: unable to delete message: ${err.message}`, {
           containerId: "A",
@@ -256,6 +302,7 @@ const MessageDetail = ({
               message={message}
               previousMsgs={previousMsgs}
               attachments={attachments}
+              section={section}
             />
           </NewWindow>
         )}
@@ -269,6 +316,9 @@ const MessageDetail = ({
           <div className="message-detail__patient">
             {message.related_patient_id ? (
               <>
+                <span>
+                  <strong>Related patient: </strong>
+                </span>
                 <NavLink
                   to={`/staff/patient-record/${message.related_patient_id}`}
                   className="message-detail__patient-link"
@@ -276,13 +326,15 @@ const MessageDetail = ({
                 >
                   {toPatientName(message.patient_infos)}
                 </NavLink>
-                <button
-                  onClick={handleAddToClinicalNotes}
-                  style={{ width: "230px" }}
-                  disabled={posting}
-                >
-                  Add message to patient clinical notes
-                </button>
+                {section !== "To-dos" && (
+                  <button
+                    onClick={handleAddToClinicalNotes}
+                    style={{ width: "230px" }}
+                    disabled={posting}
+                  >
+                    Add message to patient clinical notes
+                  </button>
+                )}
               </>
             ) : null}
           </div>
@@ -294,26 +346,37 @@ const MessageDetail = ({
           )}
         </div>
         <div ref={messageContentRef} className="message-detail__content">
-          <Message message={message} key={message.id} index={0} />
-          {errMsg && <p className="message-detail__content-err">{errMsg}</p>}
-          {!errMsg && previousMsgs && previousMsgs.length > 0
-            ? previousMsgs.map((message, index) =>
-                message.type === "Internal" ? (
-                  <Message
-                    message={message}
-                    key={message.id}
-                    index={index + 1}
-                  />
-                ) : (
-                  <MessageExternal
-                    message={message}
-                    key={message.id}
-                    index={index + 1}
-                  />
-                )
-              )
-            : !loading && null}
-          {loading && <LoadingParagraph />}
+          <Message
+            message={message}
+            key={message.id}
+            index={0}
+            section={section}
+          />
+          {section !== "To-dos" && (
+            <>
+              {errMsg && (
+                <p className="message-detail__content-err">{errMsg}</p>
+              )}
+              {!errMsg && previousMsgs && previousMsgs.length > 0
+                ? previousMsgs.map((message, index) =>
+                    message.type === "Internal" ? (
+                      <Message
+                        message={message}
+                        key={message.id}
+                        index={index + 1}
+                      />
+                    ) : (
+                      <MessageExternal
+                        message={message}
+                        key={message.id}
+                        index={index + 1}
+                      />
+                    )
+                  )
+                : !loading && null}
+              {loading && <LoadingParagraph />}
+            </>
+          )}
           <MessagesAttachments
             attachments={attachments}
             deletable={false}
@@ -334,19 +397,24 @@ const MessageDetail = ({
             previousMsgs={previousMsgs}
             patientName={toPatientName(message.patient_infos)}
             setCurrentMsgId={setCurrentMsgId}
+            setMessages={setMessages}
+            setPaging={setPaging}
           />
         )}
-        {section !== "Deleted messages" && !replyVisible && !forwardVisible && (
-          <div className="message-detail__btns">
-            {section !== "Sent messages" && (
-              <button onClick={handleClickReply}>Reply</button>
-            )}
-            {message.to_staff_ids.length >= 2 &&
-              section !== "Sent messages" && (
-                <button onClick={handleClickReplyAll}>Reply all</button>
+        {section !== "Deleted messages" &&
+          section !== "To-dos" &&
+          !replyVisible &&
+          !forwardVisible && (
+            <div className="message-detail__btns">
+              {section !== "Sent messages" && (
+                <button onClick={handleClickReply}>Reply</button>
               )}
-            <button onClick={handleClickForward}>Forward</button>
-            {/* {message.related_patient_id ? (
+              {message.to_staff_ids.length >= 2 &&
+                section !== "Sent messages" && (
+                  <button onClick={handleClickReplyAll}>Reply all</button>
+                )}
+              <button onClick={handleClickForward}>Forward</button>
+              {/* {message.related_patient_id ? (
               <button
                 onClick={handleAddAllAttachments}
                 disabled={attachments.length === 0}
@@ -354,8 +422,8 @@ const MessageDetail = ({
                 Add all attachments to patient record
               </button>
             ) : null} */}
-          </div>
-        )}
+            </div>
+          )}
         {forwardVisible && (
           <FakeWindow
             title="FORWARD MESSAGE"

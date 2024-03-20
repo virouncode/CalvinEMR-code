@@ -14,6 +14,7 @@ const MessagesExternalBox = ({
   currentMsgId,
   setCurrentMsgId,
   messages,
+  setMessages,
   loading,
   errMsg,
   hasMore,
@@ -46,6 +47,8 @@ const MessagesExternalBox = ({
             section={section}
             popUpVisible={popUpVisible}
             setPopUpVisible={setPopUpVisible}
+            setMessages={setMessages}
+            setPaging={setPaging}
           />
         )}
       </div>

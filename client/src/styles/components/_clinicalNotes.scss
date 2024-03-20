@@ -3,7 +3,7 @@
     font-size: 0.85rem;
     border-bottom: solid 0.5px $grey;
     border-top: solid 0.5px $grey;
-    height: 80vh;
+    height: 98%;
     overflow-y:scroll;
     position:relative;
     &__err {
@@ -61,7 +61,6 @@
         transition:0.3s;
         overflow-y: scroll;
         padding-top: 0;
-        
         &--active {
             // max-height: 150vh;
             max-height: 1300px;

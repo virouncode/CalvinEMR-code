@@ -65,6 +65,7 @@ const MessagesPatient = () => {
           currentMsgId={currentMsgId}
           setCurrentMsgId={setCurrentMsgId}
           messages={messages}
+          setMessages={setMessages}
           loading={loading}
           errMsg={errMsg}
           hasMore={hasMore}

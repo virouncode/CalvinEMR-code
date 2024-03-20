@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import useFetchMessagesExternal from "../../../../hooks/useFetchMessagesExternal";
 import useMessagesExternalSocket from "../../../../hooks/useMessagesExternalSocket";
 import useUserContext from "../../../../hooks/useUserContext";
-import TodosBox from "../Internal/TodosBox";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesExternalBox from "./MessagesExternalBox";
 import MessagesExternalToolBar from "./MessagesExternalToolbar";
@@ -27,14 +26,8 @@ const MessagesExternal = () => {
     offset: 0,
   });
   const { messages, setMessages, loading, errMsg, hasMore } =
-    useFetchMessagesExternal(
-      paging,
-      search,
-      sectionName,
-      messageId,
-      section,
-      user.id
-    );
+    useFetchMessagesExternal(paging, search, messageId, section, user.id);
+
   useMessagesExternalSocket(messages, setMessages, section, "staff");
 
   useEffect(() => {
@@ -61,6 +54,8 @@ const MessagesExternal = () => {
         setSelectAllVisible={setSelectAllVisible}
         paging={paging}
         setPaging={setPaging}
+        newTodoVisible={newTodoVisible}
+        setNewTodoVisible={setNewTodoVisible}
       />
       <div className="messages-content">
         <MessagesLeftBar
@@ -74,31 +69,26 @@ const MessagesExternal = () => {
           setPaging={setPaging}
           setMessages={setMessages}
         />
-        {section === "To do list" ? (
-          <TodosBox
-            search={search}
-            newTodoVisible={newTodoVisible}
-            setNewTodoVisible={setNewTodoVisible}
-          />
-        ) : (
-          <MessagesExternalBox
-            section={section}
-            newVisible={newVisible}
-            setNewVisible={setNewVisible}
-            msgsSelectedIds={msgsSelectedIds}
-            setMsgsSelectedIds={setMsgsSelectedIds}
-            currentMsgId={currentMsgId}
-            setCurrentMsgId={setCurrentMsgId}
-            messages={messages}
-            loading={loading}
-            errMsg={errMsg}
-            hasMore={hasMore}
-            setPaging={setPaging}
-            popUpVisible={popUpVisible}
-            setPopUpVisible={setPopUpVisible}
-            search={search}
-          />
-        )}
+        <MessagesExternalBox
+          section={section}
+          newVisible={newVisible}
+          setNewVisible={setNewVisible}
+          newTodoVisible={newTodoVisible}
+          setNewTodoVisible={setNewTodoVisible}
+          msgsSelectedIds={msgsSelectedIds}
+          setMsgsSelectedIds={setMsgsSelectedIds}
+          currentMsgId={currentMsgId}
+          setCurrentMsgId={setCurrentMsgId}
+          messages={messages}
+          setMessages={setMessages}
+          loading={loading}
+          errMsg={errMsg}
+          hasMore={hasMore}
+          setPaging={setPaging}
+          popUpVisible={popUpVisible}
+          setPopUpVisible={setPopUpVisible}
+          search={search}
+        />
       </div>
     </div>
   );

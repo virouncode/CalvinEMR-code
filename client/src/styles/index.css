@@ -389,7 +389,7 @@ select:focus {
 
 .patient-record-section {
   width: 100%;
-  height: 85vh;
+  height: 83vh;
 }
 .patient-record-section__title {
   font-size: 1.2rem;
@@ -11768,9 +11768,9 @@ readers do not read off random characters that represent icons */
 }
 
 .patient-record__content {
-  margin: 0 auto 20px;
+  margin: 0 auto;
   width: 97%;
-  min-height: 80vh;
+  height: 79vh;
   display: grid;
   grid-template-columns: 20% 60% 20%;
   align-items: flex-start;
@@ -11789,7 +11789,7 @@ readers do not read off random characters that represent icons */
 .patient-record__menu {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 98%;
   overflow-y: scroll;
   border-top: solid 0.5px #cecdcd;
   border-bottom: solid 0.5px #cecdcd;
@@ -11805,7 +11805,7 @@ readers do not read off random characters that represent icons */
   font-size: 0.85rem;
   border-bottom: solid 0.5px #cecdcd;
   border-top: solid 0.5px #cecdcd;
-  height: 80vh;
+  height: 98%;
   overflow-y: scroll;
   position: relative;
 }
@@ -14580,6 +14580,9 @@ readers do not read off random characters that represent icons */
   text-align: center;
   width: 50%;
 }
+.messages-overview__subject--todo {
+  width: 69%;
+}
 .messages-overview__patient {
   text-align: center;
   width: 13%;
@@ -14690,6 +14693,9 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.message-detail__subject--todo {
+  width: 69%;
 }
 .message-detail__patient {
   width: 40%;

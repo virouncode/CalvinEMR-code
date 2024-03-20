@@ -4,6 +4,7 @@ import { toPatientName } from "../../../../utils/toPatientName";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import NewMessageExternal from "../../Messaging/External/NewMessageExternal";
 import NewMessage from "../../Messaging/Internal/NewMessage";
+import NewTodo from "../../Messaging/Internal/NewTodo";
 import AlertsPU from "../Popups/AlertsPU";
 import AllergiesPU from "../Popups/AllergiesPU";
 import AppointmentsPU from "../Popups/AppointmentsPU";
@@ -44,6 +45,7 @@ import ProblemListContent from "../Topics/ProblemList/ProblemListContent";
 import RelationshipsContent from "../Topics/Relationships/RelationshipsContent";
 import RemindersContent from "../Topics/Reminders/RemindersContent";
 import RiskContent from "../Topics/Risks/RiskContent";
+import TodosContent from "../Topics/Todos/TodosContent";
 import PatientTopicHeader from "./PatientTopicHeader";
 
 const PatientTopic = ({
@@ -104,7 +106,8 @@ const PatientTopic = ({
           contentsVisible={contentsVisible}
           popUpButton={
             topic === "MESSAGES WITH PATIENT" ||
-            topic === "MESSAGES ABOUT PATIENT"
+            topic === "MESSAGES ABOUT PATIENT" ||
+            topic === "TO-DOS ABOUT PATIENT"
               ? "paperPlane"
               : topic === "LABELS"
               ? ""
@@ -115,7 +118,7 @@ const PatientTopic = ({
       <div
         className={
           contentsVisible
-            ? topic === "REMINDERS" || topic === "MESSAGES WITH PATIENT"
+            ? topic === "REMINDERS" || topic === "TO-DOS ABOUT PATIENT"
               ? `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active patient-record__topic-container--bottom`
               : `patient-record__topic-container patient-record__topic-container--${side} patient-record__topic-container--active`
             : `patient-record__topic-container patient-record__topic-container--${side} `
@@ -768,7 +771,7 @@ const PatientTopic = ({
             height={600}
             x={(window.innerWidth - 1000) / 2}
             y={(window.innerHeight - 600) / 2}
-            color={"#94bae8"}
+            color={backgroundColor}
             setPopUpVisible={setPopUpVisible}
           >
             <NewMessage
@@ -796,7 +799,7 @@ const PatientTopic = ({
             height={600}
             x={(window.innerWidth - 1000) / 2}
             y={(window.innerHeight - 600) / 2}
-            color={"#94bae8"}
+            color={backgroundColor}
             setPopUpVisible={setPopUpVisible}
           >
             <NewMessageExternal
@@ -809,6 +812,33 @@ const PatientTopic = ({
           </FakeWindow>
         )}
         {/*******************/}
+        {/* TO-DOS ABOUT PATIENT */}
+        {topic === "TO-DOS ABOUT PATIENT" && (
+          <TodosContent
+            topicDatas={topicDatas}
+            loading={loading}
+            errMsg={errMsg}
+          />
+        )}
+        {topic === "TO-DOS ABOUT PATIENT" && popUpVisible && (
+          <FakeWindow
+            title="NEW TO-DO"
+            width={1000}
+            height={600}
+            x={(window.innerWidth - 1000) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color={backgroundColor}
+            setPopUpVisible={setPopUpVisible}
+          >
+            <NewTodo
+              setNewTodoVisible={setPopUpVisible}
+              initialPatient={{
+                id: patientId,
+                name: toPatientName(demographicsInfos),
+              }}
+            />
+          </FakeWindow>
+        )}
       </div>
     </div>
   );

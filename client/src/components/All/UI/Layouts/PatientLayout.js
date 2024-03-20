@@ -4,8 +4,8 @@ import useTitleContext from "../../../../hooks/useTitleContext";
 import ConfirmGlobal from "../../Confirm/ConfirmGlobal";
 import Welcome from "../../Welcome/Welcome";
 import PatientHeader from "../Headers/PatientHeader";
-import ToastAlarm from "../Toast/ToastAlarm";
 import ToastCalvin from "../Toast/ToastCalvin";
+import ToastInactivity from "../Toast/ToastInactivity";
 
 const PatientLayout = () => {
   const { title } = useTitleContext();
@@ -18,7 +18,7 @@ const PatientLayout = () => {
         <Outlet />
         <ConfirmGlobal />
         <ToastCalvin id="A" />
-        <ToastAlarm id="Z" />
+        <ToastInactivity id="Z" />
       </main>
     </div>
   );

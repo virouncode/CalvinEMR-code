@@ -1,8 +1,8 @@
 .patient-record {
     &__content {
-    margin: 0 auto 20px;
+    margin: 0 auto;
     width : 97%;
-    min-height : 80vh;
+    height : 79vh;
     display : grid;
     grid-template-columns: 20% 60% 20%;
     align-items: flex-start;
@@ -21,7 +21,7 @@
     &__menu {
         display:flex;
         flex-direction: column;
-        height: 80vh;
+        height: 98%;
         overflow-y:scroll;
         border-top:solid 0.5px $grey;
         border-bottom : solid 0.5px $grey;

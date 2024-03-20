@@ -167,6 +167,28 @@ export const onMessageTopic = (message, topic, datas, setDatas, patientId) => {
       default:
         break;
     }
+  } else if (message.route === "TO-DOS ABOUT PATIENT") {
+    switch (message.action) {
+      case "create":
+        if (message.content.data.related_patient_id === patientId) {
+          setDatas([message.content.data, ...datas]);
+        }
+        break;
+      case "update":
+        if (message.content.data.related_patient_id === patientId) {
+          setDatas(
+            datas.map((item) =>
+              item.id === message.content.id ? message.content.data : item
+            )
+          );
+        }
+        break;
+      case "delete":
+        setDatas(datas.filter((item) => item.id !== message.content.id));
+        break;
+      default:
+        break;
+    }
   } else {
     switch (message.action) {
       case "create":

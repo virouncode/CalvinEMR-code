@@ -4,16 +4,20 @@ import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import MessageDetail from "./MessageDetail";
 import MessagesOverview from "./MessagesOverview";
 import NewMessage from "./NewMessage";
+import NewTodo from "./NewTodo";
 
 const MessagesBox = ({
   section,
   newVisible,
   setNewVisible,
+  newTodoVisible,
+  setNewTodoVisible,
   msgsSelectedIds,
   setMsgsSelectedIds,
   currentMsgId,
   setCurrentMsgId,
   messages,
+  setMessages,
   loading,
   errMsg,
   hasMore,
@@ -46,6 +50,8 @@ const MessagesBox = ({
             section={section}
             popUpVisible={popUpVisible}
             setPopUpVisible={setPopUpVisible}
+            setMessages={setMessages}
+            setPaging={setPaging}
           />
         )}
       </div>
@@ -60,6 +66,19 @@ const MessagesBox = ({
           setPopUpVisible={setNewVisible}
         >
           <NewMessage setNewVisible={setNewVisible} />
+        </FakeWindow>
+      )}
+      {newTodoVisible && (
+        <FakeWindow
+          title="NEW TO-DO"
+          width={1000}
+          height={600}
+          x={(window.innerWidth - 1000) / 2}
+          y={(window.innerHeight - 600) / 2}
+          color={"#94bae8"}
+          setPopUpVisible={setNewTodoVisible}
+        >
+          <NewTodo setNewTodoVisible={setNewTodoVisible} />
         </FakeWindow>
       )}
     </>

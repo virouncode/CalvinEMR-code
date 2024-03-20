@@ -16,7 +16,6 @@ const PatientRecord = ({
   //HOOKS
   const {
     loadingRecord,
-
     pastHealth,
     setPastHealth,
     loadingPastHealth,
@@ -260,26 +259,16 @@ const PatientRecord = ({
     setPagingAppointments,
 
     messagesAbout,
-    setMessagesAbout,
     loadingMessagesAbout,
-    setLoadingMessagesAbout,
     errMessagesAbout,
-    setErrMessagesAbout,
-    hasMoreMessagesAbout,
-    setHasMoreMessagesAbout,
-    pagingMessagesAbout,
-    setPagingMessagesAbout,
 
     messagesWith,
-    setMessagesWith,
     loadingMessagesWith,
-    setLoadingMessagesWith,
     errMessagesWith,
-    setErrMessagesWith,
-    hasMoreMessagesWith,
-    setHasMoreMessagesWith,
-    pagingMessagesWith,
-    setPagingMessagesWith,
+
+    todosAbout,
+    loadingTodosAbout,
+    errTodosAbout,
   } = useFetchPatientRecord(patientId);
 
   const [allContentsVisible, setAllContentsVisible] = useState(false);
@@ -583,25 +572,14 @@ const PatientRecord = ({
           pagingAppointments={pagingAppointments}
           setPagingAppointments={setPagingAppointments}
           messagesAbout={messagesAbout}
-          setMessagesAbout={setMessagesAbout}
           loadingMessagesAbout={loadingMessagesAbout}
-          setLoadingMessagesAbout={setLoadingMessagesAbout}
           errMessagesAbout={errMessagesAbout}
-          setErrMessagesAbout={setErrMessagesAbout}
-          hasMoreMessagesAbout={hasMoreMessagesAbout}
-          setHasMoreMessagesAbout={setHasMoreMessagesAbout}
-          pagingMessagesAbout={pagingMessagesAbout}
-          setPagingMessagesAbout={setPagingMessagesAbout}
           messagesWith={messagesWith}
-          setMessagesWith={setMessagesWith}
           loadingMessagesWith={loadingMessagesWith}
-          setLoadingMessagesWith={setLoadingMessagesWith}
           errMessagesWith={errMessagesWith}
-          setErrMessagesWith={setErrMessagesWith}
-          hasMoreMessagesWith={hasMoreMessagesWith}
-          setHasMoreMessagesWith={setHasMoreMessagesWith}
-          pagingMessagesWith={pagingMessagesWith}
-          setPagingMessagesWith={setPagingMessagesWith}
+          todosAbout={todosAbout}
+          loadingTodosAbout={loadingTodosAbout}
+          errTodosAbout={errTodosAbout}
         />
       </div>
     </>

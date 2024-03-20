@@ -1,6 +1,5 @@
-import React from "react";
 import { toast } from "react-toastify";
-
+import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../../hooks/useSocketContext";
@@ -34,7 +33,7 @@ const MessagesToolBar = ({
     setPaging({ ...paging, page: 1 });
   };
   const handleClickNew = (e) => {
-    if (section === "To do list") {
+    if (section === "To-dos") {
       setNewTodoVisible(true);
     } else {
       setNewVisible(true);
@@ -55,40 +54,76 @@ const MessagesToolBar = ({
   const handleDeleteSelected = async () => {
     if (
       await confirmAlert({
-        content: "Do you really want to delete selected messages ?",
+        content: `Do you really want to delete selected ${
+          section === "To-dos" ? "to-dos" : "messages"
+        }?`,
       })
     ) {
       try {
-        const msgsSelected = (
-          await xanoGet("/messages_selected", "staff", {
-            messages_ids: msgsSelectedIds,
-          })
-        ).data;
-        for (let message of msgsSelected) {
-          const datasToPut = {
-            ...message,
-            deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
-          };
-          const response = await xanoPut(
-            `/messages/${message.id}`,
-            "staff",
-            datasToPut
-          );
-          socket.emit("message", {
-            route: "MESSAGES INBOX",
-            action: "update",
-            content: { id: message.id, data: response.data },
+        if (section === "To-dos") {
+          for (let messageId of msgsSelectedIds) {
+            const messageToDelete = messages.find(({ id }) => id === messageId);
+            const attachmentsIdsToDelete = messageToDelete.attachments_ids.map(
+              ({ attachment }) => attachment.id
+            );
+            for (let attachmentId of attachmentsIdsToDelete) {
+              await xanoDelete(
+                `/messages_attachments/${attachmentId}`,
+                "staff"
+              );
+            }
+            await xanoDelete(`/todos/${messageId}`, "staff");
+            socket.emit("message", {
+              route: "MESSAGES INBOX",
+              action: "delete",
+              content: { id: messageId },
+            });
+            socket.emit("message", {
+              route: "TO-DOS ABOUT PATIENT",
+              action: "delete",
+              content: { id: messageId },
+            });
+          }
+          setNewVisible(false);
+          toast.success("To-do(s) deleted successfully", {
+            containerId: "A",
           });
-          socket.emit("message", {
-            route: "MESSAGES ABOUT PATIENT",
-            action: "update",
-            content: { id: message.id, data: response.data },
+          setMsgsSelectedIds([]);
+          setSelectAllVisible(true);
+        } else {
+          const msgsSelected = (
+            await xanoGet("/messages_selected", "staff", {
+              messages_ids: msgsSelectedIds,
+            })
+          ).data;
+          for (let message of msgsSelected) {
+            const datasToPut = {
+              ...message,
+              deleted_by_staff_ids: [...message.deleted_by_staff_ids, user.id],
+            };
+            const response = await xanoPut(
+              `/messages/${message.id}`,
+              "staff",
+              datasToPut
+            );
+            socket.emit("message", {
+              route: "MESSAGES INBOX",
+              action: "update",
+              content: { id: message.id, data: response.data },
+            });
+            socket.emit("message", {
+              route: "MESSAGES ABOUT PATIENT",
+              action: "update",
+              content: { id: message.id, data: response.data },
+            });
+          }
+          setNewVisible(false);
+          toast.success("Message(s) deleted successfully", {
+            containerId: "A",
           });
+          setMsgsSelectedIds([]);
+          setSelectAllVisible(true);
         }
-        setNewVisible(false);
-        toast.success("Message(s) deleted successfully", { containerId: "A" });
-        setMsgsSelectedIds([]);
-        setSelectAllVisible(true);
       } catch (err) {
         toast.error(`Error: unable to delete message(s): ${err.message}`, {
           containerId: "A",
@@ -160,8 +195,8 @@ const MessagesToolBar = ({
         <button
           onClick={handleClickNew}
           disabled={
-            (section === "To do list" && newTodoVisible) ||
-            (section !== "To do list" && newVisible)
+            (section === "To-dos" && newTodoVisible) ||
+            (section !== "To-dos" && newVisible)
           }
         >
           New
@@ -178,7 +213,6 @@ const MessagesToolBar = ({
             <button onClick={handleDeleteSelected}>Delete Selected</button>
           )}
         {currentMsgId === 0 &&
-          section !== "To do list" &&
           (selectAllVisible ? (
             <button onClick={handleSelectAll}>Select All</button>
           ) : (

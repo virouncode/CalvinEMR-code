@@ -14,6 +14,7 @@ const MessagesPatientBox = ({
   currentMsgId,
   setCurrentMsgId,
   messages,
+  setMessages,
   loading,
   errMsg,
   hasMore,
@@ -43,6 +44,8 @@ const MessagesPatientBox = ({
           <MessagePatientDetail
             setCurrentMsgId={setCurrentMsgId}
             message={messages.find(({ id }) => id === currentMsgId)}
+            setMessages={setMessages}
+            setPaging={setPaging}
             section={section}
             popUpVisible={popUpVisible}
             setPopUpVisible={setPopUpVisible}

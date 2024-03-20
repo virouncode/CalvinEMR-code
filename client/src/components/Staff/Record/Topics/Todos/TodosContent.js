@@ -4,47 +4,26 @@ import useUserContext from "../../../../../hooks/useUserContext";
 import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
 import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
 
-const MessagesContent = ({ topicDatas, loading, errMsg }) => {
+const TodosContent = ({ topicDatas, loading, errMsg }) => {
   const { user } = useUserContext();
-
-  const getSection = (message) => {
-    if (message.deleted_by_staff_ids.includes(user.id)) {
-      return "Deleted messages";
-    } else if (message.from_id === user.id) {
-      //et le cas forward ???
-      return "Sent messages";
-    } else {
-      return "Inbox";
-    }
-  };
   return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>
     ) : (
       <div className="topic-content">
         {topicDatas &&
-        topicDatas.filter(
-          (message) =>
-            message.from_id === user.id ||
-            message.to_staff_ids.includes(user.id)
-        ).length > 0 ? (
+        topicDatas.filter((message) => message.staff_id === user.id).length >
+          0 ? (
           <ul>
             {topicDatas
-              .filter(
-                (message) =>
-                  message.from_id === user.id ||
-                  message.to_staff_ids.includes(user.id)
-              )
+              .filter((message) => message.staff_id === user.id)
               .slice(0, 4)
               .map((message) => (
                 <li className="topic-content__item" key={message.id}>
                   <div className="topic-content__overview">
                     <NavLink
                       className="topic-content__link"
-                      to={`/staff/messages/${message.id}/${getSection(
-                        message
-                      )}/Internal`}
-                      // target="_blank"
+                      to={`/staff/messages/${message.id}/To-dos/Internal`}
                     >
                       {message.subject} - {message.body}
                     </NavLink>
@@ -52,9 +31,7 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
                   <div className="topic-content__date">
                     <NavLink
                       className="topic-content__link"
-                      to={`/staff/messages/${message.id}/${getSection(
-                        message
-                      )}/Internal`}
+                      to={`/staff/messages/${message.id}/To-dos/Internal`}
                     >
                       {timestampToDateISOTZ(message.date_created)}
                     </NavLink>
@@ -64,7 +41,7 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
             <li>...</li>
           </ul>
         ) : (
-          "No messages about patient"
+          "No to-dos about patient"
         )}
       </div>
     )
@@ -73,4 +50,4 @@ const MessagesContent = ({ topicDatas, loading, errMsg }) => {
   );
 };
 
-export default MessagesContent;
+export default TodosContent;

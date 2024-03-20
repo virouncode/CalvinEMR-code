@@ -16,6 +16,8 @@ const ReplyMessagePatient = ({
   message,
   previousMsgs,
   setCurrentMsgId,
+  setMessages,
+  setPaging,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -84,6 +86,10 @@ const ReplyMessagePatient = ({
       });
       setReplyVisible(false);
       setCurrentMsgId(0);
+      setMessages([]);
+      setPaging((p) => {
+        return { ...p, page: 1 };
+      });
       toast.success("Message sent successfully", { containerId: "A" });
       setProgress(false);
     } catch (err) {
