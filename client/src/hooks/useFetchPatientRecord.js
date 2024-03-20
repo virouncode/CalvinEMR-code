@@ -264,7 +264,6 @@ const useFetchPatientRecord = (patientId) => {
   ) => {
     try {
       setLoading(true);
-      setErrPastHealth("");
       const response = await xanoGet(
         url,
         "staff",

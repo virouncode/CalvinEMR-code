@@ -1,4 +1,4 @@
-.reference {
+.reference-links {
   border: solid 1px $grey;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   background: #FEFEFE;
@@ -6,7 +6,7 @@
   padding: 20px;
   display: grid;
   grid-template-columns: 33% 33% 33%;
-  margin-top: 30px;
+  margin-bottom: 10px;
   h3 {
     margin-bottom: 10px;
     font-size: 1rem;
@@ -33,6 +33,13 @@
       margin-right: 10px;
     }
   }
+  &__personal-links {
+    overflow-y: scroll;
+    height : 450px;
+    padding: 10px 0;
+    border-radius: 6px;
+    border:solid 1px $grey;
+  }
   &__form{
     border:solid 1px $grey;
     border-radius: 6px;
@@ -51,10 +58,11 @@
   }
   &__form-row {
     font-size: 0.85rem;
+    margin-bottom: 10px;
     label {
       display: inline-block;
       width:20%;
-      margin-bottom: 10px;
+      margin-right: 10px;
     }
     input {
       width: 80%;
@@ -66,4 +74,130 @@
       margin-left: 5px;
     }
   }
+}
+
+.reference-edocs {
+  border: solid 1px $grey;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  background: #FEFEFE;
+  border-radius: 6px;
+  padding: 20px;
+  &__title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    h3 {
+      font-size: 1rem;
+    }
+    button {
+      margin-left: 10px;
+    }
+  }
+  &__search {
+    margin: 20px 0 10px;
+    label {
+      font-size: 0.85rem;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+  }
+  &__err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 100%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 6px;
+    text-align: center;
+  }
+  &__table-container {
+      height:400px;
+      overflow:scroll;
+      border-radius: 6px;
+      box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+      position:relative;
+  }
+  &__table {
+      table-layout:fixed;
+      min-width:100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      thead {
+          position: sticky;
+          top:0;
+          background: $blue;
+          border-radius: 6px;
+      }
+      th {
+          min-width: 120px;
+          padding: 10px;
+          cursor: pointer;
+      }
+  }
+  &__item {
+      border-bottom:solid 1px $grey;
+      td {
+          text-align: center;
+          padding: 10px;
+          word-break: break-word;
+      }
+  }
+  &__item-btn-container {
+      display: flex;
+      justify-content: center;
+      button {
+          margin-left: 5px;
+      }
+  }
+  &__item-link {
+    color:blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  &__form {
+    font-size: 0.8rem;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px; 
+    width:100%;
+    &-btn-container {
+        button {
+            margin-left: 5px;
+        }
+        text-align: center;
+        margin-bottom: 20px;
+    }
+  }
+  &__row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px 0;
+    label {
+        width: 20%;
+        font-weight: bold;
+    }
+    input {
+        width: 70%;
+    }
+    input[type="submit"]{
+        width:auto;
+    }
+    &--text {
+        align-items: flex-start;
+        textarea {
+            width: 70%;
+            height:200px;
+        }
+    }
+  }
+  &__content {
+    width:49%;
+  }  
+  &__preview {
+      width:49%;
+  }
+  
 }

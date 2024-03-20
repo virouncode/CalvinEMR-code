@@ -16827,7 +16827,7 @@ readers do not read off random characters that represent icons */
   width: 40%;
 }
 
-.reference {
+.reference-links {
   border: solid 1px #cecdcd;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
   background: #FEFEFE;
@@ -16835,39 +16835,46 @@ readers do not read off random characters that represent icons */
   padding: 20px;
   display: grid;
   grid-template-columns: 33% 33% 33%;
-  margin-top: 30px;
+  margin-bottom: 10px;
 }
-.reference h3 {
+.reference-links h3 {
   margin-bottom: 10px;
   font-size: 1rem;
 }
-.reference ul {
+.reference-links ul {
   font-size: 0.9rem;
   margin-bottom: 10px;
 }
-.reference li {
+.reference-links li {
   font-style: 0.85rem;
   margin-left: 20px;
 }
-.reference li a:hover {
+.reference-links li a:hover {
   text-decoration: underline;
 }
-.reference__personal-title {
+.reference-links__personal-title {
   margin-bottom: 10px;
   display: flex;
   align-items: center;
 }
-.reference__personal-title h3 {
+.reference-links__personal-title h3 {
   margin: 0;
   margin-right: 10px;
 }
-.reference__form {
+.reference-links__personal-links {
+  overflow-y: scroll;
+  height: 450px;
+  padding: 10px 0;
+  border-radius: 6px;
+  border: solid 1px #cecdcd;
+}
+.reference-links__form {
   border: solid 1px #cecdcd;
   border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
 }
-.reference__form-err {
+.reference-links__form-err {
   padding: 10px 20px;
   font-size: 0.9rem;
   width: 100%;
@@ -16877,22 +16884,148 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
-.reference__form-row {
+.reference-links__form-row {
   font-size: 0.85rem;
-}
-.reference__form-row label {
-  display: inline-block;
-  width: 20%;
   margin-bottom: 10px;
 }
-.reference__form-row input {
+.reference-links__form-row label {
+  display: inline-block;
+  width: 20%;
+  margin-right: 10px;
+}
+.reference-links__form-row input {
   width: 80%;
 }
-.reference__form-btns {
+.reference-links__form-btns {
   text-align: center;
 }
-.reference__form-btns button {
+.reference-links__form-btns button {
   margin-left: 5px;
+}
+
+.reference-edocs {
+  border: solid 1px #cecdcd;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  background: #FEFEFE;
+  border-radius: 6px;
+  padding: 20px;
+}
+.reference-edocs__title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.reference-edocs__title h3 {
+  font-size: 1rem;
+}
+.reference-edocs__title button {
+  margin-left: 10px;
+}
+.reference-edocs__search {
+  margin: 20px 0 10px;
+}
+.reference-edocs__search label {
+  font-size: 0.85rem;
+  margin-right: 10px;
+  font-weight: bold;
+}
+.reference-edocs__err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.reference-edocs__table-container {
+  height: 400px;
+  overflow: scroll;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  position: relative;
+}
+.reference-edocs__table {
+  table-layout: fixed;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.reference-edocs__table thead {
+  position: sticky;
+  top: 0;
+  background: #93b5e9;
+  border-radius: 6px;
+}
+.reference-edocs__table th {
+  min-width: 120px;
+  padding: 10px;
+  cursor: pointer;
+}
+.reference-edocs__item {
+  border-bottom: solid 1px #cecdcd;
+}
+.reference-edocs__item td {
+  text-align: center;
+  padding: 10px;
+  word-break: break-word;
+}
+.reference-edocs__item-btn-container {
+  display: flex;
+  justify-content: center;
+}
+.reference-edocs__item-btn-container button {
+  margin-left: 5px;
+}
+.reference-edocs__item-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.reference-edocs__form {
+  font-size: 0.8rem;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  width: 100%;
+}
+.reference-edocs__form-btn-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.reference-edocs__form-btn-container button {
+  margin-left: 5px;
+}
+.reference-edocs__row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px 0;
+}
+.reference-edocs__row label {
+  width: 20%;
+  font-weight: bold;
+}
+.reference-edocs__row input {
+  width: 70%;
+}
+.reference-edocs__row input[type=submit] {
+  width: auto;
+}
+.reference-edocs__row--text {
+  align-items: flex-start;
+}
+.reference-edocs__row--text textarea {
+  width: 70%;
+  height: 200px;
+}
+.reference-edocs__content {
+  width: 49%;
+}
+.reference-edocs__preview {
+  width: 49%;
 }
 
 .missing-container {
