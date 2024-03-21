@@ -99,7 +99,6 @@ const Clinic = () => {
   return (
     <>
       <div className="clinic__global-infos">
-        {errMsgPost && <p className="clinic__global-infos-err">{errMsgPost}</p>}
         <span className="clinic__global-infos-title">Global infos</span>
         <label htmlFor="">Name: </label>
         {editClinicVisible ? (
@@ -132,7 +131,11 @@ const Clinic = () => {
             name="website"
           />
         ) : (
-          <p>{clinic.website}</p>
+          <p className="clinic__global-infos-link">
+            <a href={clinic.website} target="_blank" rel="noreferrer">
+              {clinic.website}
+            </a>
+          </p>
         )}
         <div className="clinic__global-infos-btn-container">
           {editClinicVisible ? (
@@ -147,6 +150,7 @@ const Clinic = () => {
           )}
         </div>
       </div>
+      {errMsgPost && <p className="clinic__global-infos-err">{errMsgPost}</p>}
       <div className="clinic__subtitle">
         <span>Sites</span>
         <button onClick={handleAddNew}>New site</button>

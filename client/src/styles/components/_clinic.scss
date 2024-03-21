@@ -39,9 +39,24 @@
     font-weight: bold;
     margin-right: 30px;
   }
+  &-link {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   &-btn-container {
     button {
       margin-left: 5px;
     }
   }
+  &-err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 70%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 6px;
+    text-align: center;
+}
 }

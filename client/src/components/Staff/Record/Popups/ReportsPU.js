@@ -7,6 +7,7 @@ import ConfirmGlobal, {
 import EmptyRow from "../../../All/UI/Tables/EmptyRow";
 import LoadingRow from "../../../All/UI/Tables/LoadingRow";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ReportForm from "../Topics/Reports/ReportForm";
 import ReportItemReceived from "../Topics/Reports/ReportItemReceived";
 import ReportItemSent from "../Topics/Reports/ReportItemSent";
@@ -200,14 +201,24 @@ const ReportsPU = ({
         <button onClick={handleClose}>Close</button>
       </div>
       {addVisible && (
-        <ReportForm
-          patientId={patientId}
-          setAddVisible={setAddVisible}
-          editCounter={editCounter}
-          setErrMsgPost={setErrMsgPost}
-          demographicsInfos={demographicsInfos}
-          errMsgPost={errMsgPost}
-        />
+        <FakeWindow
+          title={"ADD TO PATIENT REPORTS"}
+          width={1000}
+          height={550}
+          x={(window.innerWidth - 1000) / 2}
+          y={(window.innerHeight - 550) / 2}
+          color="#931621"
+          setPopUpVisible={setAddVisible}
+        >
+          <ReportForm
+            patientId={patientId}
+            setAddVisible={setAddVisible}
+            editCounter={editCounter}
+            setErrMsgPost={setErrMsgPost}
+            demographicsInfos={demographicsInfos}
+            errMsgPost={errMsgPost}
+          />
+        </FakeWindow>
       )}
       <ConfirmGlobal isPopUp={true} />
       <ToastCalvin id="B" />

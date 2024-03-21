@@ -13677,7 +13677,7 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 .reports__table-container {
-  height: 200px;
+  height: 220px;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
@@ -17772,8 +17772,21 @@ readers do not read off random characters that represent icons */
   font-weight: bold;
   margin-right: 30px;
 }
+.clinic__global-infos-link:hover {
+  text-decoration: underline;
+}
 .clinic__global-infos-btn-container button {
   margin-left: 5px;
+}
+.clinic__global-infos-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 70%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
 }
 
 .site-form {
