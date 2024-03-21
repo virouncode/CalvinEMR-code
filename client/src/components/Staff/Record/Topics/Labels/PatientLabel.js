@@ -20,6 +20,9 @@ const PatientLabel = ({ demographicsInfos, windowRef }) => {
     null,
     true
   );
+  const [sites] = useFetchDatas("/sites", "staff");
+  const patientSite = sites.find(({ id }) => id === assignedMd.site_id);
+
   const LABEL_CONTAINER = {
     display: "flex",
     alignItems: "center",
@@ -42,17 +45,16 @@ const PatientLabel = ({ demographicsInfos, windowRef }) => {
     padding: "0px 10px",
   };
   const LINE_STYLE = {
-    fontSize: "0.8rem",
+    fontSize: "0.7rem",
     padding: "0px 10px",
   };
   const SPAN_STYLE = {
     marginRight: "20px",
   };
   const SMALL_LINE_STYLE = {
-    fontSize: "0.6rem",
+    fontSize: "0.5rem",
     padding: "0px 10px",
   };
-
   const BTN_STYLE = {
     marginRight: "5px",
   };
@@ -143,15 +145,17 @@ const PatientLabel = ({ demographicsInfos, windowRef }) => {
           </span>
         </p>
         <p style={SMALL_LINE_STYLE}>
-          {!isObjectEmpty(assignedMd) && (
+          {!isObjectEmpty(assignedMd) && patientSite && (
             <span style={SPAN_STYLE}>
-              {clinic.name}, {assignedMd.site_infos.name},{" "}
-              {assignedMd.site_infos.address}, {assignedMd.site_infos.city},{" "}
-              {assignedMd.site_infos.province_state},{" "}
-              {assignedMd.site_infos.postal_code ||
-                assignedMd.site_infos.zip_code}
+              {clinic.name}, {patientSite.name}, {patientSite.address},{" "}
+              {patientSite.city}, {patientSite.province_state},{" "}
+              {patientSite.postal_code || patientSite.zip_code}
             </span>
           )}
+        </p>
+        <p style={SMALL_LINE_STYLE}>
+          <span style={SPAN_STYLE}>Email: {clinic.email}</span>
+          <span style={SPAN_STYLE}>Website: {clinic.website}</span>
         </p>
       </div>
       <div>

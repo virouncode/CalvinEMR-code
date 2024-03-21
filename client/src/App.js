@@ -7,6 +7,7 @@ import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
 import RequireAuth from "./context/RequireAuth";
 import useAutoLogout from "./hooks/useAutoLogout";
+import useClinicSocket from "./hooks/useClinicSocket";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
 import useLogoutForAll from "./hooks/useLogoutForAll";
 import useSocketConfig from "./hooks/useSocketConfig";
@@ -47,6 +48,7 @@ const App = () => {
   useSocketConfig(false); //true for dev, false for prod
   useStaffInfosSocket();
   useUserSocket();
+  useClinicSocket();
   useUnreadExternalSocket(); //for staff and patient
   useUnreadSocket(); //for staff
 

@@ -4,7 +4,44 @@
   }
   &__subtitle {
     font-weight: bold;
-    margin-left: 20px;
+    padding:0 20px;
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
+    font-size: 1rem;
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+.clinic__global-infos{
+  display: flex;
+  align-items: center;
+  padding:0 20px;
+  margin-bottom: 20px;
+  label {
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-right: 10px;
+  }
+  p {
+    padding:0;
+    font-size: 0.85rem;
+    margin-right: 30px;
+  }
+  input {
+    margin-right: 30px;
+    width:270px;
+  }
+  &-title {
+    padding:0;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-right: 30px;
+  }
+  &-btn-container {
+    button {
+      margin-left: 5px;
+    }
   }
 }

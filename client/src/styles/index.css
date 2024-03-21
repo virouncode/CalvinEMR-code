@@ -17736,8 +17736,44 @@ readers do not read off random characters that represent icons */
 }
 .clinic__subtitle {
   font-weight: bold;
-  margin-left: 20px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
+  font-size: 1rem;
+}
+.clinic__subtitle button {
+  margin-left: 10px;
+}
+
+.clinic__global-infos {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+.clinic__global-infos label {
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-right: 10px;
+}
+.clinic__global-infos p {
+  padding: 0;
+  font-size: 0.85rem;
+  margin-right: 30px;
+}
+.clinic__global-infos input {
+  margin-right: 30px;
+  width: 270px;
+}
+.clinic__global-infos-title {
+  padding: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 30px;
+}
+.clinic__global-infos-btn-container button {
+  margin-left: 5px;
 }
 
 .site-form {

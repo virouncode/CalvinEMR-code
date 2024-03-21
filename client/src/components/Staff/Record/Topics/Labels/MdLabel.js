@@ -44,13 +44,13 @@ const MdLabel = ({ demographicsInfos, windowRef }) => {
     marginBottom: "20px",
   };
   const TITLE_STYLE = {
-    fontSize: "1.1rem",
+    fontSize: "1rem",
     fontWeight: "bold",
     textDecoration: "underline",
     padding: "0px 10px",
   };
   const LINE_STYLE = {
-    fontSize: "0.8rem",
+    fontSize: "0.7rem",
     padding: "0px 10px",
   };
   const SPAN_STYLE = {
@@ -120,6 +120,10 @@ const MdLabel = ({ demographicsInfos, windowRef }) => {
           <p style={TITLE_STYLE}>
             {staffIdToTitleAndName(staffInfos, md.id, false).toUpperCase()}
           </p>
+          <p style={LINE_STYLE}>
+            <span style={SPAN_STYLE}>CPSO: {md.licence_nbr}</span>
+            <span style={SPAN_STYLE}>OHIP: {md.ohip_billing_nbr}</span>
+          </p>
           <p style={LINE_STYLE}>CLINIC: {clinic.name}</p>
           <p style={LINE_STYLE}>
             <span style={SPAN_STYLE}>SITE: {site.name}</span>
@@ -135,11 +139,10 @@ const MdLabel = ({ demographicsInfos, windowRef }) => {
             <span style={SPAN_STYLE}>FAX: {site.fax}</span>
           </p>
           <p style={LINE_STYLE}>
-            <span>EMAIL: {site.email}</span>
+            <span>EMAIL: {site.email || clinic.email}</span>
           </p>
           <p style={LINE_STYLE}>
-            <span style={SPAN_STYLE}>CPSO: {md.licence_nbr}</span>
-            <span style={SPAN_STYLE}>OHIP: {md.ohip_billing_nbr}</span>
+            <span>WEBSITE: {clinic.website}</span>
           </p>
         </div>
       )}

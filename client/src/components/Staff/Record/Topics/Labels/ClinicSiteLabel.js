@@ -46,13 +46,13 @@ const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {
     marginBottom: "20px",
   };
   const TITLE_STYLE = {
-    fontSize: "1.2rem",
+    fontSize: "1.1rem",
     fontWeight: "bold",
     textDecoration: "underline",
     padding: "0px 10px",
   };
   const LINE_STYLE = {
-    fontSize: "0.9rem",
+    fontSize: "0.8rem",
     padding: "0px 10px",
   };
   const SPAN_STYLE = {
@@ -108,7 +108,10 @@ const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {
               <span style={SPAN_STYLE}>FAX: {site.fax}</span>
             </p>
             <p style={LINE_STYLE}>
-              <span>EMAIL: {site.email}</span>
+              <span>EMAIL: {site.email || clinic.email}</span>
+            </p>
+            <p style={LINE_STYLE}>
+              <span>WEBSITE: {clinic.website}</span>
             </p>
           </div>
         )}
