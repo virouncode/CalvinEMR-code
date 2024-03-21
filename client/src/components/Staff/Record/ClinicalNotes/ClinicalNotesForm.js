@@ -122,14 +122,9 @@ const ClinicalNotesForm = ({
     }
     try {
       const attach_ids = (
-        await postPatientRecord(
-          "/clinical_notes_attachments",
-          user.id,
-
-          {
-            attachments_array: attachments,
-          }
-        )
+        await postPatientRecord("/clinical_notes_attachments", user.id, {
+          attachments_array: attachments,
+        })
       ).data;
 
       await postPatientRecord(
@@ -209,9 +204,6 @@ const ClinicalNotesForm = ({
             {
               file: response.data,
               alias: file.name,
-              date_created: nowTZTimestamp(),
-              created_by_id: user.id,
-              created_by_user_type: "staff",
             },
           ]); //meta, mime, name, path, size, type
           setIsLoadingFile(false);

@@ -11,29 +11,35 @@
   }
   &__container {
     margin-top: 50px;
-    height:500px;
-    overflow-y: scroll;
-    position: relative;
   }
 }
 .hcn-search {
-  position: sticky;
-  top: 0;
-  padding: 10px 20px 20px;
-  background: $white;
+  padding-left: 20px;
   label {
     font-weight: bold;
     margin-right: 10px;
   }
 }
 .hcn-results {
-  padding:0 20px 20px;
+  padding:0 20px;
+  height:480px;
+  border: solid 0.5px $grey;
+  overflow-y: scroll;
+  position: relative;
+  border-radius: 6px;
+  margin-top: 20px;
   &__item {
     cursor:pointer;
     display: flex;
     justify-content: flex-start;
     &:hover {
       text-decoration: underline;
+    }
+    &--headers {
+      padding: 10px 0 5px;
+      position: sticky;
+      top:0;
+      background-color: $white;
     }
   }   
   &__code {
@@ -45,4 +51,5 @@
   &__name {
     width:40%;
   }
+  
 }

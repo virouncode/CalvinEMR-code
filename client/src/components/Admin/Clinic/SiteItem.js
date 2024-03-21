@@ -4,7 +4,7 @@ import {
   toCodeTableName,
 } from "../../../datas/codesTables";
 import { showDocument } from "../../../utils/showDocument";
-import SignCellStaff from "../../Staff/Record/Topics/SignCellStaff";
+import SignCell from "../../Staff/Record/Topics/SignCell";
 
 const SiteItem = ({ site, handleEditClick }) => {
   const handleClickLogo = (e) => {
@@ -46,7 +46,7 @@ const SiteItem = ({ site, handleEditClick }) => {
             .map(({ title }) => title)
             .join(", ")}
         </td>
-        <SignCellStaff item={site} />
+        <SignCell item={site} />
       </tr>
     </>
   );

@@ -112,6 +112,7 @@ const PatientTopicDoctors = ({
           patientDoctors={patientDoctors}
           loadingPatientDoctors={loadingPatientDoctors}
           errMsgPatientDoctors={errMsgPatientDoctors}
+          patientId={patientId}
         />
         {popUpVisible && (
           <FakeWindow

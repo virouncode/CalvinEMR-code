@@ -15,6 +15,7 @@ const LinkForm = ({ links, setAddVisible }) => {
     name: "",
     url: "",
     staff_id: user.id,
+    created_by_id: user.id,
   });
   const [errMsg, setErrMsg] = useState("");
   const [progress, setProgress] = useState(false);

@@ -18,8 +18,6 @@ const useFetchMessages = (paging, search, messageId, section, staffId) => {
   useEffect(() => {
     const abortController = new AbortController();
     const fetchMessages = async () => {
-      console.log("fetchmessages");
-      console.log("paging", paging);
       try {
         let response;
         setLoading(true);
@@ -77,7 +75,6 @@ const useFetchMessages = (paging, search, messageId, section, staffId) => {
             );
           });
         }
-        console.log(response.data.items);
         setHasMore(response.data.items.length > 0);
         setLoading(false);
       } catch (err) {

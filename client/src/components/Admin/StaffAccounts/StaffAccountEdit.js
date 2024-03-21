@@ -94,7 +94,7 @@ const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
       datasToPut.speciality = firstLetterUpper(datasToPut.speciality);
       datasToPut.subspeciality = firstLetterUpper(datasToPut.subspeciality);
       datasToPut.updates = [
-        ...formDatas.updates,
+        ...infos.updates,
         {
           date_updated: nowTZTimestamp(),
           updated_by_id: user.id,

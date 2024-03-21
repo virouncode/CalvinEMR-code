@@ -28,7 +28,7 @@ const PatientChartHealthSearch = ({ handleClickPatient }) => {
   };
 
   return (
-    <div className="hcn__container" ref={rootRef}>
+    <div className="hcn__container">
       <div className="hcn-search">
         <label htmlFor="">Search</label>
         <input
@@ -41,7 +41,14 @@ const PatientChartHealthSearch = ({ handleClickPatient }) => {
       </div>
       {err && <p className="hcn__err">Unable to fetch patients datas</p>}
       {!err && patientsDemographics && patientsDemographics.length > 0 ? (
-        <ul className="hcn-results">
+        <ul className="hcn-results" ref={rootRef}>
+          <li className="hcn-results__item hcn-results__item--headers">
+            <span className="hcn-results__code">Chart#</span>
+            <span className="hcn-results__code">Health Card#</span>
+            <span className="hcn-results__name" style={{ fontWeight: "bold" }}>
+              Name
+            </span>
+          </li>
           {patientsDemographics.map((item, index) =>
             index === patientsDemographics.length - 1 ? (
               <li

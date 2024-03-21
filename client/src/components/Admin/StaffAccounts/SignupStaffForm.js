@@ -303,7 +303,6 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
     Best wishes,
     Powered by Calvin EMR`
       );
-
       toast.success("Staff member added successfully", { containerId: "A" });
       setAddVisible(false);
       setProgress(false);

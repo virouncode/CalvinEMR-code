@@ -1,5 +1,5 @@
 import React from "react";
-import SignCellStaff from "../../Staff/Record/Topics/SignCellStaff";
+import SignCellMultipleTypes from "../../Staff/Record/Topics/SignCellMultipleTypes";
 
 const StaffAccountItem = ({
   staff,
@@ -33,7 +33,7 @@ const StaffAccountItem = ({
       <td>{staff.licence_nbr}</td>
       <td>{staff.ohip_billing_nbr}</td>
       <td>{staff.account_status}</td>
-      <SignCellStaff item={staff} />
+      <SignCellMultipleTypes item={staff} />
     </tr>
   );
 };

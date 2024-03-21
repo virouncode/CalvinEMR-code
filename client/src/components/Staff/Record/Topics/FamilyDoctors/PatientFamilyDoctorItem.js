@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { putPatientRecord } from "../../../../../api/fetchRecords";
+import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
 } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 
-const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
+const PatientFamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [progress, setProgress] = useState(false);
@@ -16,16 +17,31 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
   const handleRemoveFromPatient = async (e) => {
     try {
       setProgress(true);
-      await putPatientRecord(
+      const datasToPut = {
+        ...item,
+        patients: item.patients.filter((id) => id !== patientId),
+        updates: [
+          ...item.updates,
+          {
+            date_updated: nowTZTimestamp(),
+            updated_by_id: user.id,
+            updated_by_user_type: "staff",
+          },
+        ],
+      };
+      const response = await xanoPut(
         `/doctors/${item.id}`,
-        user.id,
-        {
-          ...item,
-          patients: item.patients.filter((id) => id !== patientId),
-        },
-        socket,
-        "FAMILY DOCTORS/SPECIALISTS"
+        "staff",
+        datasToPut
       );
+      socket.emit("message", {
+        route: "FAMILY DOCTORS/SPECIALISTS",
+        action: "update",
+        content: {
+          id: item.id,
+          data: response.data,
+        },
+      });
       socket.emit("message", {
         route: "PATIENT DOCTORS",
         action: "delete",
@@ -75,4 +91,4 @@ const FamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
   );
 };
 
-export default FamilyDoctorItem;
+export default PatientFamilyDoctorItem;

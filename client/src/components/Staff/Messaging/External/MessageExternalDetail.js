@@ -4,7 +4,6 @@ import NewWindow from "react-new-window";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { DateTime } from "luxon";
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
@@ -156,21 +155,13 @@ const MessageExternalDetail = ({
               ? staffIdToTitleAndName(staffInfos, message.from_staff_id)
               : toPatientName(message.from_patient_infos)
           } (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
-          date_created: DateTime.local({ zone: "America/Toronto" }).toMillis(),
-          created_by_id: user.id,
-          created_by_user_type: "staff",
         },
       ];
 
       const attach_ids = (
-        await postPatientRecord(
-          "/clinical_notes_attachments",
-          user.id,
-
-          {
-            attachments_array: datasAttachment,
-          }
-        )
+        await postPatientRecord("/clinical_notes_attachments", user.id, {
+          attachments_array: datasAttachment,
+        })
       ).data;
       await postPatientRecord(
         "/clinical_notes",

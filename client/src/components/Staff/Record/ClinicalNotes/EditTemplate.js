@@ -107,7 +107,7 @@ const EditTemplate = ({
   return (
     <div className="edit-template">
       <div className="edit-template-title">
-        Please choose a template to edit/delete in:{"   "}
+        Please choose a template to edit/delete:{"   "}
         <EditTemplatesList
           myTemplates={myTemplates}
           editTemplateSelectedId={editTemplateSelectedId}

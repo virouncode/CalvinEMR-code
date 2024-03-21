@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import useFetchDatas from "../../../hooks/useFetchDatas";
 import useUserContext from "../../../hooks/useUserContext";
+import EmptyLi from "../../All/UI/Lists/EmptyLi";
+import LoadingLi from "../../All/UI/Lists/LoadingLi";
 import LinkForm from "./LinkForm";
 import MyLinkItem from "./MyLinkItem";
 
@@ -10,7 +12,6 @@ const ReferenceLinks = () => {
   const [links, setLinks, loading, err] = useFetchDatas(
     "/links_of_staff",
     "staff",
-
     "staff_id",
     user.id
   );
@@ -336,17 +337,21 @@ const ReferenceLinks = () => {
           </button>
         </div>
         {addVisible && <LinkForm links={links} setAddVisible={setAddVisible} />}
-        <ul className="reference-links__personal-links">
-          {links && links.length > 0
-            ? links.map((link) => (
-                <MyLinkItem
-                  link={link}
-                  key={link.id}
-                  setAddVisible={setAddVisible}
-                />
-              ))
-            : null}
-        </ul>
+        {err && <p className="reference-links__personal-err">{err}</p>}
+        {!err && (
+          <ul className="reference-links__personal-links">
+            {links && links.length > 0
+              ? links.map((link) => (
+                  <MyLinkItem
+                    link={link}
+                    key={link.id}
+                    setAddVisible={setAddVisible}
+                  />
+                ))
+              : !loading && <EmptyLi text="No personal links" />}
+            {loading && <LoadingLi />}
+          </ul>
+        )}
       </div>
     </div>
   );

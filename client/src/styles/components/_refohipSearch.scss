@@ -10,15 +10,10 @@
     text-align: center;
   }
   &__container {
-    margin-top: 50px;
-    height:500px;
-    overflow-y: scroll;
-    position: relative;
+    margin-top: 40px;
   }
 }
 .refohip-search {
-  position: sticky;
-  top: 0;
   padding: 10px 20px 20px;
   background: $white;
   label {
@@ -27,13 +22,25 @@
   }
 }
 .refohip-results {
-  padding:0 20px 20px;
+  height:50px;
+  border:solid 0.5px $grey;
+  border-radius: 6px;
+  overflow-y: scroll;
+  height:210px;
+  position: relative;
   &__item {
     cursor:pointer;
     display: flex;
     justify-content: flex-start;
     &:hover {
       text-decoration: underline;
+    }
+    padding:0 20px;
+    &--headers {
+      position:sticky;
+      top:0;
+      background-color: $white;
+      padding: 5px 20px;
     }
   }   
   &__code {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { putPatientRecord } from "../../../../../api/fetchRecords";
+import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
@@ -8,10 +8,11 @@ import {
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
+import { nowTZTimestamp } from "../../../../../utils/formatDates";
 import { doctorSchema } from "../../../../../validation/doctorValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../All/UI/Lists/GenericList";
-import SignCell from "../SignCell";
+import SignCellMultipleTypes from "../SignCellMultipleTypes";
 
 const FamilyDoctorListItem = ({
   item,
@@ -117,7 +118,14 @@ const FamilyDoctorListItem = ({
       speciality: firstLetterUpper(itemInfos.speciality),
       licence_nbr: itemInfos.licence_nbr,
       ohip_billing_nbr: itemInfos.ohip_billing_nbr,
-      patients: [],
+      updates: [
+        ...item.updates,
+        {
+          updated_by_id: user.id,
+          updated_by_user_type: "staff",
+          date_updated: nowTZTimestamp(),
+        },
+      ],
     };
 
     if (
@@ -127,19 +135,26 @@ const FamilyDoctorListItem = ({
     ) {
       try {
         setProgress(true);
-        await putPatientRecord(
+        const response = await xanoPut(
           `/doctors/${item.id}`,
-          user.id,
-          datasToPut,
-          socket,
-          "FAMILY DOCTORS/SPECIALISTS"
+          "staff",
+          datasToPut
         );
+        socket.emit("message", {
+          route: "FAMILY DOCTORS/SPECIALISTS",
+          action: "update",
+          content: {
+            id: item.id,
+            data: response.data,
+          },
+          patientId,
+        });
         socket.emit("message", {
           route: "PATIENT DOCTORS",
           action: "update",
           content: {
             id: item.id,
-            data: datasToPut,
+            data: response.data,
           },
           patientId,
         });
@@ -165,16 +180,31 @@ const FamilyDoctorListItem = ({
   const handleAddToPatient = async (e) => {
     try {
       //Upadte doctors list
-      await putPatientRecord(
+      const datasToPut = {
+        ...item,
+        patients: [...item.patients, patientId],
+        updates: [
+          ...item.updates,
+          {
+            date_updated: nowTZTimestamp(),
+            updated_by_id: user.id,
+            updated_by_user_type: "staff",
+          },
+        ],
+      };
+      const response = await xanoPut(
         `/doctors/${item.id}`,
-        user.id,
-        {
-          ...item,
-          patients: [...item.patients, patientId],
-        },
-        socket,
-        "FAMILY DOCTORS/SPECIALISTS"
+        "staff",
+        datasToPut
       );
+      socket.emit("message", {
+        route: "FAMILY DOCTORS/SPECIALISTS",
+        action: "update",
+        content: {
+          id: item.id,
+          data: response.data,
+        },
+      });
       //Add doctor to patient doctors
       socket.emit("message", {
         route: "PATIENT DOCTORS",
@@ -422,7 +452,7 @@ const FamilyDoctorListItem = ({
             itemInfos.email
           )}
         </td>
-        <SignCell item={item} />
+        <SignCellMultipleTypes item={item} />
       </tr>
     )
   );

@@ -6,7 +6,7 @@ import { timestampToDateISOTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 
-const SignCellStaff = ({ item }) => {
+const SignCellMultipleTypes = ({ item }) => {
   const { staffInfos } = useStaffInfosContext();
   const { adminsInfos } = useAdminsInfosContext();
   return (
@@ -14,7 +14,7 @@ const SignCellStaff = ({ item }) => {
       <td>
         <em>
           {isUpdated(item)
-            ? getLastUpdate(item).updated_by_user_type === "Staff"
+            ? getLastUpdate(item).updated_by_user_type === "staff"
               ? staffIdToTitleAndName(
                   staffInfos,
                   getLastUpdate(item).updated_by_id
@@ -37,4 +37,4 @@ const SignCellStaff = ({ item }) => {
   );
 };
 
-export default SignCellStaff;
+export default SignCellMultipleTypes;

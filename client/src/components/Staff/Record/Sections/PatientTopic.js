@@ -91,6 +91,11 @@ const PatientTopic = ({
     containerRef.current.classList.toggle(
       `patient-record__topic-container--active`
     );
+    if (topic === "REMINDERS" || topic === "TO-DOS ABOUT PATIENT") {
+      containerRef.current.classList.toggle(
+        `patient-record__topic-container--bottom`
+      );
+    }
   };
 
   return (

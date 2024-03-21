@@ -12925,11 +12925,17 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
+.doctors__table-title {
+  padding: 0;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 .doctors__table-container {
   height: 150px;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  margin-bottom: 20px;
 }
 .doctors__table {
   table-layout: fixed;
@@ -16790,16 +16796,10 @@ readers do not read off random characters that represent icons */
 }
 .hcn__container {
   margin-top: 50px;
-  height: 500px;
-  overflow-y: scroll;
-  position: relative;
 }
 
 .hcn-search {
-  position: sticky;
-  top: 0;
-  padding: 10px 20px 20px;
-  background: #FEFEFE;
+  padding-left: 20px;
 }
 .hcn-search label {
   font-weight: bold;
@@ -16807,7 +16807,13 @@ readers do not read off random characters that represent icons */
 }
 
 .hcn-results {
-  padding: 0 20px 20px;
+  padding: 0 20px;
+  height: 480px;
+  border: solid 0.5px #cecdcd;
+  overflow-y: scroll;
+  position: relative;
+  border-radius: 6px;
+  margin-top: 20px;
 }
 .hcn-results__item {
   cursor: pointer;
@@ -16816,6 +16822,12 @@ readers do not read off random characters that represent icons */
 }
 .hcn-results__item:hover {
   text-decoration: underline;
+}
+.hcn-results__item--headers {
+  padding: 10px 0 5px;
+  position: sticky;
+  top: 0;
+  background-color: #FEFEFE;
 }
 .hcn-results__code {
   font-weight: bold;
@@ -17122,15 +17134,10 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 .refohip__container {
-  margin-top: 50px;
-  height: 500px;
-  overflow-y: scroll;
-  position: relative;
+  margin-top: 40px;
 }
 
 .refohip-search {
-  position: sticky;
-  top: 0;
   padding: 10px 20px 20px;
   background: #FEFEFE;
 }
@@ -17140,15 +17147,27 @@ readers do not read off random characters that represent icons */
 }
 
 .refohip-results {
-  padding: 0 20px 20px;
+  height: 50px;
+  border: solid 0.5px #cecdcd;
+  border-radius: 6px;
+  overflow-y: scroll;
+  height: 210px;
+  position: relative;
 }
 .refohip-results__item {
   cursor: pointer;
   display: flex;
   justify-content: flex-start;
+  padding: 0 20px;
 }
 .refohip-results__item:hover {
   text-decoration: underline;
+}
+.refohip-results__item--headers {
+  position: sticky;
+  top: 0;
+  background-color: #FEFEFE;
+  padding: 5px 20px;
 }
 .refohip-results__code {
   font-weight: bold;

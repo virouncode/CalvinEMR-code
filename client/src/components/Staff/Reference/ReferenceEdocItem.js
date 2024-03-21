@@ -64,7 +64,6 @@ const ReferenceEdocItem = ({
             </button>
           </div>
         </td>
-        {console.log("item", item)}
         <td>{item.name}</td>
         <td
           className="reference-edocs__item-link"

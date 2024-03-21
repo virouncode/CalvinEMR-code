@@ -31,8 +31,10 @@ const FamilyDoctorsList = ({
   return (
     <>
       <div className="doctors-list__title">
-        Doctors database
-        <button onClick={handleAdd}>Add a new doctor to database</button>
+        External Doctors database
+        <button onClick={handleAdd}>
+          Add a new doctor to external doctors database
+        </button>
       </div>
       {errMsgPost && <div className="doctors-list__err">{errMsgPost}</div>}
       {errMsgDoctors && (

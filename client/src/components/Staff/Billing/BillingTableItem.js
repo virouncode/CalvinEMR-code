@@ -200,7 +200,7 @@ const BillingTableItem = ({
         {
           updated_by_id: user.id,
           date_updated: nowTZTimestamp(),
-          updated_by_user_type: "Staff",
+          updated_by_user_type: "staff",
         },
       ],
       site_id: itemInfos.site_id,

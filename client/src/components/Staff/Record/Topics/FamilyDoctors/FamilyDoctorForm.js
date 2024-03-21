@@ -26,35 +26,6 @@ const FamilyDoctorForm = ({
   const { staffInfos } = useStaffInfosContext();
   const [postalOrZip, setPostalOrZip] = useState("postal");
   const [progress, setProgress] = useState(false);
-  // const [formDatas, setFormDatas] = useState({
-  //   FirstName: "",
-  //   LastName: "",
-  //   Address: {
-  //     Structured: {
-  //       Line1: "",
-  //       City: "",
-  //       CountrySubDivisionCode: "",
-  //       PostalZipCode: { PostalCode: "", ZipCode: "" },
-  //     },
-  //     _addressType: "M",
-  //   },
-  //   PhoneNumber: [
-  //     {
-  //       _phoneNumberType: "W",
-  //       phoneNumber: "",
-  //     },
-  //   ],
-  //   FaxNumber: {
-  //     _phoneNumberType: "W",
-  //     phoneNumber: "",
-  //   },
-  //   EmailAddress: "",
-  //   speciality: "",
-  //   licence_nbr: "",
-  //   ohip_billing_nbr: "",
-  //   patients: [],
-  // });
-
   //HANDLERS
 
   const [formDatas, setFormDatas] = useState({
@@ -138,6 +109,7 @@ const FamilyDoctorForm = ({
       licence_nbr: formDatas.licence_nbr,
       ohip_billing_nbr: formDatas.ohip_billing_nbr,
       patients: [],
+      created_by_user_type: "staff",
     };
     //Submission
     try {
@@ -145,7 +117,6 @@ const FamilyDoctorForm = ({
       await postPatientRecord(
         "/doctors",
         user.id,
-
         datasToPost,
         socket,
         "FAMILY DOCTORS/SPECIALISTS"

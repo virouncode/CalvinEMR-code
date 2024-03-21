@@ -3,9 +3,12 @@ import { toast } from "react-toastify";
 
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/useSocketContext";
+import useUserContext from "../../../hooks/useUserContext";
+import { nowTZTimestamp } from "../../../utils/formatDates";
 import { linkSchema } from "../../../validation/linkValidation";
 
 const LinkEdit = ({ link, setEditVisible }) => {
+  const { user } = useUserContext();
   const [errMsg, setErrMsg] = useState("");
   const [editedLink, setEditedLink] = useState(link);
   const { socket } = useSocketContext();
@@ -29,6 +32,10 @@ const LinkEdit = ({ link, setEditVisible }) => {
       const response = await xanoPut(`/links/${link.id}`, "staff", {
         ...editedLink,
         url: urlFormatted,
+        updates: [
+          ...link.updates,
+          { updated_by_id: user.id, date_updated: nowTZTimestamp() },
+        ],
       });
       socket.emit("message", {
         route: "LINKS",

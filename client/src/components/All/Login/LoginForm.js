@@ -141,6 +141,12 @@ const LoginForm = () => {
         const staffInfos = (await xanoGet("/staff", "staff")).data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
+
+        //=============== ADMIN INFOS =================//
+        const adminsInfos = (await xanoGet("/admins", "staff")).data;
+        setAdminsInfos(adminsInfos);
+        localStorage.setItem("adminsInfos", JSON.stringify(adminsInfos));
+
         setLoading(false);
         navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
       } catch (err) {
@@ -213,6 +219,7 @@ const LoginForm = () => {
         const staffInfos = (await xanoGet("/staff", "patient")).data;
         setStaffInfos(staffInfos);
         localStorage.setItem("staffInfos", JSON.stringify(staffInfos));
+
         setLoading(false);
         navigate(from, { replace: true }); //on renvoit vers là où on voulait aller
       } catch (err) {

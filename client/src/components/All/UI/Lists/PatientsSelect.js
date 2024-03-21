@@ -18,8 +18,6 @@ const PatientsSelect = ({
   const patientsList = patients.filter(
     ({ patient_id }) => patient_id !== patientId
   );
-  console.log(patientsList);
-
   return (
     <select
       name={name}

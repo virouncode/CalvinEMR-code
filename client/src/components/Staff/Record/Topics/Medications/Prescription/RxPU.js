@@ -155,21 +155,13 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
             {
               file: fileToUpload.data,
               alias: `Prescription (id:${uniqueId})`,
-              date_created: nowTZTimestamp(),
-              created_by_id: user.id,
-              created_by_user_type: "staff",
             },
           ];
 
           const attach_ids = (
-            await postPatientRecord(
-              "/clinical_notes_attachments",
-              user.id,
-
-              {
-                attachments_array: datasAttachment,
-              }
-            )
+            await postPatientRecord("/clinical_notes_attachments", user.id, {
+              attachments_array: datasAttachment,
+            })
           ).data;
 
           const prescriptionToPost = {

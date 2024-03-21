@@ -187,21 +187,13 @@ const MessageDetail = ({
             staffInfos,
             message.from_id
           )} (${timestampToDateTimeSecondsStrTZ(message.date_created)})`,
-          date_created: Date.local({ zone: "America/Toronto" }),
-          created_by_id: user.id,
-          created_by_user_type: "staff",
         },
       ];
 
       const attach_ids = (
-        await postPatientRecord(
-          "/clinical_notes_attachments",
-          user.id,
-
-          {
-            attachments_array: datasAttachment,
-          }
-        )
+        await postPatientRecord("/clinical_notes_attachments", user.id, {
+          attachments_array: datasAttachment,
+        })
       ).data;
       await postPatientRecord(
         "/clinical_notes",
