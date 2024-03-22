@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-widgets/scss/styles.scss";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useFetchPatients from "../../../../../hooks/useFetchPatients";
+import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../../hooks/useUserContext";
@@ -22,7 +22,6 @@ const RelationshipForm = ({
   patientId,
   setErrMsgPost,
   errMsgPost,
-  demographicsInfos,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -30,33 +29,27 @@ const RelationshipForm = ({
   const [formDatas, setFormDatas] = useState({
     patient_id: patientId,
     relationship: "",
-    relation_id: "",
+    relation_infos: {},
   });
-  //PATIENTS DATAS
-  const [paging, setPaging] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const { patients, loading, errMsg, hasMore } = useFetchPatients(paging);
+
   const [progress, setProgress] = useState(false);
 
-  //HANDLERS
-  const handleChange = (e) => {
-    setErrMsgPost("");
-    let value = parseInt(e.target.value);
-    setFormDatas({ ...formDatas, relation_id: value });
-  };
-
   const handleRelationshipChange = (value, itemId) => {
+    setErrMsgPost("");
     setFormDatas({ ...formDatas, relationship: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const datasToPost = {
+      patient_id: patientId,
+      relationship: formDatas.relationship,
+      relation_id: formDatas.relation_infos.patient_id,
+    };
+
     //Validation
     try {
-      await relationshipSchema.validate(formDatas);
+      await relationshipSchema.validate(datasToPost);
     } catch (err) {
       setErrMsgPost(err.message);
       return;
@@ -65,56 +58,31 @@ const RelationshipForm = ({
     try {
       setProgress(true);
       //Post the relationship
-      const response = await postPatientRecord(
+      await postPatientRecord(
         "/relationships",
         user.id,
-
-        formDatas
+        datasToPost,
+        socket,
+        "RELATIONSHIPS"
       );
-      //Emit socket apart to add relation_infos
-      socket.emit("message", {
-        route: "RELATIONSHIPS",
-        action: "create",
-        content: {
-          data: {
-            ...response.data,
-            relation_infos: patients.find(
-              ({ patient_id }) => patient_id === formDatas.relation_id
-            ),
-          },
-        },
-      });
-
       //Post the inverse relationship
       let inverseRelationToPost = {};
-      inverseRelationToPost.patient_id = formDatas.relation_id;
-      const gender = patients.find(
-        ({ patient_id }) => patient_id === formDatas.relation_id
-      ).Gender;
+      inverseRelationToPost.patient_id = formDatas.relation_infos.patient_id;
+      const gender = formDatas.relation_infos.Gender;
       inverseRelationToPost.relationship = toInverseRelation(
         formDatas.relationship,
-        gender
+        toCodeTableName(genderCT, gender)
       );
       inverseRelationToPost.relation_id = formDatas.patient_id;
 
       if (inverseRelationToPost.relationship !== "Undefined") {
-        const response = await postPatientRecord(
+        await postPatientRecord(
           "/relationships",
           user.id,
-
-          inverseRelationToPost
+          inverseRelationToPost,
+          socket,
+          "RELATIONSHIPS"
         );
-        //Emit socket apart to add relation_infos
-        socket.emit("message", {
-          route: "RELATIONSHIPS",
-          action: "create",
-          content: {
-            data: {
-              ...response.data,
-              relation_infos: demographicsInfos,
-            },
-          },
-        });
       }
       editCounter.current -= 1;
       setAddVisible(false);
@@ -162,16 +130,11 @@ const RelationshipForm = ({
           <span>of</span>
         </div>
       </td>
-      <td>
+      <td style={{ position: "relative" }}>
         <PatientsSelect
-          handleChange={handleChange}
-          value={formDatas.relation_id}
-          name="relation_id"
+          formDatas={formDatas}
+          setFormDatas={setFormDatas}
           patientId={patientId}
-          patients={patients}
-          hasMore={hasMore}
-          loading={loading}
-          setPaging={setPaging}
         />
       </td>
       <td>

@@ -29,7 +29,6 @@ import { patientSchema } from "../../../validation/patientValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
 import StaffList from "../../All/UI/Lists/StaffList";
 import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
-import RelationshipsForm from "./RelationshipsForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -686,10 +685,10 @@ const SignupPatientForm = () => {
               noneOption={false}
             />
           </div>
-          <RelationshipsForm
+          {/* <RelationshipsForm
             relationships={relationships}
             setRelationships={setRelationships}
-          />
+          /> */}
           <div className="signup-patient__row signup-patient__row--avatar">
             <label htmlFor="avatar">Avatar: </label>
             <div className="signup-patient__image">

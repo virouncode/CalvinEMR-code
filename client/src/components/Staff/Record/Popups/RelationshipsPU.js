@@ -90,7 +90,6 @@ const RelationshipsPU = ({
                     patientId={patientId}
                     setErrMsgPost={setErrMsgPost}
                     errMsgPost={errMsgPost}
-                    demographicsInfos={demographicsInfos}
                   />
                 )}
                 {topicDatas && topicDatas.length > 0
@@ -104,7 +103,6 @@ const RelationshipsPU = ({
                           errMsgPost={errMsgPost}
                           lastItemRef={lastItemRef}
                           patientId={patientId}
-                          demographicsInfos={demographicsInfos}
                         />
                       ) : (
                         <RelationshipItem
@@ -114,7 +112,6 @@ const RelationshipsPU = ({
                           setErrMsgPost={setErrMsgPost}
                           errMsgPost={errMsgPost}
                           patientId={patientId}
-                          demographicsInfos={demographicsInfos}
                         />
                       )
                     )

@@ -1,0 +1,22 @@
+.patients-select {
+  &__results {
+    position:absolute;
+    bottom:10px;
+    transform: translateY(100%);
+    height: 200px;
+    overflow-y:scroll;
+    border:solid 1px $grey;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: $white;
+    box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+    width:400px;
+  }
+  &__results-item {
+    text-align: left;
+    cursor:pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

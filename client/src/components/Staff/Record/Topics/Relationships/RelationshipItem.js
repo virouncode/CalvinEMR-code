@@ -9,7 +9,7 @@ import {
 } from "../../../../../api/fetchRecords";
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../../../api/xanoCRUD/xanoGet";
-import useFetchPatients from "../../../../../hooks/useFetchPatients";
+import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
 import useSocketContext from "../../../../../hooks/useSocketContext";
 import useUserContext from "../../../../../hooks/useUserContext";
 import { relations } from "../../../../../utils/relations";
@@ -25,8 +25,8 @@ const RelationshipItem = ({
   editCounter,
   setErrMsgPost,
   errMsgPost,
+  patientId,
   lastItemRef = null,
-  demographicsInfos,
 }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
@@ -38,26 +38,33 @@ const RelationshipItem = ({
     setItemInfos(item);
   }, [item]);
 
-  //PATIENTS DATAS
-  const [paging, setPaging] = useState({
-    page: 1,
-    perPage: 10,
-    offset: 0,
-  });
-  const { patients, loading, errMsg, hasMore } = useFetchPatients(
-    paging,
-    item.patient_id
-  );
+  //{
+  // patient_id:,
+  // relationship:
+  // relation_id:
+  // relation_infos:
+  // date_created:
+  // creaed_by_id:
+  // updates:
+  // }
 
   //HANDLERS
-  const handleChange = (e) => {
+  const handleRelationshipChange = (value, itemId) => {
     setErrMsgPost("");
-    let value = parseInt(e.target.value);
-    setItemInfos({ ...itemInfos, relation_id: value });
+    setItemInfos({ ...itemInfos, relationship: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const datasToPut = {
+      id: itemInfos.id,
+      patient_id: itemInfos.patient_id,
+      relationship: itemInfos.relationship,
+      relation_id: itemInfos.relation_infos.patient_id,
+      date_created: itemInfos.date_created,
+      created_by_id: itemInfos.created_by_id,
+      updates: itemInfos.updates,
+    };
     try {
       setProgress(true);
       //Delete the inverse relation ship of item
@@ -80,22 +87,19 @@ const RelationshipItem = ({
       await putPatientRecord(
         `/relationships/${item.id}`,
         user.id,
-        itemInfos,
+        datasToPut,
         socket,
         "RELATIONSHIPS"
       );
-
       //Post the inverse relationship
       let inverseRelationToPost = {};
-      inverseRelationToPost.patient_id = itemInfos.relation_id;
-      const gender = patients.find(
-        ({ patient_id }) => patient_id === itemInfos.relation_id
-      ).Gender;
+      inverseRelationToPost.patient_id = itemInfos.relation_infos.patient_id;
+      const gender = itemInfos.relation_infos.Gender;
       inverseRelationToPost.relationship = toInverseRelation(
         itemInfos.relationship,
-        gender
+        toCodeTableName(genderCT, gender)
       );
-      inverseRelationToPost.relation_id = item.patient_id;
+      inverseRelationToPost.relation_id = itemInfos.patient_id;
 
       if (inverseRelationToPost.relationship !== "Undefined") {
         await postPatientRecord(
@@ -126,11 +130,6 @@ const RelationshipItem = ({
     setEditVisible(false);
   };
 
-  const handleRelationshipChange = (value, itemId) => {
-    setErrMsgPost("");
-    setItemInfos({ ...itemInfos, relationship: value });
-  };
-
   const handleEditClick = () => {
     editCounter.current += 1;
     setErrMsgPost("");
@@ -157,7 +156,6 @@ const RelationshipItem = ({
           await deletePatientRecord(
             "/relationships",
             inverseRelationToDeleteId,
-
             socket,
             "RELATIONSHIPS"
           );
@@ -165,7 +163,6 @@ const RelationshipItem = ({
         await deletePatientRecord(
           "/relationships",
           item.id,
-
           socket,
           "RELATIONSHIPS"
         );
@@ -230,17 +227,12 @@ const RelationshipItem = ({
             <span>of</span>
           </div>
         </td>
-        <td>
+        <td style={{ position: "relative" }}>
           {editVisible ? (
             <PatientsSelect
-              handleChange={handleChange}
-              value={itemInfos.relation_id}
-              name="relation_id"
-              patientId={itemInfos.patient_id}
-              patients={patients}
-              hasMore={hasMore}
-              loading={loading}
-              setPaging={setPaging}
+              formDatas={itemInfos}
+              setFormDatas={setItemInfos}
+              patientId={patientId}
             />
           ) : (
             toPatientName(item.relation_infos)
