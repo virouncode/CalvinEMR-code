@@ -103,7 +103,6 @@ const useFetchDashboard = () => {
     },
     [sites]
   );
-
   const fetchPatientsPerAge = useCallback(
     async (abortController) => {
       try {
@@ -183,7 +182,6 @@ const useFetchDashboard = () => {
     },
     [sites]
   );
-
   const fetchDatas = useCallback(
     async (
       rangeStart,

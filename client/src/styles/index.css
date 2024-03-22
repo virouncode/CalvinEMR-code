@@ -17562,7 +17562,6 @@ readers do not read off random characters that represent icons */
   padding: 10px;
   width: 90%;
   margin: 0 auto;
-  height: 490px;
   font-size: 0.85rem;
 }
 .dashboard-card label {
@@ -17576,6 +17575,7 @@ readers do not read off random characters that represent icons */
 .dashboard-card__content {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .dashboard-card__filter {
   display: flex;

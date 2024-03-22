@@ -28,6 +28,11 @@ const DashboardCardVisits = ({
         scaleType: "band",
       },
     ],
+    yAxis: [
+      {
+        label: "visits",
+      },
+    ],
     width: 500,
     height: 350,
     slotProps: {

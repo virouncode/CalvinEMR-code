@@ -19,6 +19,11 @@ const DashboardCardPatients = ({
         scaleType: "band",
       },
     ],
+    yAxis: [
+      {
+        label: "people",
+      },
+    ],
     width: 500,
     height: 350,
     slotProps: {

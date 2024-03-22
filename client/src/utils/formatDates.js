@@ -270,9 +270,7 @@ export const getStartOfTheMonthTZ = (timezone = "America/Toronto") => {
 export const getEndOfTheMonthTZ = (timezone = "America/Toronto") => {
   const now = nowTZ();
   const endOfMonth = now.endOf("month");
-  const beginningOfNextMonth = endOfMonth.plus({ days: 1 });
-  const beginningOfNextMonthMidnight = beginningOfNextMonth.startOf("day");
-  return beginningOfNextMonthMidnight.toMillis();
+  return endOfMonth.toMillis();
 };
 export const getTodayStartTZ = (timezone = "America/Toronto") => {
   return nowTZ().startOf("day").toMillis();

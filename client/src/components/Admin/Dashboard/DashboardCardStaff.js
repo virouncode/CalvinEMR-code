@@ -76,6 +76,11 @@ const DashboardCardStaff = ({ sites, loadingSites, errSites }) => {
         scaleType: "band",
       },
     ],
+    yAxis: [
+      {
+        label: "people",
+      },
+    ],
     width: 500,
     height: 400,
     margin: { top: 90 },
@@ -127,8 +132,16 @@ const DashboardCardStaff = ({ sites, loadingSites, errSites }) => {
               <BarChart
                 dataset={staffDuration}
                 series={[
-                  { dataKey: "shortest", label: "Shortest" },
-                  { dataKey: "longest", label: "Longest" },
+                  {
+                    dataKey: "shortest",
+                    label: "Shortest",
+                    valueFormatter: (value) => `${value} days`,
+                  },
+                  {
+                    dataKey: "longest",
+                    label: "Longest",
+                    valueFormatter: (value) => `${value} days`,
+                  },
                 ]}
                 {...chartSettingDuration}
               />
