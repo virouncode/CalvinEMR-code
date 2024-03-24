@@ -1,5 +1,5 @@
 import { BarChart } from "@mui/x-charts/BarChart";
-import React from "react";
+import React, { useState } from "react";
 import useRevenues from "../../../hooks/useRevenues";
 import useTop10BillingCodes from "../../../hooks/useTop10BillingCodes";
 import useTop10Diagnosis from "../../../hooks/useTop10Diagnosis";
@@ -9,6 +9,7 @@ import {
 } from "../../../utils/formatDates";
 import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import SelectSite from "../../Staff/EventForm/SelectSite";
 
 const DashboardCardBillings = ({
   billings,
@@ -20,9 +21,20 @@ const DashboardCardBillings = ({
   errBillings,
   sites,
 }) => {
+  const [siteSelectedIdDiagnoses, setSiteSelectedIdDiagnoses] = useState(-1);
+  const [siteSelectedIdBillingCodes, setSiteSelectedIdBillingCodes] =
+    useState(-1);
   const { revenues } = useRevenues(billings, sites);
-  const { top10Diagnosis } = useTop10Diagnosis(billings, sites);
-  const { top10BillingCodes } = useTop10BillingCodes(billings, sites);
+  const { top10Diagnosis } = useTop10Diagnosis(
+    billings,
+    sites,
+    siteSelectedIdDiagnoses
+  );
+  const { top10BillingCodes } = useTop10BillingCodes(
+    billings,
+    sites,
+    siteSelectedIdBillingCodes
+  );
   const chartSetting = {
     xAxis: [
       {
@@ -54,24 +66,6 @@ const DashboardCardBillings = ({
       },
     },
   };
-  const chartSettingDiagnosis = {
-    xAxis: [
-      {
-        data: [...sites.map(({ name }) => name), "Total"],
-        scaleType: "band",
-      },
-    ],
-    yAxis: [
-      {
-        label: "frequency",
-      },
-    ],
-    width: 500,
-    height: 350,
-    slotProps: {
-      legend: { hidden: true },
-    },
-  };
 
   const handleChangeStart = (e) => {
     const value = e.target.value;
@@ -80,6 +74,12 @@ const DashboardCardBillings = ({
   const handleChangeEnd = (e) => {
     const value = e.target.value;
     setRangeEndBillings(value === "" ? null : dateISOToTimestampTZ(value));
+  };
+  const handleSiteChangeDiagnoses = (e) => {
+    setSiteSelectedIdDiagnoses(parseInt(e.target.value));
+  };
+  const handleSiteChangeBillingCodes = (e) => {
+    setSiteSelectedIdBillingCodes(parseInt(e.target.value));
   };
   return (
     <div className="dashboard-card">
@@ -122,7 +122,57 @@ const DashboardCardBillings = ({
       {!errBillings &&
         (billings.length > 0 ? (
           <div className="dashboard-card__content">
-            <div className="dashboard-card__chart">
+            <div className="dashboard-card__ranking">
+              <p className="dashboard-card__ranking-title">Top diagnoses</p>
+              <SelectSite
+                handleSiteChange={handleSiteChangeDiagnoses}
+                sites={sites}
+                value={siteSelectedIdDiagnoses}
+                all={true}
+              />
+              {top10Diagnosis.length > 0 ? (
+                <ul className="dashboard-card__ranking-content">
+                  {top10Diagnosis.map((item, index) => (
+                    <li key={item.id} className="dashboard-card__ranking-item">
+                      <span className="dashboard-card__ranking-item-nbr">
+                        {index + 1}:
+                      </span>{" "}
+                      <span>
+                        {item.diagnosis} ({item.frequency})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyParagraph text="Not enough datas" />
+              )}
+            </div>
+            <div className="dashboard-card__ranking">
+              <p className="dashboard-card__ranking-title">Top billing codes</p>
+              <SelectSite
+                handleSiteChange={handleSiteChangeBillingCodes}
+                sites={sites}
+                value={siteSelectedIdBillingCodes}
+                all={true}
+              />
+              {top10BillingCodes.length > 0 ? (
+                <ul className="dashboard-card__ranking-content">
+                  {top10BillingCodes.map((item, index) => (
+                    <li key={item.id} className="dashboard-card__ranking-item">
+                      <span className="dashboard-card__ranking-item-nbr">
+                        {index + 1}:
+                      </span>{" "}
+                      <span>
+                        {item.billing_code} ({item.frequency})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyParagraph text="Not enough datas" />
+              )}
+            </div>
+            <div className="dashboard-card__chart" style={{ width: "100%" }}>
               <p className="dashboard-card__chart-title">Revenues</p>
               {revenues.length > 0 ? (
                 <BarChart
@@ -138,42 +188,6 @@ const DashboardCardBillings = ({
                 />
               ) : (
                 <EmptyParagraph text="No revenue available" />
-              )}
-            </div>
-            <div className="dashboard-card__chart">
-              <p className="dashboard-card__chart-title">Top diagnoses</p>
-              {top10Diagnosis.length > 0 ? (
-                <BarChart
-                  dataset={top10Diagnosis}
-                  series={top10Diagnosis.reduce((acc, item) => {
-                    return acc.concat(
-                      Object.keys(item).map((key) => {
-                        return { dataKey: key, label: key };
-                      })
-                    );
-                  }, [])}
-                  {...chartSettingDiagnosis}
-                />
-              ) : (
-                <EmptyParagraph text="No top diagnoses available" />
-              )}
-            </div>
-            <div className="dashboard-card__chart">
-              <p className="dashboard-card__chart-title">Top billing codes</p>
-              {top10BillingCodes.length > 0 ? (
-                <BarChart
-                  dataset={top10BillingCodes}
-                  series={top10BillingCodes.reduce((acc, item) => {
-                    return acc.concat(
-                      Object.keys(item).map((key) => {
-                        return { dataKey: key, label: key };
-                      })
-                    );
-                  }, [])}
-                  {...chartSettingDiagnosis}
-                />
-              ) : (
-                <EmptyParagraph text="No top billing codes available" />
               )}
             </div>
           </div>

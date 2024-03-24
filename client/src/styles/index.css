@@ -17611,6 +17611,26 @@ readers do not read off random characters that represent icons */
 .dashboard-card__total label {
   margin-right: 10px;
 }
+.dashboard-card__ranking {
+  width: 50%;
+  padding: 0 20px 10px;
+}
+.dashboard-card__ranking-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.dashboard-card__ranking-content {
+  margin-top: 20px;
+}
+.dashboard-card__ranking-item {
+  display: flex;
+  margin-left: 20px;
+}
+.dashboard-card__ranking-item-nbr {
+  font-weight: bold;
+  margin-right: 10px;
+}
 
 .patients-accounts {
   overflow: scroll;
