@@ -13,13 +13,17 @@ const ClinicalNotesCardHeaderFolded = ({
 }) => {
   const { staffInfos } = useStaffInfosContext();
   return (
-    <div className="clinical-notes__card-header clinical-notes__card-header--folded">
+    <div
+      className="clinical-notes__card-header clinical-notes__card-header--folded"
+      onClick={handleTriangleProgressClick}
+    >
       <div className="clinical-notes__card-header--folded-title">
         <input
           className="clinical-notes__card-check"
           type="checkbox"
           checked={isChecked(clinicalNote.id)}
           onChange={handleCheck}
+          onClick={(event) => event.stopPropagation()}
         />
         <p>
           <label>

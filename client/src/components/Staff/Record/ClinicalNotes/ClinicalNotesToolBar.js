@@ -49,6 +49,7 @@ const ClinicalNotesToolBar = ({
   };
   const handleClickNew = () => {
     setAddVisible(true);
+    setPaging({ ...paging, page: 1 });
     triangleRef.current.classList.add("triangle--active");
     contentRef.current.classList.add("clinical-notes__content--active");
   };
@@ -101,9 +102,6 @@ const ClinicalNotesToolBar = ({
           },
         },
       });
-      toast.success("Saved preference", {
-        containerId: "A",
-      });
     } catch (err) {
       toast.error(`Error: unable to change order: ${err.message}`, {
         containerId: "A",
@@ -144,10 +142,6 @@ const ClinicalNotesToolBar = ({
           {order === "asc" ? "Bottom" : "Top"}
         </span>
       </div>
-      {/* <ClinicalNotesOrderRadio
-        order={order}
-        handleChangeOrder={handleChangeOrder}
-      /> */}
       <div className="clinical-notes__toolbar-btn-container">
         <button onClick={handleClickFold}>
           {contentsVisible ? "Fold" : "Unfold"}

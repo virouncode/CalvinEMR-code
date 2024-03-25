@@ -122,6 +122,7 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
                   },
                 },
                 PrescriptionIdentifier: uniqueId,
+                site_id: siteSelectedId,
               };
               if (datasToPost.hasOwnProperty("id")) delete datasToPost.id;
               if (datasToPost.hasOwnProperty("temp_id"))
@@ -139,7 +140,6 @@ const RxPU = ({ demographicsInfos, setPresVisible, patientId }) => {
                 await postPatientRecord(
                   "/medications",
                   user.id,
-
                   datasToPost,
                   socket,
                   "MEDICATIONS AND TREATMENTS"

@@ -26,7 +26,10 @@ const ClinicalNotesCardHeader = ({
   const { user } = useUserContext();
 
   return (
-    <div className="clinical-notes__card-header">
+    <div
+      className="clinical-notes__card-header"
+      onClick={handleTriangleProgressClick}
+    >
       <div className="clinical-notes__card-header-row">
         <div className="clinical-notes__card-author">
           <input
@@ -34,6 +37,7 @@ const ClinicalNotesCardHeader = ({
             type="checkbox"
             checked={isChecked(clinicalNote.id)}
             onChange={handleCheck}
+            onClick={(event) => event.stopPropagation()}
           />
           <p>
             <strong>From: </strong>
@@ -76,7 +80,7 @@ const ClinicalNotesCardHeader = ({
                 >
                   Edit
                 </button>
-                <button>
+                <button onClick={(e) => e.stopPropagation()}>
                   <a
                     href={`/staff/billing/${
                       demographicsInfos.patient_id

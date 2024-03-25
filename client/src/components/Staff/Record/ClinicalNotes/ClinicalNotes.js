@@ -160,6 +160,9 @@ const ClinicalNotes = ({
             setAddVisible={setAddVisible}
             patientId={patientId}
             demographicsInfos={demographicsInfos}
+            paging={paging}
+            setPaging={setPaging}
+            order={order}
           />
         )}
         {errMsg && <p className="clinical-notes__err">{errMsg}</p>}
@@ -209,6 +212,9 @@ const ClinicalNotes = ({
             setAddVisible={setAddVisible}
             patientId={patientId}
             demographicsInfos={demographicsInfos}
+            paging={paging}
+            setPaging={setPaging}
+            order={order}
           />
         )}
       </div>

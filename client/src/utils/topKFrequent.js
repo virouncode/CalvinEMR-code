@@ -16,17 +16,11 @@ export const topKFrequent = (nums, k, category) => {
   const topKFrequent = [];
   const maxIndex = Math.min(k, frequencyArray.length); // Ensure k is not greater than the array length
   for (let i = 0; i < maxIndex; i++) {
-    category === "diagnosis"
-      ? topKFrequent.push({
-          id: i,
-          diagnosis: frequencyArray[i][0],
-          frequency: frequencyArray[i][1],
-        })
-      : topKFrequent.push({
-          id: i,
-          billing_code: frequencyArray[i][0],
-          frequency: frequencyArray[i][1],
-        });
+    let objectToPush = {};
+    objectToPush.id = i;
+    objectToPush[category] = frequencyArray[i][0];
+    objectToPush.frequency = frequencyArray[i][1];
+    topKFrequent.push(objectToPush);
   }
 
   return topKFrequent;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useFetchDatas from "../../../hooks/useFetchDatas";
+import useLinksSocket from "../../../hooks/useLinksSocket";
 import useUserContext from "../../../hooks/useUserContext";
 import EmptyLi from "../../All/UI/Lists/EmptyLi";
 import LoadingLi from "../../All/UI/Lists/LoadingLi";
@@ -15,6 +16,8 @@ const ReferenceLinks = () => {
     "staff_id",
     user.id
   );
+  useLinksSocket(links, setLinks, user.id);
+
   const handleAdd = () => {
     setAddVisible(true);
   };

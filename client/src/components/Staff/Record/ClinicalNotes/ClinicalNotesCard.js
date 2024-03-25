@@ -66,13 +66,15 @@ const ClinicalNotesCard = ({
 
   //HANDLERS
   const handleTriangleProgressClick = (e) => {
+    e.stopPropagation();
     setBodyVisible((v) => !v);
     bodyRef.current.classList.toggle(
       "clinical-notes__card-body-container--active"
     );
   };
 
-  const handleCalvinAIClick = () => {
+  const handleCalvinAIClick = (e) => {
+    e.stopPropagation();
     if (!demographicsInfos.ai_consent) {
       alert("The patient didn't give his/her consent to use AI for his record");
       return;
@@ -81,6 +83,7 @@ const ClinicalNotesCard = ({
   };
 
   const handleEditClick = (e) => {
+    e.stopPropagation();
     setEditVisible(true);
   };
   const handleChange = (e) => {
@@ -90,6 +93,7 @@ const ClinicalNotesCard = ({
   };
 
   const handleCancelClick = async (e) => {
+    e.stopPropagation();
     if (
       await confirmAlert({
         content: "Do you really want to cancel ? Your changes won't be saved",
@@ -99,6 +103,7 @@ const ClinicalNotesCard = ({
     }
   };
   const handleSaveClick = async (e) => {
+    e.stopPropagation();
     if (
       (_.isEqual(tempFormDatas, formDatas) &&
         (await confirmAlert({

@@ -1,7 +1,7 @@
 import React from "react";
 import useFetchDashboard from "../../../hooks/useFetchDashboard";
-import DashboardCard from "./DashboardCard";
 import DashboardCardBillings from "./DashboardCardBillings";
+import DashboardCardMeds from "./DashboardCardMeds";
 import DashboardCardPatients from "./DashboardCardPatients";
 import DashboardCardStaff from "./DashboardCardStaff";
 import DashboardCardVisits from "./DashboardCardVisits";
@@ -19,15 +19,12 @@ const Dashboard = () => {
     loadingVisits,
     errVisits,
     billings,
-    setBillings,
     rangeStartBillings,
     setRangeStartBillings,
     rangeEndBillings,
     setRangeEndBillings,
     loadingBillings,
-    setLoadingBillings,
     errBillings,
-    setErrBillings,
     sites,
     loadingSites,
     errSites,
@@ -37,9 +34,15 @@ const Dashboard = () => {
     patientsPerAge,
     loadingPatientsPerAge,
     errPatientsPerAge,
+    medications,
+    rangeStartMeds,
+    setRangeStartMeds,
+    rangeEndMeds,
+    setRangeEndMeds,
+    loadingMeds,
+    errMeds,
   } = useFetchDashboard();
 
-  console.log("bilings", billings);
   return (
     <div className="dashboard">
       <div className="dashboard-row">
@@ -85,7 +88,17 @@ const Dashboard = () => {
         />
       </div>
       <div className="dashboard-row">
-        <DashboardCard title="Medications"></DashboardCard>
+        <DashboardCardMeds
+          title="Medications"
+          medications={medications}
+          rangeStartMeds={rangeStartMeds}
+          setRangeStartMeds={setRangeStartMeds}
+          rangeEndMeds={rangeEndMeds}
+          setRangeEndMeds={setRangeEndMeds}
+          loadingMeds={loadingMeds}
+          errBillings={errMeds}
+          sites={sites}
+        />
       </div>
     </div>
   );

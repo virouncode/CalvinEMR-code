@@ -38,15 +38,12 @@ const useFetchDashboard = () => {
   const [errBillings, setErrBillings] = useState("");
   const [loadingBillings, setLoadingBillings] = useState(true);
 
-  // const [medications, setMedications] = useState();
-  // const [rangeStartMedications, setRangeStartMedications] = useState(
-  //   Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
-  // );
-  // const [rangeEndMedications, setRangeEndMedications] = useState(
-  //   Date.parse(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
-  // );
-  // const [errMedications, setErrMedications] = useState("");
-  // const [loadingMedications, setLoadingMedications] = useState("");
+  const [medications, setMedications] = useState();
+  const [rangeStartMeds, setRangeStartMeds] = useState(getStartOfTheMonthTZ());
+  const [rangeEndMeds, setRangeEndMeds] = useState(getEndOfTheMonthTZ());
+  const [errMeds, setErrMeds] = useState("");
+  const [loadingMeds, setLoadingMeds] = useState(true);
+
   const fetchSites = useCallback(async (abortController) => {
     try {
       setLoadingSites(true);
@@ -206,6 +203,7 @@ const useFetchDashboard = () => {
         if (abortController.signal.aborted) return;
         setDatas(response.data);
         setLoading(false);
+        console.log(endpoint, response.data);
       } catch (err) {
         setErr(`Unable to fetch datas: ${err.message}`);
         setLoading(false);
@@ -243,16 +241,15 @@ const useFetchDashboard = () => {
         "billings_in_range",
         abortController
       );
-
-      // await fetchDatas(
-      //   rangeStartMedications,
-      //   rangeEndMedications,
-      //   setMedications,
-      //   setLoadingMedications,
-      //   setErrMedications,
-      //   "medications_in_range",
-      //   abortController
-      // );
+      await fetchDatas(
+        rangeStartMeds,
+        rangeEndMeds,
+        setMedications,
+        setLoadingMeds,
+        setErrMeds,
+        "medications_in_range",
+        abortController
+      );
     };
     fetchDashboard();
     return () => abortController.abort();
@@ -261,8 +258,10 @@ const useFetchDashboard = () => {
     fetchPatientsPerAge,
     fetchPatientsPerGender,
     rangeEndBillings,
+    rangeEndMeds,
     rangeEndVisits,
     rangeStartBillings,
+    rangeStartMeds,
     rangeStartVisits,
     sites,
   ]);
@@ -294,6 +293,13 @@ const useFetchDashboard = () => {
     patientsPerAge,
     loadingPatientsPerAge,
     errPatientsPerAge,
+    medications,
+    rangeStartMeds,
+    setRangeStartMeds,
+    rangeEndMeds,
+    setRangeEndMeds,
+    loadingMeds,
+    errMeds,
   };
 };
 

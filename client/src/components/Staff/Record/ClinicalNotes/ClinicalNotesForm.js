@@ -30,6 +30,9 @@ const ClinicalNotesForm = ({
   patientId,
   demographicsInfos,
   formRef,
+  paging,
+  setPaging,
+  order,
 }) => {
   //hooks
   const { user } = useUserContext();
@@ -103,6 +106,9 @@ const ClinicalNotesForm = ({
         "CLINICAL NOTES"
       );
       setAddVisible(false);
+      if (order === "desc") {
+        setPaging({ ...paging, page: 1 });
+      }
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Error: unable to save clinical note: ${err.message}`, {
@@ -149,6 +155,7 @@ const ClinicalNotesForm = ({
         "CLINICAL NOTES"
       );
       setAddVisible(false);
+      setPaging({ ...paging, page: 1 });
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Error: unable to save clinical note: ${err.message}`, {

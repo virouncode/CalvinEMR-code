@@ -271,7 +271,7 @@ const Calendar = () => {
             <span>
               {patientsGuestsIds.length
                 ? patientsGuestsIds.map(
-                    (patient_guest, index) =>
+                    (patient_guest) =>
                       patient_guest && (
                         <span
                           className="calendar__patient-link"
@@ -284,9 +284,11 @@ const Calendar = () => {
                           key={patient_guest.patient_infos.patient_id}
                         >
                           <strong>
-                            {toPatientName(patient_guest.patient_infos)}
+                            {toPatientName(
+                              patient_guest.patient_infos
+                            ).toUpperCase()}
                           </strong>
-                          {index !== patientsGuestsIds.length - 1 ? " / " : ""}
+                          {" / "}
                         </span>
                       )
                   )
@@ -296,12 +298,11 @@ const Calendar = () => {
                     (staff_guest, index) =>
                       staff_guest && (
                         <span key={staff_guest.staff_infos.id}>
-                          {" / "}
                           <strong>
                             {staffIdToTitleAndName(
                               staffInfos,
                               staff_guest.staff_infos.id
-                            )}
+                            ).toUpperCase()}
                           </strong>
                           {index !== staffGuestsIds.length - 1 ? " / " : ""}
                         </span>
@@ -364,14 +365,9 @@ const Calendar = () => {
               {event.allDay ? "All Day" : info.timeText}
             </span>
             <span style={{ marginLeft: "10px" }}>
-              <strong>
-                {event.extendedProps.purpose?.toUpperCase() ?? "APPOINTMENT"}
-              </strong>
-            </span>
-            <span>
               {patientsGuestsIds.length
                 ? patientsGuestsIds.map(
-                    (patient_guest, index) =>
+                    (patient_guest) =>
                       patient_guest && (
                         <span
                           className="calendar__patient-link"
@@ -383,34 +379,39 @@ const Calendar = () => {
                           }
                           key={patient_guest.patient_infos.patient_id}
                         >
-                          {" / "}
                           <strong>
-                            {toPatientName(patient_guest.patient_infos)}
+                            {toPatientName(
+                              patient_guest.patient_infos
+                            ).toUpperCase()}
                           </strong>
-                          {index !== patient_guest.length - 1 ? "" : " / "}
+                          {" / "}
                         </span>
                       )
                   )
                 : null}
               {staffGuestsIds.length
                 ? staffGuestsIds.map(
-                    (staff_guest, index) =>
+                    (staff_guest) =>
                       staff_guest && (
                         <span key={staff_guest.staff_infos.id}>
-                          {" / "}
                           <strong>
                             {staffIdToTitleAndName(
                               staffInfos,
                               staff_guest.staff_infos.id
-                            )}
+                            ).toUpperCase()}
                           </strong>
-                          {index !== staffGuestsIds.length - 1 ? " / " : ""}
+                          {" / "}
                         </span>
                       )
                   )
                 : null}
             </span>
-            {" / "}
+            <span>
+              <strong>
+                {event.extendedProps.purpose?.toUpperCase() ?? "APPOINTMENT"}
+              </strong>
+              {" / "}
+            </span>
             <strong>Host: </strong>
             {event.extendedProps.hostName} / <strong>Site:</strong>{" "}
             {event.extendedProps.siteName} / <strong>Room: </strong>
@@ -476,7 +477,7 @@ const Calendar = () => {
             <span>
               {patientsGuestsIds.length
                 ? patientsGuestsIds.map(
-                    (patient_guest, index) =>
+                    (patient_guest) =>
                       patient_guest && (
                         <span
                           className="calendar__patient-link calendar__patient-link--list"
@@ -489,9 +490,11 @@ const Calendar = () => {
                           key={patient_guest.patient_infos.patient_id}
                         >
                           <strong>
-                            {toPatientName(patient_guest.patient_infos)}
+                            {toPatientName(
+                              patient_guest.patient_infos
+                            ).toUpperCase()}
                           </strong>
-                          {index !== patientsGuestsIds.length - 1 ? " / " : ""}
+                          {" / "}
                         </span>
                       )
                   )
@@ -501,12 +504,11 @@ const Calendar = () => {
                     (staff_guest, index) =>
                       staff_guest && (
                         <span key={staff_guest.staff_infos.id}>
-                          {" / "}
                           <strong>
                             {staffIdToTitleAndName(
                               staffInfos,
                               staff_guest.staff_infos.id
-                            )}
+                            ).toUpperCase()}
                           </strong>
                           {index !== staffGuestsIds.length - 1 ? " / " : ""}
                         </span>
