@@ -3,7 +3,7 @@ import useUserContext from "../../../../hooks/useUserContext";
 import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
 import { toPatientName } from "../../../../utils/toPatientName";
-import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
+import TriangleButtonClinical from "../Buttons/TriangleButtonClinical";
 
 const ClinicalNotesCardHeader = ({
   demographicsInfos,
@@ -11,24 +11,29 @@ const ClinicalNotesCardHeader = ({
   handleCheck,
   clinicalNote,
   tempFormDatas,
+  setTemplatesVisible,
   editVisible,
   versions,
-  handleVersionChange,
+  handleClickVersions,
   handleEditClick,
   handleCalvinAIClick,
   handleSaveClick,
   handleCancelClick,
   handleChange,
-  handleTriangleProgressClick,
-  choosenVersionNbr,
+  handleTriangleClinicalClick,
 }) => {
   const { staffInfos } = useStaffInfosContext();
   const { user } = useUserContext();
 
+  const handleClickTemplate = (e) => {
+    e.stopPropagation();
+    setTemplatesVisible((v) => !v);
+  };
+
   return (
     <div
       className="clinical-notes__card-header"
-      onClick={handleTriangleProgressClick}
+      onClick={handleTriangleClinicalClick}
     >
       <div className="clinical-notes__card-header-row">
         <div className="clinical-notes__card-author">
@@ -51,20 +56,12 @@ const ClinicalNotesCardHeader = ({
           </label>
           {!editVisible ? (
             versions && (
-              <select
-                name="version_nbr"
-                value={choosenVersionNbr}
-                onChange={handleVersionChange}
+              <span
+                onClick={handleClickVersions}
+                style={{ cursor: "pointer", textDecoration: "underline" }}
               >
-                {versions.map(({ version_nbr }) => (
-                  <option value={version_nbr.toString()} key={version_nbr}>
-                    {"V" + version_nbr.toString()}
-                  </option>
-                ))}
-                <option value={(versions.length + 1).toString()}>
-                  {"V" + (versions.length + 1).toString()}
-                </option>
-              </select>
+                {"V" + (versions.length + 1).toString()}
+              </span>
             )
           ) : (
             <span style={{ marginRight: "10px", fontWeight: "bold" }}>{`V${
@@ -87,9 +84,7 @@ const ClinicalNotesCardHeader = ({
                     }/${toPatientName(demographicsInfos)}/${
                       demographicsInfos.HealthCard?.Number
                     }/${clinicalNote.date_created}`}
-                    // target="_blank"
                     rel="noreferrer"
-                    // style={{ fontWeight: "bold" }}
                   >
                     Bill
                   </a>
@@ -114,8 +109,8 @@ const ClinicalNotesCardHeader = ({
           </div>
         </div>
         <div className="clinical-notes__card-triangle">
-          <TriangleButtonProgress
-            handleTriangleClick={handleTriangleProgressClick}
+          <TriangleButtonClinical
+            handleTriangleClick={handleTriangleClinicalClick}
             color="dark"
             className={
               "triangle-clinical-notes  triangle-clinical-notes--active"
@@ -137,9 +132,17 @@ const ClinicalNotesCardHeader = ({
               onChange={handleChange}
               name="subject"
               autoComplete="off"
+              onClick={(e) => e.stopPropagation()}
             />
           )}
         </div>
+        {editVisible && (
+          <div className="clinical-notes__form-template">
+            <label style={{ textDecoration: "underline", cursor: "pointer" }}>
+              <strong onClick={handleClickTemplate}>Use template</strong>
+            </label>
+          </div>
+        )}
       </div>
     </div>
   );

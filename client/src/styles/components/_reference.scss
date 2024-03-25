@@ -141,6 +141,9 @@
           text-align: center;
           padding: 10px;
           word-break: break-word;
+          input {
+            width:300px;
+          }
       }
   }
   &__item-btn-container {

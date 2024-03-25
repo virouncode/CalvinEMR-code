@@ -19,7 +19,11 @@ const TodosContent = ({ topicDatas, loading, errMsg }) => {
               .filter((message) => message.staff_id === user.id)
               .slice(0, 4)
               .map((message) => (
-                <li className="topic-content__item" key={message.id}>
+                <li
+                  className="topic-content__item"
+                  key={message.id}
+                  style={{ textDecoration: message.done && "line-through" }}
+                >
                   <div className="topic-content__overview">
                     <NavLink
                       className="topic-content__link"

@@ -117,9 +117,20 @@ const ReportsInboxAssignedPracticianForward = ({
 
   return (
     <div className="practicians-forward">
-      <label className="practicians-forward__title">
-        Forward document to practitioner
-      </label>
+      <div className="practicians-forward__title">
+        <label>Forward document to practitioner</label>
+        <div className="practicians-forward__btn">
+          <button
+            onClick={handleForwardDocument}
+            disabled={!assignedId || progress}
+          >
+            Forward
+          </button>
+          <button onClick={handleCancelForward} disabled={progress}>
+            Cancel
+          </button>
+        </div>
+      </div>
       <div className="practicians-forward__list">
         {allInfos
           .filter((category) => category.infos.length !== 0)
@@ -132,17 +143,6 @@ const ReportsInboxAssignedPracticianForward = ({
               key={category.name}
             />
           ))}
-      </div>
-      <div className="practicians-forward__btn">
-        <button
-          onClick={handleForwardDocument}
-          disabled={!assignedId || progress}
-        >
-          Forward
-        </button>
-        <button onClick={handleCancelForward} disabled={progress}>
-          Cancel
-        </button>
       </div>
     </div>
   );

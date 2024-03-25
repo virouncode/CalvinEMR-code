@@ -90,7 +90,6 @@ const ClinicalNotesToolBar = ({
         ...user.settings,
         clinical_notes_order: newOrder,
       });
-
       socket.emit("message", {
         route: "USER",
         action: "update",

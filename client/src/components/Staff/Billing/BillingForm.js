@@ -17,6 +17,7 @@ import { toPatientName } from "../../../utils/toPatientName";
 import { billingFormSchema } from "../../../validation/billingValidation";
 import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import SelectSite from "../EventForm/SelectSite";
+import BillingCodesTemplates from "./BillingCodesTemplates";
 import DiagnosisSearch from "./DiagnosisSearch";
 import PatientChartHealthSearch from "./PatientChartHealthSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
@@ -44,6 +45,8 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const [diagnosisSearchVisible, setDiagnosisSearchVisible] = useState(false);
   const [patientSearchVisible, setPatientSearchVisible] = useState(false);
   const [refOHIPSearchVisible, setRefOHIPSearchVisible] = useState(false);
+  const [billingCodesTemplatesVisible, setBillingCodesTemplatesVisible] =
+    useState(false);
   const userType = user.access_level === "Admin" ? "admin" : "staff";
 
   useEffect(() => {
@@ -91,6 +94,10 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
     setErrMsgPost("");
     setFormDatas({ ...formDatas, referrer_ohip_billing_nbr: ohip.toString() });
     setRefOHIPSearchVisible(false);
+  };
+
+  const handleSelectTemplate = (e, template_billing_codes) => {
+    setFormDatas({ ...formDatas, billing_codes: template_billing_codes });
   };
   const handleCancel = (e) => {
     setErrMsgPost("");
@@ -244,7 +251,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
             onClick={() => setDiagnosisSearchVisible(true)}
           ></i>
         </div>
-        <div className="billing-form__item">
+        <div className="billing-form__item" style={{ position: "relative" }}>
           <label htmlFor="">Billing code(s)*</label>
           <input
             type="text"
@@ -258,6 +265,11 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
             onChange={handleChange}
             autoComplete="off"
           />
+          <i
+            style={{ cursor: "pointer", position: "absolute", right: "5px" }}
+            className="fa-solid fa-magnifying-glass"
+            onClick={() => setBillingCodesTemplatesVisible(true)}
+          ></i>
         </div>
       </div>
       <div className="billing-form__row">
@@ -326,6 +338,19 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
           setPopUpVisible={setPatientSearchVisible}
         >
           <PatientChartHealthSearch handleClickPatient={handleClickPatient} />
+        </FakeWindow>
+      )}
+      {billingCodesTemplatesVisible && (
+        <FakeWindow
+          title="BILLING CODES TEMPLATES"
+          width={800}
+          height={600}
+          x={0}
+          y={0}
+          color="#93b5e9"
+          setPopUpVisible={setBillingCodesTemplatesVisible}
+        >
+          <BillingCodesTemplates handleSelectTemplate={handleSelectTemplate} />
         </FakeWindow>
       )}
     </form>

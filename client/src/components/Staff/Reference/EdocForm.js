@@ -39,6 +39,7 @@ const EdocForm = ({ errMsgPost, setErrMsgPost, setAddVisible }) => {
       setErrMsgPost("Please upload a file");
       return;
     }
+
     try {
       setProgress(true);
       const response = await xanoPost("/edocs", "staff", datasToPost);

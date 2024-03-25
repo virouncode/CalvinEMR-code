@@ -1,6 +1,6 @@
 import React from "react";
 
-const TriangleButtonProgress = ({
+const TriangleButtonClinical = ({
   handleTriangleClick,
   className,
   color,
@@ -16,4 +16,4 @@ const TriangleButtonProgress = ({
   );
 };
 
-export default TriangleButtonProgress;
+export default TriangleButtonClinical;

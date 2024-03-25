@@ -5,7 +5,8 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
-import xanoGet from "../../../../api/xanoCRUD/xanoGet";
+import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
+import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useSocketContext from "../../../../hooks/useSocketContext";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import useUserContext from "../../../../hooks/useUserContext";
@@ -18,17 +19,18 @@ import { toPatientName } from "../../../../utils/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import CalvinAI from "./CalvinAI/CalvinAI";
+import ClinicalNotesVersions from "./ClinicalNoteVersions";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 import ClinicalNotesCardBody from "./ClinicalNotesCardBody";
 import ClinicalNotesCardHeader from "./ClinicalNotesCardHeader";
 import ClinicalNotesCardHeaderFolded from "./ClinicalNotesCardHeaderFolded";
+import ClinicalNotesTemplates from "./ClinicalNotesTemplates";
 
 var _ = require("lodash");
 
 const ClinicalNotesCard = ({
   clinicalNote,
   clinicalNotes,
-  setClinicalNotes,
   patientId,
   checkedNotes,
   setCheckedNotes,
@@ -36,8 +38,6 @@ const ClinicalNotesCard = ({
   contentsVisible,
   demographicsInfos,
   lastItemRef = null,
-  addVisible,
-  order,
 }) => {
   //hooks
   const { user } = useUserContext();
@@ -48,10 +48,30 @@ const ClinicalNotesCard = ({
   const [tempFormDatas, setTempFormDatas] = useState(null);
   const [formDatas, setFormDatas] = useState(null);
   const [bodyVisible, setBodyVisible] = useState(true);
-  const [popUpVisible, setPopUpVisible] = useState(false);
+  const [aiVisible, setAIVisible] = useState(false);
+  const [versionsVisible, setVersionsVisible] = useState(false);
   const [choosenVersionNbr, setChoosenVersionNbr] = useState(
     clinicalNote.version_nbr
   );
+  const [templatesVisible, setTemplatesVisible] = useState(false);
+
+  const [templates, setTemplates] = useFetchDatas(
+    "/clinical_notes_templates",
+    "staff"
+  );
+
+  useClinicalTemplatesSocket(templates, setTemplates);
+
+  const handleSelectTemplate = (e, templateId) => {
+    e.stopPropagation();
+    setTempFormDatas({
+      ...tempFormDatas,
+      MyClinicalNotesContent:
+        tempFormDatas.MyClinicalNotesContent +
+        (tempFormDatas.MyClinicalNotesContent ? "\n\n" : "") +
+        templates.find(({ id }) => id === templateId)?.body,
+    });
+  };
 
   useEffect(() => {
     if (clinicalNote) {
@@ -65,7 +85,7 @@ const ClinicalNotesCard = ({
   }, [contentsVisible]);
 
   //HANDLERS
-  const handleTriangleProgressClick = (e) => {
+  const handleTriangleClinicalClick = (e) => {
     e.stopPropagation();
     setBodyVisible((v) => !v);
     bodyRef.current.classList.toggle(
@@ -79,7 +99,7 @@ const ClinicalNotesCard = ({
       alert("The patient didn't give his/her consent to use AI for his record");
       return;
     }
-    setPopUpVisible((v) => !v);
+    setAIVisible((v) => !v);
   };
 
   const handleEditClick = (e) => {
@@ -169,39 +189,9 @@ const ClinicalNotesCard = ({
     }
   };
 
-  const handleVersionChange = async (e) => {
-    const value = parseInt(e.target.value); //the choosen version
-    setChoosenVersionNbr(value);
-
-    //We setClinicalNotes because we can't set a single clinical note
-    if (value < clinicalNote.version_nbr) {
-      //we replace the actual clinical note by the version
-      setClinicalNotes(
-        clinicalNotes.map((item) =>
-          item.id === clinicalNote.id
-            ? {
-                ...clinicalNote.versions.find(
-                  ({ version_nbr }) => version_nbr === value
-                ),
-                id: clinicalNote.id,
-                attachments_ids: clinicalNote.attachments_ids,
-                versions: clinicalNote.versions,
-              }
-            : item
-        )
-      );
-    } else {
-      //back to last version
-      const response = await xanoGet(
-        `/clinical_notes/${clinicalNote.id}`,
-        "staff"
-      );
-      setClinicalNotes(
-        clinicalNotes.map((item) =>
-          item.id === clinicalNote.id ? response.data : item
-        )
-      );
-    }
+  const handleClickVersions = (e) => {
+    e.stopPropagation();
+    setVersionsVisible((v) => !v);
   };
 
   const isChecked = (progressNoteId) => {
@@ -218,21 +208,23 @@ const ClinicalNotesCard = ({
             handleCheck={handleCheck}
             clinicalNote={clinicalNote}
             tempFormDatas={tempFormDatas}
+            setTemplatesVisible={setTemplatesVisible}
             editVisible={editVisible}
             versions={clinicalNote.versions}
-            handleVersionChange={handleVersionChange}
+            handleClickVersions={handleClickVersions}
             handleEditClick={handleEditClick}
             handleCalvinAIClick={handleCalvinAIClick}
             handleSaveClick={handleSaveClick}
             handleCancelClick={handleCancelClick}
             handleChange={handleChange}
-            handleTriangleProgressClick={handleTriangleProgressClick}
+            handleTriangleClinicalClick={handleTriangleClinicalClick}
             choosenVersionNbr={choosenVersionNbr}
           />
         ) : (
           <ClinicalNotesCardHeaderFolded
             tempFormDatas={tempFormDatas}
-            handleTriangleProgressClick={handleTriangleProgressClick}
+            handleTriangleClinicalClick={handleTriangleClinicalClick}
+            handleClickVersions={handleClickVersions}
             isChecked={isChecked}
             clinicalNote={clinicalNote}
             handleCheck={handleCheck}
@@ -275,15 +267,15 @@ const ClinicalNotesCard = ({
             </div>
           )}
         </div>
-        {popUpVisible && (
+        {aiVisible && (
           <FakeWindow
             title={`CALVIN AI talk about ${toPatientName(demographicsInfos)}`}
             width={1000}
             height={window.innerHeight}
             x={(window.innerWidth - 1000) / 2}
             y={0}
-            color="#50B1C1"
-            setPopUpVisible={setPopUpVisible}
+            color="#93b5e9"
+            setPopUpVisible={setAIVisible}
           >
             <CalvinAI
               attachments={clinicalNote.attachments_ids.map(
@@ -291,6 +283,38 @@ const ClinicalNotesCard = ({
               )}
               initialBody={formDatas.MyClinicalNotesContent}
               demographicsInfos={demographicsInfos}
+            />
+          </FakeWindow>
+        )}
+        {versionsVisible && (
+          <FakeWindow
+            title={`CLINICAL NOTE VERSIONS`}
+            width={1000}
+            height={600}
+            x={(window.innerWidth - 1000) / 2}
+            y={(window.innerHeight - 600) / 2}
+            color="#93b5e9"
+            setPopUpVisible={setVersionsVisible}
+          >
+            <ClinicalNotesVersions
+              versions={clinicalNote.versions}
+              clinicalNote={clinicalNote}
+            />
+          </FakeWindow>
+        )}
+        {templatesVisible && (
+          <FakeWindow
+            title={`CHOOSE TEMPLATE(S)`}
+            width={500}
+            height={600}
+            x={window.innerWidth - 500}
+            y={0}
+            color="#93b5e9"
+            setPopUpVisible={setTemplatesVisible}
+          >
+            <ClinicalNotesTemplates
+              templates={templates}
+              handleSelectTemplate={handleSelectTemplate}
             />
           </FakeWindow>
         )}

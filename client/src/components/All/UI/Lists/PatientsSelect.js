@@ -30,8 +30,6 @@ const PatientsSelect = ({ formDatas, setFormDatas, patientId = 0 }) => {
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    console.log(value);
-    console.log(resultsVisible);
     setResultsVisible(true);
     setSearch(value);
     setPaging({ ...paging, page: 1 });

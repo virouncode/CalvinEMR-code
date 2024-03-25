@@ -172,7 +172,10 @@ const DashboardCardBillings = ({
                 <EmptyParagraph text="Not enough datas" />
               )}
             </div>
-            <div className="dashboard-card__chart" style={{ width: "100%" }}>
+            <div
+              className="dashboard-card__chart"
+              style={{ width: "100%", marginTop: "20px" }}
+            >
               <p className="dashboard-card__chart-title">Revenues</p>
               {revenues.length > 0 ? (
                 <BarChart

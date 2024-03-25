@@ -145,7 +145,6 @@ const ClinicalNotes = ({
           />
         </FakeWindow>
       )}
-
       <div
         className={
           notesVisible

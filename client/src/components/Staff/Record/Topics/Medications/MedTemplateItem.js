@@ -94,7 +94,7 @@ const MedTemplateItem = ({
           </span>
         </Tooltip>
         <i
-          className="fa-regular fa-pen-to-square"
+          className="fa-solid fa-pen-to-square"
           style={{ marginLeft: "5px" }}
           onClick={handleEdit}
         ></i>

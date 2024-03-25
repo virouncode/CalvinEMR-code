@@ -41,7 +41,8 @@ const PatientTopicDoctors = ({
 
   //HOOKS
   const [popUpVisible, setPopUpVisible] = useState(false);
-  const containerRef = useRef("null");
+  const containerRef = useRef(null);
+  const triangleRef = useRef(null);
 
   //STYLE
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
@@ -76,11 +77,20 @@ const PatientTopicDoctors = ({
 
   //HANDLERS
   const handlePopUpClick = (e) => {
+    e.stopPropagation();
     setPopUpVisible((v) => !v);
   };
 
   const handleTriangleClick = (e) => {
+    e.stopPropagation();
     e.target.classList.toggle("triangle--active");
+    containerRef.current.classList.toggle(
+      `patient-record__topic-container--active`
+    );
+  };
+
+  const handleClickHeader = () => {
+    triangleRef.current.classList.toggle("triangle--active");
     containerRef.current.classList.toggle(
       `patient-record__topic-container--active`
     );
@@ -91,6 +101,7 @@ const PatientTopicDoctors = ({
       <div
         className={`patient-record__topic-header patient-record__topic-header--${side}`}
         style={TOPIC_STYLE}
+        onClick={handleClickHeader}
       >
         <PatientTopicHeader
           topic={topicDoctors}
@@ -98,6 +109,7 @@ const PatientTopicDoctors = ({
           handlePopUpClick={handlePopUpClick}
           contentsVisible={contentsVisible}
           popUpButton="popUp"
+          triangleRef={triangleRef}
         />
       </div>
       <div

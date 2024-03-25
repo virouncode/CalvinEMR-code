@@ -5,6 +5,7 @@ import useReportsInboxSocket from "../../../hooks/useReportsInboxSocket";
 import useUserContext from "../../../hooks/useUserContext";
 import EmptyRow from "../../All/UI/Tables/EmptyRow";
 import LoadingRow from "../../All/UI/Tables/LoadingRow";
+import FakeWindow from "../../All/UI/Windows/FakeWindow";
 import ReportsInboxAssignedPracticianForward from "./ReportsInboxAssignedPracticianForward";
 import ReportsInboxItem from "./ReportsInboxItem";
 
@@ -81,12 +82,22 @@ const ReportsInbox = () => {
         </div>
       )}
       {forwardVisible && (
-        <ReportsInboxAssignedPracticianForward
-          reportToForward={reports.find(
-            ({ id }) => id === parseInt(reportToForwardId)
-          )}
-          setForwardVisible={setForwardVisible}
-        />
+        <FakeWindow
+          title="FORWARD REPORT"
+          width={600}
+          height={500}
+          x={(window.innerWidth - 600) / 2}
+          y={(window.innerHeight - 500) / 2}
+          color="#93b5e9"
+          setPopUpVisible={setForwardVisible}
+        >
+          <ReportsInboxAssignedPracticianForward
+            reportToForward={reports.find(
+              ({ id }) => id === parseInt(reportToForwardId)
+            )}
+            setForwardVisible={setForwardVisible}
+          />
+        </FakeWindow>
       )}
     </>
   );

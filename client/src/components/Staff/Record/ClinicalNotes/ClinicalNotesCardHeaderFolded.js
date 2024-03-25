@@ -2,11 +2,11 @@ import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
 import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import TriangleButtonProgress from "../Buttons/TriangleButtonProgress";
+import TriangleButtonClinical from "../Buttons/TriangleButtonClinical";
 
 const ClinicalNotesCardHeaderFolded = ({
   tempFormDatas,
-  handleTriangleProgressClick,
+  handleTriangleClinicalClick,
   isChecked,
   clinicalNote,
   handleCheck,
@@ -15,7 +15,7 @@ const ClinicalNotesCardHeaderFolded = ({
   return (
     <div
       className="clinical-notes__card-header clinical-notes__card-header--folded"
-      onClick={handleTriangleProgressClick}
+      onClick={handleTriangleClinicalClick}
     >
       <div className="clinical-notes__card-header--folded-title">
         <input
@@ -37,8 +37,8 @@ const ClinicalNotesCardHeaderFolded = ({
         </p>
       </div>
       <div className="clinical-notes__card-header--folded-triangle">
-        <TriangleButtonProgress
-          handleTriangleClick={handleTriangleProgressClick}
+        <TriangleButtonClinical
+          handleTriangleClick={handleTriangleClinicalClick}
           color="dark"
           className={"triangle-clinical-notes"}
         />

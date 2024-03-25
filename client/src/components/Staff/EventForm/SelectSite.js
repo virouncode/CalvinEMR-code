@@ -14,9 +14,9 @@ const SelectSite = ({
       )}
       <select value={value} onChange={handleSiteChange}>
         {all && <option value="-1">All</option>}
-        <option value="0" disabled>
+        {/* <option value="0" disabled>
           Choose a site...
-        </option>
+        </option> */}
         {sites &&
           sites.map((site) => (
             <option value={site.id} name={site.id} key={site.id}>

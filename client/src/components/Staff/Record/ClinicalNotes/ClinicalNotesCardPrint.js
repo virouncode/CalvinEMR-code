@@ -1,48 +1,23 @@
 import React from "react";
 import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
+import {
+  timestampToDateTimeSecondsStrTZ,
+  timestampToDateTimeStrTZ,
+} from "../../../../utils/formatDates";
 import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {
   const { staffInfos } = useStaffInfosContext();
 
-  //styles
-  const BODY_STYLE = {
-    padding: "10px",
-    textAlign: "justify",
-    whiteSpace: "pre-wrap",
-  };
-  const FOOTER_STYLE = {
-    textAlign: "end",
-    fontSize: "0.6rem",
-    fontStyle: "italic",
-  };
-
   return (
-    <div
-      className="clinical-notes__card clinical-notes__card--print"
-      style={{ fontFamily: "sans-serif" }}
-    >
+    <div className="clinical-notes__card clinical-notes__card--print">
       <div className="clinical-notes__card-header">
         <div className="clinical-notes__card-header-row">
           <p style={{ margin: "0", padding: "0" }}>
             <strong>From: </strong>
-            {staffIdToTitleAndName(
-              staffInfos,
-              isUpdated(clinicalNote)
-                ? getLastUpdate(clinicalNote).updated_by_id
-                : clinicalNote.created_by_id
-            )}
-          </p>
-          <p style={{ margin: "0", fontSize: "0.7rem", padding: "0 5px" }}>
-            Signed on{" "}
-            {`${timestampToDateTimeSecondsStrTZ(
-              isUpdated(clinicalNote)
-                ? getLastUpdate(clinicalNote).date_updated
-                : clinicalNote.date_created
-            )}`}
+            {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)}
+            {` ${timestampToDateTimeStrTZ(clinicalNote.date_created)}`}
           </p>
         </div>
         <div className="clinical-notes__card-header-row">
@@ -60,7 +35,7 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           </div>
         </div>
       </div>
-      <div style={BODY_STYLE}>
+      <div className="clinical-notes__card-body">
         <p style={{ whiteSpace: "pre-wrap" }}>
           {clinicalNote.MyClinicalNotesContent}
         </p>
@@ -71,26 +46,19 @@ const ClinicalNotesCardPrint = ({ clinicalNote }) => {
           deletable={false}
           addable={false}
         />
-        <div style={FOOTER_STYLE}>
-          {isUpdated(clinicalNote) ? (
-            <p style={{ padding: "0", margin: "0" }}>
-              Updated by{" "}
-              {staffIdToTitleAndName(
-                staffInfos,
-                getLastUpdate(clinicalNote).updated_by_id
-              )}{" "}
-              on{" "}
-              {timestampToDateTimeSecondsStrTZ(
-                getLastUpdate(clinicalNote).date_updated
-              )}
-            </p>
-          ) : null}
-          <p style={{ padding: "0", margin: "0" }}>
-            Created by{" "}
-            {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
-            {timestampToDateTimeSecondsStrTZ(clinicalNote.date_created)}
+      </div>
+      <div className="clinical-notes__card-sign">
+        <p style={{ padding: "0 10px" }}>
+          Created by{" "}
+          {staffIdToTitleAndName(staffInfos, clinicalNote.created_by_id)} on{" "}
+          {timestampToDateTimeSecondsStrTZ(clinicalNote.date_created)}
+        </p>
+        {clinicalNote.date_updated && (
+          <p style={{ padding: "0 10px" }}>
+            Updated on{" "}
+            {timestampToDateTimeSecondsStrTZ(clinicalNote.date_updated)}
           </p>
-        </div>
+        )}
       </div>
     </div>
   );

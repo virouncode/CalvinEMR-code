@@ -73,7 +73,8 @@ const PatientTopic = ({
 }) => {
   //HOOKS
   const [popUpVisible, setPopUpVisible] = useState(false);
-  const containerRef = useRef("null");
+  const containerRef = useRef(null);
+  const triangleRef = useRef(null);
 
   //STYLE
   const TOPIC_STYLE = { color: textColor, background: backgroundColor };
@@ -83,11 +84,25 @@ const PatientTopic = ({
 
   //HANDLERS
   const handlePopUpClick = (e) => {
+    e.stopPropagation();
     setPopUpVisible((v) => !v);
   };
 
   const handleTriangleClick = (e) => {
+    e.stopPropagation();
     e.target.classList.toggle("triangle--active");
+    containerRef.current.classList.toggle(
+      `patient-record__topic-container--active`
+    );
+    if (topic === "REMINDERS" || topic === "TO-DOS ABOUT PATIENT") {
+      containerRef.current.classList.toggle(
+        `patient-record__topic-container--bottom`
+      );
+    }
+  };
+
+  const handleClickHeader = () => {
+    triangleRef.current.classList.toggle("triangle--active");
     containerRef.current.classList.toggle(
       `patient-record__topic-container--active`
     );
@@ -103,6 +118,7 @@ const PatientTopic = ({
       <div
         className={`patient-record__topic-header patient-record__topic-header--${side}`}
         style={TOPIC_STYLE}
+        onClick={handleClickHeader}
       >
         <PatientTopicHeader
           topic={topic}
@@ -118,6 +134,7 @@ const PatientTopic = ({
               ? ""
               : "popUp"
           }
+          triangleRef={triangleRef}
         />
       </div>
       <div

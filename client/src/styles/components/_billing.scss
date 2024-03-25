@@ -155,3 +155,67 @@
     background-color: $white;
   }
 }
+.billing-codes__templates {
+  margin-top: 40px;
+  padding:0 20px;
+  &-err {
+    padding : 10px 20px;
+    font-size: 0.9rem;
+    width : 100%;
+    margin:10px auto;
+    color : red;
+    background-color:rgba(255, 0, 0, 0.403);
+    border-radius: 6px;
+    text-align: center;
+}
+  &-btn-container {
+      text-align: center;
+      margin-bottom: 20px;
+      button {
+          margin-left: 5px;
+      }
+  }
+  &-list {
+      height:470px;
+      border: solid 0.5px $grey;
+      border-radius: 6px;
+      overflow-y: scroll;
+      padding:10px;
+      &-item {
+        cursor:pointer;
+        &:hover{
+          text-decoration: underline;
+        }
+        &--edit {
+          cursor:auto;
+          padding: 5px;
+          &:hover{
+            text-decoration: none;
+          }
+          label {
+            font-weight: bold;
+            margin-right: 10px;
+          }
+          input {
+            margin-right: 10px;
+            width:210px;
+          }
+          button {
+            margin-left: 5px;
+          }
+        }
+      }
+  }
+  &-search {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      label {
+          font-weight: bold;
+          margin-right: 10px;
+      }
+      input {
+          width:200px;
+      }
+  }
+}

@@ -8,7 +8,11 @@
     height : 100%;
     display: flex;
     justify-content: space-between;
-    
+    &__print-day {
+        position:absolute;
+        left:13%;
+        top:12px;
+    }
     &__options{
         display: flex;
         justify-content: space-between;
@@ -295,5 +299,38 @@
 .form-control  {
     &:read-only{
         outline:solid 1px $black;
+    }
+}
+.daysheet {
+    font-family: $font1;
+    print-color-adjust: exact;
+    &__event-card {
+        font-size: 0.85rem;
+        // padding:20px;
+        border: solid 0.5px $grey;
+        border-radius:6px;
+        box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+        margin: 10px;
+        &-header {
+            background: $blue;
+            padding:10px;
+            border-radius: 6px 6px 0 0;
+        }
+        &-content {
+            padding:10px 20px;
+        }
+    }
+    &__date {
+        text-align: center;
+        padding: 10px;
+        font-weight: bold;
+    }
+    &__btn-container {
+        text-align: center;
+    }
+}
+@media print {
+    .daysheet__btn-container {
+        display: none !important;
     }
 }

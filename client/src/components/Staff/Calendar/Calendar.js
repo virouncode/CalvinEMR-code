@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { DateTime } from "luxon";
+import NewWindow from "react-new-window";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
@@ -32,6 +33,7 @@ import EventForm from "../EventForm/EventForm";
 import CalendarFilter from "./CalendarFilter";
 import CalendarOptions from "./CalendarOptions";
 import CalendarView from "./CalendarView";
+import DaySheet from "./DaySheet";
 import SelectTimelineSite from "./SelectTimelineSite";
 import Shortcutpickr from "./Shortcutpickr";
 import TimelineView from "./TimelineView";
@@ -85,6 +87,8 @@ const Calendar = () => {
     defaultDurationMin,
     setDefaultDurationMin,
   } = useAvailabilty(user.id);
+
+  const [printDayVisible, setPrintDayVsisible] = useState(false);
 
   //Calendar Elements
   const fcRef = useRef(null); //fullcalendar
@@ -1086,6 +1090,9 @@ const Calendar = () => {
       info.revert();
     }
   };
+  const handlePrintDay = () => {
+    setPrintDayVsisible((v) => !v);
+  };
   return events ? (
     <div>
       <CalendarOptions
@@ -1130,6 +1137,34 @@ const Calendar = () => {
             setTimelineVisible={setTimelineVisible}
             timelineVisible={timelineVisible}
           />
+          {fcRef?.current?.calendar?.view?.type === "timeGrid" && (
+            <button
+              className="calendar__print-day"
+              onClick={handlePrintDay}
+              disabled={!events || events.length === 0}
+            >
+              Print day sheet
+            </button>
+          )}
+          {printDayVisible && (
+            <NewWindow
+              title={`Day sheet: ${timestampToDateISOTZ(rangeStart)}`}
+              features={{
+                toolbar: "no",
+                scrollbars: "no",
+                menubar: "no",
+                status: "no",
+                directories: "no",
+                width: 793.7,
+                height: 1122.5,
+                left: 320,
+                top: 200,
+              }}
+              onUnload={() => setPrintDayVsisible(false)}
+            >
+              <DaySheet events={events} rangeStart={rangeStart} />
+            </NewWindow>
+          )}
           {!timelineVisible ? (
             <CalendarView
               slotDuration={user.settings.slot_duration}

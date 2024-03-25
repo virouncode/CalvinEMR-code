@@ -203,7 +203,6 @@ const useFetchDashboard = () => {
         if (abortController.signal.aborted) return;
         setDatas(response.data);
         setLoading(false);
-        console.log(endpoint, response.data);
       } catch (err) {
         setErr(`Unable to fetch datas: ${err.message}`);
         setLoading(false);

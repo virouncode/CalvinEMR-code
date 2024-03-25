@@ -21,9 +21,7 @@ import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../../All/UI/Windows/FakeWindow";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
-import ClinicalNotesTemplatesList from "./ClinicalNotesTemplatesList";
-import EditTemplate from "./EditTemplate";
-import NewTemplate from "./NewTemplate";
+import ClinicalNotesTemplates from "./ClinicalNotesTemplates";
 
 const ClinicalNotesForm = ({
   setAddVisible,
@@ -46,11 +44,9 @@ const ClinicalNotesForm = ({
     attachments_ids: [],
   });
   const [attachments, setAttachments] = useState([]);
-  const [templateSelectedId, setTemplateSelectedId] = useState("");
-  const [newTemplateVisible, setNewTemplateVisible] = useState(false);
-  const [editTemplateVisible, setEditTemplateVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [templatesVisible, setTemplatesVisible] = useState(false);
 
   const [templates, setTemplates] = useFetchDatas(
     "/clinical_notes_templates",
@@ -233,28 +229,15 @@ const ClinicalNotesForm = ({
     setAttachments(updatedAttachments);
   };
 
-  const handleSelectTemplate = (e) => {
+  const handleSelectTemplate = (e, templateId) => {
     setErrMsg("");
-    const value = parseInt(e.target.value);
-    setTemplateSelectedId(value);
-    if (value !== -1 && value !== -2) {
-      setFormDatas({
-        ...formDatas,
-        MyClinicalNotesContent:
-          formDatas.MyClinicalNotesContent +
-          (formDatas.MyClinicalNotesContent ? "\n\n" : "") +
-          templates.find(({ id }) => id === parseInt(value)).body,
-      });
-    } else if (value === -1) {
-      setNewTemplateVisible(true);
-    } else if (value === -2) {
-      if (!templates.filter(({ author_id }) => author_id === user.id).length) {
-        alert("You don't have any templates");
-        setTemplateSelectedId("");
-        return;
-      }
-      setEditTemplateVisible(true);
-    }
+    setFormDatas({
+      ...formDatas,
+      MyClinicalNotesContent:
+        formDatas.MyClinicalNotesContent +
+        (formDatas.MyClinicalNotesContent ? "\n\n" : "") +
+        templates.find(({ id }) => id === templateId)?.body,
+    });
   };
 
   return (
@@ -271,14 +254,27 @@ const ClinicalNotesForm = ({
               {staffIdToTitleAndName(staffInfos, user.id)}
             </p>
             <div className="clinical-notes__form-template">
-              <label>
-                <strong>Use template: </strong>
+              <label style={{ textDecoration: "underline", cursor: "pointer" }}>
+                <strong onClick={() => setTemplatesVisible(true)}>
+                  Use template
+                </strong>
               </label>
-              <ClinicalNotesTemplatesList
-                templates={templates}
-                templateSelectedId={templateSelectedId}
-                handleSelectTemplate={handleSelectTemplate}
-              />
+              {templatesVisible && (
+                <FakeWindow
+                  title={`CHOOSE TEMPLATE(S)`}
+                  width={500}
+                  height={600}
+                  x={window.innerWidth - 500}
+                  y={0}
+                  color="#93b5e9"
+                  setPopUpVisible={setTemplatesVisible}
+                >
+                  <ClinicalNotesTemplates
+                    templates={templates}
+                    handleSelectTemplate={handleSelectTemplate}
+                  />
+                </FakeWindow>
+              )}
             </div>
           </div>
           <div className="clinical-notes__form-row">
@@ -335,49 +331,6 @@ const ClinicalNotesForm = ({
           {isLoadingFile && <CircularProgressMedium />}
         </div>
       </form>
-      {newTemplateVisible && (
-        <FakeWindow
-          title="NEW TEMPLATE"
-          width={1000}
-          height={500}
-          x={(window.innerWidth - 1000) / 2}
-          y={(window.innerHeight - 500) / 2}
-          color="#50B1C1"
-          setPopUpVisible={setNewTemplateVisible}
-          closeCross={false}
-        >
-          <NewTemplate
-            setNewTemplateVisible={setNewTemplateVisible}
-            templates={templates}
-            setTemplateSelectedId={setTemplateSelectedId}
-            setTemplates={setTemplates}
-            setFormDatas={setFormDatas}
-            formDatas={formDatas}
-          />
-        </FakeWindow>
-      )}
-      {editTemplateVisible && (
-        <FakeWindow
-          title="EDIT TEMPLATE"
-          width={1000}
-          height={500}
-          x={(window.innerWidth - 1000) / 2}
-          y={(window.innerHeight - 500) / 2}
-          color="#50B1C1"
-          setPopUpVisible={setEditTemplateVisible}
-        >
-          <EditTemplate
-            setEditTemplateVisible={setEditTemplateVisible}
-            myTemplates={templates.filter(
-              ({ author_id }) => author_id === user.id
-            )}
-            setTemplateSelectedId={setTemplateSelectedId}
-            setTemplates={setTemplates}
-            setFormDatas={setFormDatas}
-            formDatas={formDatas}
-          />
-        </FakeWindow>
-      )}{" "}
     </>
   );
 };

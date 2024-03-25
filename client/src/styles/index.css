@@ -10948,6 +10948,11 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
 }
+.calendar__print-day {
+  position: absolute;
+  left: 13%;
+  top: 12px;
+}
 .calendar__options {
   display: flex;
   justify-content: space-between;
@@ -11222,6 +11227,40 @@ readers do not read off random characters that represent icons */
   outline: solid 1px #3D375A;
 }
 
+.daysheet {
+  font-family: Lato, sans-serif;
+  -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+}
+.daysheet__event-card {
+  font-size: 0.85rem;
+  border: solid 0.5px #cecdcd;
+  border-radius: 6px;
+  box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
+  margin: 10px;
+}
+.daysheet__event-card-header {
+  background: #93b5e9;
+  padding: 10px;
+  border-radius: 6px 6px 0 0;
+}
+.daysheet__event-card-content {
+  padding: 10px 20px;
+}
+.daysheet__date {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
+.daysheet__btn-container {
+  text-align: center;
+}
+
+@media print {
+  .daysheet__btn-container {
+    display: none !important;
+  }
+}
 .calendar-shortcutpickr {
   max-width: 200px;
   height: auto;
@@ -11884,10 +11923,6 @@ readers do not read off random characters that represent icons */
   border-radius: 6px;
   text-align: center;
 }
-.clinical-notes__form-template select {
-  width: 150px;
-  margin-left: 5px;
-}
 .clinical-notes__form-header {
   background: #5EBAC7;
   padding: 10px;
@@ -12081,6 +12116,7 @@ readers do not read off random characters that represent icons */
   padding: 40px;
   -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
+  font-family: Lato, sans-serif;
 }
 .clinical-notes__overview {
   margin-top: 40px;
@@ -12105,6 +12141,95 @@ readers do not read off random characters that represent icons */
   padding: 0;
   white-space: pre-wrap;
   margin-left: 40px;
+}
+.clinical-notes__versions {
+  margin-top: 40px;
+}
+.clinical-notes__templates {
+  margin-top: 40px;
+  padding: 0 20px;
+}
+.clinical-notes__templates-btn-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.clinical-notes__templates-btn-container button {
+  margin-left: 5px;
+}
+.clinical-notes__templates-list {
+  height: 470px;
+  border: solid 0.5px #cecdcd;
+  border-radius: 6px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+.clinical-notes__templates-list-item {
+  cursor: pointer;
+}
+.clinical-notes__templates-list-item:hover {
+  text-decoration: underline;
+}
+.clinical-notes__templates-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.clinical-notes__templates-search label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.clinical-notes__templates-search input {
+  width: 200px;
+}
+
+.new-template, .edit-template {
+  margin-top: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+}
+.new-template-err, .edit-template-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 0 auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+  margin: 0 auto 20px;
+}
+.new-template-title, .edit-template-title {
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.new-template-name, .edit-template-name {
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.new-template-name input, .edit-template-name input {
+  width: 300px;
+}
+.new-template-body, .edit-template-body {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.new-template-body textarea, .edit-template-body textarea {
+  min-height: 300px;
+  width: 100%;
+}
+.new-template-btns, .edit-template-btns {
+  width: 100%;
+  text-align: center;
+}
+.new-template-btns button, .edit-template-btns button {
+  margin-right: 10px;
 }
 
 @media print {
@@ -15178,56 +15303,6 @@ readers do not read off random characters that represent icons */
     display: none !important;
   }
 }
-.new-template, .edit-template {
-  margin-top: 30px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 100%;
-}
-.new-template-err, .edit-template-err {
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  width: 100%;
-  margin: 0 auto;
-  color: red;
-  background-color: rgba(255, 0, 0, 0.403);
-  border-radius: 6px;
-  text-align: center;
-  margin: 0 auto 20px;
-}
-.new-template-title, .edit-template-title {
-  font-size: 0.9rem;
-  width: 100%;
-  margin-bottom: 20px;
-}
-.new-template-name, .edit-template-name {
-  font-size: 0.9rem;
-  width: 100%;
-  margin-bottom: 10px;
-}
-.new-template-name input, .edit-template-name input {
-  width: 300px;
-}
-.new-template-body, .edit-template-body {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.new-template-body textarea, .edit-template-body textarea {
-  min-height: 300px;
-  width: 100%;
-}
-.new-template-btns, .edit-template-btns {
-  width: 100%;
-  text-align: center;
-}
-.new-template-btns button, .edit-template-btns button {
-  margin-right: 10px;
-}
-
 .todos__box {
   background-color: #FEFEFE;
   width: 90%;
@@ -15808,7 +15883,7 @@ readers do not read off random characters that represent icons */
   padding: 0;
 }
 .reportsinbox__table-container {
-  height: 75vh;
+  height: 72vh;
   overflow: scroll;
   border-radius: 6px;
   box-shadow: rgba(149, 157, 165, 0.8) 0px 3px 4px;
@@ -15951,15 +16026,9 @@ readers do not read off random characters that represent icons */
 
 .practicians-forward {
   background: #FEFEFE;
-  border: solid 1px #cecdcd;
-  border-radius: 6px;
-  width: 70%;
+  width: 100%;
   margin: 30px auto 0;
   padding: 10px;
-}
-.practicians-forward__btn {
-  width: 100%;
-  text-align: end;
 }
 .practicians-forward__btn button {
   margin-left: 10px;
@@ -15967,10 +16036,17 @@ readers do not read off random characters that represent icons */
 .practicians-forward__title {
   font-size: 0.9rem;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 .practicians-forward__list {
   margin-top: 10px;
   font-size: 0.85rem;
+  border: solid 0.5px #cecdcd;
+  border-radius: 6px;
+  padding: 10px 0;
+  overflow-y: scroll;
+  height: 400px;
 }
 .practicians-forward__list-item {
   display: flex;
@@ -16736,6 +16812,71 @@ readers do not read off random characters that represent icons */
   background-color: #FEFEFE;
 }
 
+.billing-codes__templates {
+  margin-top: 40px;
+  padding: 0 20px;
+}
+.billing-codes__templates-err {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  width: 100%;
+  margin: 10px auto;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.403);
+  border-radius: 6px;
+  text-align: center;
+}
+.billing-codes__templates-btn-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.billing-codes__templates-btn-container button {
+  margin-left: 5px;
+}
+.billing-codes__templates-list {
+  height: 470px;
+  border: solid 0.5px #cecdcd;
+  border-radius: 6px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+.billing-codes__templates-list-item {
+  cursor: pointer;
+}
+.billing-codes__templates-list-item:hover {
+  text-decoration: underline;
+}
+.billing-codes__templates-list-item--edit {
+  cursor: auto;
+  padding: 5px;
+}
+.billing-codes__templates-list-item--edit:hover {
+  text-decoration: none;
+}
+.billing-codes__templates-list-item--edit label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.billing-codes__templates-list-item--edit input {
+  margin-right: 10px;
+  width: 210px;
+}
+.billing-codes__templates-list-item--edit button {
+  margin-left: 5px;
+}
+.billing-codes__templates-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.billing-codes__templates-search label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.billing-codes__templates-search input {
+  width: 200px;
+}
+
 .diagnosis__err {
   padding: 10px 20px;
   font-size: 0.9rem;
@@ -16982,6 +17123,9 @@ readers do not read off random characters that represent icons */
   text-align: center;
   padding: 10px;
   word-break: break-word;
+}
+.reference-edocs__item td input {
+  width: 300px;
 }
 .reference-edocs__item-btn-container {
   display: flex;

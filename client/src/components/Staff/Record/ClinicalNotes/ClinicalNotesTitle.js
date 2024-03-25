@@ -16,14 +16,21 @@ const ClinicalNotesTitle = ({
   errPatient,
 }) => {
   const handleTriangleClick = (e) => {
+    e.stopPropagation();
     e.target.classList.toggle("triangle--active");
+    contentRef.current.classList.toggle("clinical-notes__content--active");
+    setSelectAllDisabled((d) => !d);
+    setNotesVisible((v) => !v);
+  };
+  const handleTitleClick = (e) => {
+    triangleRef.current.classList.toggle("triangle--active");
     contentRef.current.classList.toggle("clinical-notes__content--active");
     setSelectAllDisabled((d) => !d);
     setNotesVisible((v) => !v);
   };
 
   return (
-    <div className="clinical-notes__title">
+    <div className="clinical-notes__title" onClick={handleTitleClick}>
       <div>
         <TriangleButton
           handleTriangleClick={handleTriangleClick}

@@ -8,13 +8,7 @@ import { nowTZTimestamp } from "../../../../utils/formatDates";
 import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
 import CopyTemplatesList from "./CopyTemplatesList";
 
-const NewTemplate = ({
-  setNewTemplateVisible,
-  templates,
-  setTemplateSelectedId,
-  setFormDatas,
-  formDatas,
-}) => {
+const NewTemplate = ({ setNewTemplateVisible, templates }) => {
   const { user } = useUserContext();
   const { socket } = useSocketContext();
   const [copyTemplateSelectedId, setCopyTemplateSelectedId] = useState("");
@@ -40,7 +34,6 @@ const NewTemplate = ({
   const handleCancel = () => {
     setErrMsg("");
     setNewTemplateVisible(false);
-    setTemplateSelectedId("");
   };
 
   const handleSave = async () => {
@@ -63,8 +56,6 @@ const NewTemplate = ({
         action: "create",
         content: { data: response.data },
       });
-      setFormDatas({ ...formDatas, MyClinicalNotesContent: newTemplate.body });
-      setTemplateSelectedId(response.data.id);
       setNewTemplateVisible(false);
       toast.success("Template saved succesfully", { containerId: "B" });
     } catch (err) {

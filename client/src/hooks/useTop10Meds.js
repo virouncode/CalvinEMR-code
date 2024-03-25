@@ -18,9 +18,7 @@ const useTop10Meds = (medications, sites, siteSelectedIdMeds) => {
       ({ site_id }) => site_id === siteSelectedIdMeds
     );
     if (medsForSite.length > 0) {
-      console.log("medsForSite", medsForSite);
       const medsNamesForSite = medsForSite.map((med) => med.DrugName);
-      console.log("medsNamesForSite", medsNamesForSite);
       top10MedsForSite = topKFrequent(medsNamesForSite, 10, "medication");
     } else {
       top10MedsForSite = [];
