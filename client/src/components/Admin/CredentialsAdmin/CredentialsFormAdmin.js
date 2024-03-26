@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useAuthContext from "../../../hooks/useAuthContext";
 import useSocketContext from "../../../hooks/useSocketContext";
 import useUserContext from "../../../hooks/useUserContext";
 
-const CredentialsFormPatient = () => {
+const CredentialsFormAdmin = () => {
   const navigate = useNavigate();
   const { auth } = useAuthContext();
   const { user } = useUserContext();
@@ -25,6 +26,12 @@ const CredentialsFormPatient = () => {
   });
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const handleChange = (e) => {
+    setErrMsg("");
+    const name = e.target.name;
+    const value = e.target.value;
+    setCredentials({ ...credentials, [name]: value });
+  };
   const handlePasswordChange = (e) => {
     setErrMsg("");
     let value = e.target.value;
@@ -58,13 +65,6 @@ const CredentialsFormPatient = () => {
     setPasswordValidity(newValidity);
     setCredentials({ ...credentials, password: value });
   };
-  const handleChange = (e) => {
-    setErrMsg("");
-    const name = e.target.name;
-    const value = e.target.value;
-    setCredentials({ ...credentials, [name]: value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (credentials.confirmPassword !== credentials.password) {
@@ -82,7 +82,7 @@ const CredentialsFormPatient = () => {
 
     if (credentials.email.toLowerCase() !== auth.email.toLowerCase()) {
       try {
-        const response = await xanoGet(`/patient_with_email`, "patient", {
+        const response = await xanoGet(`/admin_with_email`, "admin", {
           email: credentials.email.toLowerCase(),
         });
         if (response.data) {
@@ -96,35 +96,17 @@ const CredentialsFormPatient = () => {
     }
 
     try {
-      //get patientInfo
-      const me = (await xanoGet(`/patients/${user.id}`, "patient")).data;
+      //get my infos
+      const me = (await xanoGet(`/admin/${user.id}`, "admin")).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      const response = await xanoPut(
-        `/patients/password/${user.id}`,
-        "patient",
-        me
-      );
+      const response = await xanoPut(`/admin/password/${user.id}`, "admin", me);
       socket.emit("message", {
-        route: "PATIENTS",
+        route: "ADMINS INFOS",
         action: "update",
         content: { id: user.id, data: response.data },
       });
       //pas besoin de socket sur USER car il va se relogger
-      const datasToPut = {
-        ...user.demographics,
-        Email: credentials.email.toLowerCase(),
-      };
-      await xanoPut(
-        `/demographics/${user.demographics.id}`,
-        "patient",
-        datasToPut
-      );
-      socket.emit("message", {
-        route: "DEMOGRAPHICS",
-        action: "update",
-        content: { id: user.demographics.id, data: datasToPut },
-      });
       setSuccessMsg("Credentials changed succesfully");
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
@@ -134,7 +116,7 @@ const CredentialsFormPatient = () => {
   };
 
   return successMsg ? (
-    <div className="credentials-success">{successMsg}</div>
+    <p className="credentials-success">{successMsg}</p>
   ) : (
     <>
       <form className="credentials-form" onSubmit={handleSubmit}>
@@ -288,4 +270,4 @@ const CredentialsFormPatient = () => {
   );
 };
 
-export default CredentialsFormPatient;
+export default CredentialsFormAdmin;

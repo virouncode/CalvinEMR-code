@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const xanoDelete = async (url, userType, abortController) => {
+const xanoDelete = async (url, userType, abortController = null) => {
   try {
     const config = {
       url: "/xano",
@@ -8,9 +8,9 @@ const xanoDelete = async (url, userType, abortController) => {
       params: {
         url,
         userType,
-        abortController,
       },
     };
+    if (abortController) config.signal = abortController.signal;
     return await axios(config);
   } catch (err) {
     throw err;

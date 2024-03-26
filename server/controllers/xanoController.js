@@ -25,7 +25,7 @@ const getAxiosInstance = (userType) => {
 
 const getXano = async (req, res) => {
   try {
-    const { url, userType, abortController, params } = req.query;
+    const { url, userType, params } = req.query;
     const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
@@ -37,9 +37,6 @@ const getXano = async (req, res) => {
       headers,
     };
     if (params) config.params = params;
-    if (abortController) {
-      config.signal = abortController.signal;
-    }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
     if (typeof response.data === "number") {
@@ -54,7 +51,7 @@ const getXano = async (req, res) => {
 
 const postXano = async (req, res) => {
   try {
-    const { url, userType, abortController } = req.query;
+    const { url, userType } = req.query;
     const datasToPost = req.body;
     const authToken = req.cookies.token;
     let headers = {
@@ -67,9 +64,6 @@ const postXano = async (req, res) => {
       headers,
       data: datasToPost,
     };
-    if (abortController) {
-      config.signal = abortController.signal;
-    }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
     if (typeof response.data === "number") {
@@ -84,7 +78,7 @@ const postXano = async (req, res) => {
 };
 const putXano = async (req, res) => {
   try {
-    const { url, userType, abortController } = req.query;
+    const { url, userType } = req.query;
     const datasToPut = req.body;
     const authToken = req.cookies.token;
     let headers = {
@@ -97,9 +91,6 @@ const putXano = async (req, res) => {
       headers,
       data: datasToPut,
     };
-    if (abortController) {
-      config.signal = abortController.signal;
-    }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
     if (typeof response.data === "number") {
@@ -115,7 +106,7 @@ const putXano = async (req, res) => {
 
 const deleteXano = async (req, res) => {
   try {
-    const { url, userType, abortController } = req.query;
+    const { url, userType } = req.query;
     const authToken = req.cookies.token;
     let headers = {
       "Content-Type": "application/json",
@@ -127,9 +118,6 @@ const deleteXano = async (req, res) => {
       url,
       headers,
     };
-    if (abortController) {
-      config.signal = abortController.signal;
-    }
     const axiosXanoInstance = getAxiosInstance(userType);
     const response = await axiosXanoInstance(config);
     res.status(response.status).send(response.data);

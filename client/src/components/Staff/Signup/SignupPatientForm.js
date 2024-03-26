@@ -4,6 +4,7 @@ import { postPatientRecord } from "../../../api/fetchRecords";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
+import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import {
   genderCT,
   namePrefixCT,
@@ -23,7 +24,6 @@ import {
   timestampToDateISOTZ,
 } from "../../../utils/formatDates";
 import { generatePassword } from "../../../utils/generatePassword";
-import { toInverseRelation } from "../../../utils/toInverseRelation";
 import { toPatientName } from "../../../utils/toPatientName";
 import { patientSchema } from "../../../validation/patientValidation";
 import GenericList from "../../All/UI/Lists/GenericList";
@@ -40,7 +40,7 @@ const SignupPatientForm = () => {
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const [relationships, setRelationships] = useState([]);
+  // const [relationships, setRelationships] = useState([]);
   const [postalOrZip, setPostalOrZip] = useState("postal");
   const [formDatas, setFormDatas] = useState({
     email: "",
@@ -139,17 +139,17 @@ const SignupPatientForm = () => {
     e.preventDefault();
     setErrMsg("");
     //Validation
-    let emptyRelation = false;
-    for (let item of relationships) {
-      if (item.relationship === "" || item.relation_id === "") {
-        emptyRelation = true;
-        break;
-      }
-    }
-    if (emptyRelation) {
-      setErrMsg("Please define all relationships or remove unnecessary lines");
-      return;
-    }
+    // let emptyRelation = false;
+    // for (let item of relationships) {
+    //   if (item.relationship === "" || item.relation_id === "") {
+    //     emptyRelation = true;
+    //     break;
+    //   }
+    // }
+    // if (emptyRelation) {
+    //   setErrMsg("Please define all relationships or remove unnecessary lines");
+    //   return;
+    // }
     try {
       await patientSchema.validate(formDatas);
     } catch (err) {
@@ -294,57 +294,66 @@ const SignupPatientForm = () => {
       const response3 = await postPatientRecord(
         "/demographics",
         user.id,
-
         demographicsToPost,
         socket,
         "DEMOGRAPHICS"
       );
-      //Relationships
-      const relationshipsToPost = [...relationships];
-      relationshipsToPost.forEach((relationship) => {
-        delete relationship.id;
-        relationship.patient_id = patientId;
-        relationship.created_by_id = user.id;
-        relationship.date_created = nowTZTimestamp();
-      });
-      relationshipsToPost.forEach(async (relationship) => {
-        const response = await xanoPost(
-          "/relationships",
-          "staff",
-
-          relationship
-        );
-        socket.emit("message", {
-          route: "RELATIONSHIPS",
-          action: "create",
-          content: { data: response.data },
-        });
-      });
-      let inverseRelationsToPost = [...relationshipsToPost];
-      inverseRelationsToPost.forEach((item) => {
-        const gender = toCodeTableName(genderCT, item.gender);
-        item.patient_id = item.relation_id;
-        item.relationship = toInverseRelation(item.relationship, gender);
-        item.relation_id = patientId;
-        item.date_created = nowTZTimestamp();
-        item.created_by_id = user.id;
-      });
-      inverseRelationsToPost = inverseRelationsToPost.filter(
-        ({ relationship }) => relationship !== "Undefined"
+      const newPatientId = response3.data.id;
+      //Put patient in patients [] of assignedMd
+      const response4 = await xanoGet(
+        `/staff/${formDatas.assignedMd}`,
+        "staff"
       );
-      inverseRelationsToPost.forEach(async (relationship) => {
-        const response = await xanoPost(
-          "/relationships",
-          "staff",
-
-          relationship
-        );
-        socket.emit("message", {
-          route: "RELATIONSHIPS",
-          action: "create",
-          content: { data: response.data },
-        });
+      await xanoPut(`/staff/${formDatas.assignedMd}`, "staff", {
+        ...response4.data,
+        patients: [...response4.data.patients, newPatientId],
       });
+      //Relationships
+      // const relationshipsToPost = [...relationships];
+      // relationshipsToPost.forEach((relationship) => {
+      //   delete relationship.id;
+      //   relationship.patient_id = patientId;
+      //   relationship.created_by_id = user.id;
+      //   relationship.date_created = nowTZTimestamp();
+      // });
+      // relationshipsToPost.forEach(async (relationship) => {
+      //   const response = await xanoPost(
+      //     "/relationships",
+      //     "staff",
+
+      //     relationship
+      //   );
+      //   socket.emit("message", {
+      //     route: "RELATIONSHIPS",
+      //     action: "create",
+      //     content: { data: response.data },
+      //   });
+      // });
+      // let inverseRelationsToPost = [...relationshipsToPost];
+      // inverseRelationsToPost.forEach((item) => {
+      //   const gender = toCodeTableName(genderCT, item.gender);
+      //   item.patient_id = item.relation_id;
+      //   item.relationship = toInverseRelation(item.relationship, gender);
+      //   item.relation_id = patientId;
+      //   item.date_created = nowTZTimestamp();
+      //   item.created_by_id = user.id;
+      // });
+      // inverseRelationsToPost = inverseRelationsToPost.filter(
+      //   ({ relationship }) => relationship !== "Undefined"
+      // );
+      // inverseRelationsToPost.forEach(async (relationship) => {
+      //   const response = await xanoPost(
+      //     "/relationships",
+      //     "staff",
+
+      //     relationship
+      //   );
+      //   socket.emit("message", {
+      //     route: "RELATIONSHIPS",
+      //     action: "create",
+      //     content: { data: response.data },
+      //   });
+      // });
       setProgress(false);
     } catch (err) {
       setErrMsg(`Unable to post new patient:${err.message}`);

@@ -16,9 +16,9 @@ const xanoPostReset = async (
         url,
         userType,
         tempToken,
-        abortController,
       },
     };
+    if (abortController) config.signal = abortController.signal;
     return await axios(config);
   } catch (err) {
     throw err;

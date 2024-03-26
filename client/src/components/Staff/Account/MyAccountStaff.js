@@ -9,10 +9,10 @@ import { myAccountSchema } from "../../../validation/myAccountValidation";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
-const MyAccountForm = () => {
+const MyAccountStaff = () => {
   //HOOKS
-  const { user, setUser } = useUserContext();
-  const { staffInfos, setStaffInfos } = useStaffInfosContext();
+  const { user } = useUserContext();
+  const { staffInfos } = useStaffInfosContext();
   const { socket } = useSocketContext();
   const [editVisible, setEditVisible] = useState(false);
   const [formDatas, setFormDatas] = useState(null);
@@ -244,4 +244,4 @@ const MyAccountForm = () => {
   );
 };
 
-export default MyAccountForm;
+export default MyAccountStaff;

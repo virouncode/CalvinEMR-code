@@ -109,41 +109,66 @@ const useFetchDashboard = () => {
           let totalsForSite = {};
           //<18
           totalsForSite.under18 = (
-            await xanoGet("/dashboard/patients_under_age_site", "admin", {
-              site_id: site.id,
-              dob_limit: getLimitTimestampForAge(18),
-            })
+            await xanoGet(
+              "/dashboard/patients_under_age_site",
+              "admin",
+              {
+                site_id: site.id,
+                dob_limit: getLimitTimestampForAge(18),
+              },
+              abortController
+            )
           ).data;
           //18-35
           totalsForSite.from18to35 = (
-            await xanoGet("/dashboard/patients_age_range_site", "admin", {
-              site_id: site.id,
-              dob_start: getLimitTimestampForAge(35),
-              dob_end: getLimitTimestampForAge(18),
-            })
+            await xanoGet(
+              "/dashboard/patients_age_range_site",
+              "admin",
+              {
+                site_id: site.id,
+                dob_start: getLimitTimestampForAge(35),
+                dob_end: getLimitTimestampForAge(18),
+              },
+              abortController
+            )
           ).data;
           //36-50
           totalsForSite.from36to50 = (
-            await xanoGet("/dashboard/patients_age_range_site", "admin", {
-              site_id: site.id,
-              dob_start: getLimitTimestampForAge(50),
-              dob_end: getLimitTimestampForAge(36),
-            })
+            await xanoGet(
+              "/dashboard/patients_age_range_site",
+              "admin",
+              {
+                site_id: site.id,
+                dob_start: getLimitTimestampForAge(50),
+                dob_end: getLimitTimestampForAge(36),
+              },
+              abortController
+            )
           ).data;
           //51-70
           totalsForSite.from51to70 = (
-            await xanoGet("/dashboard/patients_age_range_site", "admin", {
-              site_id: site.id,
-              dob_start: getLimitTimestampForAge(70),
-              dob_end: getLimitTimestampForAge(51),
-            })
+            await xanoGet(
+              "/dashboard/patients_age_range_site",
+              "admin",
+              {
+                site_id: site.id,
+                dob_start: getLimitTimestampForAge(70),
+                dob_end: getLimitTimestampForAge(51),
+              },
+              abortController
+            )
           ).data;
           //>70
           totalsForSite.over70 = (
-            await xanoGet("/dashboard/patients_over_age_site", "admin", {
-              site_id: site.id,
-              dob_limit: getLimitTimestampForAge(70),
-            })
+            await xanoGet(
+              "/dashboard/patients_over_age_site",
+              "admin",
+              {
+                site_id: site.id,
+                dob_limit: getLimitTimestampForAge(70),
+              },
+              abortController
+            )
           ).data;
           totals = [...totals, totalsForSite];
         }

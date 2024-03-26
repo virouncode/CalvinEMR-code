@@ -100,11 +100,11 @@ const CredentialsForm = () => {
       const me = (await xanoGet(`/staff/${user.id}`, "staff")).data;
       me.email = credentials.email.toLowerCase();
       me.password = credentials.password;
-      await xanoPut(`/staff/${user.id}`, "staff", me);
+      const response = await xanoPut(`/staff/password/${user.id}`, "staff", me);
       socket.emit("message", {
         route: "STAFF INFOS",
         action: "update",
-        content: { id: user.id, data: me },
+        content: { id: user.id, data: response.data },
       });
       //pas besoin de socket sur USER car il va se relogger
       setSuccessMsg("Credentials changed succesfully");

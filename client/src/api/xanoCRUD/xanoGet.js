@@ -13,9 +13,9 @@ const xanoGet = async (
       params: {
         url,
         userType,
-        abortController,
       },
     };
+    if (abortController) config.signal = abortController.signal;
     if (params) config.params.params = params;
     return await axios(config);
   } catch (err) {

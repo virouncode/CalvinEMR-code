@@ -6,6 +6,7 @@ import LoginLayout from "./components/All/UI/Layouts/LoginLayout";
 import PatientLayout from "./components/All/UI/Layouts/PatientLayout";
 import StaffLayout from "./components/All/UI/Layouts/StaffLayout";
 import RequireAuth from "./context/RequireAuth";
+import useAdminsInfosSocket from "./hooks/useAdminsInfosSocket";
 import useAutoLogout from "./hooks/useAutoLogout";
 import useClinicSocket from "./hooks/useClinicSocket";
 import { useLocalStorageTracker } from "./hooks/useLocalStorageTracker";
@@ -15,10 +16,12 @@ import useStaffInfosSocket from "./hooks/useStaffInfosSocket";
 import useUnreadExternalSocket from "./hooks/useUnreadExternalSocket";
 import useUnreadSocket from "./hooks/useUnreadSocket";
 import useUserSocket from "./hooks/useUserSocket";
+import AdminCredentialsPage from "./pages/Admin/AdminCredentialsPage";
 import BillingPageAdmin from "./pages/Admin/BillingPageAdmin";
 import ClinicPage from "./pages/Admin/ClinicPage";
 import DashboardPage from "./pages/Admin/DashboardPage";
 import MigrationPage from "./pages/Admin/MigrationPage";
+import MyAccountAdminPage from "./pages/Admin/MyAccountAdminPage";
 import StaffAccountsPage from "./pages/Admin/StaffAccountsPage";
 import LoginPage from "./pages/All/LoginPage";
 import MissingPage from "./pages/All/MissingPage";
@@ -47,6 +50,7 @@ const App = () => {
   useLogoutForAll(); //log every tabs out if logout on one tab
   useSocketConfig(false); //true for dev, false for prod
   useStaffInfosSocket();
+  useAdminsInfosSocket();
   useUserSocket();
   useClinicSocket();
   useUnreadExternalSocket(); //for staff and patient
@@ -86,7 +90,6 @@ const App = () => {
             />
             <Route path="my-account" element={<MyAccountPage />} />
             <Route path="credentials" element={<CredentialsPage />} />
-            <Route path="export" element={<MigrationPage />} />
           </Route>
         </Route>
         <Route path="admin" element={<AdminLayout />}>
@@ -97,6 +100,8 @@ const App = () => {
             <Route path="clinic" element={<ClinicPage />} />
             <Route path="billing" element={<BillingPageAdmin />} />
             <Route path="migration" element={<MigrationPage />} />
+            <Route path="my-account" element={<MyAccountAdminPage />} />
+            <Route path="credentials" element={<AdminCredentialsPage />} />
           </Route>
         </Route>
         <Route path="patient" element={<PatientLayout />}>

@@ -7,9 +7,6 @@ import DashboardCardStaff from "./DashboardCardStaff";
 import DashboardCardVisits from "./DashboardCardVisits";
 
 const Dashboard = () => {
-  // const [rangeStartDobVisits, setRangeStartDobVisits] = useState(
-  //   Date.parse(new Date(20, 0, 1))
-  // );
   const {
     visits,
     rangeStartVisits,

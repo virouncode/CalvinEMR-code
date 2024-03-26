@@ -1,9 +1,9 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import MyAccountStaff from "../../components/Staff/Account/MyAccountStaff";
+import MyAccountAdmin from "../../components/Admin/AccountAdmin/MyAccountAdmin";
 import useTitle from "../../hooks/useTitle";
 
-const MyAccountPage = () => {
+const MyAccountAdminPage = () => {
   useTitle("My personal informations");
   return (
     <>
@@ -11,10 +11,10 @@ const MyAccountPage = () => {
         <title>My account</title>
       </Helmet>
       <section className="myaccount-section">
-        <MyAccountStaff />
+        <MyAccountAdmin />
       </section>
     </>
   );
 };
 
-export default MyAccountPage;
+export default MyAccountAdminPage;

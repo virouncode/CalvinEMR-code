@@ -14,7 +14,7 @@ export const myAccountSchema = yup.object({
   }),
   last_name: yup
     .string()
-    .required("First Name field is required")
+    .required("Last Name field is required")
     .matches(/^([^0-9]*)$/, {
       message: "Invalid Last Name",
       excludeEmptyString: true,

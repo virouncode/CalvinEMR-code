@@ -8,10 +8,10 @@ const xanoPut = async (url, userType, data, abortController = null) => {
       params: {
         url,
         userType,
-        abortController,
       },
       data,
     };
+    if (abortController) config.signal = abortController.signal;
     return await axios(config);
   } catch (err) {
     throw err;

@@ -9,9 +9,9 @@ const xanoPost = async (url, userType, data, abortController = null) => {
       params: {
         url,
         userType,
-        abortController,
       },
     };
+    if (abortController) config.signal = abortController.signal;
     return await axios(config);
   } catch (err) {
     throw err;
