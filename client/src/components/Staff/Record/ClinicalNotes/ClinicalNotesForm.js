@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { postPatientRecord } from "../../../../api/fetchRecords";
@@ -55,13 +55,36 @@ const ClinicalNotesForm = ({
 
   useClinicalTemplatesSocket(templates, setTemplates);
 
+  useEffect(() => {
+    const retreiveClinicalNote = async () => {
+      if (
+        localStorage.getItem("currentClinicalNote") &&
+        JSON.parse(localStorage.getItem("currentClinicalNote")).patient_id ===
+          patientId
+      ) {
+        if (
+          await confirmAlert({
+            content:
+              "You have an unsaved clinical note about this patient in memory, do you want to retreive it ?",
+          })
+        ) {
+          setFormDatas(JSON.parse(localStorage.getItem("currentClinicalNote")));
+        } else {
+          localStorage.removeItem("currentClinicalNote");
+        }
+      }
+    };
+    retreiveClinicalNote();
+  }, []);
+
   //HANDLERS
   const handleCancelClick = async () => {
     if (
       await confirmAlert({
-        content: "Do you really want to cancel ? You changes won't be saved",
+        content: "Do you really want to cancel ? Your changes won't be saved",
       })
     ) {
+      localStorage.removeItem("currentClinicalNote");
       setAddVisible(false);
     }
   };
@@ -105,6 +128,7 @@ const ClinicalNotesForm = ({
       if (order === "desc") {
         setPaging({ ...paging, page: 1 });
       }
+      localStorage.removeItem("currentClinicalNote");
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Error: unable to save clinical note: ${err.message}`, {
@@ -152,6 +176,7 @@ const ClinicalNotesForm = ({
       );
       setAddVisible(false);
       setPaging({ ...paging, page: 1 });
+      localStorage.removeItem("currentClinicalNote");
       toast.success("Saved successfully", { containerId: "A" });
     } catch (err) {
       toast.error(`Error: unable to save clinical note: ${err.message}`, {
@@ -169,6 +194,10 @@ const ClinicalNotesForm = ({
     setErrMsg("");
     const name = e.target.name;
     const value = e.target.value;
+    localStorage.setItem(
+      "currentClinicalNote",
+      JSON.stringify({ ...formDatas, [name]: value })
+    );
     setFormDatas({ ...formDatas, [name]: value });
   };
 

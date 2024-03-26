@@ -26,6 +26,7 @@ const StaffHeader = () => {
     localStorage.removeItem("adminsInfos");
     localStorage.removeItem("clinic");
     localStorage.removeItem("lastAction");
+    localStorage.removeItem("currentClinicalNote");
     localStorage.setItem("message", "logout");
     localStorage.removeItem("message");
   };

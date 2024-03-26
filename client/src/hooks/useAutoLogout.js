@@ -27,6 +27,7 @@ const useAutoLogout = (timeMin) => {
     localStorage.removeItem("clinic");
     localStorage.removeItem("lastAction");
     localStorage.removeItem("adminsInfos");
+    localStorage.removeItem("currentClinicalNote");
     localStorage.setItem("message", "logout"); //send a message to all tabs to logout
     localStorage.removeItem("message");
     toastID.current && toast.dismiss(toastID.current);
