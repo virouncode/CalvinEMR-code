@@ -25,7 +25,6 @@ import ClinicalNotesCardBody from "./ClinicalNotesCardBody";
 import ClinicalNotesCardHeader from "./ClinicalNotesCardHeader";
 import ClinicalNotesCardHeaderFolded from "./ClinicalNotesCardHeaderFolded";
 import ClinicalNotesTemplates from "./ClinicalNotesTemplates";
-
 var _ = require("lodash");
 
 const ClinicalNotesCard = ({
@@ -59,7 +58,6 @@ const ClinicalNotesCard = ({
     "/clinical_notes_templates",
     "staff"
   );
-
   useClinicalTemplatesSocket(templates, setTemplates);
 
   const handleSelectTemplate = (e, templateId) => {

@@ -52,7 +52,6 @@ const ClinicalNotesForm = ({
     "/clinical_notes_templates",
     "staff"
   );
-
   useClinicalTemplatesSocket(templates, setTemplates);
 
   useEffect(() => {
