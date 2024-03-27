@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
-import useUserContext from "../../../../../hooks/useUserContext";
-import fillPdfForm from "../../../../../utils/fillPdfForm";
-import EformsList from "../../../../All/UI/Lists/EformsList";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import fillPdfForm from "../../../../../utils/eforms/fillPdfForm";
+import EformsList from "../../../../UI/Lists/EformsList";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const Eform = ({
   setAddVisible,

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import socketIOClient from "socket.io-client";
-import useSocketContext from "./useSocketContext";
+import useSocketContext from "./context/useSocketContext";
 const MY_URL = "https://desolate-falls-54368-86c7ea576f1b.herokuapp.com/";
 
 const useSocketConfig = (dev) => {

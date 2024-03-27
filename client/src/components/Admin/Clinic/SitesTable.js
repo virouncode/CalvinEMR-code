@@ -1,6 +1,6 @@
 import React from "react";
-import EmptyRow from "../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../All/UI/Tables/LoadingRow";
+import EmptyRow from "../../UI/Tables/EmptyRow";
+import LoadingRow from "../../UI/Tables/LoadingRow";
 import SiteItem from "./SiteItem";
 
 const SitesTable = ({ sites, loading, errMsg, handleEditClick }) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import useUserContext from "./useUserContext";
+import useUserContext from "./context/useUserContext";
 
 const useFetchPatientAppointments = () => {
   const [appointments, setAppointments] = useState([]);

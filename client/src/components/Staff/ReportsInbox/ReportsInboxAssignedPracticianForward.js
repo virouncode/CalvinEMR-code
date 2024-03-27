@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import ReportsInboxPracticianCategoryForward from "./ReportsInboxPracticianCategoryForward";
 
 const ReportsInboxAssignedPracticianForward = ({

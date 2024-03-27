@@ -1,24 +1,24 @@
 import dateFormat from "dateformat";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { exportPatientEMR } from "../../../utils/exports/exportsXML";
-import { recordCategories } from "../../../utils/exports/recordCategories";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { exportPatientEMR } from "../../../utils/migration/exports/exportsXML";
+import { recordCategories } from "../../../utils/migration/exports/recordCategories";
 
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
-import { nowTZ } from "../../../utils/formatDates";
+import { nowTZ } from "../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../utils/staffIdToName";
+} from "../../../utils/names/staffIdToName";
 import {
   toPatientFirstName,
   toPatientLastName,
-} from "../../../utils/toPatientName";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+} from "../../../utils/names/toPatientName";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 import MigrationPatientSearchForm from "./MigrationPatientSearchForm";
 import MigrationPatientsList from "./MigrationPatientsList";
 import MigrationRecordsList from "./MigrationRecordsList";

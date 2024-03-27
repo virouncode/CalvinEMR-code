@@ -1,6 +1,6 @@
 import React from "react";
-import { getResidualInfo } from "../../../../../utils/getResidualInfo";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { getResidualInfo } from "../../../../../utils/migration/exports/getResidualInfo";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const PersonalHistoryContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

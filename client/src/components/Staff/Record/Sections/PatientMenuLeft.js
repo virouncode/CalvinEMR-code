@@ -1,5 +1,5 @@
 import React from "react";
-import { toPatientName } from "../../../../utils/toPatientName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import PatientTopic from "./PatientTopic";
 import PatientTopicDoctors from "./PatientTopicDoctors";
 

@@ -4,10 +4,10 @@ import { toast } from "react-toastify";
 
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import { nowTZTimestamp } from "../../../../../utils/formatDates";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import { nowTZTimestamp } from "../../../../../utils/dates/formatDates";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import MedTemplateEdit from "./MedTemplateEdit";
 
 var _ = require("lodash");

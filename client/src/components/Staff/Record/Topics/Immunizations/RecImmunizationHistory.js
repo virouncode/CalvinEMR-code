@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { routeCT } from "../../../../../datas/codesTables";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import { routeCT } from "../../../../../omdDatas/codesTables";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import RecImmunizationEditMultiple from "./RecImmunizationEditMultiple";
 
 const RecImmunizationHistory = ({

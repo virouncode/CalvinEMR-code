@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../api/fetchRecords";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../utils/firstLetterUpper";
-import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
-import { getResidualInfo } from "../../../../utils/getResidualInfo";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
-import { personalHistorySchema } from "../../../../validation/personalHistoryValidation";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/dates/formatDates";
+import { getLastUpdate, isUpdated } from "../../../../utils/dates/updates";
+import { getResidualInfo } from "../../../../utils/migration/exports/getResidualInfo";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterOfFirstWordUpper } from "../../../../utils/strings/firstLetterUpper";
+import { personalHistorySchema } from "../../../../validation/record/personalHistoryValidation";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import PersonalHistoryForm from "../Topics/PersonalHistory/PersonalHistoryForm";
 
 const PersonalHistoryPU = ({
@@ -306,17 +306,30 @@ const PersonalHistoryPU = ({
               <div className="personalhistory-card__btns">
                 {!editVisible ? (
                   <>
-                    <button onClick={(e) => setEditVisible((v) => !v)}>
+                    <button
+                      onClick={(e) => setEditVisible((v) => !v)}
+                      disabled={progress}
+                    >
                       Edit
                     </button>
-                    <button onClick={handleClose}>Close</button>
+                    <button onClick={handleClose} disabled={progress}>
+                      Close
+                    </button>
                   </>
                 ) : (
                   <>
-                    <button type="button" onClick={handleSubmit}>
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={progress}
+                    >
                       Save
                     </button>
-                    <button type="button" onClick={handleCancel}>
+                    <button
+                      type="button"
+                      onClick={handleCancel}
+                      disabled={progress}
+                    >
                       Cancel
                     </button>
                   </>

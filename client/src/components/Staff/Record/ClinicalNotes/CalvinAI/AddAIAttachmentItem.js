@@ -2,8 +2,8 @@ import React from "react";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import { extractToText } from "../../../../../utils/extractToText";
+} from "../../../../../omdDatas/codesTables";
+import { extractToText } from "../../../../../utils/extractText/extractToText";
 
 const AddAIAttachmentItem = ({
   attachment,

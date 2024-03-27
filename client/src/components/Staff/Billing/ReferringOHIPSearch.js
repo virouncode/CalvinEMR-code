@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import useFetchDoctorsList from "../../../hooks/useFetchDoctorsList";
 import useIntersection from "../../../hooks/useIntersection";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import EmptyLi from "../../All/UI/Lists/EmptyLi";
-import LoadingLi from "../../All/UI/Lists/LoadingLi";
+import EmptyLi from "../../UI/Lists/EmptyLi";
+import LoadingLi from "../../UI/Lists/LoadingLi";
 
 const ReferringOHIPSearch = ({ handleClickRefOHIP }) => {
   const [search, setSearch] = useState("");
@@ -12,7 +12,7 @@ const ReferringOHIPSearch = ({ handleClickRefOHIP }) => {
     perPage: 15,
     offset: 0,
   });
-  const { loading, err, doctors, setDoctors, hasMore } = useFetchDoctorsList(
+  const { loading, err, doctors, hasMore } = useFetchDoctorsList(
     search,
     paging
   );

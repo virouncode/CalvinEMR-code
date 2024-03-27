@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { toPatientName } from "../../../../../utils/toPatientName";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { toPatientName } from "../../../../../utils/names/toPatientName";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const RelationshipsContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

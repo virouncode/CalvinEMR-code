@@ -9,15 +9,15 @@ import {
 } from "../../../../../api/fetchRecords";
 import xanoDelete from "../../../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../../../api/xanoCRUD/xanoGet";
-import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { relations } from "../../../../../utils/relations";
-import { toInverseRelation } from "../../../../../utils/toInverseRelation";
-import { toPatientName } from "../../../../../utils/toPatientName";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { genderCT, toCodeTableName } from "../../../../../omdDatas/codesTables";
+import { toPatientName } from "../../../../../utils/names/toPatientName";
+import { relations } from "../../../../../utils/relationships/relations";
+import { toInverseRelation } from "../../../../../utils/relationships/toInverseRelation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import PatientsSelect from "../../../../All/UI/Lists/PatientsSelect";
-import RelationshipList from "../../../../All/UI/Lists/RelationshipList";
+import PatientsSelect from "../../../../UI/Lists/PatientsSelect";
+import RelationshipList from "../../../../UI/Lists/RelationshipList";
 import SignCell from "../SignCell";
 
 const RelationshipItem = ({

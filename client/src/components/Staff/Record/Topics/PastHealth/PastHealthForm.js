@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import { lifeStageCT } from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { lifeStageCT } from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { pastHealthSchema } from "../../../../../validation/pastHealthValidation";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { pastHealthSchema } from "../../../../../validation/record/pastHealthValidation";
+import GenericList from "../../../../UI/Lists/GenericList";
 
 const PastHealthForm = ({
   editCounter,

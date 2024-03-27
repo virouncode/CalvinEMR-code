@@ -2,11 +2,11 @@
 //Listen to local storage events, if the key is "message" and the valu is "logout" => logout
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useAdminsInfosContext from "./useAdminsInfosContext";
+import useAdminsInfosContext from "./context/useAdminsInfosContext";
+import useClinicContext from "./context/useClinicContext";
+import useStaffInfosContext from "./context/useStaffInfosContext";
+import useUserContext from "./context/useUserContext";
 import useAuthContext from "./useAuthContext";
-import useClinicContext from "./useClinicContext";
-import useStaffInfosContext from "./useStaffInfosContext";
-import useUserContext from "./useUserContext";
 
 const useLogoutForAll = () => {
   const { setUser } = useUserContext();

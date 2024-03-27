@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLimitTimestampForAge } from "../utils/formatDates";
+import { getLimitTimestampForAge } from "../utils/dates/formatDates";
 
 const useVisitsPerAge = (sites, visits) => {
   const [visitsPerAge, setVisitsPerAge] = useState([]);

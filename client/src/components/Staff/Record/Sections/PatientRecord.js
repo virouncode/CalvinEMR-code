@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import usePatientDemoSocket from "../../../../hooks/socket/usePatientDemoSocket";
 import useFetchPatientRecord from "../../../../hooks/useFetchPatientRecord";
-import usePatientDemoSocket from "../../../../hooks/usePatientDemoSocket";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
+import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
 import ClinicalNotes from "../ClinicalNotes/ClinicalNotes";
 import PatientMenuLeft from "./PatientMenuLeft";
 import PatientMenuRight from "./PatientMenuRight";

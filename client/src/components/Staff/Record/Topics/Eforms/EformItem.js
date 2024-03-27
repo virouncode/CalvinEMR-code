@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { showDocument } from "../../../../../utils/showDocument";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { showDocument } from "../../../../../utils/files/showDocument";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 
 const EformItem = ({ item, lastItemRef = null }) => {

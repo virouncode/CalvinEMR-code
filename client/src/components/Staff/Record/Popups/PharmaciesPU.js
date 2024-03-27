@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import useTopicSocket from "../../../../hooks/useTopicSocket";
-import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
+import useTopicSocket from "../../../../hooks/socket/useTopicSocket";
+import { isObjectEmpty } from "../../../../utils/js/isObjectEmpty";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import PharmaciesList from "../Topics/Pharmacies/PharmaciesList";
 import PharmacyCard from "../Topics/Pharmacies/PharmacyCard";
 

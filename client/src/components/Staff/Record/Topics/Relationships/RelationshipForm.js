@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-widgets/scss/styles.scss";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { genderCT, toCodeTableName } from "../../../../../omdDatas/codesTables";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { toInverseRelation } from "../../../../../utils/toInverseRelation";
-import { relationshipSchema } from "../../../../../validation/relationshipValidation";
-import PatientsSelect from "../../../../All/UI/Lists/PatientsSelect";
-import RelationshipList from "../../../../All/UI/Lists/RelationshipList";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { toInverseRelation } from "../../../../../utils/relationships/toInverseRelation";
+import { relationshipSchema } from "../../../../../validation/record/relationshipValidation";
+import PatientsSelect from "../../../../UI/Lists/PatientsSelect";
+import RelationshipList from "../../../../UI/Lists/RelationshipList";
 
 const RelationshipForm = ({
   editCounter,

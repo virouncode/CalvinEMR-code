@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const RemindersContent = ({ topicDatas, loading, errMsg }) => {
   useEffect(() => {

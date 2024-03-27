@@ -4,16 +4,16 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { pregnancySchema } from "../../../../../validation/pregnancyValidation";
+} from "../../../../../utils/dates/formatDates";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { pregnancySchema } from "../../../../../validation/record/pregnancyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import PregnanciesList from "../../../../All/UI/Lists/PregnanciesList";
+import PregnanciesList from "../../../../UI/Lists/PregnanciesList";
 import SignCell from "../SignCell";
 
 const PregnancyItem = ({

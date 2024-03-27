@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 
 const StaffAIAgreement = ({ setStart, setChatVisible }) => {
   const { user } = useUserContext();

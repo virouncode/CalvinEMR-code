@@ -1,17 +1,20 @@
 import React from "react";
 import logo from "../../../../../../assets/img/logoLoginTest.png";
-import { genderCT, toCodeTableName } from "../../../../../../datas/codesTables";
-import useClinicContext from "../../../../../../hooks/useClinicContext";
-import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../../hooks/useUserContext";
+import useClinicContext from "../../../../../../hooks/context/useClinicContext";
+import useStaffInfosContext from "../../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../../hooks/context/useUserContext";
+import {
+  genderCT,
+  toCodeTableName,
+} from "../../../../../../omdDatas/codesTables";
 import {
   getAgeTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../../../utils/toPatientName";
-import CircularProgressMedium from "../../../../../All/UI/Progress/CircularProgressMedium";
+} from "../../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../../../utils/names/toPatientName";
+import CircularProgressMedium from "../../../../../UI/Progress/CircularProgressMedium";
 
 const PrescriptionPagePrint = ({
   printRef,

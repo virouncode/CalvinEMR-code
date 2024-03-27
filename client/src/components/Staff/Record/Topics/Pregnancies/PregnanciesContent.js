@@ -1,6 +1,6 @@
 import React from "react";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const PregnanciesContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

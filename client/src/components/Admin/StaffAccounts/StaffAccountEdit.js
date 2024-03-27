@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { myAccountSchema } from "../../../validation/myAccountValidation";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
+import { myAccountStaffSchema } from "../../../validation/accounts/myAccountStaffValidation";
 import SelectSite from "../../Staff/EventForm/SelectSite";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -112,7 +112,7 @@ const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
 
       //Validation
       try {
-        await myAccountSchema.validate(datasToPut);
+        await myAccountStaffSchema.validate(datasToPut);
       } catch (err) {
         setErrMsg(err.message);
         setProgress(false);

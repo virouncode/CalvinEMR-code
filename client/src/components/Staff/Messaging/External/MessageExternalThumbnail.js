@@ -2,12 +2,12 @@ import React from "react";
 import { toast } from "react-toastify";
 
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { timestampToDateTimeStrTZ } from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessageExternalThumbnail = ({

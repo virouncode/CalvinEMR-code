@@ -1,9 +1,11 @@
 import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
 import { putPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
 import {
   enrollmentStatusCT,
   genderCT,
@@ -14,39 +16,34 @@ import {
   provinceStateTerritoryCT,
   terminationReasonCT,
   toCodeTableName,
-} from "../../../../datas/codesTables";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { emergencyContactCaption } from "../../../../utils/emergencyContactCaption";
-import { enrolmentCaption } from "../../../../utils/enrolmentCaption";
-import { firstLetterUpper } from "../../../../utils/firstLetterUpper";
+} from "../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   getAgeTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
   timestampToDateTimeSecondsStrTZ,
-} from "../../../../utils/formatDates";
-import { isObjectEmpty } from "../../../../utils/isObjectEmpty";
-import { primaryPhysicianCaption } from "../../../../utils/primaryPhysicianCaption";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
-import { demographicsSchema } from "../../../../validation/demographicsValidation";
+} from "../../../../utils/dates/formatDates";
+import { getLastUpdate, isUpdated } from "../../../../utils/dates/updates";
+import { isObjectEmpty } from "../../../../utils/js/isObjectEmpty";
+import { emergencyContactCaption } from "../../../../utils/names/emergencyContactCaption";
+import { enrolmentCaption } from "../../../../utils/names/enrolmentCaption";
+import { primaryPhysicianCaption } from "../../../../utils/names/primaryPhysicianCaption";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import { firstLetterUpper } from "../../../../utils/strings/firstLetterUpper";
+import { demographicsSchema } from "../../../../validation/record/demographicsValidation";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import GenericList from "../../../All/UI/Lists/GenericList";
-import StaffList from "../../../All/UI/Lists/StaffList";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import GenericList from "../../../UI/Lists/GenericList";
+import StaffList from "../../../UI/Lists/StaffList";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
+import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import EnrolmentHistory from "../Topics/Demographics/EnrolmentHistory";
 import NewEnrolmentForm from "../Topics/Demographics/NewEnrolmentForm";
-
-var _ = require("lodash");
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 

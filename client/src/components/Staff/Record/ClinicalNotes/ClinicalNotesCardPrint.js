@@ -1,10 +1,10 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
 import {
   timestampToDateTimeSecondsStrTZ,
   timestampToDateTimeStrTZ,
-} from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+} from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 
 const ClinicalNotesCardPrint = ({ clinicalNote }) => {

@@ -3,23 +3,23 @@ import { toast } from "react-toastify";
 
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import useClinicalTemplatesSocket from "../../../../hooks/socket/useClinicalTemplatesSocket";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../utils/formatDates";
+import { nowTZTimestamp } from "../../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
-import { clinicalSchema } from "../../../../validation/clinicalValidation";
+} from "../../../../utils/names/staffIdToName";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import { clinicalNoteSchema } from "../../../../validation/record/clinicalNoteValidation";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";
 import ClinicalNotesTemplates from "./ClinicalNotesTemplates";
 
@@ -56,7 +56,7 @@ const ClinicalNotesForm = ({
   useClinicalTemplatesSocket(templates, setTemplates);
 
   useEffect(() => {
-    const retreiveClinicalNote = async () => {
+    const retrieveClinicalNote = async () => {
       if (
         localStorage.getItem("currentClinicalNote") &&
         JSON.parse(localStorage.getItem("currentClinicalNote")).patient_id ===
@@ -74,8 +74,8 @@ const ClinicalNotesForm = ({
         }
       }
     };
-    retreiveClinicalNote();
-  }, []);
+    retrieveClinicalNote();
+  }, [patientId]);
 
   //HANDLERS
   const handleCancelClick = async () => {
@@ -92,7 +92,7 @@ const ClinicalNotesForm = ({
     e.preventDefault();
     //Validation
     try {
-      await clinicalSchema.validate(formDatas);
+      await clinicalNoteSchema.validate(formDatas);
     } catch (err) {
       setErrMsg(err.message);
       return;
@@ -141,7 +141,7 @@ const ClinicalNotesForm = ({
     e.preventDefault();
     //Validation
     try {
-      await clinicalSchema.validate(formDatas);
+      await clinicalNoteSchema.validate(formDatas);
     } catch (err) {
       setErrMsg(err.message);
       return;

@@ -1,7 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import NewWindow from "react-new-window";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import AddToReportsForm from "./AddToReportsForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";

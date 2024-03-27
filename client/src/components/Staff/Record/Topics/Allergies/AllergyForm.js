@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   lifeStageCT,
   propertyOfOffendingAgentCT,
   reactionSeverityCT,
   reactionTypeCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToAMPMStrTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { allergySchema } from "../../../../../validation/allergyValidation";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { allergySchema } from "../../../../../validation/record/allergyValidation";
+import GenericList from "../../../../UI/Lists/GenericList";
 
 const AllergyForm = ({
   editCounter,

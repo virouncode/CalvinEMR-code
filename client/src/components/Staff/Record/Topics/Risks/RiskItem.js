@@ -4,18 +4,21 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import { lifeStageCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import {
+  lifeStageCT,
+  toCodeTableName,
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { riskSchema } from "../../../../../validation/riskValidation";
+} from "../../../../../utils/dates/formatDates";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { riskSchema } from "../../../../../validation/record/riskValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+import GenericList from "../../../../UI/Lists/GenericList";
 import SignCell from "../SignCell";
 
 const RiskItem = ({

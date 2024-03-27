@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import useFetchTopicDatas from "../../../../../hooks/useFetchTopicDatas";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { onMessageMedTemplate } from "../../../../../utils/socketHandlers/onMessageMedTemplate";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
-import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import { onMessageMedTemplate } from "../../../../../socketHandlers/onMessageMedTemplate";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
+import CircularProgressSmall from "../../../../UI/Progress/CircularProgressSmall";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import MedTemplateForm from "./MedTemplateForm";
 import MedTemplateItem from "./MedTemplateItem";
 

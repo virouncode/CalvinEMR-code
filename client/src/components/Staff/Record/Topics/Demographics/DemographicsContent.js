@@ -1,20 +1,20 @@
 import avatar from "../../../../../assets/img/avatar.png";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
 import {
   genderCT,
   personStatusCT,
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import { emergencyContactCaption } from "../../../../../utils/emergencyContactCaption";
-import { enrolmentCaption } from "../../../../../utils/enrolmentCaption";
+} from "../../../../../omdDatas/codesTables";
 import {
   getAgeTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+} from "../../../../../utils/dates/formatDates";
+import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
+import { emergencyContactCaption } from "../../../../../utils/names/emergencyContactCaption";
+import { enrolmentCaption } from "../../../../../utils/names/enrolmentCaption";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
@@ -198,15 +198,15 @@ const DemographicsContent = ({
               </p>
               <p>
                 <label>Referred Physician: </label>
-                {demographicsInfos.ReferredPhysician?.FirstName ||
-                  "" + " " + demographicsInfos.ReferredPhysician?.LastName ||
-                  ""}
+                {(demographicsInfos.ReferredPhysician?.FirstName || "") +
+                  " " +
+                  (demographicsInfos.ReferredPhysician?.LastName || "")}
               </p>
               <p>
                 <label>Family Physician: </label>
-                {demographicsInfos.FamilyPhysician?.FirstName ||
-                  "" + " " + demographicsInfos.FamilyPhysician?.LastName ||
-                  ""}
+                {(demographicsInfos.FamilyPhysician?.FirstName || "") +
+                  " " +
+                  (demographicsInfos.FamilyPhysician?.LastName || "")}
               </p>
               <p>
                 <label>Emergency Contact: </label>

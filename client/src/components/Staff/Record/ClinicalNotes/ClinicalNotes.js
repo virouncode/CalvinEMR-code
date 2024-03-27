@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import NewWindow from "react-new-window";
-import useClinicalNotesSocket from "../../../../hooks/useClinicalNotesSocket";
+import useClinicalNotesSocket from "../../../../hooks/socket/useClinicalNotesSocket";
 import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
 import useIntersection from "../../../../hooks/useIntersection";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
 import ClinicalNotesCard from "./ClinicalNotesCard";
 import ClinicalNotesForm from "./ClinicalNotesForm";

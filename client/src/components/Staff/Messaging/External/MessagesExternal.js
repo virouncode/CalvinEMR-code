@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import useMessagesExternalSocket from "../../../../hooks/socket/useMessagesExternalSocket";
 import useFetchMessagesExternal from "../../../../hooks/useFetchMessagesExternal";
-import useMessagesExternalSocket from "../../../../hooks/useMessagesExternalSocket";
-import useUserContext from "../../../../hooks/useUserContext";
 import MessagesLeftBar from "../MessagesLeftBar";
 import MessagesExternalBox from "./MessagesExternalBox";
 import MessagesExternalToolBar from "./MessagesExternalToolbar";

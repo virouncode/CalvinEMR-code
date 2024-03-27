@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useTitleContext from "./useTitleContext";
+import useTitleContext from "./context/useTitleContext";
 
 const useTitle = (text) => {
   const { setTitle } = useTitleContext();

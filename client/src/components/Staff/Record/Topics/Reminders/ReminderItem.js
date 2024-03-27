@@ -4,10 +4,10 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { reminderSchema } from "../../../../../validation/reminderValidation";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { reminderSchema } from "../../../../../validation/record/reminderValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import SignCell from "../SignCell";
 

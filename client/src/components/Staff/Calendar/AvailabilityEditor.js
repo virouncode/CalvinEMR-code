@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { availabilitySchema } from "../../../validation/availabilityValidation";
-import DurationPicker from "../../All/UI/Pickers/DurationPicker";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+
+import { availabilitySchema } from "../../../validation/calendar/availabilityValidation";
+import DurationPicker from "../../UI/Pickers/DurationPicker";
 import AvailabilityItem from "./AvailabilityItem";
 
 const AvailabilityEditor = ({

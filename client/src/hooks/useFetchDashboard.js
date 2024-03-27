@@ -4,7 +4,7 @@ import {
   getEndOfTheMonthTZ,
   getLimitTimestampForAge,
   getStartOfTheMonthTZ,
-} from "../utils/formatDates";
+} from "../utils/dates/formatDates";
 
 const useFetchDashboard = () => {
   const [sites, setSites] = useState([]);

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
-import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import { getAgeTZ, timestampToDateISOTZ } from "../../../../utils/formatDates";
-import { toPatientName } from "../../../../utils/toPatientName";
-import EmptyParagraph from "../../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
+import { genderCT, toCodeTableName } from "../../../../omdDatas/codesTables";
+import {
+  getAgeTZ,
+  timestampToDateISOTZ,
+} from "../../../../utils/dates/formatDates";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import EmptyParagraph from "../../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
 import ClinicalNotesCardPrint from "../ClinicalNotes/ClinicalNotesCardPrint";
 
 const ClinicalNotesPU = ({

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { toJsDemographics } from "../../../utils/imports/jsTemplates";
+import { toJsDemographics } from "../../../utils/migration/imports/jsTemplates";
 
 const MigrationImport = () => {
   const [xmlContent, setXmlContent] = useState(null);

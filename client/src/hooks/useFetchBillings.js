@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { getEndOfTheMonthTZ, getStartOfTheMonthTZ } from "../utils/formatDates";
-import useUserContext from "./useUserContext";
+import {
+  getEndOfTheMonthTZ,
+  getStartOfTheMonthTZ,
+} from "../utils/dates/formatDates";
+import useUserContext from "./context/useUserContext";
 
 const useFetchBillings = (paging, userType) => {
   const { user } = useUserContext();

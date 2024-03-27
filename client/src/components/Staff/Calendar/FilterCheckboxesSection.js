@@ -1,7 +1,7 @@
 import React from "react";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { categoryToTitle } from "../../../utils/categoryToTitle";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { categoryToTitle } from "../../../utils/names/categoryToTitle";
 import FilterStaffItem from "./FilterStaffItem";
 
 const FilterCheckboxesSection = ({

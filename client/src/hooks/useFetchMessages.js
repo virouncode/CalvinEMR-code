@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { filterAndSortMessages } from "../utils/filterAndSortMessages";
+import { filterAndSortMessages } from "../utils/messages/filterAndSortMessages";
 
 const useFetchMessages = (paging, search, messageId, section, staffId) => {
   const [messages, setMessages] = useState([]);

@@ -2,7 +2,7 @@ import React from "react";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
+} from "../../../../../omdDatas/codesTables";
 
 const PharmacyCard = ({ pharmacy, demographicsInfos }) => {
   return (

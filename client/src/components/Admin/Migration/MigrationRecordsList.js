@@ -1,4 +1,4 @@
-import { recordCategories } from "../../../utils/exports/recordCategories";
+import { recordCategories } from "../../../utils/migration/exports/recordCategories";
 import MigrationRecordItem from "./MigrationRecordItem";
 
 const MigrationRecordsList = ({

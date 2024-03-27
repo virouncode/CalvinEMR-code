@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../../../api/fetchRecords";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   enrollmentStatusCT,
   terminationReasonCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { enrolmentSchema } from "../../../../../validation/enrolmentValidation";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+} from "../../../../../utils/dates/formatDates";
+import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { enrolmentSchema } from "../../../../../validation/record/enrolmentValidation";
+import GenericList from "../../../../UI/Lists/GenericList";
 
 const EnrolmentEdit = ({
   setEditVisible,

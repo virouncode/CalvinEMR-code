@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 import useFetchDatas from "../../../../hooks/useFetchDatas";
 import useTopicSocket from "../../../../hooks/useTopicSocket";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ImmunizationsPU from "../Popups/ImmunizationsPU";
 import ImmunizationsContent from "../Topics/Immunizations/ImmunizationsContent";
 import PatientTopicHeader from "./PatientTopicHeader";

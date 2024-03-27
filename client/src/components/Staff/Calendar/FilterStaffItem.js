@@ -1,7 +1,7 @@
 import React from "react";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import { categoryToTitle } from "../../../utils/categoryToTitle";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import { categoryToTitle } from "../../../utils/names/categoryToTitle";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
 
 const FilterStaffItem = ({
   staff,

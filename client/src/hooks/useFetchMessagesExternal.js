@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
+import { filterAndSortExternalMessages } from "../utils/messages/filterAndSortExternalMessages";
 
 const useFetchMessagesExternal = (
   paging,

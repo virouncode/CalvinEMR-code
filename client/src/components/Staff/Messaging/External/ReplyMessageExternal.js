@@ -4,12 +4,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { sendEmail } from "../../../../api/sendEmail";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../utils/formatDates";
-import { toPatientName } from "../../../../utils/toPatientName";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/dates/formatDates";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import MessageExternal from "./MessageExternal";
 

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import { genderCT, toCodeTableName } from "../../../../../datas/codesTables";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { getAgeTZ } from "../../../../../utils/formatDates";
-import ToastCalvin from "../../../../All/UI/Toast/ToastCalvin";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { genderCT, toCodeTableName } from "../../../../../omdDatas/codesTables";
+import { getAgeTZ } from "../../../../../utils/dates/formatDates";
+import ToastCalvin from "../../../../UI/Toast/ToastCalvin";
 import StaffAIAgreement from "../../../Agreement/StaffAIAgreement";
 import CalvinAIDiscussion from "./CalvinAIDiscussion";
 import CalvinAIPrompt from "./CalvinAIPrompt";

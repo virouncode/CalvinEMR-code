@@ -1,7 +1,7 @@
 import React from "react";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { showDocument } from "../../../../../utils/showDocument";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { showDocument } from "../../../../../utils/files/showDocument";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const EformsContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

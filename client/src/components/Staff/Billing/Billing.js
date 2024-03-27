@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-import useBillingSocket from "../../../hooks/useBillingSocket";
+import useUserContext from "../../../hooks/context/useUserContext";
+import useBillingSocket from "../../../hooks/socket/useBillingSocket";
 import useFetchBillings from "../../../hooks/useFetchBillings";
 import useFetchDatas from "../../../hooks/useFetchDatas";
-import useUserContext from "../../../hooks/useUserContext";
 import BillingFilter from "./BillingFilter";
 import BillingForm from "./BillingForm";
 import BillingTable from "./BillingTable";

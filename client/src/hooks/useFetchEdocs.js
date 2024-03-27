@@ -45,7 +45,6 @@ const useFetchEdocs = () => {
     paging,
     setPaging,
     hasMore,
-    setHasMore,
     loading,
     errMsg,
   };

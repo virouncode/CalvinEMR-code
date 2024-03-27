@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { categoryToTitle } from "../utils/categoryToTitle";
-import useStaffInfosContext from "./useStaffInfosContext";
+import { categoryToTitle } from "../utils/names/categoryToTitle";
+import useStaffInfosContext from "./context/useStaffInfosContext";
 
 const useStaffPerCategory = (sites) => {
   const { staffInfos } = useStaffInfosContext();

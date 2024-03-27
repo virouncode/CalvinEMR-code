@@ -1,5 +1,5 @@
 import React from "react";
-import { getVaccinationInterval } from "../../../../../utils/getVaccinationInterval";
+import { getImmunizationInterval } from "../../../../../utils/immunizations/getImmunizationInterval";
 import RecImmunizationItemDouble from "./RecImmunizationItemDouble";
 import RecImmunizationItemMultiple from "./RecImmunizationItemMultiple";
 import RecImmunizationItemSingle from "./RecImmunizationItemSingle";
@@ -35,8 +35,8 @@ const RecImmunizationCell = ({
             type={type}
             route={route}
             immunizationInfos={immunizationInfos[0] || {}}
-            rangeStart={getVaccinationInterval(age, patientDob).rangeStart}
-            rangeEnd={getVaccinationInterval(age, patientDob).rangeEnd}
+            rangeStart={getImmunizationInterval(age, patientDob).rangeStart}
+            rangeEnd={getImmunizationInterval(age, patientDob).rangeEnd}
             patientId={patientId}
             loadingPatient={loadingPatient}
             errPatient={errPatient}
@@ -49,8 +49,8 @@ const RecImmunizationCell = ({
             route={route}
             immunizationInfos={immunizationInfos}
             patientDob={patientDob}
-            rangeStart={getVaccinationInterval(age, patientDob).rangeStart}
-            rangeEnd={getVaccinationInterval(age, patientDob).rangeEnd}
+            rangeStart={getImmunizationInterval(age, patientDob).rangeStart}
+            rangeEnd={getImmunizationInterval(age, patientDob).rangeEnd}
             patientId={patientId}
             loadingPatient={loadingPatient}
             errPatient={errPatient}

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   toCodeTableName,
   ynIndicatorsimpleCT,
-} from "../../../../../datas/codesTables";
-import { cmToFeet, kgToLbs } from "../../../../../utils/measurements";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+} from "../../../../../omdDatas/codesTables";
+import {
+  cmToFeet,
+  kgToLbs,
+} from "../../../../../utils/measurements/measurements";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const CareElementsContent = ({ topicDatas, loading, errMsg }) => {
   //HOOKS

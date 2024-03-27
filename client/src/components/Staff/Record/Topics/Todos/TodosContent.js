@@ -1,11 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const TodosContent = ({ topicDatas, loading, errMsg }) => {
   const { user } = useUserContext();
+  console.log("todos", topicDatas);
   return !loading ? (
     errMsg ? (
       <p className="topic-content__err">{errMsg}</p>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { enrolmentCaptionComplete } from "../../../../../utils/enrolmentCaption";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import { enrolmentCaptionComplete } from "../../../../../utils/names/enrolmentCaption";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import EnrolmentEdit from "./EnrolmentEdit";
 
 const EnrolmentItem = ({

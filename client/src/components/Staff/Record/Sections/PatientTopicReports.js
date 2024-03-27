@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import useTopicSocket from "../../../../hooks/useTopicSocket";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import useTopicSocket from "../../../../hooks/socket/useTopicSocket";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ReportsPU from "../Popups/ReportsPU";
 import ReportsContent from "../Topics/Reports/ReportsContent";
 import PatientTopicHeader from "./PatientTopicHeader";

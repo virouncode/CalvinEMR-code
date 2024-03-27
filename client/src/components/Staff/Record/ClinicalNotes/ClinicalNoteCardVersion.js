@@ -1,7 +1,7 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateTimeSecondsStrTZ } from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 
 const ClinicalNoteCardVersion = ({ version }) => {
   const { staffInfos } = useStaffInfosContext();

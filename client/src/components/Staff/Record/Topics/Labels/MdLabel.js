@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import useClinicContext from "../../../../../hooks/useClinicContext";
+import useClinicContext from "../../../../../hooks/context/useClinicContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { copyToClipboard } from "../../../../../utils/copyToClipboard";
-import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import { copyToClipboard } from "../../../../../utils/js/copyToClipboard";
+import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
 import SelectSite from "../../../EventForm/SelectSite";
 
 const MdLabel = ({ demographicsInfos, windowRef }) => {

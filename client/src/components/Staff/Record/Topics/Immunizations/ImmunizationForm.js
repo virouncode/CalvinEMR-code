@@ -1,26 +1,26 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   immunizationTypeCT,
   routeCT,
   siteCT,
   ynIndicatorsimpleCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { immunizationSchema } from "../../../../../validation/immunizationValidation";
-import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
-import GenericList from "../../../../All/UI/Lists/GenericList";
-import ImmunizationsList from "../../../../All/UI/Lists/ImmunizationsList";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { immunizationSchema } from "../../../../../validation/record/immunizationValidation";
+import GenericCombo from "../../../../UI/Lists/GenericCombo";
+import GenericList from "../../../../UI/Lists/GenericList";
+import ImmunizationsList from "../../../../UI/Lists/ImmunizationsList";
 
 const ImmunizationForm = ({
   patientId,

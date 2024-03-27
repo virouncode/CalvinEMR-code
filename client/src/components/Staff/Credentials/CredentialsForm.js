@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useAuthContext from "../../../hooks/useAuthContext";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useAuthContext from "../../../hooks/context/useAuthContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 
 const CredentialsForm = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
-import { createChartNbr } from "../utils/createChartNbr";
-import { nowTZTimestamp } from "../utils/formatDates";
+import { nowTZTimestamp } from "../utils/dates/formatDates";
+import { createChartNbr } from "../utils/numbers/createChartNbr";
 import xanoDelete from "./xanoCRUD/xanoDelete";
 import xanoPost from "./xanoCRUD/xanoPost";
 import xanoPut from "./xanoCRUD/xanoPut";

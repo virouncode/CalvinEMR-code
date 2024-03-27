@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
-import CredentialsFormPatient from "../../components/Patient/CredentialsPatient/CredentialsFormPatient";
-import VerifyPasswordPatient from "../../components/Patient/CredentialsPatient/VerifyPasswordPatient";
+import CredentialsFormPatient from "../../components/Patient/Credentials/CredentialsFormPatient";
+import VerifyPasswordPatient from "../../components/Patient/Credentials/VerifyPasswordPatient";
 import useTitle from "../../hooks/useTitle";
 
 const PatientCredentialsPage = () => {

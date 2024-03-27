@@ -1,5 +1,5 @@
 import React from "react";
-import { timestampToHumanDateTZ } from "../../../utils/formatDates";
+import { timestampToHumanDateTZ } from "../../../utils/dates/formatDates";
 import DaySheetEventCard from "./DaySheetEventCard";
 
 const DaySheet = ({ events, rangeStart }) => {

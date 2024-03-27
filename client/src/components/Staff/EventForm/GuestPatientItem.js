@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { toPatientName } from "../../../utils/toPatientName";
+import { toPatientName } from "../../../utils/names/toPatientName";
 
 const GuestPatientItem = ({ guest, handleRemoveGuest }) => {
   return (

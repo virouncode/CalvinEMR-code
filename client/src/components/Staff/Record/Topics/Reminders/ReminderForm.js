@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { reminderSchema } from "../../../../../validation/reminderValidation";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { reminderSchema } from "../../../../../validation/record/reminderValidation";
 
 const ReminderForm = ({
   editCounter,

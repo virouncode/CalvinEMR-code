@@ -6,10 +6,10 @@ import {
   timestampToDateMonthsLaterISOTZ,
   timestampToDateYearsLaterISOTZ,
   timestampYearsLaterTZ,
-} from "../../../../../utils/formatDates";
-import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
-import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+} from "../../../../../utils/dates/formatDates";
+import { getImmunizationLogo } from "../../../../../utils/immunizations/getImmunizationLogo";
+import LoadingParagraph from "../../../../UI/Paragraphs/LoadingParagraph";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import RecImmunizationEditFirstDose from "./RecImmunizationEditFirstDose";
 import RecImmunizationEditSecondDose from "./RecImmunizationEditSecondDose";
 import RecImmunizationFormFirstDose from "./RecImmunizationFormFirstDose";
@@ -109,7 +109,7 @@ const RecImmunizationItemDouble = ({
             {timestampToDateISOTZ(
               immunizationInfos.find(({ doseNumber }) => doseNumber === 1).Date
             )}{" "}
-            {getVaccinationLogo(type)}
+            {getImmunizationLogo(type)}
           </label>
         ) : (
           <label>
@@ -132,7 +132,7 @@ const RecImmunizationItemDouble = ({
               </span>
             )}
             {age === "6 Months" && `Every year in the fall *`}{" "}
-            {getVaccinationLogo(type)}
+            {getImmunizationLogo(type)}
           </label>
         )}
         {formVisibleFirstDose && (
@@ -213,7 +213,7 @@ const RecImmunizationItemDouble = ({
                   immunizationInfos.find(({ doseNumber }) => doseNumber === 2)
                     .Date
                 )}{" "}
-                {getVaccinationLogo(type)}
+                {getImmunizationLogo(type)}
               </label>
             ) : (
               <label>
@@ -287,7 +287,7 @@ const RecImmunizationItemDouble = ({
                       `2 to 6 months after`
                     ))}
                 </span>{" "}
-                {getVaccinationLogo(type)}
+                {getImmunizationLogo(type)}
               </label>
             )}
           </>

@@ -5,32 +5,32 @@ import { toast } from "react-toastify";
 import { DateTime } from "luxon";
 import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import useAvailableRooms from "../../../hooks/useAvailableRooms";
 import { useEventForm } from "../../../hooks/useEventForm";
 import usePatientsGuestsList from "../../../hooks/usePatientsGuestsList";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+import { statuses } from "../../../utils/appointments/statuses";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
   timestampToTimeISOTZ,
   tzComponentsToTimestamp,
-} from "../../../utils/formatDates";
+} from "../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import { statuses } from "../../../utils/statuses";
-import { toSiteName } from "../../../utils/toSiteName";
-import { toRoomTitle } from "../../../validation/toRoomTitle";
+} from "../../../utils/names/staffIdToName";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import { toRoomTitle } from "../../../utils/names/toRoomTitle";
+import { toSiteName } from "../../../utils/names/toSiteName";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import DateTimePicker from "../../All/UI/Pickers/DateTimePicker";
-import DurationPicker from "../../All/UI/Pickers/DurationPicker";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
+import DateTimePicker from "../../UI/Pickers/DateTimePicker";
+import DurationPicker from "../../UI/Pickers/DurationPicker";
 import EditGuests from "./EditGuests";
 import HostsList from "./HostsList";
 import Invitation from "./Invitation";

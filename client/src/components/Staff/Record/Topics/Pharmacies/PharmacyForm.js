@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
-import { provinceStateTerritoryCT } from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { provinceStateTerritoryCT } from "../../../../../omdDatas/codesTables";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { pharmacySchema } from "../../../../../validation/pharmacyValidation";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+} from "../../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { pharmacySchema } from "../../../../../validation/record/pharmacyValidation";
+import GenericList from "../../../../UI/Lists/GenericList";
 
 const PharmacyForm = ({
   editCounter,

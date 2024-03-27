@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useIntersection from "../../../../../hooks/useIntersection";
-import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
+import CircularProgressSmall from "../../../../UI/Progress/CircularProgressSmall";
 import AddAIReportItem from "./AddAIReportItem";
 
 const AddAIReports = ({

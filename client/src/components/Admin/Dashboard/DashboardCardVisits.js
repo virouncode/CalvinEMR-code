@@ -5,9 +5,9 @@ import useVisitsPerGender from "../../../hooks/useVistsPerGender";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+} from "../../../utils/dates/formatDates";
+import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const DashboardCardVisits = ({
   visits,

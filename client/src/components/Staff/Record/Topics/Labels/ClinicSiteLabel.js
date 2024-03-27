@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import useClinicContext from "../../../../../hooks/useClinicContext";
+import useClinicContext from "../../../../../hooks/context/useClinicContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { copyToClipboard } from "../../../../../utils/copyToClipboard";
-import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
+import { copyToClipboard } from "../../../../../utils/js/copyToClipboard";
+import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
 import SelectSite from "../../../EventForm/SelectSite";
 
 const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {

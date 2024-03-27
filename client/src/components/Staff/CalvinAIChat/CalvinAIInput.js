@@ -1,6 +1,6 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Button, TextField } from "@mui/material";
-import TypingDots from "../../All/UI/Buttons/TypingDots";
+import TypingDots from "../../UI/Buttons/TypingDots";
 
 const CalvinAIInput = ({ handleChangeInput, value, handleAskGPT, loading }) => {
   return (

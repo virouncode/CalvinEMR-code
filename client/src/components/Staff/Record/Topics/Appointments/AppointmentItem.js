@@ -6,33 +6,33 @@ import {
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import useAvailableRooms from "../../../../../hooks/useAvailableRooms";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import {
-  firstLetterOfFirstWordUpper,
-  firstLetterUpper,
-} from "../../../../../utils/firstLetterUpper";
+import { statuses } from "../../../../../utils/appointments/statuses";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
   timestampToDateTimeStrTZ,
   timestampToTimeISOTZ,
   tzComponentsToTimestamp,
-} from "../../../../../utils/formatDates";
+} from "../../../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { statuses } from "../../../../../utils/statuses";
-import { toSiteName } from "../../../../../utils/toSiteName";
-import { appointmentSchema } from "../../../../../validation/appointmentValidation";
-import { toRoomTitle } from "../../../../../validation/toRoomTitle";
+} from "../../../../../utils/names/staffIdToName";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { toRoomTitle } from "../../../../../utils/names/toRoomTitle";
+import { toSiteName } from "../../../../../utils/names/toSiteName";
+import {
+  firstLetterOfFirstWordUpper,
+  firstLetterUpper,
+} from "../../../../../utils/strings/firstLetterUpper";
+import { appointmentSchema } from "../../../../../validation/record/appointmentValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import DateTimePicker from "../../../../All/UI/Pickers/DateTimePicker";
+import DateTimePicker from "../../../../UI/Pickers/DateTimePicker";
 import HostsList from "../../../EventForm/HostsList";
 import RoomsList from "../../../EventForm/RoomsList";
 import SelectSite from "../../../EventForm/SelectSite";

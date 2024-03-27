@@ -1,5 +1,5 @@
 import React from "react";
-import CircularProgressSmall from "../../../All/UI/Progress/CircularProgressSmall";
+import CircularProgressSmall from "../../../UI/Progress/CircularProgressSmall";
 
 const LoadingClinical = () => {
   return (

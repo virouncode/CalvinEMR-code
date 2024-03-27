@@ -3,14 +3,14 @@ import { toast } from "react-toastify";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { generatePassword } from "../../../utils/generatePassword";
-import { staffSchema } from "../../../validation/staffValidation";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+import { generatePassword } from "../../../utils/numbers/generatePassword";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
+import { staffSchema } from "../../../validation/signup/staffValidation";
 import SelectSite from "../../Staff/EventForm/SelectSite";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 

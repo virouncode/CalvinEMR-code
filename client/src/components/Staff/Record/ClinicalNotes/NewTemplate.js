@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../utils/formatDates";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/dates/formatDates";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import CopyTemplatesList from "./CopyTemplatesList";
 
 const NewTemplate = ({ setNewTemplateVisible, templates }) => {

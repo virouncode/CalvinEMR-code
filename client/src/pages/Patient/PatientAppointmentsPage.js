@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import PatientAppointments from "../../components/Patient/AppointmentsPatient/PatientAppointments";
+import PatientAppointments from "../../components/Patient/Appointments/PatientAppointments";
 import useTitle from "../../hooks/useTitle";
 
 const PatientAppointmentsPage = () => {

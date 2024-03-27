@@ -1,6 +1,6 @@
 import React from "react";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
-import TimePickerAvailability from "../../All/UI/Pickers/TimePickerAvailability";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
+import TimePickerAvailability from "../../UI/Pickers/TimePickerAvailability";
 
 const AvailabilityItem = ({
   day,

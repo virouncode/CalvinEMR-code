@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatientRecord } from "../../../../../api/fetchRecords";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   dosageUnitCT,
   frequencyCT,
   strengthUnitCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { isMedicationActive } from "../../../../../utils/isMedicationActive";
+} from "../../../../../omdDatas/codesTables";
+import { isMedicationActive } from "../../../../../utils/medications/isMedicationActive";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import SignCell from "../SignCell";
 import MedicationDetails from "./MedicationDetails";
 

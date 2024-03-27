@@ -1,5 +1,5 @@
 import React from "react";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import GuestsList from "./GuestsList";
 import GuestsSearch from "./GuestsSearch";
 

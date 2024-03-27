@@ -4,25 +4,25 @@ import {
   deletePatientRecord,
   putPatientRecord,
 } from "../../../../../api/fetchRecords";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   immunizationTypeCT,
   routeCT,
   siteCT,
   toCodeTableName,
   ynIndicatorsimpleCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { immunizationSchema } from "../../../../../validation/immunizationValidation";
+} from "../../../../../utils/dates/formatDates";
+import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { immunizationSchema } from "../../../../../validation/record/immunizationValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
-import GenericList from "../../../../All/UI/Lists/GenericList";
-import ImmunizationsList from "../../../../All/UI/Lists/ImmunizationsList";
+import GenericCombo from "../../../../UI/Lists/GenericCombo";
+import GenericList from "../../../../UI/Lists/GenericList";
+import ImmunizationsList from "../../../../UI/Lists/ImmunizationsList";
 import SignCell from "../SignCell";
 
 const ImmunizationItem = ({

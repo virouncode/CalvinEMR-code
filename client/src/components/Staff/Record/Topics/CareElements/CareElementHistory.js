@@ -1,8 +1,8 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 import React from "react";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
-import { toDatasToPlot } from "../../../../../utils/toDatasToPlot";
-import { toYDataKey } from "../../../../../utils/toYDataKey";
+import { toDatasToPlot } from "../../../../../utils/charts/toDatasToPlot";
+import { toYDataKey } from "../../../../../utils/charts/toYDataKey";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
 
 const CareElementHistory = ({ historyTopic, historyDatas, historyUnit }) => {
   const datasToPlot = toDatasToPlot(historyTopic, historyDatas);

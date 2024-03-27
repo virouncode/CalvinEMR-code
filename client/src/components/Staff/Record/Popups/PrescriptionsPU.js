@@ -1,8 +1,8 @@
 import React from "react";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
 import PrescriptionItem from "../Topics/Prescriptions/PrescriptionItem";
 
 const PrescriptionsPU = ({

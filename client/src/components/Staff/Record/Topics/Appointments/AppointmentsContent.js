@@ -2,8 +2,8 @@ import React from "react";
 import {
   timestampToDateISOTZ,
   timestampToDateTimeStrTZ,
-} from "../../../../../utils/formatDates";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+} from "../../../../../utils/dates/formatDates";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const AppointmentsContent = ({ topicDatas, errMsg, loading }) => {
   return !loading ? (

@@ -1,8 +1,8 @@
 import React from "react";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { showDocument } from "../../../../../utils/showDocument";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { showDocument } from "../../../../../utils/files/showDocument";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
 
 const PrescriptionItem = ({ item, lastItemRef = null }) => {
   const { staffInfos } = useStaffInfosContext();

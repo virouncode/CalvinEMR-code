@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
+import useTopicSocket from "../../../../hooks/socket/useTopicSocket";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
-import useTopicSocket from "../../../../hooks/useTopicSocket";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import FamilyDoctorsPU from "../Popups/FamilyDoctorsPU";
 import FamilyDoctorsContent from "../Topics/FamilyDoctors/FamilyDoctorsContent";
 import PatientTopicHeader from "./PatientTopicHeader";

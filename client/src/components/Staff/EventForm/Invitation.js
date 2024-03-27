@@ -4,13 +4,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { sendEmail } from "../../../api/sendEmail";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useUserContext from "../../../hooks/useUserContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   timestampToHumanDateTZ,
   timestampToHumanDateTimeTZ,
-} from "../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../utils/toPatientName";
+} from "../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../utils/names/toPatientName";
 import SelectSite from "./SelectSite";
 import TemplatesRadio from "./TemplatesRadio";
 

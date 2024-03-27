@@ -2,8 +2,8 @@ import { toast } from "react-toastify";
 import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useUserContext from "../../../../hooks/useUserContext";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
 
 const MessagesToolBar = ({

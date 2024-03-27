@@ -1,10 +1,10 @@
 import { BarChart } from "@mui/x-charts/BarChart";
 import React from "react";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import useStaffDuration from "../../../hooks/useStaffDuration";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
 import useStaffPerCategory from "../../../hooks/useStaffPerCategory";
-import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const DashboardCardStaff = ({ sites, loadingSites, errSites }) => {
   const { staffInfos } = useStaffInfosContext();

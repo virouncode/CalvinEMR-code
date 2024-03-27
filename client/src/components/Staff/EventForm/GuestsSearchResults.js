@@ -1,7 +1,7 @@
 import React from "react";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import useIntersection from "../../../hooks/useIntersection";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import LoadingLi from "../../All/UI/Lists/LoadingLi";
+import LoadingLi from "../../UI/Lists/LoadingLi";
 import GuestPatientResultItem from "./GuestPatientResultItem";
 import GuestStaffResultItem from "./GuestStaffResultItem";
 

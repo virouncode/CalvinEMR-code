@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import RecImmunizationFormMultiple from "./RecImmunizationFormMultiple";
 import RecImmunizationHistory from "./RecImmunizationHistory";
 

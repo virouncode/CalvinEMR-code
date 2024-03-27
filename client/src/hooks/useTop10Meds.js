@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { topKFrequent } from "../utils/topKFrequent";
+import { topKFrequent } from "../utils/charts/topKFrequent";
 
 const useTop10Meds = (medications, sites, siteSelectedIdMeds) => {
   const [top10Meds, setTop10Meds] = useState([]);
-
   useEffect(() => {
     if (
       !sites ||

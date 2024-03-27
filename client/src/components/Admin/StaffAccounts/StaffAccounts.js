@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import useFetchDatas from "../../../hooks/useFetchDatas";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import SignupStaffForm from "./SignupStaffForm";
 import StaffAccountEdit from "./StaffAccountEdit";
 import StaffAccountSearch from "./StaffAccountSearch";

@@ -7,20 +7,20 @@ import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../utils/toPatientName";
-import { toSiteName } from "../../../utils/toSiteName";
-import { billingItemSchema } from "../../../validation/billingValidation";
+} from "../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { toSiteName } from "../../../utils/names/toSiteName";
+import { billingItemSchema } from "../../../validation/billing/billingValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import SelectSite from "../EventForm/SelectSite";
 import DiagnosisSearch from "./DiagnosisSearch";
 import PatientChartHealthSearch from "./PatientChartHealthSearch";

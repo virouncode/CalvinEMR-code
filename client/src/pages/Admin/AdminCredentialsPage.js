@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
-import CredentialsFormAdmin from "../../components/Admin/CredentialsAdmin/CredentialsFormAdmin";
-import VerifyPasswordAdmin from "../../components/Admin/CredentialsAdmin/VerifyPasswordAdmin";
+import CredentialsFormAdmin from "../../components/Admin/Credentials/CredentialsFormAdmin";
+import VerifyPasswordAdmin from "../../components/Admin/Credentials/VerifyPasswordAdmin";
 import useTitle from "../../hooks/useTitle";
 
 const AdminCredentialsPage = () => {

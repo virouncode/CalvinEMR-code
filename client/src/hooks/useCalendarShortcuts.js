@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-
 import xanoDelete from "../api/xanoCRUD/xanoDelete";
 import { confirmAlert } from "../components/All/Confirm/ConfirmGlobal";
-import useSocketContext from "./useSocketContext";
-import useUserContext from "./useUserContext";
+import useSocketContext from "./context/useSocketContext";
+import useUserContext from "./context/useUserContext";
 
 const useCalendarShortcuts = (
   fcRef,

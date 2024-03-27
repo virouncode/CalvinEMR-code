@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { nowTZTimestamp } from "../utils/formatDates";
-import useAdminsInfosContext from "./useAdminsInfosContext";
+import { nowTZTimestamp } from "../utils/dates/formatDates";
+import useAdminsInfosContext from "./context/useAdminsInfosContext";
+import useClinicContext from "./context/useClinicContext";
+import useStaffInfosContext from "./context/useStaffInfosContext";
+import useUserContext from "./context/useUserContext";
 import useAuthContext from "./useAuthContext";
-import useClinicContext from "./useClinicContext";
-import useStaffInfosContext from "./useStaffInfosContext";
-import useUserContext from "./useUserContext";
 
 const useAutoLogout = (timeMin) => {
   const { setUser } = useUserContext();

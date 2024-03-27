@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPostAuth from "../../../api/xanoCRUD/xanoPostAuth";
-import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
-import useAuthContext from "../../../hooks/useAuthContext";
-import useClinicContext from "../../../hooks/useClinicContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { toPatientName } from "../../../utils/toPatientName";
-import { userSchema } from "../../../validation/userValidation";
-import CircularProgressSmallBlack from "../UI/Progress/CircularProgressSmallBlack";
+import useAdminsInfosContext from "../../../hooks/context/useAdminsInfosContext";
+import useAuthContext from "../../../hooks/context/useAuthContext";
+import useClinicContext from "../../../hooks/context/useClinicContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { loginSchema } from "../../../validation/login/loginValidation";
+import CircularProgressSmallBlack from "../../UI/Progress/CircularProgressSmallBlack";
 const LOGIN_URL = "/auth/login";
 const USERINFO_URL = "/auth/me";
 
@@ -59,7 +59,7 @@ const LoginForm = () => {
     e.preventDefault();
     //Validation
     try {
-      await userSchema.validate(formDatas);
+      await loginSchema.validate(formDatas);
     } catch (err) {
       setErr(err.message);
       return;

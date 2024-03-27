@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import useUserContext from "../../../hooks/context/useUserContext";
+import useReportsInboxSocket from "../../../hooks/socket/useReportsInboxSocket";
 import useFetchStaffReports from "../../../hooks/useFetchStaffReports";
 import useIntersection from "../../../hooks/useIntersection";
-import useReportsInboxSocket from "../../../hooks/useReportsInboxSocket";
-import useUserContext from "../../../hooks/useUserContext";
-import EmptyRow from "../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../All/UI/Tables/LoadingRow";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import EmptyRow from "../../UI/Tables/EmptyRow";
+import LoadingRow from "../../UI/Tables/LoadingRow";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import ReportsInboxAssignedPracticianForward from "./ReportsInboxAssignedPracticianForward";
 import ReportsInboxItem from "./ReportsInboxItem";
 

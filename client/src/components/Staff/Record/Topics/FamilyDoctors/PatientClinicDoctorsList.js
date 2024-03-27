@@ -1,6 +1,6 @@
 import React from "react";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import EmptyRow from "../../../../All/UI/Tables/EmptyRow";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import EmptyRow from "../../../../UI/Tables/EmptyRow";
 import PatientClinicDoctorItem from "./PatientClinicDoctorItem";
 
 const PatientClinicDoctorsList = ({ patientId, sites }) => {

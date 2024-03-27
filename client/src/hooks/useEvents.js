@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { parseToEvents } from "../utils/parseToEvents";
-import useUserContext from "./useUserContext";
+import { parseToEvents } from "../utils/appointments/parseToEvents";
+import useUserContext from "./context/useUserContext";
 
 const useEvents = (
   hostsIds,

@@ -4,18 +4,18 @@ import { toast } from "react-toastify";
 
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import { staffIdToOHIP } from "../../../utils/staffIdToName";
-import { toPatientName } from "../../../utils/toPatientName";
-import { billingFormSchema } from "../../../validation/billingValidation";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+} from "../../../utils/dates/formatDates";
+import { staffIdToOHIP } from "../../../utils/names/staffIdToName";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { billingFormSchema } from "../../../validation/billing/billingValidation";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import SelectSite from "../EventForm/SelectSite";
 import BillingCodesTemplates from "./BillingCodesTemplates";
 import DiagnosisSearch from "./DiagnosisSearch";

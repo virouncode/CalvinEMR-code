@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import EmptyLi from "../../../All/UI/Lists/EmptyLi";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import EmptyLi from "../../../UI/Lists/EmptyLi";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import EditTemplate from "./EditTemplate";
 import NewTemplate from "./NewTemplate";
 

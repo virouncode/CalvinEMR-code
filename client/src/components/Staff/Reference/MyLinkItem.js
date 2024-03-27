@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import LinkEdit from "./LinkEdit";
 

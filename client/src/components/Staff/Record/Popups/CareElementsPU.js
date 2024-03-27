@@ -4,18 +4,19 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
 
 import {
   toCodeTableName,
   ynIndicatorsimpleCT,
-} from "../../../../datas/codesTables";
+} from "../../../../omdDatas/codesTables";
 import {
   nowTZTimestamp,
   timestampToDateTimeSecondsStrTZ,
-} from "../../../../utils/formatDates";
+} from "../../../../utils/dates/formatDates";
+import { getLastUpdate, isUpdated } from "../../../../utils/dates/updates";
 import {
   bodyMassIndex,
   bodySurfaceArea,
@@ -23,17 +24,16 @@ import {
   feetToCm,
   kgToLbs,
   lbsToKg,
-} from "../../../../utils/measurements";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
-import { careElementsSchema } from "../../../../validation/careElementsValidation";
+} from "../../../../utils/measurements/measurements";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { careElementsSchema } from "../../../../validation/record/careElementsValidation";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import GenericList from "../../../All/UI/Lists/GenericList";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import GenericList from "../../../UI/Lists/GenericList";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import CareElementHistory from "../Topics/CareElements/CareElementHistory";
 var _ = require("lodash");
 

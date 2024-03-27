@@ -3,28 +3,28 @@ import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import { getAvailableRooms } from "../../../../../api/getAvailableRooms";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterOfFirstWordUpper } from "../../../../../utils/firstLetterUpper";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
+import { statuses } from "../../../../../utils/appointments/statuses";
 import {
   nowTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
   timestampToTimeISOTZ,
   tzComponentsToTimestamp,
-} from "../../../../../utils/formatDates";
+} from "../../../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { statuses } from "../../../../../utils/statuses";
-import { appointmentSchema } from "../../../../../validation/appointmentValidation";
-import { toRoomTitle } from "../../../../../validation/toRoomTitle";
+} from "../../../../../utils/names/staffIdToName";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { toRoomTitle } from "../../../../../utils/names/toRoomTitle";
+import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { appointmentSchema } from "../../../../../validation/record/appointmentValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import { DateTimePicker } from "../../../../All/UI/Pickers/DateTimePicker";
+import { DateTimePicker } from "../../../../UI/Pickers/DateTimePicker";
 import HostsList from "../../../EventForm/HostsList";
 import RoomsList from "../../../EventForm/RoomsList";
 import SelectSite from "../../../EventForm/SelectSite";

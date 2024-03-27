@@ -1,6 +1,6 @@
 import React from "react";
-import PatientsSelect from "../../All/UI/Lists/PatientsSelect";
-import RelationshipList from "../../All/UI/Lists/RelationshipList";
+import PatientsSelect from "../../UI/Lists/PatientsSelect";
+import RelationshipList from "../../UI/Lists/RelationshipList";
 
 const RelationshipRow = ({
   item,

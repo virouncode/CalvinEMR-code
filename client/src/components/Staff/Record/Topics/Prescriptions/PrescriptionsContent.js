@@ -1,6 +1,6 @@
 import React from "react";
-import { showDocument } from "../../../../../utils/showDocument";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { showDocument } from "../../../../../utils/files/showDocument";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const PrescriptionsContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

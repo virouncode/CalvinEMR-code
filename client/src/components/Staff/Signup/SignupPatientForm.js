@@ -5,6 +5,9 @@ import { sendEmail } from "../../../api/sendEmail";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   genderCT,
   namePrefixCT,
@@ -12,23 +15,20 @@ import {
   officialLanguageCT,
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../datas/codesTables";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { createChartNbr } from "../../../utils/createChartNbr";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
+} from "../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import { generatePassword } from "../../../utils/generatePassword";
-import { toPatientName } from "../../../utils/toPatientName";
-import { patientSchema } from "../../../validation/patientValidation";
-import GenericList from "../../All/UI/Lists/GenericList";
-import StaffList from "../../All/UI/Lists/StaffList";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+} from "../../../utils/dates/formatDates";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { createChartNbr } from "../../../utils/numbers/createChartNbr";
+import { generatePassword } from "../../../utils/numbers/generatePassword";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
+import { patientSchema } from "../../../validation/signup/patientValidation";
+import GenericList from "../../UI/Lists/GenericList";
+import StaffList from "../../UI/Lists/StaffList";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 

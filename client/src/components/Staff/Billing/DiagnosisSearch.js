@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import useFetchDiagnosisList from "../../../hooks/useFetchDiagnosisList";
 import useIntersection from "../../../hooks/useIntersection";
-import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const DiagnosisSearch = ({ handleClickDiagnosis }) => {
   const [search, setSearch] = useState("");
@@ -11,8 +11,10 @@ const DiagnosisSearch = ({ handleClickDiagnosis }) => {
     perPage: 15,
     offset: 0,
   });
-  const { loading, err, diagnosis, setDiagnosis, hasMore } =
-    useFetchDiagnosisList(search, paging);
+  const { loading, err, diagnosis, hasMore } = useFetchDiagnosisList(
+    search,
+    paging
+  );
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 
   const handleSearch = (e) => {

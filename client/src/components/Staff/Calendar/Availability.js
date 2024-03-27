@@ -1,5 +1,5 @@
 import React from "react";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import AvailabilityEditor from "./AvailabilityEditor";
 
 const Availability = ({

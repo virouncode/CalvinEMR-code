@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react";
+import useUserContext from "../../../../hooks/context/useUserContext";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
-import useUserContext from "../../../../hooks/useUserContext";
-import { toPatientName } from "../../../../utils/toPatientName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import { default as MedicationItem } from "../Topics/Medications/MedicationItem";
 import RxPU from "../Topics/Medications/Prescription/RxPU";
 

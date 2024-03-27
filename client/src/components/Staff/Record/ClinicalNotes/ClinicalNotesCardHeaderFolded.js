@@ -1,7 +1,7 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateTimeStrTZ } from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 import TriangleButtonClinical from "../Buttons/TriangleButtonClinical";
 
 const ClinicalNotesCardHeaderFolded = ({

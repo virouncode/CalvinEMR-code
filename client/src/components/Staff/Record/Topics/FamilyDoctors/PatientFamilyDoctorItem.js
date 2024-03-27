@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../../utils/formatDates";
+} from "../../../../../omdDatas/codesTables";
+import { nowTZTimestamp } from "../../../../../utils/dates/formatDates";
 
 const PatientFamilyDoctorItem = ({ item, patientId, lastItemRef = null }) => {
   const { user } = useUserContext();

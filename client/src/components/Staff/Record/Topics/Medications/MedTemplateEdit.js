@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   dosageUnitCT,
   formCT,
@@ -10,16 +12,14 @@ import {
   routeCT,
   strengthUnitCT,
   ynIndicatorsimpleCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../../utils/formatDates";
-import { toPrescriptionInstructions } from "../../../../../utils/toPrescriptionInstructions";
-import { medTemplateSchema } from "../../../../../validation/medTemplateValidation";
-import { toDurationText } from "../../../../../validation/toDurationText";
-import GenericCombo from "../../../../All/UI/Lists/GenericCombo";
-import GenericList from "../../../../All/UI/Lists/GenericList";
-import DurationPickerLong from "../../../../All/UI/Pickers/DurationPickerLong";
+} from "../../../../../omdDatas/codesTables";
+import { nowTZTimestamp } from "../../../../../utils/dates/formatDates";
+import { toDurationText } from "../../../../../utils/dates/toDurationText";
+import { toPrescriptionInstructions } from "../../../../../utils/medications/toPrescriptionInstructions";
+import { medTemplateSchema } from "../../../../../validation/record/medTemplateValidation";
+import GenericCombo from "../../../../UI/Lists/GenericCombo";
+import GenericList from "../../../../UI/Lists/GenericList";
+import DurationPickerLong from "../../../../UI/Pickers/DurationPickerLong";
 
 const MedTemplateEdit = ({ setEditVisible, med }) => {
   const { user } = useUserContext();

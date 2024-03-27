@@ -1,6 +1,6 @@
 import React from "react";
-import EmptyParagraph from "../../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
+import EmptyParagraph from "../../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
 import MessageExternalThumbnail from "./MessageExternalThumbnail";
 import MessagesExternalOverviewToolbar from "./MessagesExternalOverviewToolbar";
 

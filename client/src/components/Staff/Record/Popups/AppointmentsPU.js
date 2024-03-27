@@ -6,9 +6,9 @@ import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import AppointmentForm from "../Topics/Appointments/AppointmentForm";
 import AppointmentItem from "../Topics/Appointments/AppointmentItem";
 
@@ -31,7 +31,7 @@ const AppointmentsPU = ({
   const editCounter = useRef(0);
   const [addVisible, setAddVisible] = useState(false);
   const [errMsgPost, setErrMsgPost] = useState("");
-  const [sites, setSites] = useFetchDatas("/sites", "staff");
+  const [sites] = useFetchDatas("/sites", "staff");
 
   useFetchCategoryDatas(
     "/appointments_of_patient",

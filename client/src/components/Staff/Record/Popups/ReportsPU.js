@@ -4,10 +4,10 @@ import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ReportForm from "../Topics/Reports/ReportForm";
 import ReportItemReceived from "../Topics/Reports/ReportItemReceived";
 import ReportItemSent from "../Topics/Reports/ReportItemSent";

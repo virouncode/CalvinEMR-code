@@ -1,6 +1,6 @@
 import React from "react";
 import useIntersection from "../../../../hooks/useIntersection";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import MessageDetail from "./MessageDetail";
 import MessagesOverview from "./MessagesOverview";
 import NewMessage from "./NewMessage";

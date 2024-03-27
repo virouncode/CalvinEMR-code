@@ -4,14 +4,14 @@ import { toast } from "react-toastify";
 
 import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
 import useFetchCategoryDatas from "../../../../hooks/useFetchCategoryDatas";
 import useIntersection from "../../../../hooks/useIntersection";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useUserContext from "../../../../hooks/useUserContext";
 import ConfirmGlobal from "../../../All/Confirm/ConfirmGlobal";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import Eform from "../Topics/Eforms/Eform";
 import EformItem from "../Topics/Eforms/EformItem";
 
@@ -34,7 +34,6 @@ const EformsPU = ({
 }) => {
   //HOOKS
   const { user } = useUserContext();
-  ;
   const { socket } = useSocketContext();
   const [addVisible, setAddVisible] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);

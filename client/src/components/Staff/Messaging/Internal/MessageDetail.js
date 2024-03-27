@@ -8,24 +8,24 @@ import { postPatientRecord } from "../../../../api/fetchRecords";
 import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
 import useFetchPreviousMessages from "../../../../hooks/useFetchPreviousMessages";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
 import {
   nowTZTimestamp,
   timestampToDateTimeSecondsStrTZ,
-} from "../../../../utils/formatDates";
+} from "../../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../utils/staffIdToName";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
+} from "../../../../utils/names/staffIdToName";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
 import ForwardMessage from "./ForwardMessage";

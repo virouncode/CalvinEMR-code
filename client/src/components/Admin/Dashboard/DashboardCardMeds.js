@@ -3,10 +3,10 @@ import useTop10Meds from "../../../hooks/useTop10Meds";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+} from "../../../utils/dates/formatDates";
 import SelectSite from "../../Staff/EventForm/SelectSite";
+import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const DashboardCardMeds = ({
   medications,

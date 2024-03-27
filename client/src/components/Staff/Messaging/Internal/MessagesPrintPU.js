@@ -1,4 +1,4 @@
-import { toPatientName } from "../../../../utils/toPatientName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";

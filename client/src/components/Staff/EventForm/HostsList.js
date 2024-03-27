@@ -1,5 +1,5 @@
 import React from "react";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
 import HostOption from "./HostOption";
 
 const HostsList = ({ handleHostChange, hostId, disabled = false, style }) => {

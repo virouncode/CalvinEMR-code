@@ -1,6 +1,6 @@
 import React from "react";
-import { isMedicationActive } from "../../../../../utils/isMedicationActive";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { isMedicationActive } from "../../../../../utils/medications/isMedicationActive";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const MedicationsContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

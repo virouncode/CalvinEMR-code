@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useAllPatientsDemoSocket from "../../../../hooks/useAllPatientsDemoSocket";
+import useAllPatientsDemoSocket from "../../../../hooks/socket/useAllPatientsDemoSocket";
 import usePatientsDemographics from "../../../../hooks/usePatientsDemographics";
 import PatientSearchForm from "./PatientSearchForm";
 import PatientSearchResult from "./PatientSearchResult";

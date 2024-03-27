@@ -1,5 +1,5 @@
 import React from "react";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const ProblemListContent = ({ topicDatas, loading, errMsg }) => {
   return !loading ? (

@@ -1,5 +1,5 @@
 import React from "react";
-import useUserContext from "../../../hooks/useUserContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 
 const MessagesLeftBar = ({
   msgType,

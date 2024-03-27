@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { edocSchema } from "../../../validation/edocValidation";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+import { edocSchema } from "../../../validation/reference/edocValidation";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import { toExportCSVName } from "../../../utils/toExportCSVName";
+} from "../../../utils/dates/formatDates";
+import { toExportCSVName } from "../../../utils/files/toExportCSVName";
 
 const BillingFilter = ({
   billings,

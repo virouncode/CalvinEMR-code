@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import { provinceStateTerritoryCT } from "../../../datas/codesTables";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../utils/firstLetterUpper";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { siteSchema } from "../../../validation/siteValidation";
-import GenericList from "../../All/UI/Lists/GenericList";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { provinceStateTerritoryCT } from "../../../omdDatas/codesTables";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
+import { siteSchema } from "../../../validation/clinic/siteValidation";
+import GenericList from "../../UI/Lists/GenericList";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 import RoomsForm from "./RoomsForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";

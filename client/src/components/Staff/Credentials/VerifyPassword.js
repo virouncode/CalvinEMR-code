@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
-import useAuthContext from "../../../hooks/useAuthContext";
+import useAuthContext from "../../../hooks/context/useAuthContext";
 
 const VerifyPassword = ({ setVerified }) => {
   const LOGIN_URL = "/auth/login";

@@ -5,8 +5,8 @@ import {
   routeCT,
   toCodeTableName,
   ynIndicatorsimpleCT,
-} from "../../../../../datas/codesTables";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
+} from "../../../../../omdDatas/codesTables";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
 
 const MedicationDetails = ({ item }) => {
   return (

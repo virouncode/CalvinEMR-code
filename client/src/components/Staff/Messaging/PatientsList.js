@@ -1,7 +1,7 @@
 import React from "react";
 import useIntersection from "../../../hooks/useIntersection";
-import { toPatientName } from "../../../utils/toPatientName";
-import LoadingLi from "../../All/UI/Lists/LoadingLi";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import LoadingLi from "../../UI/Lists/LoadingLi";
 import PatientsListItem from "./PatientsListItem";
 
 const PatientsList = ({

@@ -5,19 +5,19 @@ import {
   postPatientRecord,
   putPatientRecord,
 } from "../../../../api/fetchRecords";
-import useClinicalTemplatesSocket from "../../../../hooks/useClinicalTemplatesSocket";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import useClinicalTemplatesSocket from "../../../../hooks/socket/useClinicalTemplatesSocket";
 import useFetchDatas from "../../../../hooks/useFetchDatas";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
 import {
   nowTZTimestamp,
   timestampToDateTimeSecondsStrTZ,
-} from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
+} from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 import { confirmAlert } from "../../../All/Confirm/ConfirmGlobal";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import CalvinAI from "./CalvinAI/CalvinAI";
 import ClinicalNotesVersions from "./ClinicalNoteVersions";
 import ClinicalNotesAttachments from "./ClinicalNotesAttachments";

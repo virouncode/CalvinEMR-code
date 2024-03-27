@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import useTopicSocket from "../../../../../hooks/useTopicSocket";
-import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import useTopicSocket from "../../../../../hooks/socket/useTopicSocket";
+import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const PharmaciesContent = ({
   patientId,

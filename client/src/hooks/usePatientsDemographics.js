@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { timestampToDateISOTZ } from "../utils/formatDates";
-import useUserContext from "./useUserContext";
+import { timestampToDateISOTZ } from "../utils/dates/formatDates";
+import useUserContext from "./context/useUserContext";
 
 const usePatientsDemographics = (search, paging) => {
   const { user } = useUserContext();

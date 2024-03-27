@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { postPatientRecord } from "../../../../api/fetchRecords";
-import { reportClassCT } from "../../../../datas/codesTables";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useUserContext from "../../../../hooks/useUserContext";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { reportClassCT } from "../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../../utils/formatDates";
-import { getExtension } from "../../../../utils/getExtension";
-import GenericList from "../../../All/UI/Lists/GenericList";
+} from "../../../../utils/dates/formatDates";
+import { getExtension } from "../../../../utils/files/getExtension";
+import GenericList from "../../../UI/Lists/GenericList";
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 
 const AddToReportsForm = ({ attachment, patientId, date, setAddToReports }) => {

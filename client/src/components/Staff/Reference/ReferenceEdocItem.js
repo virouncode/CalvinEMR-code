@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { timestampToDateISOTZ } from "../../../utils/formatDates";
-import { showDocument } from "../../../utils/showDocument";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import { edocSchema } from "../../../validation/edocValidation";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { timestampToDateISOTZ } from "../../../utils/dates/formatDates";
+import { showDocument } from "../../../utils/files/showDocument";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import { edocSchema } from "../../../validation/reference/edocValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 
 const ReferenceEdocItem = ({

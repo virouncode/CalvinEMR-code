@@ -1,10 +1,10 @@
 import React from "react";
-import useAdminsInfosContext from "../../../../hooks/useAdminsInfosContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { adminIdToName } from "../../../../utils/adminIdToName";
-import { timestampToDateISOTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
+import useAdminsInfosContext from "../../../../hooks/context/useAdminsInfosContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateISOTZ } from "../../../../utils/dates/formatDates";
+import { getLastUpdate, isUpdated } from "../../../../utils/dates/updates";
+import { adminIdToName } from "../../../../utils/names/adminIdToName";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 
 const SignCellMultipleTypes = ({ item }) => {
   const { staffInfos } = useStaffInfosContext();

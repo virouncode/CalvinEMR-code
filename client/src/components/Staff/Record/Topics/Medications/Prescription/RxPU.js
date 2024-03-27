@@ -10,20 +10,20 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { postPatientRecord } from "../../../../../../api/fetchRecords";
 import xanoPost from "../../../../../../api/xanoCRUD/xanoPost";
+import useSocketContext from "../../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../../hooks/context/useUserContext";
 import useFetchDatas from "../../../../../../hooks/useFetchDatas";
-import useSocketContext from "../../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../../../utils/formatDates";
+import { nowTZTimestamp } from "../../../../../../utils/dates/formatDates";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../../../../utils/staffIdToName";
+} from "../../../../../../utils/names/staffIdToName";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../../../All/Confirm/ConfirmGlobal";
-import ToastCalvin from "../../../../../All/UI/Toast/ToastCalvin";
+import ToastCalvin from "../../../../../UI/Toast/ToastCalvin";
 import MedicationForm from "../MedicationForm";
 import MedsTemplatesList from "../MedsTemplatesList";
 import PrescriptionActions from "./PrescriptionActions";

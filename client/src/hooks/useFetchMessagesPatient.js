@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { filterAndSortExternalMessages } from "../utils/filterAndSortExternalMessages";
+import { filterAndSortExternalMessages } from "../utils/messages/filterAndSortExternalMessages";
 
 const useFetchMessagesPatient = (
   paging,

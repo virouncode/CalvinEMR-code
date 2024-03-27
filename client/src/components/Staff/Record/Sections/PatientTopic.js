@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import useTopicSocket from "../../../../hooks/useTopicSocket";
-import { toPatientName } from "../../../../utils/toPatientName";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import useTopicSocket from "../../../../hooks/socket/useTopicSocket";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import NewMessageExternal from "../../Messaging/External/NewMessageExternal";
 import NewMessage from "../../Messaging/Internal/NewMessage";
 import NewTodo from "../../Messaging/Internal/NewTodo";

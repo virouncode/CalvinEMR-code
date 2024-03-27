@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import useIntersection from "../../../hooks/useIntersection";
 import usePatientsList from "../../../hooks/usePatientsList";
-import { toPatientName } from "../../../utils/toPatientName";
-import EmptyParagraph from "../../All/UI/Paragraphs/EmptyParagraph";
-import LoadingParagraph from "../../All/UI/Tables/LoadingParagraph";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
+import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
 const PatientChartHealthSearch = ({ handleClickPatient }) => {
   const [search, setSearch] = useState("");
@@ -12,13 +12,10 @@ const PatientChartHealthSearch = ({ handleClickPatient }) => {
     perPage: 15,
     offset: 0,
   });
-  const {
-    loading,
-    err,
-    patientsDemographics,
-    setPatientsDemographics,
-    hasMore,
-  } = usePatientsList(search, paging);
+  const { loading, err, patientsDemographics, hasMore } = usePatientsList(
+    search,
+    paging
+  );
 
   const { rootRef, lastItemRef } = useIntersection(loading, hasMore, setPaging);
 

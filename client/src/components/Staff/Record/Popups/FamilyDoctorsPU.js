@@ -4,8 +4,8 @@ import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../../All/UI/Windows/FakeWindow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../../UI/Windows/FakeWindow";
 import ClinicDoctorsList from "../Topics/FamilyDoctors/ClinicDoctorsList";
 import FamilyDoctorsList from "../Topics/FamilyDoctors/FamilyDoctorsList";
 import PatientClinicDoctorsList from "../Topics/FamilyDoctors/PatientClinicDoctorsList";

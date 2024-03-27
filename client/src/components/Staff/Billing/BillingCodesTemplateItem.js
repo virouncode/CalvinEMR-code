@@ -3,11 +3,11 @@ import { toast } from "react-toastify";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoGet from "../../../api/xanoCRUD/xanoGet";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 
 const BillingCodesTemplateItem = ({

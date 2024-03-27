@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import FakeWindow from "../../components/All/UI/Windows/FakeWindow";
 import PatientAIAgreement from "../../components/Patient/Agreement/PatientAIAgreement";
-import MessagesPatient from "../../components/Patient/MessagingPatient/MessagesPatient";
-import usePatientUserDemographicsSocket from "../../hooks/usePatientUserDemographicsSocket";
+import MessagesPatient from "../../components/Patient/Messages/MessagesPatient";
+import FakeWindow from "../../components/UI/Windows/FakeWindow";
+import useUserContext from "../../hooks/context/useUserContext";
+import usePatientUserDemographicsSocket from "../../hooks/socket/usePatientUserDemographicsSocket";
 import useTitle from "../../hooks/useTitle";
-import useUserContext from "../../hooks/useUserContext";
 
 const PatientMessagesPage = () => {
   const { user } = useUserContext();

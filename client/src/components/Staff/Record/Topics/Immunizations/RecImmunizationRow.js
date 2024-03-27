@@ -1,7 +1,7 @@
 import {
   allImmunizationsAges,
   recommendedImmunizationsList,
-} from "../../../../../utils/recommendedImmunizations";
+} from "../../../../../utils/immunizations/recommendedImmunizations";
 import RecImmunizationCell from "./RecImmunizationCell";
 import RecImmunizationEmptyCell from "./RecImmunizationEmptyCell";
 

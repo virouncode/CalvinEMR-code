@@ -1,8 +1,8 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { timestampToDateTimeStrTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../utils/toPatientName";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateTimeStrTZ } from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../utils/names/toPatientName";
 
 const Message = ({ message, index, section }) => {
   const { staffInfos } = useStaffInfosContext();

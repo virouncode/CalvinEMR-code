@@ -2,8 +2,8 @@ import React from "react";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../datas/codesTables";
-import { showDocument } from "../../../utils/showDocument";
+} from "../../../omdDatas/codesTables";
+import { showDocument } from "../../../utils/files/showDocument";
 import SignCell from "../../Staff/Record/Topics/SignCell";
 
 const SiteItem = ({ site, handleEditClick }) => {

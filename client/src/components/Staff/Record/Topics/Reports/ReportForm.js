@@ -3,22 +3,22 @@ import { toast } from "react-toastify";
 
 import { postPatientRecord } from "../../../../../api/fetchRecords";
 import xanoPost from "../../../../../api/xanoCRUD/xanoPost";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   reportClassCT,
   reportFormatCT,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../../hooks/useUserContext";
+} from "../../../../../omdDatas/codesTables";
 import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
-} from "../../../../../utils/formatDates";
-import { getExtension } from "../../../../../utils/getExtension";
-import { patientIdToAssignedStaffName } from "../../../../../utils/patientIdToName";
-import { reportSchema } from "../../../../../validation/reportValidation";
-import GenericList from "../../../../All/UI/Lists/GenericList";
-import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
+} from "../../../../../utils/dates/formatDates";
+import { getExtension } from "../../../../../utils/files/getExtension";
+import { patientIdToAssignedStaffName } from "../../../../../utils/names/patientIdToName";
+import { reportSchema } from "../../../../../validation/record/reportValidation";
+import GenericList from "../../../../UI/Lists/GenericList";
+import LoadingParagraph from "../../../../UI/Paragraphs/LoadingParagraph";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
 

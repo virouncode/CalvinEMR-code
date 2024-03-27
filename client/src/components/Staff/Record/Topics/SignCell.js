@@ -1,8 +1,8 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { timestampToDateISOTZ } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import { getLastUpdate, isUpdated } from "../../../../utils/updates";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { timestampToDateISOTZ } from "../../../../utils/dates/formatDates";
+import { getLastUpdate, isUpdated } from "../../../../utils/dates/updates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 
 const SignCell = ({ item }) => {
   const { staffInfos } = useStaffInfosContext();

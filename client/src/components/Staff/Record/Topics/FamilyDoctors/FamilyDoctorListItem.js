@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import xanoPut from "../../../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../../../hooks/context/useSocketContext";
+import useUserContext from "../../../../../hooks/context/useUserContext";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import useSocketContext from "../../../../../hooks/useSocketContext";
-import useUserContext from "../../../../../hooks/useUserContext";
-import { firstLetterUpper } from "../../../../../utils/firstLetterUpper";
-import { nowTZTimestamp } from "../../../../../utils/formatDates";
-import { doctorSchema } from "../../../../../validation/doctorValidation";
+} from "../../../../../omdDatas/codesTables";
+import { nowTZTimestamp } from "../../../../../utils/dates/formatDates";
+import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper";
+import { doctorSchema } from "../../../../../validation/record/doctorValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import GenericList from "../../../../All/UI/Lists/GenericList";
+import GenericList from "../../../../UI/Lists/GenericList";
 import SignCellMultipleTypes from "../SignCellMultipleTypes";
 
 const FamilyDoctorListItem = ({
@@ -262,16 +262,27 @@ const FamilyDoctorListItem = ({
               <>
                 <button
                   onClick={handleAddToPatient}
-                  disabled={item.patients.includes(patientId)}
+                  disabled={item.patients.includes(patientId) || progress}
                 >
                   Add to patient
                 </button>
-                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleEditClick} disabled={progress}>
+                  Edit
+                </button>
               </>
             ) : (
               <>
-                <input type="submit" value="Save" onClick={handleSubmit} />
-                <button type="button" onClick={handleCancel}>
+                <input
+                  type="submit"
+                  value="Save"
+                  onClick={handleSubmit}
+                  disabled={progress}
+                />
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={progress}
+                >
                   Cancel
                 </button>
               </>

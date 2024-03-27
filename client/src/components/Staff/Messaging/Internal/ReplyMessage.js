@@ -2,13 +2,13 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoPost from "../../../../api/xanoCRUD/xanoPost";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../../hooks/useUserContext";
-import { nowTZTimestamp } from "../../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
-import CircularProgressMedium from "../../../All/UI/Progress/CircularProgressMedium";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../../hooks/context/useUserContext";
+import { nowTZTimestamp } from "../../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
+import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import MessagesAttachments from "../MessagesAttachments";
 import Message from "./Message";
 

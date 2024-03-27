@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useIntersection from "../../../../../hooks/useIntersection";
-import EmptyRow from "../../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../../All/UI/Tables/LoadingRow";
+import EmptyRow from "../../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../../UI/Tables/LoadingRow";
 import FamilyDoctorForm from "./FamilyDoctorForm";
 import FamilyDoctorListItem from "./FamilyDoctorListItem";
 

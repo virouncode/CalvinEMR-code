@@ -2,8 +2,8 @@ import React, { useRef, useState } from "react";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import ImmunizationsCaption from "../Topics/Immunizations/ImmunizationsCaption";
 import ImmunizationsTable from "../Topics/Immunizations/ImmunizationsTable";
 import RecImmunizationsTable from "../Topics/Immunizations/RecImmunizationsTable";

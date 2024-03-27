@@ -7,28 +7,28 @@ import { getAvailableRooms } from "../../../api/getAvailableRooms";
 import xanoDelete from "../../../api/xanoCRUD/xanoDelete";
 import xanoPost from "../../../api/xanoCRUD/xanoPost";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import useEventsSocket from "../../../hooks/socket/useEventsSocket";
 import useAvailabilty from "../../../hooks/useAvailability";
 import useCalendarShortcuts from "../../../hooks/useCalendarShortcuts";
 import useEvents from "../../../hooks/useEvents";
-import useEventsSocket from "../../../hooks/useEventsSocket";
 import useFetchDatas from "../../../hooks/useFetchDatas";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
 import {
   getTodayEndTZ,
   getTodayStartTZ,
   nowTZTimestamp,
   timestampToDateISOTZ,
   timestampToTimeISOTZ,
-} from "../../../utils/formatDates";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../utils/toPatientName";
-import { toSiteName } from "../../../utils/toSiteName";
-import { toRoomTitle } from "../../../validation/toRoomTitle";
+} from "../../../utils/dates/formatDates";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { toRoomTitle } from "../../../utils/names/toRoomTitle";
+import { toSiteName } from "../../../utils/names/toSiteName";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
-import CircularProgressMedium from "../../All/UI/Progress/CircularProgressMedium";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import EventForm from "../EventForm/EventForm";
 import CalendarFilter from "./CalendarFilter";
 import CalendarOptions from "./CalendarOptions";

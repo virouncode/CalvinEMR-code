@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import useBillingTemplatesSocket from "../../../hooks/useBillingTemplatesSocket";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useBillingTemplatesSocket from "../../../hooks/socket/useBillingTemplatesSocket";
 import useFetchDatas from "../../../hooks/useFetchDatas";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import { staffIdToTitleAndName } from "../../../utils/staffIdToTitleAndName";
-import EmptyLi from "../../All/UI/Lists/EmptyLi";
+import { staffIdToTitleAndName } from "../../../utils/names/staffIdToTitleAndName";
+import EmptyLi from "../../UI/Lists/EmptyLi";
 import BillingCodesTemplateForm from "./BillingCodesTemplateForm";
 import BillingCodesTemplateItem from "./BillingCodesTemplateItem";
 

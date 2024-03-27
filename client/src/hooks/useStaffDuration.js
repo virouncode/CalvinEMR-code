@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { nowTZTimestamp } from "../utils/formatDates";
-import useStaffInfosContext from "./useStaffInfosContext";
+import { nowTZTimestamp } from "../utils/dates/formatDates";
+import useStaffInfosContext from "./context/useStaffInfosContext";
 
 const useStaffDuration = (sites) => {
   const { staffInfos } = useStaffInfosContext();

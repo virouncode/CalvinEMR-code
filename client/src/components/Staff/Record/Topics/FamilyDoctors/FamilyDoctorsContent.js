@@ -1,10 +1,10 @@
 import React from "react";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../../datas/codesTables";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+} from "../../../../../omdDatas/codesTables";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const FamilyDoctorsContent = ({
   patientDoctors,

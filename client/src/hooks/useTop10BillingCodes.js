@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { topKFrequent } from "../utils/topKFrequent";
+import { topKFrequent } from "../utils/charts/topKFrequent";
 
 const useTop10BillingCodes = (billings, sites, siteSelectedId) => {
   const [top10BillingCodes, setTop10BillingCodes] = useState([]);
-
   useEffect(() => {
     if (!sites || sites?.length === 0 || !billings || billings?.length === 0)
       return;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CircularProgressSmall from "../../../../All/UI/Progress/CircularProgressSmall";
+import CircularProgressSmall from "../../../../UI/Progress/CircularProgressSmall";
 import AddAIAttachmentItem from "./AddAIAttachmentItem";
 
 const AddAIAttachments = ({

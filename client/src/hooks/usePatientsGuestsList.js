@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
-import { timestampToDateISOTZ } from "../utils/formatDates";
+import { timestampToDateISOTZ } from "../utils/dates/formatDates";
 
 const usePatientsGuestsList = (search, paging, patients_guests_ids) => {
   const [patientsDemographics, setPatientsDemographics] = useState([]);

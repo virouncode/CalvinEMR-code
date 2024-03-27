@@ -4,9 +4,9 @@ import useIntersection from "../../../../hooks/useIntersection";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import EmptyRow from "../../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import EmptyRow from "../../../UI/Tables/EmptyRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 import AlertForm from "../Topics/Alerts/AlertForm";
 import AlertItem from "../Topics/Alerts/AlertItem";
 

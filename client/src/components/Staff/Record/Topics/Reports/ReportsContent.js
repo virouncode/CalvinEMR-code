@@ -1,7 +1,7 @@
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { showDocument } from "../../../../../utils/showDocument";
-import { showReportTextContent } from "../../../../../utils/showReportTextContent";
-import CircularProgressMedium from "../../../../All/UI/Progress/CircularProgressMedium";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { showDocument } from "../../../../../utils/files/showDocument";
+import { showReportTextContent } from "../../../../../utils/reports/showReportTextContent";
+import CircularProgressMedium from "../../../../UI/Progress/CircularProgressMedium";
 
 const ReportsContent = ({
   reportsReceived,

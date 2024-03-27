@@ -1,9 +1,9 @@
 import React from "react";
 import useIntersection from "../../../hooks/useIntersection";
-import { toPatientName } from "../../../utils/toPatientName";
-import EmptyLi from "../../All/UI/Lists/EmptyLi";
-import LoadingLi from "../../All/UI/Lists/LoadingLi";
+import { toPatientName } from "../../../utils/names/toPatientName";
 import PatientsListItem from "../../Staff/Messaging/PatientsListItem";
+import EmptyLi from "../../UI/Lists/EmptyLi";
+import LoadingLi from "../../UI/Lists/LoadingLi";
 
 const MigrationPatientsList = ({
   isPatientIdChecked,

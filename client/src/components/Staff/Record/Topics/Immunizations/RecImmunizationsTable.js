@@ -1,5 +1,5 @@
 import React from "react";
-import SplittedHeader from "../../../../All/UI/Tables/SplittedHeader";
+import SplittedHeader from "../../../../UI/Tables/SplittedHeader";
 import RecImmunizationRow from "./RecImmunizationRow";
 
 const RecImmunizationsTable = ({

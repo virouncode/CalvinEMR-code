@@ -1,6 +1,6 @@
 import React from "react";
-import useStaffInfosContext from "../../../../hooks/useStaffInfosContext";
-import { staffIdToTitleAndName } from "../../../../utils/staffIdToTitleAndName";
+import useStaffInfosContext from "../../../../hooks/context/useStaffInfosContext";
+import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 
 const ClinicalNotesTemplatesList = ({
   templates,

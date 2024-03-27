@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NewWindow from "react-new-window";
-import ToastCalvin from "../../All/UI/Toast/ToastCalvin";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import ToastCalvin from "../../UI/Toast/ToastCalvin";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import ReportForm from "../Record/Topics/Reports/ReportForm";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";

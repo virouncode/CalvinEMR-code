@@ -1,13 +1,13 @@
 import React, { useRef } from "react";
 import { toast } from "react-toastify";
-import useClinicContext from "../../../../../hooks/useClinicContext";
+import useClinicContext from "../../../../../hooks/context/useClinicContext";
+import useStaffInfosContext from "../../../../../hooks/context/useStaffInfosContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
-import useStaffInfosContext from "../../../../../hooks/useStaffInfosContext";
-import { copyToClipboard } from "../../../../../utils/copyToClipboard";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { isObjectEmpty } from "../../../../../utils/isObjectEmpty";
-import { staffIdToTitleAndName } from "../../../../../utils/staffIdToTitleAndName";
-import { toPatientName } from "../../../../../utils/toPatientName";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { copyToClipboard } from "../../../../../utils/js/copyToClipboard";
+import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
+import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
+import { toPatientName } from "../../../../../utils/names/toPatientName";
 
 const PatientLabel = ({ demographicsInfos, windowRef }) => {
   const { staffInfos } = useStaffInfosContext();

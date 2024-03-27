@@ -1,8 +1,11 @@
 import React from "react";
-import { genderCT, toCodeTableName } from "../../../../datas/codesTables";
-import { getAgeTZ, timestampToDateISOTZ } from "../../../../utils/formatDates";
-import { toPatientName } from "../../../../utils/toPatientName";
-import LoadingParagraph from "../../../All/UI/Tables/LoadingParagraph";
+import { genderCT, toCodeTableName } from "../../../../omdDatas/codesTables";
+import {
+  getAgeTZ,
+  timestampToDateISOTZ,
+} from "../../../../utils/dates/formatDates";
+import { toPatientName } from "../../../../utils/names/toPatientName";
+import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
 import TriangleButton from "../Buttons/TriangleButton";
 
 const ClinicalNotesTitle = ({

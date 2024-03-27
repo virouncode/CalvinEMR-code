@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { timestampToDateISOTZ } from "../../../../../utils/formatDates";
-import { getVaccinationLogo } from "../../../../../utils/getVaccinationLogo";
-import LoadingParagraph from "../../../../All/UI/Tables/LoadingParagraph";
-import FakeWindow from "../../../../All/UI/Windows/FakeWindow";
+import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
+import { getImmunizationLogo } from "../../../../../utils/immunizations/getImmunizationLogo";
+import LoadingParagraph from "../../../../UI/Paragraphs/LoadingParagraph";
+import FakeWindow from "../../../../UI/Windows/FakeWindow";
 import RecImmunizationEdit from "./RecImmunizationEdit";
 import RecImmunizationForm from "./RecImmunizationForm";
 
@@ -64,7 +64,7 @@ const RecImmunizationItemSingle = ({
           }}
         >
           {timestampToDateISOTZ(immunizationInfos.Date)}{" "}
-          {getVaccinationLogo(route)}
+          {getImmunizationLogo(route)}
         </label>
       ) : (
         <label>
@@ -75,7 +75,7 @@ const RecImmunizationItemSingle = ({
                   rangeEnd
                 )}`}
           </span>{" "}
-          {getVaccinationLogo(route)}
+          {getImmunizationLogo(route)}
         </label>
       )}
       {formVisible && (

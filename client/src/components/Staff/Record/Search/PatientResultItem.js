@@ -4,8 +4,11 @@ import { NavLink } from "react-router-dom";
 import {
   provinceStateTerritoryCT,
   toCodeTableName,
-} from "../../../../datas/codesTables";
-import { getAgeTZ, timestampToDateISOTZ } from "../../../../utils/formatDates";
+} from "../../../../omdDatas/codesTables";
+import {
+  getAgeTZ,
+  timestampToDateISOTZ,
+} from "../../../../utils/dates/formatDates";
 
 const PatientResultItem = ({ patient, lastPatientRef }) => {
   return (

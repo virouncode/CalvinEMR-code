@@ -3,12 +3,12 @@ import { toast } from "react-toastify";
 
 import xanoDelete from "../../../../api/xanoCRUD/xanoDelete";
 import xanoPut from "../../../../api/xanoCRUD/xanoPut";
-import useSocketContext from "../../../../hooks/useSocketContext";
-import { nowTZTimestamp } from "../../../../utils/formatDates";
+import useSocketContext from "../../../../hooks/context/useSocketContext";
+import { nowTZTimestamp } from "../../../../utils/dates/formatDates";
 import ConfirmGlobal, {
   confirmAlert,
 } from "../../../All/Confirm/ConfirmGlobal";
-import ToastCalvin from "../../../All/UI/Toast/ToastCalvin";
+import ToastCalvin from "../../../UI/Toast/ToastCalvin";
 
 const EditTemplate = ({ setEditTemplateVisible, templateToEdit }) => {
   const { socket } = useSocketContext();

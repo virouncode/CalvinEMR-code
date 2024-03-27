@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import useAdminsInfosContext from "../../../hooks/useAdminsInfosContext";
-import useClinicContext from "../../../hooks/useClinicContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
-import { nowHumanTZ, nowTZ } from "../../../utils/formatDates";
-import { toWelcomeName } from "../../../utils/toWelcomeName";
-import ToastCalvin from "../UI/Toast/ToastCalvin";
+import useAdminsInfosContext from "../../../hooks/context/useAdminsInfosContext";
+import useClinicContext from "../../../hooks/context/useClinicContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
+import { nowHumanTZ, nowTZ } from "../../../utils/dates/formatDates";
+import { toWelcomeName } from "../../../utils/names/toWelcomeName";
+import ToastCalvin from "../../UI/Toast/ToastCalvin";
 
 const Welcome = ({ title }) => {
   //=================== STATES =======================//

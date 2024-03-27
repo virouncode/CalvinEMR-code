@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { putPatientRecord } from "../../../api/fetchRecords";
-import useSocketContext from "../../../hooks/useSocketContext";
-import useStaffInfosContext from "../../../hooks/useStaffInfosContext";
-import useUserContext from "../../../hooks/useUserContext";
+import useSocketContext from "../../../hooks/context/useSocketContext";
+import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
+import useUserContext from "../../../hooks/context/useUserContext";
 import {
   nowTZTimestamp,
   timestampToDateISOTZ,
-} from "../../../utils/formatDates";
-import { showDocument } from "../../../utils/showDocument";
-import { showReportTextContent } from "../../../utils/showReportTextContent";
+} from "../../../utils/dates/formatDates";
+import { showDocument } from "../../../utils/files/showDocument";
 import {
   staffIdToFirstName,
   staffIdToLastName,
   staffIdToOHIP,
-} from "../../../utils/staffIdToName";
-import { toPatientName } from "../../../utils/toPatientName";
+} from "../../../utils/names/staffIdToName";
+import { toPatientName } from "../../../utils/names/toPatientName";
+import { showReportTextContent } from "../../../utils/reports/showReportTextContent";
 import SignCell from "../Record/Topics/SignCell";
 
 const ReportsInboxItem = ({

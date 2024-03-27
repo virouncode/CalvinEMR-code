@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import useEdocsSocket from "../../../hooks/useEdocsSocket";
+import useEdocsSocket from "../../../hooks/socket/useEdocsSocket";
 import useFetchEdocs from "../../../hooks/useFetchEdocs";
 import useIntersection from "../../../hooks/useIntersection";
-import EmptyRow from "../../All/UI/Tables/EmptyRow";
-import LoadingRow from "../../All/UI/Tables/LoadingRow";
-import FakeWindow from "../../All/UI/Windows/FakeWindow";
+import EmptyRow from "../../UI/Tables/EmptyRow";
+import LoadingRow from "../../UI/Tables/LoadingRow";
+import FakeWindow from "../../UI/Windows/FakeWindow";
 import EdocForm from "./EdocForm";
 import ReferenceEdocItem from "./ReferenceEdocItem";
 
@@ -20,7 +20,6 @@ const ReferenceEdocs = () => {
     paging,
     setPaging,
     hasMore,
-    setHasMore,
     loading,
     errMsg,
   } = useFetchEdocs();

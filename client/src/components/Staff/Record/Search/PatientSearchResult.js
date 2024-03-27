@@ -1,6 +1,6 @@
 import React from "react";
 import useIntersection from "../../../../hooks/useIntersection";
-import LoadingRow from "../../../All/UI/Tables/LoadingRow";
+import LoadingRow from "../../../UI/Tables/LoadingRow";
 import PatientResultItem from "./PatientResultItem";
 
 const PatientSearchResult = ({
