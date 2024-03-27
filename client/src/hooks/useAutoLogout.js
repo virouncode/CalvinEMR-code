@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { nowTZTimestamp } from "../utils/dates/formatDates";
 import useAdminsInfosContext from "./context/useAdminsInfosContext";
+import useAuthContext from "./context/useAuthContext";
 import useClinicContext from "./context/useClinicContext";
 import useStaffInfosContext from "./context/useStaffInfosContext";
 import useUserContext from "./context/useUserContext";
-import useAuthContext from "./useAuthContext";
 
 const useAutoLogout = (timeMin) => {
   const { setUser } = useUserContext();
