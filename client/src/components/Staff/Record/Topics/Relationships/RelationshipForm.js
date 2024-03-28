@@ -13,8 +13,8 @@ import {
 import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
 import { toInverseRelation } from "../../../../../utils/relationships/toInverseRelation";
 import { relationshipSchema } from "../../../../../validation/record/relationshipValidation";
-import PatientsSelect from "../../../../UI/Lists/PatientsSelect";
-import RelationshipList from "../../../../UI/Lists/RelationshipList";
+import RelationshipList from "./RelationshipList";
+import RelationshipPatientsSelect from "./RelationshipPatientsSelect";
 
 const RelationshipForm = ({
   editCounter,
@@ -131,7 +131,7 @@ const RelationshipForm = ({
         </div>
       </td>
       <td style={{ position: "relative" }}>
-        <PatientsSelect
+        <RelationshipPatientsSelect
           formDatas={formDatas}
           setFormDatas={setFormDatas}
           patientId={patientId}

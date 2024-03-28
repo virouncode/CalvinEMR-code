@@ -19,7 +19,7 @@ import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstL
 import { riskSchema } from "../../../../../validation/record/riskValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../UI/Lists/GenericList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const RiskItem = ({
   item,

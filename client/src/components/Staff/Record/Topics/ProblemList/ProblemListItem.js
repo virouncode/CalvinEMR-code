@@ -15,7 +15,7 @@ import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstL
 import { problemListSchema } from "../../../../../validation/record/problemListValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../UI/Lists/GenericList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const ProblemListItem = ({
   item,

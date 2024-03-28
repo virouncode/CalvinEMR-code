@@ -33,11 +33,11 @@ import {
 import { appointmentSchema } from "../../../../../validation/record/appointmentValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import DateTimePicker from "../../../../UI/Pickers/DateTimePicker";
-import HostsList from "../../../EventForm/HostsList";
-import RoomsList from "../../../EventForm/RoomsList";
-import SelectSite from "../../../EventForm/SelectSite";
-import StatusList from "../../../EventForm/StatusList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
+import HostsSelect from "../../../EventForm/Host/HostsSelect";
+import RoomsSelect from "../../../EventForm/Rooms/RoomsSelect";
+import SiteSelect from "../../../EventForm/SiteSelect";
+import StatusSelect from "../../../EventForm/Status/StatusSelect";
 
 const AppointmentItem = ({
   item,
@@ -535,7 +535,7 @@ const AppointmentItem = ({
         </td>
         <td style={{ minWidth: "170px" }}>
           {editVisible && isSecretary() ? (
-            <HostsList
+            <HostsSelect
               staffInfos={staffInfos}
               handleHostChange={handleHostChange}
               hostId={itemInfos.host_id}
@@ -612,7 +612,7 @@ const AppointmentItem = ({
         </td>
         <td>
           {editVisible ? (
-            <SelectSite
+            <SiteSelect
               handleSiteChange={handleSiteChange}
               sites={sites}
               value={itemInfos.site_id}
@@ -624,7 +624,7 @@ const AppointmentItem = ({
         </td>
         <td>
           {editVisible ? (
-            <RoomsList
+            <RoomsSelect
               handleRoomChange={handleRoomChange}
               roomSelectedId={itemInfos.room_id}
               rooms={sites
@@ -639,7 +639,7 @@ const AppointmentItem = ({
         </td>
         <td>
           {editVisible ? (
-            <StatusList
+            <StatusSelect
               handleChange={handleChange}
               statuses={statuses}
               selectedStatus={itemInfos.AppointmentStatus}

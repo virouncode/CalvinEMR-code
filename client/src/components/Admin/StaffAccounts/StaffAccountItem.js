@@ -1,5 +1,5 @@
 import React from "react";
-import SignCellMultipleTypes from "../../Staff/Record/Topics/SignCellMultipleTypes";
+import SignCellMultipleTypes from "../../UI/Tables/SignCellMultipleTypes";
 
 const StaffAccountItem = ({
   staff,

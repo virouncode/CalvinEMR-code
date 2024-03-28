@@ -5,7 +5,7 @@ import useUserContext from "../../../../../hooks/context/useUserContext";
 import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import { copyToClipboard } from "../../../../../utils/js/copyToClipboard";
 import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
-import SelectSite from "../../../EventForm/SelectSite";
+import SiteSelect from "../../../EventForm/SiteSelect";
 
 const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {
   const { user } = useUserContext();
@@ -82,7 +82,7 @@ const ClinicSiteLabel = ({ demographicsInfos, windowRef }) => {
   return (
     <div style={LABEL_CONTAINER}>
       <div className="labels-content__select" style={SELECT_STYLE}>
-        <SelectSite
+        <SiteSelect
           handleSiteChange={handleSiteChange}
           sites={sites}
           value={site?.id}

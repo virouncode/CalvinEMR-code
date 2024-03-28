@@ -8,7 +8,7 @@ import {
   toCodeTableName,
 } from "../../../../../omdDatas/codesTables";
 import { nowTZTimestamp } from "../../../../../utils/dates/formatDates";
-import SignCellMultipleTypes from "../SignCellMultipleTypes";
+import SignCellMultipleTypes from "../../../../UI/Tables/SignCellMultipleTypes";
 
 const ClinicDoctorItem = ({ item, patientId, site }) => {
   //HOOKS

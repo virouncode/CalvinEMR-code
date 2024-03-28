@@ -30,12 +30,12 @@ import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 import FakeWindow from "../../UI/Windows/FakeWindow";
 import EventForm from "../EventForm/EventForm";
-import CalendarFilter from "./CalendarFilter";
-import CalendarOptions from "./CalendarOptions";
 import CalendarView from "./CalendarView";
 import DaySheet from "./DaySheet";
+import CalendarFilter from "./Options/CalendarFilter";
+import CalendarOptions from "./Options/CalendarOptions";
+import Shortcutpickr from "./Options/Shortcutpickr";
 import SelectTimelineSite from "./SelectTimelineSite";
-import Shortcutpickr from "./Shortcutpickr";
 import TimelineView from "./TimelineView";
 import ToggleView from "./ToggleView";
 

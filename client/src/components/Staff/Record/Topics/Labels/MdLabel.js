@@ -7,7 +7,7 @@ import useFetchDatas from "../../../../../hooks/useFetchDatas";
 import { copyToClipboard } from "../../../../../utils/js/copyToClipboard";
 import { isObjectEmpty } from "../../../../../utils/js/isObjectEmpty";
 import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
-import SelectSite from "../../../EventForm/SelectSite";
+import SiteSelect from "../../../EventForm/SiteSelect";
 
 const MdLabel = ({ demographicsInfos, windowRef }) => {
   const { user } = useUserContext();
@@ -109,7 +109,7 @@ const MdLabel = ({ demographicsInfos, windowRef }) => {
               </option>
             ))}
         </select>
-        <SelectSite
+        <SiteSelect
           handleSiteChange={handleSiteChange}
           sites={sites}
           value={site.id}

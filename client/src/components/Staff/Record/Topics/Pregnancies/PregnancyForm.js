@@ -12,7 +12,7 @@ import {
 import { staffIdToTitleAndName } from "../../../../../utils/names/staffIdToTitleAndName";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
 import { pregnancySchema } from "../../../../../validation/record/pregnancyValidation";
-import PregnanciesList from "../../../../UI/Lists/PregnanciesList";
+import PregnanciesList from "./PregnanciesList";
 
 const PregnancyForm = ({
   editCounter,

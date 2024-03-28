@@ -1,6 +1,6 @@
 import React from "react";
-import PatientsSelect from "../../UI/Lists/PatientsSelect";
 import RelationshipList from "../../UI/Lists/RelationshipList";
+import RelationshipPatientsSelect from "../../UI/Lists/RelationshipPatientsSelect";
 
 const RelationshipRow = ({
   item,
@@ -20,7 +20,7 @@ const RelationshipRow = ({
         value={item.relationship}
       />{" "}
       of{" "}
-      <PatientsSelect
+      <RelationshipPatientsSelect
         id={item.id} //the id of each item to relate the select element to my relationship
         handleChange={handleChange}
         value={item.relation_id}

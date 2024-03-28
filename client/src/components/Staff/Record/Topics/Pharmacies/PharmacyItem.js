@@ -11,7 +11,7 @@ import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper"
 import { pharmacySchema } from "../../../../../validation/record/pharmacyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../UI/Lists/GenericList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const PharmacyItem = ({
   item,

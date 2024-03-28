@@ -22,8 +22,8 @@ import { immunizationSchema } from "../../../../../validation/record/immunizatio
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericCombo from "../../../../UI/Lists/GenericCombo";
 import GenericList from "../../../../UI/Lists/GenericList";
-import ImmunizationsList from "../../../../UI/Lists/ImmunizationsList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
+import ImmunizationsList from "./ImmunizationsList";
 
 const ImmunizationItem = ({
   item,

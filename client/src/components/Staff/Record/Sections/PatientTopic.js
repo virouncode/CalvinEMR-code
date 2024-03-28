@@ -5,46 +5,46 @@ import FakeWindow from "../../../UI/Windows/FakeWindow";
 import NewMessageExternal from "../../Messaging/External/NewMessageExternal";
 import NewMessage from "../../Messaging/Internal/NewMessage";
 import NewTodo from "../../Messaging/Internal/NewTodo";
-import AlertsPU from "../Popups/AlertsPU";
-import AllergiesPU from "../Popups/AllergiesPU";
-import AppointmentsPU from "../Popups/AppointmentsPU";
-import CareElementsPU from "../Popups/CareElementsPU";
-import DemographicsPU from "../Popups/DemographicsPU";
-import EformsPU from "../Popups/EformsPU";
-import FamHistoryPU from "../Popups/FamHistoryPU";
-import ImmunizationsPU from "../Popups/ImmunizationsPU";
-import MedicationsPU from "../Popups/MedicationsPU";
-import PastHealthPU from "../Popups/PastHealthPU";
-import PersonalHistoryPU from "../Popups/PersonalHistoryPU";
-import PharmaciesPU from "../Popups/PharmaciesPU";
-import PregnanciesPU from "../Popups/PregnanciesPU";
-import PrescriptionsPU from "../Popups/PrescriptionsPU";
-import ProblemListPU from "../Popups/ProblemListPU";
-import RelationshipsPU from "../Popups/RelationshipsPU";
-import RemindersPU from "../Popups/RemindersPU";
-import RiskPU from "../Popups/RiskPU";
 import AlertsContent from "../Topics/Alerts/AlertContent";
+import AlertsPU from "../Topics/Alerts/AlertsPU";
 import AllergiesContent from "../Topics/Allergies/AllergiesContent";
+import AllergiesPU from "../Topics/Allergies/AllergiesPU";
 import AppointmentsContent from "../Topics/Appointments/AppointmentsContent";
+import AppointmentsPU from "../Topics/Appointments/AppointmentsPU";
 import CareElementsContent from "../Topics/CareElements/CareElementsContent";
+import CareElementsPU from "../Topics/CareElements/CareElementsPU";
 import DemographicsContent from "../Topics/Demographics/DemographicsContent";
+import DemographicsPU from "../Topics/Demographics/DemographicsPU";
 import EformsContent from "../Topics/Eforms/EformsContent";
-import FamHistoryContent from "../Topics/Family/FamHistoryContent";
+import EformsPU from "../Topics/Eforms/EformsPU";
+import FamilyHistoryContent from "../Topics/FamilyHistory/FamilyHistoryContent";
+import FamilyHistoryPU from "../Topics/FamilyHistory/FamilyHistoryPU";
 import ImmunizationsContent from "../Topics/Immunizations/ImmunizationsContent";
+import ImmunizationsPU from "../Topics/Immunizations/ImmunizationsPU";
 import LabResultsContent from "../Topics/LabResults/LabResultsContent";
 import LabelsContent from "../Topics/Labels/LabelsContent";
 import MedicationsContent from "../Topics/Medications/MedicationsContent";
+import MedicationsPU from "../Topics/Medications/MedicationsPU";
 import MessagesContent from "../Topics/MessagesAboutPatient/MessagesContent";
 import MessagesExternalContent from "../Topics/MessagesWithPatient/MessagesExternalContent";
 import PastHealthContent from "../Topics/PastHealth/PastHealthContent";
+import PastHealthPU from "../Topics/PastHealth/PastHealthPU";
 import PersonalHistoryContent from "../Topics/PersonalHistory/PersonalHistoryContent";
+import PersonalHistoryPU from "../Topics/PersonalHistory/PersonalHistoryPU";
 import PharmaciesContent from "../Topics/Pharmacies/PharmaciesContent";
+import PharmaciesPU from "../Topics/Pharmacies/PharmaciesPU";
 import PregnanciesContent from "../Topics/Pregnancies/PregnanciesContent";
+import PregnanciesPU from "../Topics/Pregnancies/PregnanciesPU";
 import PrescriptionsContent from "../Topics/Prescriptions/PrescriptionsContent";
+import PrescriptionsPU from "../Topics/Prescriptions/PrescriptionsPU";
 import ProblemListContent from "../Topics/ProblemList/ProblemListContent";
+import ProblemListPU from "../Topics/ProblemList/ProblemListPU";
 import RelationshipsContent from "../Topics/Relationships/RelationshipsContent";
+import RelationshipsPU from "../Topics/Relationships/RelationshipsPU";
 import RemindersContent from "../Topics/Reminders/RemindersContent";
+import RemindersPU from "../Topics/Reminders/RemindersPU";
 import RiskContent from "../Topics/Risks/RiskContent";
+import RiskPU from "../Topics/Risks/RiskPU";
 import TodosContent from "../Topics/Todos/TodosContent";
 import PatientTopicHeader from "./PatientTopicHeader";
 
@@ -211,7 +211,7 @@ const PatientTopic = ({
         {/*******************/}
         {/* FAMILY HISTORY */}
         {topic === "FAMILY HISTORY" && (
-          <FamHistoryContent
+          <FamilyHistoryContent
             topicDatas={topicDatas}
             loading={loading}
             errMsg={errMsg}
@@ -227,7 +227,7 @@ const PatientTopic = ({
             color={backgroundColor}
             setPopUpVisible={setPopUpVisible}
           >
-            <FamHistoryPU
+            <FamilyHistoryPU
               topicDatas={topicDatas}
               setTopicDatas={setTopicDatas}
               loading={loading}

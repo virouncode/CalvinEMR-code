@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import usePatientsDemographics from "../../../hooks/usePatientsDemographics";
 import PatientsList from "../Messaging/PatientsList";
-import PatientSearchReportInbox from "./PatientSearchReportInbox";
+import ReportInboxPatientSearch from "./ReportInboxPatientSearch";
 
 const ReportsInboxPatients = ({
   isPatientChecked,
@@ -33,7 +33,7 @@ const ReportsInboxPatients = ({
   return (
     <div className="reportsinbox__patients">
       {label && <div className="reportsinbox__patients-title">Patients</div>}
-      <PatientSearchReportInbox search={search} handleSearch={handleSearch} />
+      <ReportInboxPatientSearch search={search} handleSearch={handleSearch} />
       <div className="reportsinbox__patients-list">
         <PatientsList
           isPatientChecked={isPatientChecked}

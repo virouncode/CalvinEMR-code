@@ -19,7 +19,7 @@ import {
 } from "../../../../../utils/names/staffIdToName";
 import { showReportTextContent } from "../../../../../utils/reports/showReportTextContent";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const ReportItemReceived = ({ item, lastItemReceivedRef = null }) => {
   const { user } = useUserContext();

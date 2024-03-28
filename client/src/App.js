@@ -1,10 +1,10 @@
 //Librairies
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import AdminLayout from "./components/UI/Layouts/AdminLayout";
-import LoginLayout from "./components/UI/Layouts/LoginLayout";
-import PatientLayout from "./components/UI/Layouts/PatientLayout";
-import StaffLayout from "./components/UI/Layouts/StaffLayout";
+import AdminLayout from "./components/All/Layouts/AdminLayout";
+import LoginLayout from "./components/All/Layouts/LoginLayout";
+import PatientLayout from "./components/All/Layouts/PatientLayout";
+import StaffLayout from "./components/All/Layouts/StaffLayout";
 import RequireAuth from "./context/RequireAuth";
 import useAdminsInfosSocket from "./hooks/socket/useAdminsInfosSocket";
 import useClinicSocket from "./hooks/socket/useClinicSocket";
@@ -46,9 +46,9 @@ import StaffSignupPatientPage from "./pages/Staff/StaffSignupPatientPage";
 
 const App = () => {
   useLocalStorageTracker();
-  useAutoLogout(120); //autologout in min
+  useAutoLogout(120); //autologout in x min
   useLogoutForAll(); //log every tabs out if logout on one tab
-  useSocketConfig(false); //true for dev, false for prod
+  useSocketConfig(true); //true for dev, false for prod
   useStaffInfosSocket();
   useAdminsInfosSocket();
   useUserSocket();

@@ -7,7 +7,7 @@ import useUserContext from "../../../hooks/context/useUserContext";
 import { nowTZTimestamp } from "../../../utils/dates/formatDates";
 import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
 import { myAccountStaffSchema } from "../../../validation/accounts/myAccountStaffValidation";
-import SelectSite from "../../Staff/EventForm/SelectSite";
+import SiteSelect from "../../Staff/EventForm/SiteSelect";
 import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
@@ -184,7 +184,7 @@ const StaffAccountEdit = ({ infos, editVisible, setEditVisible, sites }) => {
             </div>
             <div className="staff-account__row">
               <label htmlFor="">Site*: </label>
-              <SelectSite
+              <SiteSelect
                 handleSiteChange={handleSiteChange}
                 sites={sites}
                 value={formDatas.site_id}

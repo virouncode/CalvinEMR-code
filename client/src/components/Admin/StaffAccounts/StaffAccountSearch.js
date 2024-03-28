@@ -1,5 +1,5 @@
 import React from "react";
-import SelectSite from "../../Staff/EventForm/SelectSite";
+import SiteSelect from "../../Staff/EventForm/SiteSelect";
 
 const StaffAccountSearch = ({ search, setSearch, sites }) => {
   const handleChange = (e) => {
@@ -29,7 +29,7 @@ const StaffAccountSearch = ({ search, setSearch, sites }) => {
           </div>
           <div className="staff-search__item">
             {" "}
-            <SelectSite
+            <SiteSelect
               handleSiteChange={handleSiteChange}
               sites={sites}
               value={search.site_id}

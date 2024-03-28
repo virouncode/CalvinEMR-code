@@ -9,7 +9,7 @@ import { nowTZTimestamp } from "../../../utils/dates/formatDates";
 import { generatePassword } from "../../../utils/numbers/generatePassword";
 import { firstLetterUpper } from "../../../utils/strings/firstLetterUpper";
 import { staffSchema } from "../../../validation/signup/staffValidation";
-import SelectSite from "../../Staff/EventForm/SelectSite";
+import SiteSelect from "../../Staff/EventForm/SiteSelect";
 import CircularProgressMedium from "../../UI/Progress/CircularProgressMedium";
 
 const BASE_URL = "https://xsjk-1rpe-2jnw.n7c.xano.io";
@@ -361,7 +361,7 @@ const SignupStaffForm = ({ setAddVisible, sites }) => {
           </div>
           <div className="signup-staff__row">
             <label htmlFor="">Site*: </label>
-            <SelectSite
+            <SiteSelect
               handleSiteChange={handleSiteChange}
               sites={sites}
               value={formDatas.site_id}

@@ -17,7 +17,7 @@ import {
 } from "../../../utils/names/staffIdToName";
 import { toPatientName } from "../../../utils/names/toPatientName";
 import { showReportTextContent } from "../../../utils/reports/showReportTextContent";
-import SignCell from "../Record/Topics/SignCell";
+import SignCell from "../../UI/Tables/SignCell";
 
 const ReportsInboxItem = ({
   item,

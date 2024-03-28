@@ -14,7 +14,6 @@ node_modules
 
 # production
 /build
-/server/xsd
 
 # misc
 .DS_Store

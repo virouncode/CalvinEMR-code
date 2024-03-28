@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ContactsList from "../../Staff/Messaging/ContactsList";
+import StaffContactsList from "../../Staff/Messaging/StaffContactsList";
 
 const ContactsForPatientCategory = ({
   categoryInfos,
@@ -29,7 +29,7 @@ const ContactsForPatientCategory = ({
         <label>{categoryName}</label>
       </div>
       {listVisible && (
-        <ContactsList
+        <StaffContactsList
           categoryInfos={categoryInfos}
           isContactChecked={isContactChecked}
           handleCheckContact={handleCheckContact}

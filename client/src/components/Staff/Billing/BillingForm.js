@@ -16,11 +16,11 @@ import { staffIdToOHIP } from "../../../utils/names/staffIdToName";
 import { toPatientName } from "../../../utils/names/toPatientName";
 import { billingFormSchema } from "../../../validation/billing/billingValidation";
 import FakeWindow from "../../UI/Windows/FakeWindow";
-import SelectSite from "../EventForm/SelectSite";
-import BillingCodesTemplates from "./BillingCodesTemplates";
+import SiteSelect from "../EventForm/SiteSelect";
 import DiagnosisSearch from "./DiagnosisSearch";
 import PatientChartHealthSearch from "./PatientChartHealthSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
+import BillingCodesTemplates from "./Templates/BillingCodesTemplates";
 
 const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
   const navigate = useNavigate();
@@ -288,7 +288,7 @@ const BillingForm = ({ setAddVisible, setErrMsgPost, sites }) => {
           ></i>
         </div>
         <div className="billing-form__item">
-          <SelectSite
+          <SiteSelect
             handleSiteChange={handleSiteChange}
             sites={sites}
             value={formDatas.site_id}

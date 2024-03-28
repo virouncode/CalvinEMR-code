@@ -4,7 +4,7 @@ import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
 } from "../../../utils/dates/formatDates";
-import SelectSite from "../../Staff/EventForm/SelectSite";
+import SiteSelect from "../../Staff/EventForm/SiteSelect";
 import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
@@ -58,7 +58,7 @@ const DashboardCardMeds = ({
           <div className="dashboard-card__content">
             <div className="dashboard-card__ranking">
               <p className="dashboard-card__ranking-title">Top medications</p>
-              <SelectSite
+              <SiteSelect
                 handleSiteChange={handleSiteChangeMeds}
                 sites={sites}
                 value={siteSelectedIdMeds}

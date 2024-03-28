@@ -5,8 +5,8 @@ import {
   timestampToDateISOTZ,
 } from "../../../../utils/dates/formatDates";
 import { toPatientName } from "../../../../utils/names/toPatientName";
+import TriangleButton from "../../../UI/Buttons/TriangleButton";
 import LoadingParagraph from "../../../UI/Paragraphs/LoadingParagraph";
-import TriangleButton from "../Buttons/TriangleButton";
 
 const ClinicalNotesTitle = ({
   demographicsInfos,

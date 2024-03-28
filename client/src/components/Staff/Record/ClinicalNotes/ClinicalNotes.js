@@ -4,12 +4,12 @@ import useClinicalNotesSocket from "../../../../hooks/socket/useClinicalNotesSoc
 import useFetchClinicalNotes from "../../../../hooks/useFetchClinicalNotes";
 import useIntersection from "../../../../hooks/useIntersection";
 import FakeWindow from "../../../UI/Windows/FakeWindow";
-import ClinicalNotesPU from "../Popups/ClinicalNotesPU";
-import ClinicalNotesCard from "./ClinicalNotesCard";
-import ClinicalNotesForm from "./ClinicalNotesForm";
+import ClinicalNoteCard from "./Card/ClinicalNoteCard";
+import ClinicalNoteForm from "./Card/ClinicalNoteForm";
 import ClinicalNotesHeader from "./ClinicalNotesHeader";
-import ClinicalNotesOverview from "./ClinicalNotesOverview";
 import LoadingClinical from "./LoadingClinical";
+import ClinicalNotesOverview from "./Overview/ClinicalNotesOverview";
+import ClinicalNotesPrint from "./Print/ClinicalNotesPrint";
 
 const ClinicalNotes = ({
   demographicsInfos,
@@ -117,7 +117,7 @@ const ClinicalNotes = ({
           }}
           onUnload={() => setPopUpVisible(false)}
         >
-          <ClinicalNotesPU
+          <ClinicalNotesPrint
             demographicsInfos={demographicsInfos}
             clinicalNotes={clinicalNotes}
             checkedNotes={checkedNotes}
@@ -154,7 +154,7 @@ const ClinicalNotes = ({
         ref={contentRef}
       >
         {clinicalNotes && addVisible && order === "desc" && (
-          <ClinicalNotesForm
+          <ClinicalNoteForm
             formRef={formRef}
             setAddVisible={setAddVisible}
             patientId={patientId}
@@ -169,7 +169,7 @@ const ClinicalNotes = ({
           (clinicalNotes && clinicalNotes.length > 0
             ? clinicalNotes.map((item, index) =>
                 index === clinicalNotes.length - 1 ? (
-                  <ClinicalNotesCard
+                  <ClinicalNoteCard
                     clinicalNote={item}
                     clinicalNotes={clinicalNotes}
                     setClinicalNotes={setClinicalNotes}
@@ -185,7 +185,7 @@ const ClinicalNotes = ({
                     addVisible={addVisible}
                   />
                 ) : (
-                  <ClinicalNotesCard
+                  <ClinicalNoteCard
                     clinicalNote={item}
                     clinicalNotes={clinicalNotes}
                     setClinicalNotes={setClinicalNotes}
@@ -206,7 +206,7 @@ const ClinicalNotes = ({
               ))}
         {loading && <LoadingClinical />}
         {!loading && clinicalNotes && addVisible && order === "asc" && (
-          <ClinicalNotesForm
+          <ClinicalNoteForm
             formRef={formRef}
             setAddVisible={setAddVisible}
             patientId={patientId}

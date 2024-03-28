@@ -21,7 +21,7 @@ import { toSiteName } from "../../../utils/names/toSiteName";
 import { billingItemSchema } from "../../../validation/billing/billingValidation";
 import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import FakeWindow from "../../UI/Windows/FakeWindow";
-import SelectSite from "../EventForm/SelectSite";
+import SiteSelect from "../EventForm/SiteSelect";
 import DiagnosisSearch from "./DiagnosisSearch";
 import PatientChartHealthSearch from "./PatientChartHealthSearch";
 import ReferringOHIPSearch from "./ReferringOHIPSearch";
@@ -308,7 +308,7 @@ const BillingTableItem = ({
           </td>
           <td>
             {editVisible ? (
-              <SelectSite
+              <SiteSelect
                 handleSiteChange={handleSiteChange}
                 sites={sites}
                 value={itemInfos.site_id}

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import useTopicSocket from "../../../../hooks/socket/useTopicSocket";
 import FakeWindow from "../../../UI/Windows/FakeWindow";
-import ReportsPU from "../Popups/ReportsPU";
 import ReportsContent from "../Topics/Reports/ReportsContent";
+import ReportsPU from "../Topics/Reports/ReportsPU";
 import PatientTopicHeader from "./PatientTopicHeader";
 
 const PatientTopicReports = ({

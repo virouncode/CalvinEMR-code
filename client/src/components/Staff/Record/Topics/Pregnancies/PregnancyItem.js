@@ -13,8 +13,8 @@ import {
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
 import { pregnancySchema } from "../../../../../validation/record/pregnancyValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import PregnanciesList from "../../../../UI/Lists/PregnanciesList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
+import PregnanciesList from "./PregnanciesList";
 
 const PregnancyItem = ({
   item,

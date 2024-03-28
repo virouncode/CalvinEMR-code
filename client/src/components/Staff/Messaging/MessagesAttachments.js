@@ -16,7 +16,6 @@ const MessagesAttachments = ({
       <div className="message-attachments">
         {attachments.map((attachment) => (
           <MessageAttachmentCard
-            patientId={patientId}
             handleRemoveAttachment={handleRemoveAttachment}
             attachment={attachment}
             key={attachment.alias}

@@ -1,6 +1,6 @@
 import React from "react";
 import CircularProgressMedium from "../../../../../UI/Progress/CircularProgressMedium";
-import SelectSite from "../../../../EventForm/SelectSite";
+import SiteSelect from "../../../../EventForm/SiteSelect";
 
 const PrescriptionActions = ({
   handlePrint,
@@ -22,7 +22,7 @@ const PrescriptionActions = ({
       <button onClick={handleCancel} disabled={progress}>
         Cancel
       </button>
-      <SelectSite
+      <SiteSelect
         handleSiteChange={handleSiteChange}
         value={siteSelectedId}
         sites={sites}

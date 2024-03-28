@@ -25,10 +25,10 @@ import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstL
 import { appointmentSchema } from "../../../../../validation/record/appointmentValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import { DateTimePicker } from "../../../../UI/Pickers/DateTimePicker";
-import HostsList from "../../../EventForm/HostsList";
-import RoomsList from "../../../EventForm/RoomsList";
-import SelectSite from "../../../EventForm/SelectSite";
-import StatusList from "../../../EventForm/StatusList";
+import HostsSelect from "../../../EventForm/Host/HostsSelect";
+import RoomsSelect from "../../../EventForm/Rooms/RoomsSelect";
+import SiteSelect from "../../../EventForm/SiteSelect";
+import StatusSelect from "../../../EventForm/Status/StatusSelect";
 
 const AppointmentForm = ({
   patientId,
@@ -453,7 +453,7 @@ const AppointmentForm = ({
       </td>
       <td style={{ minWidth: "170px" }}>
         {isSecretary() ? (
-          <HostsList
+          <HostsSelect
             staffInfos={staffInfos}
             handleHostChange={handleHostChange}
             hostId={formDatas.host_id}
@@ -511,7 +511,7 @@ const AppointmentForm = ({
         </select>
       </td>
       <td>
-        <SelectSite
+        <SiteSelect
           handleSiteChange={handleSiteChange}
           sites={sites}
           value={formDatas.site_id}
@@ -519,7 +519,7 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <RoomsList
+        <RoomsSelect
           handleRoomChange={handleRoomChange}
           roomSelectedId={formDatas.room_id}
           rooms={sites
@@ -530,7 +530,7 @@ const AppointmentForm = ({
         />
       </td>
       <td>
-        <StatusList
+        <StatusSelect
           handleChange={handleChange}
           statuses={statuses}
           selectedStatus={formDatas.AppointmentStatus}

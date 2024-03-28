@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { toast } from "react-toastify";
 import xanoPut from "../../../api/xanoCRUD/xanoPut";
 import useSocketContext from "../../../hooks/context/useSocketContext";
 import useStaffInfosContext from "../../../hooks/context/useStaffInfosContext";
@@ -18,10 +19,8 @@ const MyAccountStaff = () => {
   const [formDatas, setFormDatas] = useState(null);
   const [tempFormDatas, setTempFormDatas] = useState(null);
   const [errMsg, setErrMsg] = useState("");
-  const navigate = useNavigate();
-  const [successMsg, setSuccessMsg] = useState("");
-  // const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [progress, setProgress] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setFormDatas(staffInfos.find(({ id }) => id === user.id));
@@ -60,8 +59,6 @@ const MyAccountStaff = () => {
         "staff",
         tempFormDatas
       );
-      setSuccessMsg("Infos changed successfully");
-
       socket.emit("message", {
         route: "USER",
         action: "update",
@@ -83,12 +80,13 @@ const MyAccountStaff = () => {
           data: response.data,
         },
       });
-
       setEditVisible(false);
       setProgress(false);
-      setTimeout(() => setSuccessMsg(""), 2000);
+      toast.success(`Infos changed successfully`, { containerId: "A" });
     } catch (err) {
-      setErrMsg(`Error: unable to save infos: ${err.message}`);
+      toast.error(`Error: unable to save infos: ${err.message}`, {
+        containerId: "A",
+      });
       setProgress(false);
     }
   };
@@ -102,7 +100,6 @@ const MyAccountStaff = () => {
   return (
     <div className="myaccount-section__container">
       {errMsg && <p className="myaccount-section__err">{errMsg}</p>}
-      {successMsg && <p className="myaccount-section__success">{successMsg}</p>}
       {tempFormDatas && (
         <div className="myaccount-section__form">
           <div className="myaccount-section__column">

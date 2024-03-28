@@ -7,7 +7,7 @@ import { timestampToDateISOTZ } from "../../../../../utils/dates/formatDates";
 import { showDocument } from "../../../../../utils/files/showDocument";
 import { showReportTextContent } from "../../../../../utils/reports/showReportTextContent";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const ReportItemSent = ({ item, lastItemSentRef = null }) => {
   const { user } = useUserContext();

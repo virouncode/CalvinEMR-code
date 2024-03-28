@@ -1,7 +1,7 @@
 import React from "react";
-import PaperPlaneButton from "../Buttons/PaperPlaneButton";
-import PopUpButton from "../Buttons/PopUpButton";
-import TriangleButton from "../Buttons/TriangleButton";
+import PaperPlaneButton from "../../../UI/Buttons/PaperPlaneButton";
+import PopUpButton from "../../../UI/Buttons/PopUpButton";
+import TriangleButton from "../../../UI/Buttons/TriangleButton";
 
 const PatientTopicHeader = ({
   topic,

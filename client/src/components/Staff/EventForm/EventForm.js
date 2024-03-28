@@ -31,12 +31,12 @@ import { confirmAlert } from "../../All/Confirm/ConfirmGlobal";
 import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 import DateTimePicker from "../../UI/Pickers/DateTimePicker";
 import DurationPicker from "../../UI/Pickers/DurationPicker";
-import EditGuests from "./EditGuests";
-import HostsList from "./HostsList";
-import Invitation from "./Invitation";
-import RoomsRadio from "./RoomsRadio";
-import SelectSite from "./SelectSite";
-import StatusesRadio from "./StatusesRadio";
+import EditGuests from "./Guests/EditGuests";
+import HostsSelect from "./Host/HostsSelect";
+import Invitation from "./Invitation/Invitation";
+import RoomsRadio from "./Rooms/RoomsRadio";
+import SiteSelect from "./SiteSelect";
+import StatusesRadio from "./Status/StatusesRadio";
 
 var _ = require("lodash");
 
@@ -694,7 +694,7 @@ const EventForm = ({
               <div className="event-form__item">
                 <label>Host </label>
                 {user.title === "Secretary" ? (
-                  <HostsList
+                  <HostsSelect
                     handleHostChange={handleHostChange}
                     hostId={tempFormDatas.host_id}
                   />
@@ -718,12 +718,6 @@ const EventForm = ({
             </div>
             <div className="event-form__row">
               <div className="event-form__item">
-                {/* <FlatpickrStart
-                  fpStart={fpStart}
-                  startTime={tempFormDatas.start}
-                  handleStartChange={handleStartChange}
-                  allDay={tempFormDatas.all_day}
-                /> */}
                 <DateTimePicker
                   value={tempFormDatas.start}
                   refDate={refDateStart}
@@ -739,13 +733,6 @@ const EventForm = ({
                 />
               </div>
               <div className="event-form__item">
-                {/* <FlatpickrEnd
-                  fpEnd={fpEnd}
-                  start={currentEvent.current.start}
-                  endTime={tempFormDatas.end}
-                  allDay={currentEvent.current.allDay}
-                  handleEndChange={handleEndChange}
-                /> */}
                 <DateTimePicker
                   value={tempFormDatas.end}
                   refDate={refDateEnd}
@@ -813,7 +800,7 @@ const EventForm = ({
             </div>
             <div className="event-form__row event-form__row--radio">
               <div style={{ marginBottom: "5px" }}>
-                <SelectSite
+                <SiteSelect
                   handleSiteChange={handleSiteChange}
                   sites={sites}
                   value={tempFormDatas.site_id}

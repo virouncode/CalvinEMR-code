@@ -7,7 +7,7 @@ import {
   dateISOToTimestampTZ,
   timestampToDateISOTZ,
 } from "../../../utils/dates/formatDates";
-import SelectSite from "../../Staff/EventForm/SelectSite";
+import SiteSelect from "../../Staff/EventForm/SiteSelect";
 import EmptyParagraph from "../../UI/Paragraphs/EmptyParagraph";
 import LoadingParagraph from "../../UI/Paragraphs/LoadingParagraph";
 
@@ -124,7 +124,7 @@ const DashboardCardBillings = ({
           <div className="dashboard-card__content">
             <div className="dashboard-card__ranking">
               <p className="dashboard-card__ranking-title">Top diagnoses</p>
-              <SelectSite
+              <SiteSelect
                 handleSiteChange={handleSiteChangeDiagnoses}
                 sites={sites}
                 value={siteSelectedIdDiagnoses}
@@ -149,7 +149,7 @@ const DashboardCardBillings = ({
             </div>
             <div className="dashboard-card__ranking">
               <p className="dashboard-card__ranking-title">Top billing codes</p>
-              <SelectSite
+              <SiteSelect
                 handleSiteChange={handleSiteChangeBillingCodes}
                 sites={sites}
                 value={siteSelectedIdBillingCodes}

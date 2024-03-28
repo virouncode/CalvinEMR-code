@@ -14,13 +14,10 @@ const Patients = ({
     offset: 0,
   });
   const [search, setSearch] = useState("");
-  const {
-    loading,
-    err,
-    patientsDemographics,
-    setPatientsDemographics,
-    hasMore,
-  } = usePatientsList(search, paging);
+  const { loading, err, patientsDemographics, hasMore } = usePatientsList(
+    search,
+    paging
+  );
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -43,6 +40,7 @@ const Patients = ({
         />
       </div>
       <div className="patients__list">
+        {err & <p className="patients__list-err">{err}</p>}
         <PatientsList
           isPatientChecked={isPatientChecked}
           handleCheckPatient={handleCheckPatient}

@@ -20,7 +20,7 @@ import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper"
 import { immunizationSchema } from "../../../../../validation/record/immunizationValidation";
 import GenericCombo from "../../../../UI/Lists/GenericCombo";
 import GenericList from "../../../../UI/Lists/GenericList";
-import ImmunizationsList from "../../../../UI/Lists/ImmunizationsList";
+import ImmunizationsList from "./ImmunizationsList";
 
 const ImmunizationForm = ({
   patientId,

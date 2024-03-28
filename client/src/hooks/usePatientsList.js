@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 import xanoGet from "../api/xanoCRUD/xanoGet";
 import useUserContext from "./context/useUserContext";
@@ -9,7 +8,7 @@ const usePatientsList = (search, paging) => {
   const [patientsDemographics, setPatientsDemographics] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState("");
   const userType = user.access_level === "Admin" ? "admin" : "staff";
 
   useEffect(() => {
@@ -41,13 +40,7 @@ const usePatientsList = (search, paging) => {
         setLoading(false);
       } catch (err) {
         if (err.name !== "CanceledError") {
-          toast.error(
-            `Error: unable to get patients demographics: ${err.message}`,
-            {
-              containerId: "A",
-            }
-          );
-          setErr(true);
+          setErr(`Error: unable to get patients: ${err.message}`);
         }
         setLoading(false);
       }

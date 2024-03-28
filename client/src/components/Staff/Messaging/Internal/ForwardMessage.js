@@ -10,9 +10,9 @@ import { categoryToTitle } from "../../../../utils/names/categoryToTitle";
 import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../../UI/Toast/ToastCalvin";
-import Contacts from "../Contacts";
 import MessageExternal from "../External/MessageExternal";
 import MessagesAttachments from "../MessagesAttachments";
+import StaffContacts from "../StaffContacts";
 import Message from "./Message";
 
 const ForwardMessage = ({
@@ -240,7 +240,7 @@ const ForwardMessage = ({
   return (
     <div className="forward-message">
       <div className="forward-message__contacts">
-        <Contacts
+        <StaffContacts
           staffInfos={staffInfos}
           handleCheckContact={handleCheckContact}
           isContactChecked={isContactChecked}

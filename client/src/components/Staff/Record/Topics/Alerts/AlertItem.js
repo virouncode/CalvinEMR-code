@@ -13,7 +13,7 @@ import {
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
 import { alertSchema } from "../../../../../validation/record/alertValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const AlertItem = ({
   item,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import SearchPatient from "../../components/Staff/Record/Search/SearchPatient";
+import PatientSearch from "../../components/Staff/Record/Search/PatientSearch";
 import useTitle from "../../hooks/useTitle";
 
 const StaffSearchPatientPage = () => {
@@ -11,7 +11,7 @@ const StaffSearchPatientPage = () => {
         <title>Patients</title>
       </Helmet>
       <section className="search-patient-section">
-        <SearchPatient />
+        <PatientSearch />
       </section>
     </>
   );

@@ -9,7 +9,7 @@ import useUserContext from "../../../../../hooks/context/useUserContext";
 import { firstLetterOfFirstWordUpper } from "../../../../../utils/strings/firstLetterUpper";
 import { reminderSchema } from "../../../../../validation/record/reminderValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
 
 const ReminderItem = ({
   item,

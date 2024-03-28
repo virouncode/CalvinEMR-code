@@ -16,9 +16,9 @@ import { toPatientName } from "../../../../../utils/names/toPatientName";
 import { relations } from "../../../../../utils/relationships/relations";
 import { toInverseRelation } from "../../../../../utils/relationships/toInverseRelation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
-import PatientsSelect from "../../../../UI/Lists/PatientsSelect";
-import RelationshipList from "../../../../UI/Lists/RelationshipList";
-import SignCell from "../SignCell";
+import SignCell from "../../../../UI/Tables/SignCell";
+import RelationshipList from "./RelationshipList";
+import RelationshipPatientsSelect from "./RelationshipPatientsSelect";
 
 const RelationshipItem = ({
   item,
@@ -229,7 +229,7 @@ const RelationshipItem = ({
         </td>
         <td style={{ position: "relative" }}>
           {editVisible ? (
-            <PatientsSelect
+            <RelationshipPatientsSelect
               formDatas={itemInfos}
               setFormDatas={setItemInfos}
               patientId={patientId}

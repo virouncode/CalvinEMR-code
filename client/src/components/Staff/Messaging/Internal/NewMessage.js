@@ -10,9 +10,9 @@ import { categoryToTitle } from "../../../../utils/names/categoryToTitle";
 import { staffIdToTitleAndName } from "../../../../utils/names/staffIdToTitleAndName";
 import CircularProgressMedium from "../../../UI/Progress/CircularProgressMedium";
 import ToastCalvin from "../../../UI/Toast/ToastCalvin";
-import Contacts from "../Contacts";
 import MessagesAttachments from "../MessagesAttachments";
 import Patients from "../Patients";
+import StaffContacts from "../StaffContacts";
 
 const NewMessage = ({
   setNewVisible,
@@ -237,7 +237,7 @@ const NewMessage = ({
   return (
     <div className="new-message">
       <div className="new-message__contacts">
-        <Contacts
+        <StaffContacts
           staffInfos={staffInfos}
           handleCheckContact={handleCheckContact}
           isContactChecked={isContactChecked}

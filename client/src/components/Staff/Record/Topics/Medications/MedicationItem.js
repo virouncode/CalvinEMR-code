@@ -11,8 +11,8 @@ import {
 } from "../../../../../omdDatas/codesTables";
 import { isMedicationActive } from "../../../../../utils/medications/isMedicationActive";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
+import SignCell from "../../../../UI/Tables/SignCell";
 import FakeWindow from "../../../../UI/Windows/FakeWindow";
-import SignCell from "../SignCell";
 import MedicationDetails from "./MedicationDetails";
 
 const MedicationItem = ({ item, lastItemRef = null }) => {

@@ -12,7 +12,7 @@ import { firstLetterUpper } from "../../../../../utils/strings/firstLetterUpper"
 import { doctorSchema } from "../../../../../validation/record/doctorValidation";
 import { confirmAlert } from "../../../../All/Confirm/ConfirmGlobal";
 import GenericList from "../../../../UI/Lists/GenericList";
-import SignCellMultipleTypes from "../SignCellMultipleTypes";
+import SignCellMultipleTypes from "../../../../UI/Tables/SignCellMultipleTypes";
 
 const FamilyDoctorListItem = ({
   item,

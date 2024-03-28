@@ -4,7 +4,7 @@ import {
   toCodeTableName,
 } from "../../../omdDatas/codesTables";
 import { showDocument } from "../../../utils/files/showDocument";
-import SignCell from "../../Staff/Record/Topics/SignCell";
+import SignCell from "../../UI/Tables/SignCell";
 
 const SiteItem = ({ site, handleEditClick }) => {
   const handleClickLogo = (e) => {
